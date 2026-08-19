@@ -1,1 +1,319 @@
-import {useEffect,useState} from 'react';import Card from '../../components/ui/Card';import {getAllStatePrices,getMarketNews,getPriceHistory} from '../../services/market.service';function Sparkline({history}){if(!history||history.length<2)return null;const prices=history.map(h=>h.price),min=Math.min(...prices),max=Math.max(...prices),range=max-min||1,points=prices.map((p,i)=>{const x=i/(prices.length-1)*100,y=30-(p-min)/range*30;return `${x},${y}`}).join(' ');return <svg viewBox="0 0 100 30" className="w-24 h-8" preserveAspectRatio="none"><polyline points={points} fill="none" stroke="#3F6B3F" strokeWidth="2"/></svg>}export default function FarmerMarket(){const[prices,setPrices]=useState([]),[news,setNews]=useState([]),[loading,setLoading]=useState(true),[selected,setSelected]=useState(null);useEffect(()=>{Promise.all([getAllStatePrices(),getMarketNews(4)]).then(async([priceResult,newsResult])=>{const rows=priceResult.data||[];const withHistory=await Promise.all(rows.map(async r=>{const h=await getPriceHistory(r.state,r.wool_type);return{...r,history:h.data};}));setPrices(withHistory);setNews(newsResult.data||[]);setLoading(false);setSelected(withHistory[0]||null);});},[]);if(loading)return <div className="flex justify-center pt-16"><div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent"/></div>;return <div className="max-w-3xl mx-auto px-4 md:px-8 pt-8 md:pt-10 pb-8"><h1 className="text-2xl font-bold text-textPrimary mb-4">Market</h1>{selected&&<Card className="mb-5"><div className="flex items-center justify-between"><div><p className="text-textSecondary text-[13px]">{selected.wool_type} · {selected.state}</p><p className="text-3xl font-bold text-textPrimary mt-1">₹{selected.price_per_kg}/kg</p><p className={`text-sm font-bold mt-1 ${selected.change_percent>=0?'text-success':'text-error'}`}>{selected.change_percent>=0?'▲':'▼'} {Math.abs(selected.change_percent)}% (14 days)</p></div><Sparkline history={selected.history}/></div></Card>}<h2 className="text-lg font-semibold text-textPrimary mb-3">State-wise Prices</h2><div className="space-y-2 mb-8">{prices.map(p=><button key={`${p.state}-${p.wool_type}`} onClick={()=>setSelected(p)} className={`w-full flex items-center justify-between bg-surface rounded-lg border p-3.5 text-left transition-colors ${selected===p?'border-primary':'border-border'}`}><div><p className="font-semibold text-textPrimary text-sm">{p.state}</p><p className="text-textSecondary text-xs">{p.wool_type}</p></div><div className="text-right"><p className="font-bold text-textPrimary">₹{p.price_per_kg}/kg</p><p className={`text-xs font-semibold ${p.change_percent>=0?'text-success':'text-error'}`}>{p.change_percent>=0?'▲':'▼'} {Math.abs(p.change_percent)}%</p></div></button>)}</div><h2 className="text-lg font-semibold text-textPrimary mb-3">Market News</h2><div className="space-y-3">{news.map(n=><Card key={n.id}><p className="font-semibold text-textPrimary text-sm">{n.title}</p><p className="text-textSecondary text-[13px] mt-1">{n.summary}</p><p className="text-textMuted text-xs mt-2">{new Date(n.published_at).toLocaleDateString()} · {n.source}</p></Card>)}</div></div>}
+import React, { useEffect, useState } from 'react';
+import {
+  TrendingUp,
+  TrendingDown,
+  MapPin,
+  Sparkles,
+  Search,
+  Filter,
+  Newspaper,
+  Calendar,
+  Layers,
+  ArrowUpRight,
+  BadgeIndianRupee,
+  RefreshCw,
+  CheckCircle2,
+} from 'lucide-react';
+import Card from '../../components/ui/Card';
+import { getAllStatePrices, getMarketNews, getPriceHistory } from '../../services/market.service';
+
+function Sparkline({ history, rising = true }) {
+  if (!history || history.length < 2) return null;
+  const prices = history.map(h => Number(h.price || 0));
+  const min = Math.min(...prices);
+  const max = Math.max(...prices);
+  const range = max - min || 1;
+  const points = prices
+    .map((p, i) => {
+      const x = (i / (prices.length - 1)) * 100;
+      const y = 32 - ((p - min) / range) * 28;
+      return `${x},${y}`;
+    })
+    .join(' ');
+
+  const strokeColor = rising ? '#3F6B3F' : '#B3422F';
+  const fillColor = rising ? 'rgba(63, 107, 63, 0.12)' : 'rgba(179, 66, 47, 0.12)';
+
+  return (
+    <div className="w-28 sm:w-36 h-10 flex items-center justify-end">
+      <svg viewBox="0 0 100 36" className="w-full h-full overflow-visible" preserveAspectRatio="none">
+        <polygon
+          points={`0,36 ${points} 100,36`}
+          fill={fillColor}
+        />
+        <polyline
+          points={points}
+          fill="none"
+          stroke={strokeColor}
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    </div>
+  );
+}
+
+export default function FarmerMarket() {
+  const [prices, setPrices] = useState([]);
+  const [news, setNews] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [selected, setSelected] = useState(null);
+  const [search, setSearch] = useState('');
+  const [filterState, setFilterState] = useState('All');
+
+  async function loadData() {
+    setLoading(true);
+    try {
+      const [priceResult, newsResult] = await Promise.all([
+        getAllStatePrices(),
+        getMarketNews(4),
+      ]);
+      const rows = priceResult.data || [];
+      const withHistory = await Promise.all(
+        rows.map(async r => {
+          const h = await getPriceHistory(r.state, r.wool_type);
+          return { ...r, history: h.data };
+        })
+      );
+      setPrices(withHistory);
+      setNews(newsResult.data || []);
+      if (withHistory.length > 0) {
+        setSelected(withHistory[0]);
+      }
+    } catch (e) {
+      console.error('Error fetching market prices:', e);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  const uniqueStates = ['All', ...new Set(prices.map(p => p.state))];
+
+  const filteredPrices = prices.filter(p => {
+    const matchSearch =
+      p.wool_type?.toLowerCase().includes(search.toLowerCase()) ||
+      p.state?.toLowerCase().includes(search.toLowerCase());
+    const matchState = filterState === 'All' || p.state === filterState;
+    return matchSearch && matchState;
+  });
+
+  return (
+    <main className="page-shell">
+      {/* ─── Header ─── */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+        <div>
+          <div className="eyebrow text-primary mb-1">
+            <Sparkles size={13} /> Mandi Price Intelligence
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-textPrimary">
+            Wool Mandi Rates & Trends
+          </h1>
+          <p className="text-xs sm:text-sm text-textSecondary mt-0.5">
+            Real-time daily spot prices gathered from APMC trading hubs across India
+          </p>
+        </div>
+
+        <button
+          onClick={loadData}
+          disabled={loading}
+          className="self-start sm:self-auto inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-surface border border-border text-xs font-semibold text-textSecondary hover:text-primary hover:border-primary/40 transition-colors"
+        >
+          <RefreshCw size={14} className={loading ? 'animate-spin' : ''} />
+          <span>Refresh Rates</span>
+        </button>
+      </div>
+
+      {loading ? (
+        <div className="py-20 flex justify-center">
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+        </div>
+      ) : (
+        <div className="space-y-8 animate-fade-in">
+          {/* ─── Featured Selected Rate Card ─── */}
+          {selected && (
+            <div className="rounded-3xl bg-surface border border-border p-6 sm:p-8 shadow-card-hover relative overflow-hidden">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                <div>
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="px-3 py-1 rounded-full text-xs font-bold bg-primaryLight text-primary">
+                      {selected.wool_type}
+                    </span>
+                    <span className="text-xs font-semibold text-textMuted flex items-center gap-1">
+                      <MapPin size={12} /> {selected.state} Mandi
+                    </span>
+                  </div>
+
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-3xl sm:text-4xl font-extrabold text-textPrimary font-mono">
+                      ₹{selected.price_per_kg}
+                    </span>
+                    <span className="text-sm font-semibold text-textSecondary">/ kg</span>
+                  </div>
+
+                  <div className="mt-2 flex items-center gap-2">
+                    <span
+                      className={`inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-full ${
+                        Number(selected.change_percent || 0) >= 0
+                          ? 'bg-emerald-50 text-emerald-700'
+                          : 'bg-rose-50 text-rose-700'
+                      }`}
+                    >
+                      {Number(selected.change_percent || 0) >= 0 ? (
+                        <TrendingUp size={13} />
+                      ) : (
+                        <TrendingDown size={13} />
+                      )}
+                      <span>
+                        {Number(selected.change_percent || 0) >= 0 ? '+' : ''}
+                        {selected.change_percent}% (14-day trend)
+                      </span>
+                    </span>
+                    <span className="text-xs text-textMuted">Updated today 09:00 AM</span>
+                  </div>
+                </div>
+
+                <div className="flex flex-col items-start md:items-end justify-between self-stretch">
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-textMuted mb-2">
+                    14-Day Price Curve
+                  </span>
+                  <Sparkline
+                    history={selected.history}
+                    rising={Number(selected.change_percent || 0) >= 0}
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ─── Search & State Filter Controls ─── */}
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+            <div className="relative flex-1 max-w-md">
+              <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-textMuted" />
+              <input
+                type="text"
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                placeholder="Search breed or state..."
+                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-border bg-surface text-sm text-textPrimary placeholder:text-textMuted focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+              />
+            </div>
+
+            {/* State Filter Pills */}
+            <div className="flex items-center gap-1.5 overflow-x-auto pb-1 max-w-full">
+              {uniqueStates.map(st => (
+                <button
+                  key={st}
+                  onClick={() => setFilterState(st)}
+                  className={`px-3.5 py-1.5 rounded-full text-xs font-semibold shrink-0 transition-all ${
+                    filterState === st
+                      ? 'bg-primary text-white shadow-sm'
+                      : 'bg-surface border border-border text-textSecondary hover:border-primary/40'
+                  }`}
+                >
+                  {st}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* ─── State-wise Prices Grid ─── */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
+            {filteredPrices.map(p => {
+              const isSelected =
+                selected?.state === p.state && selected?.wool_type === p.wool_type;
+              const isRising = Number(p.change_percent || 0) >= 0;
+
+              return (
+                <div
+                  key={`${p.state}-${p.wool_type}`}
+                  onClick={() => setSelected(p)}
+                  className={`p-4 rounded-2xl border transition-all duration-200 cursor-pointer flex flex-col justify-between ${
+                    isSelected
+                      ? 'border-primary bg-primaryLight/30 ring-2 ring-primary/30 shadow-sm'
+                      : 'border-border/80 bg-surface hover:border-primary/40 hover:shadow-card'
+                  }`}
+                >
+                  <div className="flex items-start justify-between gap-2">
+                    <div>
+                      <p className="font-bold text-sm text-textPrimary">{p.state}</p>
+                      <p className="text-xs text-textSecondary mt-0.5">{p.wool_type}</p>
+                    </div>
+                    <span
+                      className={`inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full ${
+                        isRising ? 'bg-emerald-50 text-emerald-700' : 'bg-rose-50 text-rose-700'
+                      }`}
+                    >
+                      {isRising ? '+' : ''}
+                      {p.change_percent}%
+                    </span>
+                  </div>
+
+                  <div className="mt-4 pt-3 border-t border-border/60 flex items-center justify-between">
+                    <div>
+                      <span className="text-lg font-extrabold text-textPrimary">
+                        ₹{p.price_per_kg}
+                      </span>
+                      <span className="text-xs text-textSecondary"> /kg</span>
+                    </div>
+                    <span className="text-xs font-bold text-primary inline-flex items-center gap-0.5">
+                      View details →
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* ─── Mandi Market News & Bulletins ─── */}
+          {news.length > 0 && (
+            <div className="pt-6 border-t border-border/70">
+              <div className="section-heading mb-4">
+                <div>
+                  <p className="eyebrow text-primary">
+                    <Newspaper size={13} /> Market Intelligence
+                  </p>
+                  <h2 className="text-xl font-bold text-textPrimary">Mandi Bulletins & Trade Updates</h2>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {news.map((item, idx) => (
+                  <div
+                    key={item.id || idx}
+                    className="p-5 rounded-2xl bg-surface border border-border/80 shadow-sm flex flex-col justify-between"
+                  >
+                    <div>
+                      <h3 className="font-bold text-sm sm:text-base text-textPrimary leading-snug">
+                        {item.title}
+                      </h3>
+                      <p className="text-xs text-textSecondary mt-2 leading-relaxed">
+                        {item.summary}
+                      </p>
+                    </div>
+
+                    <div className="mt-4 pt-3 border-t border-border/60 flex items-center justify-between text-xs text-textMuted">
+                      <span className="flex items-center gap-1">
+                        <Calendar size={12} />
+                        {new Date(item.published_at).toLocaleDateString('en-IN', {
+                          day: 'numeric',
+                          month: 'short',
+                          year: 'numeric',
+                        })}
+                      </span>
+                      <span className="font-semibold text-primary">{item.source}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+    </main>
+  );
+}
