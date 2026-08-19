@@ -1,0 +1,93 @@
+import mongoose from 'mongoose';
+import bcrypt from 'bcryptjs';
+
+const userSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: [true, 'Name is required'],
+    trim: true,
+  },
+  email: {
+    type: String,
+    required: [true, 'Email is required'],
+    unique: true,
+    lowercase: true,
+    trim: true,
+    index: true,
+  },
+  mobile: {
+    type: String,
+    required: [true, 'Mobile number is required'],
+    trim: true,
+  },
+  password: {
+    type: String,
+    required: [true, 'Password is required'],
+    minlength: 6,
+  },
+  role: {
+    type: String,
+    enum: ['farmer', 'buyer', 'processor', 'warehouse', 'artisan', 'admin'],
+    default: 'farmer',
+    index: true,
+  },
+  state: {
+    type: String,
+    required: [true, 'State is required'],
+    index: true,
+  },
+  district: {
+    type: String,
+    required: [true, 'District is required'],
+  },
+  village: {
+    type: String,
+    default: '',
+  },
+  address: {
+    type: String,
+    default: '',
+  },
+  organization: {
+    type: String,
+    default: '',
+  },
+  isVerified: {
+    type: Boolean,
+    default: false,
+  },
+  avatarUrl: {
+    type: String,
+    default: '',
+  },
+  flockSize: {
+    type: Number,
+    default: 0,
+  },
+  primaryBreeds: [{
+    type: String,
+  }],
+}, {
+  timestamps: true,
+  toJSON: {
+    transform(doc, ret) {
+      ret.id = ret._id;
+      delete ret.password;
+      delete ret.__v;
+      return ret;
+    }
+  }
+});
+
+userSchema.pre('save', async function() {
+  if (!this.isModified('password')) return;
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+});
+
+userSchema.methods.comparePassword = async function(candidatePassword) {
+  return bcrypt.compare(candidatePassword, this.password);
+};
+
+const User = mongoose.model('User', userSchema);
+export default User;

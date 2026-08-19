@@ -1,0 +1,276 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  min-width: 320px;
+  background: linear-gradient(180deg, #f7f6f0 0%, #fbfaf7 40%, #f4f7f1 100%);
+  font-family: 'Inter', system-ui, sans-serif;
+  color: #232420;
+}
+
+* { box-sizing: border-box; }
+a { transition: color .2s ease; }
+a:hover { color: #3F6B3F; }
+::selection { background: #dcebd6; color: #232420; }
+
+@layer components {
+  /* ─── Page Shell ─── */
+  .page-shell { @apply max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-10 pb-12; }
+
+  /* ─── Hero Panel (Farmer Dashboard) ─── */
+  .hero-panel {
+    @apply relative overflow-hidden rounded-[2rem] px-6 py-9 sm:px-10 sm:py-12 text-white;
+    background: linear-gradient(125deg, #244f3e 0%, #3f6b3f 58%, #6f9163 100%);
+    box-shadow: 0 22px 45px rgba(41, 79, 47, .20);
+  }
+  .hero-panel h1 { @apply mt-4 text-3xl sm:text-4xl lg:text-5xl font-bold leading-[1.1] tracking-tight; }
+  .hero-panel h1 span { color: #e6efd9; }
+  .eyebrow { @apply inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[.14em]; }
+  .hero-panel .eyebrow { color: #d8ebca; }
+  .hero-copy { @apply mt-4 flex items-center gap-1.5 text-sm text-white/75; }
+  .hero-cta { @apply inline-flex items-center gap-2 rounded-xl bg-white px-4 py-3 text-sm font-bold text-primary shadow-lg transition duration-300 hover:-translate-y-0.5 hover:shadow-xl; }
+  .hero-ghost { @apply rounded-xl border border-white/30 bg-white/10 px-4 py-3 text-sm font-semibold text-white backdrop-blur transition hover:bg-white/20; }
+  .hero-orb { @apply absolute rounded-full bg-white/10 blur-2xl; animation: float 8s ease-in-out infinite; }
+  .orb-one { width: 230px; height: 230px; right: -60px; top: -95px; }
+  .orb-two { width: 130px; height: 130px; right: 25%; bottom: -88px; animation-delay: -3s; }
+  .hero-mark { @apply absolute -right-8 bottom-[-58px] h-56 w-56 text-white/10 rotate-[-24deg]; }
+
+  /* ─── Dashboard Grid & Metrics ─── */
+  .dashboard-grid { @apply grid gap-4 mt-5 md:grid-cols-3; }
+  .metric-card { @apply relative min-h-[158px] overflow-hidden; background: rgba(255, 255, 255, .85); }
+  .metric-card p { @apply mt-4 text-xs font-semibold uppercase tracking-[.09em] text-textSecondary; }
+  .metric-card strong { @apply mt-1 block text-3xl font-bold tracking-tight text-textPrimary; }
+  .metric-card strong small { @apply ml-1 text-base font-medium text-textSecondary; }
+  .metric-card span { @apply mt-2 block text-xs text-textMuted; }
+  .metric-icon { @apply grid h-10 w-10 place-items-center rounded-xl; }
+  .market-highlight { @apply min-h-[158px]; background: linear-gradient(135deg, #e9f2f5, #ffffff 65%); }
+
+  /* ─── Trend Chips ─── */
+  .trend-chip { @apply inline-flex items-center gap-1 rounded-full px-2.5 py-1.5 text-xs font-bold; }
+  .trend-up { @apply bg-primaryLight text-primary; }
+  .trend-down { @apply bg-errorLight text-error; }
+
+  /* ─── Section Headings ─── */
+  .section-heading { @apply mb-4 flex items-end justify-between gap-4; }
+  .section-heading h2 { @apply mt-1 text-xl font-bold tracking-tight text-textPrimary; }
+  .text-link { @apply inline-flex items-center gap-1 text-sm font-bold text-primary transition hover:gap-2; }
+
+  /* ─── Action Grid (Quick Actions) ─── */
+  .action-grid { @apply grid gap-3 md:grid-cols-3; }
+  .action-card { @apply flex items-center gap-3 rounded-2xl border border-border bg-surface p-4 text-left shadow-sm transition duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-lg; }
+  .action-card b { @apply block text-sm text-textPrimary; }
+  .action-card small { @apply mt-0.5 block text-xs text-textSecondary; }
+  .action-icon { @apply grid h-11 w-11 shrink-0 place-items-center rounded-xl; }
+  .action-arrow { @apply ml-auto text-textMuted transition group-hover:translate-x-1 group-hover:text-primary; }
+
+  /* ─── Batch Cards ─── */
+  .batch-card { @apply flex items-center gap-3 border-border/80 p-4 transition duration-300 hover:-translate-y-0.5 hover:border-primary/40; }
+  .batch-icon { @apply grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-primaryLight text-primary; }
+  .batch-arrow { @apply shrink-0 text-textMuted transition group-hover:text-primary; }
+  .status-badge { @apply inline-flex rounded-full bg-primaryLight px-2.5 py-1 text-[11px] font-bold text-primary; }
+
+  /* ─── Empty State ─── */
+  .empty-state { @apply flex min-h-[210px] flex-col items-center justify-center text-center; }
+  .empty-state svg { @apply text-primary; }
+  .empty-state h3 { @apply mt-3 font-bold text-textPrimary; }
+  .empty-state p { @apply mt-1 max-w-sm text-sm text-textSecondary; }
+  .empty-state .text-link { @apply mt-4; }
+
+  /* ─── Entrance Animations ─── */
+  .animate-enter { animation: enter .6s cubic-bezier(.2, .8, .2, 1) both; }
+  .delay-1 { animation-delay: .08s; }
+  .delay-2 { animation-delay: .16s; }
+  .delay-3 { animation-delay: .24s; }
+
+  /* ─── Marketplace Hero ─── */
+  .market-hero {
+    @apply relative overflow-hidden rounded-[2rem] px-6 py-9 sm:px-10 sm:py-12 text-white flex items-center justify-between gap-6;
+    background: linear-gradient(135deg, #2c4a3e 0%, #3f6b3f 45%, #7a9e5e 100%);
+    box-shadow: 0 22px 45px rgba(41, 79, 47, .18);
+  }
+  .market-hero .eyebrow { color: #d8ebca; }
+  .market-hero h1 {
+    @apply mt-3 text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight tracking-tight;
+  }
+  .market-hero h1 em {
+    font-style: normal;
+    color: #e6efd9;
+  }
+  .market-hero > div:first-child p:last-of-type {
+    @apply mt-3 text-sm text-white/70 max-w-md;
+  }
+  .market-hero-icon {
+    @apply hidden sm:block text-white/10 shrink-0;
+  }
+
+  /* ─── Marketplace Controls ─── */
+  .market-controls {
+    @apply mt-6 flex flex-col sm:flex-row items-stretch sm:items-center gap-3;
+  }
+  .search-field {
+    @apply flex items-center gap-2.5 flex-1 min-h-[48px] px-4 rounded-xl border border-border bg-surface text-textSecondary transition-colors focus-within:border-primary/50 focus-within:ring-2 focus-within:ring-primary/10;
+  }
+  .search-field input {
+    @apply flex-1 bg-transparent border-none outline-none text-[15px] text-textPrimary placeholder:text-textMuted;
+  }
+  .filter-row {
+    @apply flex items-center gap-2.5 flex-wrap;
+  }
+  .filter-row > span {
+    @apply hidden sm:inline-flex items-center gap-1 text-xs font-semibold text-textSecondary uppercase tracking-wider;
+  }
+  .filter-row select {
+    @apply min-h-[44px] px-3 py-2 rounded-xl border border-border bg-surface text-sm text-textPrimary transition-colors focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 cursor-pointer;
+  }
+
+  /* ─── Marketplace Message ─── */
+  .market-message {
+    @apply mt-4 px-4 py-3 rounded-xl bg-primaryLight text-primary text-sm font-medium border border-primary/20;
+  }
+
+  /* ─── Marketplace Listing Grid ─── */
+  .listing-grid {
+    @apply grid gap-4 sm:grid-cols-2 lg:grid-cols-3;
+  }
+  .listing-card {
+    @apply flex flex-col overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-card-hover cursor-default;
+  }
+  .listing-card h3 {
+    @apply font-bold text-[15px] text-textPrimary;
+  }
+  .listing-card strong {
+    @apply text-lg font-bold text-textPrimary whitespace-nowrap;
+  }
+  .listing-card strong small {
+    @apply text-xs font-medium text-textSecondary;
+  }
+
+  /* ─── Listing Image ─── */
+  .listing-image {
+    @apply relative overflow-hidden rounded-xl -mx-4 -mt-4 mb-0;
+  }
+  .listing-image img {
+    @apply w-full h-44 object-cover transition-transform duration-500 group-hover:scale-105;
+  }
+  .listing-image span {
+    @apply absolute bottom-2 right-2 px-2.5 py-1 rounded-full bg-black/60 text-white text-[11px] font-bold backdrop-blur-sm;
+  }
+
+  .listing-location {
+    @apply flex items-center gap-1 mt-1 text-xs text-textSecondary;
+  }
+
+  /* ─── Loader Stage ─── */
+  .loader-stage {
+    @apply flex items-center justify-center py-16;
+  }
+
+  /* ─── Nav link styles ─── */
+  .nav-link {
+    @apply relative px-3 py-1.5 rounded-lg text-sm font-medium text-textSecondary transition-colors duration-200 hover:text-primary hover:bg-primaryLight/50;
+  }
+  .nav-link-active {
+    @apply text-primary bg-primaryLight/60 font-semibold;
+  }
+
+  /* ─── Admin sidebar ─── */
+  .admin-sidebar {
+    @apply w-56 shrink-0 border-r border-border/60 bg-surface/50 hidden md:block;
+  }
+  .admin-sidebar-link {
+    @apply flex items-center gap-2.5 px-4 py-2.5 text-sm font-medium text-textSecondary rounded-lg transition-all duration-200 hover:bg-primaryLight/50 hover:text-primary mx-2;
+  }
+  .admin-sidebar-link-active {
+    @apply bg-primaryLight text-primary font-semibold;
+  }
+
+  /* ─── Auth pages (Responsive Split Layout & Cards) ─── */
+  .auth-page-split {
+    @apply min-h-screen flex flex-col lg:flex-row items-stretch bg-background;
+  }
+  .auth-showcase-panel {
+    @apply relative hidden lg:flex lg:w-5/12 xl:w-1/2 flex-col justify-between p-12 text-white overflow-hidden;
+    background: linear-gradient(145deg, #1b3d26 0%, #2f5632 45%, #3f6b3f 80%, #688a55 100%);
+  }
+  .auth-form-container {
+    @apply flex-1 flex flex-col justify-center items-center px-4 sm:px-8 md:px-12 py-10 sm:py-14;
+    background:
+      radial-gradient(ellipse at 20% 50%, rgba(63,107,63,0.04) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 20%, rgba(185,121,62,0.04) 0%, transparent 50%),
+      linear-gradient(180deg, #FAF9F6 0%, #F5F4EE 100%);
+  }
+  .auth-card-modern {
+    @apply w-full max-w-xl bg-surface rounded-3xl border border-border/80 p-6 sm:p-10 transition-all duration-300;
+    box-shadow: 0 20px 45px -12px rgba(45, 60, 45, 0.08), 0 4px 16px -2px rgba(0,0,0,0.03);
+  }
+
+  /* ─── Landing Page Styles ─── */
+  .landing-hero {
+    @apply relative overflow-hidden pt-12 pb-20 md:pt-20 md:pb-28 text-center sm:text-left;
+  }
+  .glass-pill {
+    @apply inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold backdrop-blur-md border border-white/25 shadow-sm;
+  }
+  .glass-card {
+    @apply bg-surface/90 backdrop-blur-md rounded-2xl border border-border/80 shadow-card transition-all duration-300 hover:shadow-card-hover hover:border-primary/30;
+  }
+  .gradient-border-card {
+    @apply relative rounded-3xl p-px overflow-hidden bg-gradient-to-b from-primary/30 via-border to-border/40;
+  }
+  .gradient-border-inner {
+    @apply rounded-[23px] bg-surface p-6 sm:p-8 h-full;
+  }
+  .stat-badge {
+    @apply flex flex-col items-center sm:items-start p-5 rounded-2xl bg-surface border border-border/80 shadow-sm;
+  }
+
+  /* ─── Ticker / Marquee ─── */
+  .ticker-wrap {
+    @apply overflow-hidden whitespace-nowrap py-3 relative border-y border-border/60 bg-surface/60 backdrop-blur-sm select-none;
+  }
+  .ticker-move {
+    @apply inline-flex gap-8 items-center animate-marquee;
+  }
+  .ticker-wrap:hover .ticker-move {
+    animation-play-state: paused;
+  }
+
+  /* ─── Role badge colors for admin & display ─── */
+  .role-badge { @apply inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold capitalize; }
+  .role-farmer { @apply bg-primaryLight text-primary; }
+  .role-buyer { @apply bg-infoLight text-info; }
+  .role-processor { @apply bg-accentLight text-accent; }
+  .role-warehouse { @apply bg-warningLight text-warning; }
+  .role-artisan { @apply bg-purple-100 text-purple-700; }
+  .role-admin { @apply bg-errorLight text-error; }
+}
+
+/* ─── Keyframes ─── */
+@keyframes enter {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(15px); }
+}
+@keyframes shrink-bar {
+  from { width: 100%; }
+  to { width: 0%; }
+}
+
+/* ─── Reduced Motion ─── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
+  }
+}
+
+/* ─── Form resets ─── */
+button, input, textarea, select { font-family: inherit; }
+button:disabled { opacity: .65; cursor: not-allowed; }
