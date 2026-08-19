@@ -1,4 +1,3 @@
-import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
@@ -22,7 +21,6 @@ import trainingRoutes from './routes/trainingRoutes.js';
 import notificationRoutes from './routes/notificationRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 
-dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
