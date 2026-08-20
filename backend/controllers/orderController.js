@@ -232,3 +232,36 @@ export async function updateOrderStatus(req, res, next) {
     next(error);
   }
 }
+
+export async function getBuyerAnalytics(req, res, next) {
+  try {
+    const orders = await Order.find({ buyer: req.user._id });
+    
+    const completedOrders = orders.filter(o => o.status === 'delivered');
+    const activeOrders = orders.filter(o => !['delivered', 'cancelled'].includes(o.status));
+    const totalSpent = orders.reduce((sum, o) => o.status !== 'cancelled' ? sum + (o.totalAmount || 0) : sum, 0);
+    const totalVolume = orders.reduce((sum, o) => o.status !== 'cancelled' ? sum + (o.quantityKg || 0) : sum, 0);
+    
+    const woolTypeStats = orders.reduce((acc, o) => {
+      if (o.status !== 'cancelled') {
+        acc[o.woolType] = (acc[o.woolType] || 0) + (o.quantityKg || 0);
+      }
+      return acc;
+    }, {});
+    const topWoolTypes = Object.entries(woolTypeStats).sort((a, b) => b[1] - a[1]);
+
+    res.json({ 
+      success: true, 
+      data: {
+        completedOrders: completedOrders.length,
+        activeOrders: activeOrders.length,
+        totalSpent,
+        totalVolume,
+        topWoolTypes,
+        recentOrders: orders.sort((a, b) => b.createdAt - a.createdAt).slice(0, 5)
+      } 
+    });
+  } catch (error) {
+    next(error);
+  }
+}

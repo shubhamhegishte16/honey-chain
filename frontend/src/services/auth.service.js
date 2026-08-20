@@ -53,3 +53,15 @@ export async function updateUserRole(userId, role) {
   // Not used right now
   return { data: null };
 }
+
+export async function getSavedListings() {
+  return await apiRequest('/auth/saved-listings', { method: 'GET' });
+}
+
+export async function addSavedListing(listingId) {
+  return await apiRequest(`/auth/saved-listings/${listingId}`, { method: 'POST' });
+}
+
+export async function removeSavedListing(listingId) {
+  return await apiRequest(`/auth/saved-listings/${listingId}`, { method: 'DELETE' });
+}
