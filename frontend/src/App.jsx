@@ -24,6 +24,10 @@ import UserManagement from './pages/admin/UserManagement';
 import BatchManagement from './pages/admin/BatchManagement';
 import MarketplaceManagement from './pages/admin/MarketplaceManagement';
 
+import LearnLanding from './pages/learn/LearnLanding';
+import ResourceListing from './pages/learn/ResourceListing';
+import ResourceDetails from './pages/learn/ResourceDetails';
+
 function NavLink({ to, children, onClick }) {
   const { pathname } = useLocation();
   const isActive = pathname === to || (to !== '/' && pathname.startsWith(to));
@@ -48,6 +52,7 @@ function Layout({ children }) {
     { to: '/farmer/market', label: 'Prices' },
     { to: '/farmer/marketplace', label: 'Marketplace' },
     { to: '/farmer/tracking', label: 'Tracking' },
+    { to: '/learn', label: 'Learn' },
   ];
 
   const adminLinks = [
@@ -59,7 +64,8 @@ function Layout({ children }) {
 
   const links = profile?.role === 'admin' ? adminLinks
     : profile?.role === 'farmer' ? farmerLinks
-    : [{ to: '/', label: 'Marketplace' }];
+    : profile?.role === 'artisan' ? [{ to: '/', label: 'Marketplace' }, { to: '/learn', label: 'Learn' }]
+    : [{ to: '/', label: 'Marketplace' }, { to: '/learn', label: 'Learn' }];
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -237,6 +243,11 @@ export default function App() {
       <Route path="/admin/users" element={<Protected allowedRoles={['admin']}><AdminLayout><UserManagement /></AdminLayout></Protected>} />
       <Route path="/admin/batches" element={<Protected allowedRoles={['admin']}><AdminLayout><BatchManagement /></AdminLayout></Protected>} />
       <Route path="/admin/marketplace" element={<Protected allowedRoles={['admin']}><AdminLayout><MarketplaceManagement /></AdminLayout></Protected>} />
+
+      {/* Learn / Training Routes */}
+      <Route path="/learn" element={<Protected allowedRoles={['farmer', 'artisan', 'buyer', 'processor', 'admin']}><LearnLanding /></Protected>} />
+      <Route path="/learn/category/:categoryName" element={<Protected allowedRoles={['farmer', 'artisan', 'buyer', 'processor', 'admin']}><ResourceListing /></Protected>} />
+      <Route path="/learn/resource/:id" element={<Protected allowedRoles={['farmer', 'artisan', 'buyer', 'processor', 'admin']}><ResourceDetails /></Protected>} />
 
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
