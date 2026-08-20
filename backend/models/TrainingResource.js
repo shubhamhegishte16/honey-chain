@@ -53,6 +53,10 @@ const trainingResourceSchema = new mongoose.Schema({
     type: Number,
     default: 140,
   },
+  youtubeUrl: {
+    type: String,
+    default: null,
+  },
 }, {
   timestamps: true,
   toJSON: {

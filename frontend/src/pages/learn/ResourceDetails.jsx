@@ -140,6 +140,46 @@ export default function ResourceDetails() {
                 <p className="text-sm text-textSecondary italic">{resource.summary}</p>
               </div>
 
+              {/* YouTube Video Section */}
+              {(() => {
+                const getYouTubeEmbedUrl = (url) => {
+                  if (!url) return null;
+                  const isYouTube = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/.+$/i.test(url);
+                  if (!isYouTube) return null;
+                  try {
+                    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+                    const match = url.match(regExp);
+                    if (match && match[2] && match[2].length === 11) {
+                      return `https://www.youtube.com/embed/${match[2]}`;
+                    }
+                  } catch (e) {}
+                  return null;
+                };
+                const embedUrl = getYouTubeEmbedUrl(resource.youtubeUrl);
+                if (!embedUrl) return null;
+
+                return (
+                  <div className="mb-6">
+                    <div className="flex items-center gap-2 mb-3">
+                      <span className="text-base sm:text-lg font-bold text-textPrimary">📺 Training Video</span>
+                      <span className="px-2 py-0.5 rounded bg-red-100 text-red-800 text-[10px] font-bold uppercase tracking-wider">
+                        Hindi Video
+                      </span>
+                    </div>
+                    <div className="relative w-full pb-[56.25%] h-0 rounded-2xl overflow-hidden shadow-md border border-border/80 bg-black">
+                      <iframe
+                        className="absolute top-0 left-0 w-full h-full"
+                        src={embedUrl}
+                        title={`${resource.title} Video Guide`}
+                        frameBorder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowFullScreen
+                      />
+                    </div>
+                  </div>
+                );
+              })()}
+
               {/* Body Content */}
               <div className="prose max-w-none">
                 {renderContent(resource.content)}

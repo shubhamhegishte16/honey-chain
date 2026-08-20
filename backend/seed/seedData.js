@@ -801,6 +801,26 @@ export async function seedDatabase() {
     // 11. Create Training Resources across 10 Categories
     await TrainingResource.create([
       {
+        title: 'Sheep Care & Disease Prevention Guidelines',
+        category: 'Sheep Management',
+        level: 'Beginner',
+        duration: '12 min read',
+        summary: 'Essential guidelines for vaccine scheduling, nutritional feeds, and shelter sanitation to prevent flock outbreaks.',
+        content: `### 1. Vaccination and Healthcare
+Maintain a strict vaccination log for enterotoxemia, sheep pox, and PPR. Deworm the flock pre-monsoon and post-monsoon.
+
+### 2. Nutrition
+Supplement grazing with protein-rich mineral blocks and legumes to ensure high quality staple growth and prevent fleece shedding.`,
+        keyTakeaways: [
+          'Vaccinate pre-monsoon for sheep pox and PPR to prevent major losses',
+          'Deworm twice a year to ensure good nutritional absorption',
+          'Provide mineral blocks to encourage thick, strong wool staples'
+        ],
+        tags: ['Sheep Health', 'Disease Prevention', 'Nutrition'],
+        views: 185,
+        youtubeUrl: 'https://www.youtube.com/watch?v=JYASAHeFRKg',
+      },
+      {
         title: 'Modern Shearing Practices & Sheep Welfare',
         category: 'Wool Shearing',
         level: 'Beginner',
@@ -821,6 +841,7 @@ Immediately skirt the belly wool, leg pieces, and heavily soiled tags away from 
         ],
         tags: ['Shearing', 'Staple Length', 'Wool Quality'],
         views: 240,
+        youtubeUrl: 'https://www.youtube.com/watch?v=N7CpW1mBodc',
       },
       {
         title: 'Central Wool Board Grading Standards & Micron Metrics',
@@ -842,6 +863,7 @@ Clean skirting before weighing increases batch valuation by up to 25-30% on the 
         ],
         tags: ['Grading', 'Micron', 'Standards', 'Pricing'],
         views: 315,
+        youtubeUrl: 'https://www.youtube.com/watch?v=Ksc8wY_VFJk',
       },
       {
         title: 'Monsoon Wool Storage & Moisture Prevention Protocol',
@@ -864,6 +886,27 @@ Turn stacked wool sacks fortnightly to prevent core temperature build-up and swe
         ],
         tags: ['Storage', 'Monsoon', 'Warehousing'],
         views: 198,
+        youtubeUrl: null,
+      },
+      {
+        title: 'Wool Scouring, Carding, & Processing Basics',
+        category: 'Wool Processing',
+        level: 'Beginner',
+        duration: '12 min read',
+        summary: 'Understanding the step-by-step process of scouring, carding, and spinning raw wool into premium yarn.',
+        content: `### 1. Scouring
+Raw fleece contains lanolin, dirt, and sweat salts. Scouring washes the fleece in warm soapy water to clean it.
+
+### 2. Carding and Combing
+Carding aligns the tangled wool fibers into straight rows, creating a soft web of wool ready to spin.`,
+        keyTakeaways: [
+          'Scouring removes grease and debris',
+          'Carding separates and aligns fibers for spinning',
+          'Adding values through processing yields over 60% higher pricing'
+        ],
+        tags: ['Processing', 'Carding', 'Scouring'],
+        views: 210,
+        youtubeUrl: 'https://www.youtube.com/watch?v=MXM31v49Xtw',
       },
       {
         title: 'Natural Dyeing with Himalayan Botanicals & Mineral Mordants',
@@ -883,6 +926,7 @@ Premordant with 10% weight of fibre potassium alum to lock natural pigments and 
         ],
         tags: ['Dyeing', 'Artisan', 'Natural Colors'],
         views: 180,
+        youtubeUrl: null,
       },
       {
         title: 'Maximizing Direct-to-Buyer Revenue on Digital Marketplaces',
@@ -902,6 +946,7 @@ Always state exact quantity, provide high-resolution natural light photos, and l
         ],
         tags: ['Marketplace', 'Direct Selling', 'Farmer Profit'],
         views: 420,
+        youtubeUrl: null,
       }
     ]);
 
