@@ -22,6 +22,7 @@ import Input from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
 import { signUp } from '../../services/auth.service';
 import { useAuth } from '../../context/AuthContext';
+import { useLanguage } from '../../context/LanguageContext';
 import { INDIAN_STATES, DISTRICTS_BY_STATE, ROLES } from '../../constants/states';
 
 const ROLE_DETAILS = {
@@ -54,6 +55,7 @@ const ROLE_DETAILS = {
 export default function Register() {
   const navigate = useNavigate();
   const { setProfileAfterAuth } = useAuth();
+  const { t } = useLanguage();
   const [form, setForm] = useState({
     name: '',
     mobile: '',
@@ -86,20 +88,20 @@ export default function Register() {
 
   function validate() {
     const e = {};
-    if (!form.name.trim()) e.name = 'Full name is required';
+    if (!form.name.trim()) e.name = t('fullNameRequired', 'Full name is required');
     if (!form.mobile.trim() || form.mobile.replace(/\D/g, '').length < 10) {
-      e.mobile = 'Enter a valid 10-digit mobile number';
+      e.mobile = t('validMobileRequired', 'Enter a valid 10-digit mobile number');
     }
     if (!form.email.trim() || !/\S+@\S+\.\S+/.test(form.email)) {
-      e.email = 'Enter a valid email address';
+      e.email = t('validEmailRequired', 'Enter a valid email address');
     }
     if (!form.password || form.password.length < 6) {
-      e.password = 'Password must be at least 6 characters';
+      e.password = t('passwordLengthRequired', 'Password must be at least 6 characters');
     }
-    if (!form.state) e.state = 'Please select your state';
-    if (!form.district) e.district = 'Please select your district';
-    if (!form.role) e.role = 'Please select your user type';
-    if (!agreeTerms) e.terms = 'Please accept the terms to proceed';
+    if (!form.state) e.state = t('stateRequired', 'Please select your state');
+    if (!form.district) e.district = t('districtRequired', 'Please select your district');
+    if (!form.role) e.role = t('roleRequired', 'Please select your user type');
+    if (!agreeTerms) e.terms = t('acceptTermsRequired', 'Please accept the terms to proceed');
 
     setErrors(e);
     return Object.keys(e).length === 0;
@@ -114,7 +116,7 @@ export default function Register() {
     const { data, error } = await signUp(form);
     if (error) {
       setLoading(false);
-      setSubmitError(error.message || 'Registration failed. Please try again.');
+      setSubmitError(error.message || t('registrationFailed', 'Registration failed. Please try again.'));
       return;
     }
     await setProfileAfterAuth(data.user);
@@ -141,7 +143,7 @@ export default function Register() {
               className="inline-flex items-center gap-2 text-white/90 hover:text-white text-xs font-semibold uppercase tracking-wider mb-8 transition-colors group"
             >
               <ArrowLeft size={15} className="transition-transform group-hover:-translate-x-1" />
-              Back to WoolConnect Home
+              {t('backToWoolConnectHome', 'Back to WoolConnect Home')}
             </Link>
 
             <div className="flex items-center gap-3">
@@ -150,7 +152,7 @@ export default function Register() {
               </span>
               <div>
                 <span className="text-2xl font-bold tracking-tight text-white block">WoolConnect</span>
-                <span className="text-xs font-medium text-emerald-200">National Wool Ecosystem Platform</span>
+                <span className="text-xs font-medium text-emerald-200">{t('nationalWoolEcosystem', 'National Wool Ecosystem Platform')}</span>
               </div>
             </div>
           </div>
@@ -158,30 +160,30 @@ export default function Register() {
           <div className="relative z-10 my-auto py-6">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 text-emerald-200 text-xs font-semibold backdrop-blur-md mb-4 border border-white/15">
               <Sparkles size={14} className="text-amber-300" />
-              Join 10,000+ Verified Pastoralists & Buyers
+              {t('joinVerifiedPastoralists', 'Join 10,000+ Verified Pastoralists & Buyers')}
             </div>
 
             <h2 className="text-3xl xl:text-4xl font-bold tracking-tight text-white leading-tight">
-              One platform connecting <br />
-              <span className="text-emerald-200">every step of the wool chain.</span>
+              {t('onePlatformConnecting', 'One platform connecting')} <br />
+              <span className="text-emerald-200">{t('everyStepWoolChain', 'every step of the wool chain.')}</span>
             </h2>
 
             <p className="mt-4 text-white/80 text-sm leading-relaxed max-w-md">
-              Whether you are recording your seasonal clip in Bikaner or procuring fine merino in Bengaluru, WoolConnect delivers transparency and value.
+              {t('whetherRecordingClip', 'Whether you are recording your seasonal clip in Bikaner or procuring fine merino in Bengaluru, WoolConnect delivers transparency and value.')}
             </p>
 
             <div className="mt-6 space-y-2.5 max-w-md">
               <div className="flex items-center gap-3 p-3 rounded-xl bg-white/10 border border-white/10 text-xs text-white/90">
                 <CheckCircle2 size={16} className="text-emerald-300 shrink-0" />
-                <span>Instant QR passport generation for every wool lot</span>
+                <span>{t('instantQrPassportGen', 'Instant QR passport generation for every wool lot')}</span>
               </div>
               <div className="flex items-center gap-3 p-3 rounded-xl bg-white/10 border border-white/10 text-xs text-white/90">
                 <CheckCircle2 size={16} className="text-amber-300 shrink-0" />
-                <span>Direct APMC mandi pricing & trend intelligence</span>
+                <span>{t('directApmcMandiPricing', 'Direct APMC mandi pricing & trend intelligence')}</span>
               </div>
               <div className="flex items-center gap-3 p-3 rounded-xl bg-white/10 border border-white/10 text-xs text-white/90">
                 <CheckCircle2 size={16} className="text-sky-300 shrink-0" />
-                <span>Zero intermediary commission for pastoralist producers</span>
+                <span>{t('zeroIntermediaryCommission', 'Zero intermediary commission for pastoralist producers')}</span>
               </div>
             </div>
           </div>
@@ -189,10 +191,10 @@ export default function Register() {
           <div className="relative z-10 pt-6 border-t border-white/15 flex items-center justify-between text-xs text-white/75">
             <div className="flex items-center gap-2">
               <ShieldCheck size={16} className="text-emerald-300 shrink-0" />
-              <span>Encrypted data & privacy guaranteed</span>
+              <span>{t('encryptedDataPrivacy', 'Encrypted data & privacy guaranteed')}</span>
             </div>
             <Link to="/login" className="text-emerald-200 hover:text-white font-semibold">
-              Already registered? Log in →
+              {t('alreadyRegistered', 'Already registered? Log in →')}
             </Link>
           </div>
         </div>
@@ -211,16 +213,16 @@ export default function Register() {
               to="/login"
               className="text-xs font-semibold text-primary hover:text-primaryDark flex items-center gap-1"
             >
-              Sign In instead →
+              {t('signInInstead', 'Sign In instead →')}
             </Link>
           </div>
 
           <div className="w-full max-w-xl">
             {/* Header */}
             <div className="mb-6">
-              <h1 className="text-2xl font-bold tracking-tight text-textPrimary">Create Account</h1>
+              <h1 className="text-2xl font-bold tracking-tight text-textPrimary">{t('createAccount', 'Create Account')}</h1>
               <p className="text-sm text-textSecondary mt-1">
-                Select your role and enter your details to join WoolConnect
+                {t('selectRoleDetails', 'Select your role and enter your details to join WoolConnect')}
               </p>
             </div>
 
@@ -228,13 +230,14 @@ export default function Register() {
               {/* Role Selector — compact single-row pills instead of 4 large cards */}
               <div className="mb-5">
                 <label className="block font-semibold text-xs text-textSecondary uppercase tracking-wider mb-2">
-                  Your Role <span className="text-primary font-bold">*</span>
+                  {t('yourRole', 'Your Role')} <span className="text-primary font-bold">*</span>
                 </label>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                   {ROLES.map(role => {
                     const details = ROLE_DETAILS[role.value] || ROLE_DETAILS.farmer;
                     const Icon = details.icon;
                     const isSelected = form.role === role.value;
+                    const roleLabelKey = 'role' + role.value.charAt(0).toUpperCase() + role.value.slice(1);
 
                     return (
                       <button
@@ -256,7 +259,7 @@ export default function Register() {
                           <Icon size={15} />
                         </span>
                         <span className="font-semibold text-[11px] text-textPrimary leading-tight">
-                          {role.label}
+                          {t(roleLabelKey, role.label)}
                         </span>
                       </button>
                     );
@@ -268,7 +271,7 @@ export default function Register() {
               {/* Personal Details */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4">
                 <Input
-                  label="Full Name"
+                  label={t('fullName', 'Full Name')}
                   id="name"
                   name="name"
                   icon={User}
@@ -281,7 +284,7 @@ export default function Register() {
                 />
 
                 <Input
-                  label="Mobile Number"
+                  label={t('mobileNumber', 'Mobile Number')}
                   type="tel"
                   id="mobile"
                   name="mobile"
@@ -297,7 +300,7 @@ export default function Register() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4">
                 <Input
-                  label="Email Address"
+                  label={t('emailAddress', 'Email Address')}
                   type="email"
                   id="email"
                   name="email"
@@ -311,14 +314,14 @@ export default function Register() {
                 />
 
                 <Input
-                  label="Password"
+                  label={t('password', 'Password')}
                   type={showPassword ? 'text' : 'password'}
                   id="password"
                   name="password"
                   icon={Lock}
                   value={form.password}
                   onChange={e => update('password', e.target.value)}
-                  placeholder="Min. 6 characters"
+                  placeholder={t('minCharacters', 'Min. 6 characters')}
                   error={errors.password}
                   autoComplete="new-password"
                   required
@@ -327,7 +330,7 @@ export default function Register() {
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
                       className="text-textMuted hover:text-textPrimary p-1 focus:outline-none"
-                      aria-label={showPassword ? 'Hide password' : 'Show password'}
+                      aria-label={showPassword ? t('hidePassword', 'Hide password') : t('showPassword', 'Show password')}
                     >
                       {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                     </button>
@@ -339,7 +342,7 @@ export default function Register() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 mb-5">
                 <div>
                   <label htmlFor="state" className="block font-semibold text-xs text-textSecondary uppercase tracking-wider mb-1.5">
-                    State <span className="text-primary font-bold">*</span>
+                    {t('state', 'State')} <span className="text-primary font-bold">*</span>
                   </label>
                   <select
                     id="state"
@@ -360,7 +363,7 @@ export default function Register() {
                 {districts.length > 0 && (
                   <div>
                     <label htmlFor="district" className="block font-semibold text-xs text-textSecondary uppercase tracking-wider mb-1.5">
-                      District <span className="text-primary font-bold">*</span>
+                      {t('district', 'District')} <span className="text-primary font-bold">*</span>
                     </label>
                     <select
                       id="district"
@@ -390,9 +393,7 @@ export default function Register() {
                     className="mt-0.5 rounded border-border text-primary focus:ring-primary h-4 w-4 cursor-pointer accent-primary shrink-0"
                   />
                   <span>
-                    I agree to the WoolConnect{' '}
-                    <span className="font-semibold text-textPrimary underline">Terms of Service</span> and{' '}
-                    <span className="font-semibold text-textPrimary underline">Data Privacy Policy</span>.
+                    {t('agreeTerms', 'I agree to the WoolConnect Terms of Service and Data Privacy Policy.')}
                   </span>
                 </label>
                 {errors.terms && <p className="text-error text-xs mt-1 font-medium">{errors.terms}</p>}
@@ -419,7 +420,7 @@ export default function Register() {
               )}
 
               <Button
-                title="Create Account & Enter Platform"
+                title={t('createAccountEnter', 'Create Account & Enter Platform')}
                 type="submit"
                 loading={loading}
                 icon={ArrowRight}
@@ -430,12 +431,12 @@ export default function Register() {
               {/* Switch to login */}
               <div className="text-center mt-6 pt-5 border-t border-border/60">
                 <p className="text-sm text-textSecondary">
-                  Already registered?{' '}
+                  {t('alreadyRegistered', 'Already registered?')}{' '}
                   <Link
                     to="/login"
                     className="font-bold text-primary hover:text-primaryDark transition-colors inline-flex items-center gap-1 group"
                   >
-                    Sign in here
+                    {t('signInHere', 'Sign in here')}
                     <ArrowRight size={14} className="transition-transform group-hover:translate-x-0.5" />
                   </Link>
                 </p>
@@ -444,7 +445,7 @@ export default function Register() {
           </div>
 
           <p className="mt-8 text-center text-xs text-textMuted max-w-md">
-            Zero signup fee. Instant access to live mandi rates, lot registration, and buyer networking.
+            {t('zeroSignupFee', 'Zero signup fee. Instant access to live mandi rates, lot registration, and buyer networking.')}
           </p>
         </div>
       </div>

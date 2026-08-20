@@ -5,9 +5,11 @@ import Card from '../ui/Card';
 import Button from '../ui/Button';
 import { getListings, placeOrder } from '../../services/marketplace.service';
 import { INDIAN_STATES, WOOL_TYPES } from '../../constants/states';
+import { useLanguage } from '../../context/LanguageContext';
 
 export default function MarketplaceExperience({ allowBuying = false }) {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [listings, setListings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -35,9 +37,9 @@ export default function MarketplaceExperience({ allowBuying = false }) {
     <main className="page-shell marketplace-page">
       <section className="market-hero animate-enter">
         <div>
-          <p className="eyebrow"><Sparkles size={14} /> Direct from verified producers</p>
-          <h1>Find wool with a <em>proven story.</em></h1>
-          <p>Discover traceable lots from growers and cooperatives across India.</p>
+          <p className="eyebrow"><Sparkles size={14} /> {t('directFromVerified', 'Direct from verified producers')}</p>
+          <h1>{t('findWoolProvenStory', 'Find wool with a proven story.')}</h1>
+          <p>{t('discoverTraceableLots', 'Discover traceable lots from growers and cooperatives across India.')}</p>
         </div>
         <Tag className="market-hero-icon" size={100} />
       </section>
@@ -48,17 +50,17 @@ export default function MarketplaceExperience({ allowBuying = false }) {
           <input
             value={search}
             onChange={event => setSearch(event.target.value)}
-            placeholder="Search wool, state or producer"
+            placeholder={t('searchWoolStateProducer', 'Search wool, state or producer')}
           />
         </div>
         <div className="filter-row">
-          <span><Filter size={15} /> Filter</span>
+          <span><Filter size={15} /> {t('filter', 'Filter')}</span>
           <select value={state} onChange={event => setState(event.target.value)}>
-            <option value="">All states</option>
+            <option value="">{t('allStates', 'All states')}</option>
             {INDIAN_STATES.map(item => <option key={item.code} value={item.name}>{item.name}</option>)}
           </select>
           <select value={woolType} onChange={event => setWoolType(event.target.value)}>
-            <option value="">All wool types</option>
+            <option value="">{t('allWoolTypes', 'All wool types')}</option>
             {WOOL_TYPES.map(item => <option key={item} value={item}>{item}</option>)}
           </select>
         </div>
@@ -67,8 +69,8 @@ export default function MarketplaceExperience({ allowBuying = false }) {
       <section className="mt-7">
         <div className="section-heading">
           <div>
-            <p className="eyebrow text-primary"><ShoppingBag size={14} /> Available today</p>
-            <h2>{loading ? 'Finding the best lots…' : `${listings.length} wool lots available`}</h2>
+            <p className="eyebrow text-primary"><ShoppingBag size={14} /> {t('availableToday', 'Available today')}</p>
+            <h2>{loading ? t('findingBestLots', 'Finding the best lots…') : `${listings.length} ${t('lotsAvailable', 'wool lots available')}`}</h2>
           </div>
         </div>
 
@@ -79,8 +81,8 @@ export default function MarketplaceExperience({ allowBuying = false }) {
         ) : listings.length === 0 ? (
           <Card className="empty-state">
             <Search size={28} />
-            <h3>No wool lots found</h3>
-            <p>Try a different search or remove a filter to discover more lots.</p>
+            <h3>{t('noListingsFound', 'No listings found.')}</h3>
+            <p>{t('noListingsMatchFilters', 'Try a different search or remove a filter to discover more lots.')}</p>
           </Card>
         ) : (
           <div className="listing-grid">
@@ -95,7 +97,7 @@ export default function MarketplaceExperience({ allowBuying = false }) {
                     src={listing.image_url || 'https://images.unsplash.com/photo-1516467508483-a7212febe31a?w=800&auto=format&fit=crop&q=70'}
                     alt={listing.wool_type}
                   />
-                  <span>{listing.quantity_kg} kg available</span>
+                  <span>{listing.quantity_kg} kg {t('available', 'available')}</span>
                   {allowBuying && (
                     <button onClick={(e) => { e.stopPropagation(); /* saved wool logic */ }} className="absolute top-2 right-2 p-2 rounded-full bg-white/50 hover:bg-white text-textPrimary shadow-sm transition-colors">
                       <Bookmark size={16} />
@@ -105,18 +107,18 @@ export default function MarketplaceExperience({ allowBuying = false }) {
                 <div className="pt-4">
                   <div className="flex items-start justify-between gap-3">
                     <div>
-                      <h3>{listing.wool_type} wool</h3>
+                      <h3>{listing.wool_type} {t('wool', 'wool')}</h3>
                       <p className="listing-location"><MapPin size={13} />{listing.district}, {listing.state}</p>
                     </div>
-                    <strong>₹{listing.price_per_kg}<small>/kg</small></strong>
+                    <strong>₹{listing.price_per_kg}<small>/{t('kg', 'kg')}</small></strong>
                   </div>
                   <div className="mt-3 text-xs text-textSecondary flex justify-between items-center">
-                    <span>From {listing.seller_name || 'a verified producer'}</span>
+                    <span>{t('seller', 'Seller')}: {listing.seller_name || t('fromVerifiedProducer', 'a verified producer')}</span>
                   </div>
                   {allowBuying && (
                     <div className="mt-4 pt-3 border-t border-border/50 flex justify-end">
                        <span className="text-primary text-xs font-bold flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-                         View Details <ChevronRight size={14}/>
+                          {t('viewDetails', 'View Details')} <ChevronRight size={14}/>
                        </span>
                     </div>
                   )}

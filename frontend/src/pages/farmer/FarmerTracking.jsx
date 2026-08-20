@@ -16,33 +16,34 @@ import {
   ArrowUpRight,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { useLanguage } from '../../context/LanguageContext';
 import BatchStatusBadge from '../../components/batch/BatchStatusBadge';
 import Button from '../../components/ui/Button';
 import { getBatchesByFarmer } from '../../services/batches.service';
 
-const STATUS_FILTERS = [
-  { id: 'all', label: 'All Batches' },
-  { id: 'listed', label: 'Listed' },
-  { id: 'produced', label: 'Produced' },
-  { id: 'quality_checked', label: 'Graded' },
-  { id: 'stored', label: 'Stored' },
-  { id: 'processed', label: 'Processed' },
-];
-
 export default function FarmerTracking() {
   const { profile } = useAuth();
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const [batches, setBatches] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [search, setSearch] = useState('');
   const [activeFilter, setActiveFilter] = useState('all');
+  const statusFilters = [
+    { id: 'all', label: t('allBatches') },
+    { id: 'listed', label: t('listed') },
+    { id: 'produced', label: t('produced') },
+    { id: 'quality_checked', label: t('graded') },
+    { id: 'stored', label: t('stored') },
+    { id: 'processed', label: t('processed') },
+  ];
 
   useEffect(() => {
     if (!profile?.id) return;
     setLoading(true);
     getBatchesByFarmer(profile.id).then(({ data, error: fetchError }) => {
-      if (fetchError) setError('Could not load your wool batches.');
+      if (fetchError) setError(t('somethingWrongWool'));
       else setBatches(data || []);
       setLoading(false);
     });
@@ -63,13 +64,13 @@ export default function FarmerTracking() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
           <div className="eyebrow text-primary mb-1">
-            <Sparkles size={13} /> Batch Management
+            <Sparkles size={13} /> {t('myWool')}
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-textPrimary">
-            Wool Batch Tracking
+            {t('myWool')}
           </h1>
           <p className="text-xs sm:text-sm text-textSecondary mt-0.5">
-            Monitor end-to-end provenance, grading status, and QR lot passports
+            {t('totalWool')}: {batches.reduce((sum, batch) => sum + Number(batch.quantity_kg || 0), 0).toLocaleString()} kg
           </p>
         </div>
 
@@ -78,7 +79,7 @@ export default function FarmerTracking() {
           className="self-start sm:self-auto inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-white font-bold text-sm shadow-sm hover:bg-primaryDark hover:shadow-md transition-all active:scale-[0.98]"
         >
           <ClipboardPlus size={16} />
-          <span>Record New Batch</span>
+          <span>{t('addNewWool')}</span>
         </button>
       </div>
 
@@ -90,13 +91,13 @@ export default function FarmerTracking() {
             type="text"
             value={search}
             onChange={e => setSearch(e.target.value)}
-            placeholder="Search by lot ID, breed, or district..."
+            placeholder={t('searchWool')}
             className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-border bg-surface text-sm text-textPrimary placeholder:text-textMuted focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
           />
         </div>
 
         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 max-w-full">
-          {STATUS_FILTERS.map(f => (
+          {statusFilters.map(f => (
             <button
               key={f.id}
               onClick={() => setActiveFilter(f.id)}
@@ -126,18 +127,18 @@ export default function FarmerTracking() {
           <span className="grid h-16 w-16 place-items-center rounded-3xl bg-primaryLight text-primary mb-4 shadow-sm">
             <Package size={32} />
           </span>
-          <h3 className="font-bold text-lg text-textPrimary">No wool batches found</h3>
+          <h3 className="font-bold text-lg text-textPrimary">{t('noWoolFound')}</h3>
           <p className="text-xs sm:text-sm text-textSecondary max-w-sm mt-1 mb-6">
             {search || activeFilter !== 'all'
-              ? 'No batches match your search filter criteria.'
-              : 'Add your first wool batch to generate a verifiable digital passport and track it from farm to fabric.'}
+              ? t('noWoolSearch')
+              : t('noWoolHelp')}
           </p>
           <button
             onClick={() => navigate('/batches/add')}
             className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-primary text-white font-bold text-sm shadow hover:bg-primaryDark transition-all"
           >
             <ClipboardPlus size={16} />
-            <span>Record First Batch</span>
+            <span>{t('recordFirstBatch')}</span>
           </button>
         </div>
       ) : (
@@ -167,14 +168,14 @@ export default function FarmerTracking() {
 
                 <div className="grid grid-cols-2 gap-2 my-3 p-3 rounded-2xl bg-background border border-border/60 text-xs">
                   <div>
-                    <span className="text-[10px] uppercase font-bold text-textMuted block">Origin</span>
+                    <span className="text-[10px] uppercase font-bold text-textMuted block">{t('origin')}</span>
                     <span className="font-semibold text-textPrimary flex items-center gap-1 mt-0.5 truncate">
                       <MapPin size={11} className="text-primary shrink-0" />
                       {batch.district || 'Bikaner'}, {batch.state || 'Rajasthan'}
                     </span>
                   </div>
                   <div>
-                    <span className="text-[10px] uppercase font-bold text-textMuted block">Sheared Date</span>
+                    <span className="text-[10px] uppercase font-bold text-textMuted block">{t('shearingDate')}</span>
                     <span className="font-semibold text-textPrimary flex items-center gap-1 mt-0.5 truncate">
                       <Calendar size={11} className="text-textMuted shrink-0" />
                       {batch.shearing_date ? new Date(batch.shearing_date).toLocaleDateString() : 'Recent Clip'}
@@ -190,13 +191,13 @@ export default function FarmerTracking() {
                     onClick={() => navigate(`/batches/${batch.id || batch._id}/qr`)}
                     className="px-3 py-1.5 rounded-lg bg-background border border-border text-textSecondary hover:border-primary hover:text-primary transition-colors flex items-center gap-1"
                   >
-                    <QrCode size={13} /> QR
+                    <QrCode size={13} /> {t('qr')}
                   </button>
                   <button
                     onClick={() => navigate(`/batches/${batch.id || batch._id}/traceability`)}
                     className="px-3 py-1.5 rounded-lg bg-background border border-border text-textSecondary hover:border-primary hover:text-primary transition-colors flex items-center gap-1"
                   >
-                    <Layers size={13} /> Timeline
+                    <Layers size={13} /> {t('woolJourney')}
                   </button>
                 </div>
 
@@ -204,7 +205,7 @@ export default function FarmerTracking() {
                   onClick={() => navigate(`/batches/${batch.id || batch._id}/details`)}
                   className="text-primary hover:text-primaryDark font-bold inline-flex items-center gap-1 group"
                 >
-                  <span>Details</span>
+                  <span>{t('seeWool')}</span>
                   <ArrowRight size={14} className="transition-transform group-hover:translate-x-0.5" />
                 </button>
               </div>

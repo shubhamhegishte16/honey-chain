@@ -17,6 +17,7 @@ import {
   RefreshCw,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { useLanguage } from '../../context/LanguageContext';
 import Card from '../../components/ui/Card';
 import BatchStatusBadge from '../../components/batch/BatchStatusBadge';
 import { getBatchesByFarmer, getTotalInventory } from '../../services/batches.service';
@@ -24,6 +25,7 @@ import { getAllStatePrices } from '../../services/market.service';
 
 export default function FarmerDashboard() {
   const { profile } = useAuth();
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const [inventory, setInventory] = useState(null);
   const [price, setPrice] = useState(null);
@@ -107,13 +109,13 @@ export default function FarmerDashboard() {
           <div className="max-w-xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-emerald-200 border border-white/15 text-xs font-semibold backdrop-blur-md mb-3">
               <Sparkles size={13} className="text-amber-300" />
-              <span>Pastoralist Producer Portal</span>
+              <span>WOOLCONNECT</span>
             </div>
 
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight leading-tight">
-              Namaste, {profile?.name?.split(' ')[0] || 'Farmer'}. <br />
+              {t('namaste')}, {profile?.name?.split(' ')[0] || t('farmerFallback')}. <br />
               <span className="text-emerald-200 font-medium text-xl sm:text-2xl lg:text-3xl">
-                Track your clips, maximize your returns.
+                {t('whatToDo')}
               </span>
             </h1>
 
@@ -135,14 +137,14 @@ export default function FarmerDashboard() {
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 rounded-2xl bg-white text-primary font-bold text-sm shadow-md hover:bg-emerald-50 hover:shadow-lg transition-all duration-200 active:scale-[0.98]"
             >
               <ClipboardPlus size={17} />
-              <span>Add Wool Batch</span>
+              <span>{t('addNewWool')}</span>
             </button>
 
             <button
               onClick={() => navigate('/farmer/tracking')}
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-white/10 border border-white/20 text-white font-semibold text-sm backdrop-blur hover:bg-white/20 transition-all"
             >
-              <span>View Tracking</span>
+              <span>{t('myWool')}</span>
               <ArrowRight size={15} />
             </button>
           </div>
@@ -163,7 +165,7 @@ export default function FarmerDashboard() {
           </div>
 
           <div className="mt-4">
-            <p className="text-xs font-bold uppercase tracking-wider text-textMuted">Available Inventory</p>
+            <p className="text-xs font-bold uppercase tracking-wider text-textMuted">{t('totalWool')}</p>
             <p className="text-3xl font-extrabold text-textPrimary mt-1 tracking-tight">
               {inventory !== null ? `${inventory.toLocaleString()} kg` : '0 kg'}
             </p>
@@ -194,7 +196,7 @@ export default function FarmerDashboard() {
           </div>
 
           <div className="mt-4">
-            <p className="text-xs font-bold uppercase tracking-wider text-textMuted">Local Mandi Rate</p>
+            <p className="text-xs font-bold uppercase tracking-wider text-textMuted">{t('todaysPrice')}</p>
             <p className="text-3xl font-extrabold text-textPrimary mt-1 tracking-tight">
               {price ? `₹${price.price_per_kg}` : '₹310'}<span className="text-base font-semibold text-textSecondary">/kg</span>
             </p>
@@ -216,15 +218,15 @@ export default function FarmerDashboard() {
           </div>
 
           <div className="mt-4">
-            <p className="text-xs font-bold uppercase tracking-wider text-textMuted">QR Passport Status</p>
+            <p className="text-xs font-bold uppercase tracking-wider text-textMuted">{t('qrPassportStatus')}</p>
             <p className="text-2xl font-bold text-textPrimary mt-1 tracking-tight">
-              {recentBatches.length} {recentBatches.length === 1 ? 'Batch' : 'Batches'} Tagged
+              {recentBatches.length} {t('batchesTagged')}
             </p>
             <Link
               to="/farmer/tracking"
               className="text-xs font-bold text-primary hover:text-primaryDark mt-2 inline-flex items-center gap-1 group"
             >
-              <span>View all passports</span>
+              <span>{t('viewAllPassports')}</span>
               <ChevronRight size={14} className="transition-transform group-hover:translate-x-0.5" />
             </Link>
           </div>
@@ -236,7 +238,7 @@ export default function FarmerDashboard() {
         <div className="section-heading mb-4">
           <div>
             <p className="eyebrow text-primary"><Sparkles size={13} /> Quick Tools</p>
-            <h2 className="text-xl font-bold text-textPrimary">What would you like to do?</h2>
+            <h2 className="text-xl font-bold text-textPrimary">{t('whatToDo')}</h2>
           </div>
         </div>
 
@@ -270,10 +272,10 @@ export default function FarmerDashboard() {
         <div className="section-heading mb-4">
           <div>
             <p className="eyebrow text-primary"><Layers size={13} /> Harvest Ledger</p>
-            <h2 className="text-xl font-bold text-textPrimary">Recent Wool Batches</h2>
+            <h2 className="text-xl font-bold text-textPrimary">{t('myWool')}</h2>
           </div>
           <Link to="/farmer/tracking" className="text-link">
-            <span>View All Batches</span>
+            <span>{t('viewWool')}</span>
             <ArrowRight size={14} />
           </Link>
         </div>
@@ -287,16 +289,16 @@ export default function FarmerDashboard() {
             <span className="grid h-14 w-14 place-items-center rounded-3xl bg-primaryLight text-primary mb-3">
               <Package size={28} />
             </span>
-            <h3 className="font-bold text-base text-textPrimary">No wool batches recorded yet</h3>
+            <h3 className="font-bold text-base text-textPrimary">{t('noWoolYet')}</h3>
             <p className="text-xs sm:text-sm text-textSecondary max-w-sm mt-1 mb-5">
-              Record your seasonal shearing lot to generate its tamper-evident QR passport and link with buyers.
+              {t('noWoolHelp')}
             </p>
             <button
               onClick={() => navigate('/batches/add')}
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-white font-bold text-xs shadow hover:bg-primaryDark transition-all"
             >
               <ClipboardPlus size={15} />
-              <span>Record First Batch</span>
+              <span>{t('recordFirstBatch')}</span>
             </button>
           </div>
         ) : (

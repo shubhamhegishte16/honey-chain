@@ -18,6 +18,7 @@ import Button from '../../components/ui/Button';
 import BatchStatusBadge from '../../components/batch/BatchStatusBadge';
 import { getBatchById } from '../../services/batches.service';
 import { getTrackingEvents } from '../../services/tracking.service';
+import { useLanguage } from '../../context/LanguageContext';
 
 const EVENT_CONFIG = {
   produced: {
@@ -77,6 +78,7 @@ const EVENT_CONFIG = {
 };
 
 export default function BatchTraceability() {
+  const { t } = useLanguage();
   const { id } = useParams();
   const navigate = useNavigate();
   const [batch, setBatch] = useState(null);
@@ -113,11 +115,11 @@ export default function BatchTraceability() {
           className="inline-flex items-center gap-1.5 text-xs font-semibold text-textSecondary hover:text-primary transition-colors group"
         >
           <ArrowLeft size={15} className="transition-transform group-hover:-translate-x-0.5" />
-          <span>Back to Batch Details</span>
+          <span>{t('backToPassport')}</span>
         </Link>
 
         <span className="text-xs text-primary font-bold flex items-center gap-1">
-          <ShieldCheck size={14} /> Cryptographic Proof
+          <ShieldCheck size={14} /> {t('verified')}
         </span>
       </div>
 
@@ -126,10 +128,10 @@ export default function BatchTraceability() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-border/70 mb-8">
           <div>
             <div className="eyebrow text-primary mb-1">
-              <Layers size={13} /> Provenance Ledger
+              <Layers size={13} /> {t('woolJourney')}
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold text-textPrimary">
-              Batch Traceability Timeline
+              {t('traceabilityTimeline')}
             </h1>
             {batch && (
               <p className="text-xs sm:text-sm text-textSecondary mt-0.5">
@@ -147,7 +149,7 @@ export default function BatchTraceability() {
           </div>
         ) : events.length === 0 ? (
           <div className="p-8 text-center bg-background rounded-2xl border border-border text-textSecondary text-sm">
-            No traceability events recorded yet for this batch.
+            {t('pending')}
           </div>
         ) : (
           <div className="relative pl-6 sm:pl-8 space-y-8 before:absolute before:left-[11px] sm:before:left-[15px] before:top-3 before:bottom-3 before:w-0.5 before:bg-gradient-to-b before:from-primary before:via-border before:to-border">

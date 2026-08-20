@@ -18,10 +18,12 @@ import Input from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
 import { signIn } from '../../services/auth.service';
 import { useAuth } from '../../context/AuthContext';
+import { useLanguage } from '../../context/LanguageContext';
 
 export default function Login() {
   const navigate = useNavigate();
   const { setProfileAfterAuth } = useAuth();
+  const { t } = useLanguage();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -33,14 +35,14 @@ export default function Login() {
     e.preventDefault();
     setError('');
     if (!email.trim() || !password) {
-      setError('Please enter your email and password.');
+      setError(t('pleaseEnterEmailPass', 'Please enter your email and password.'));
       return;
     }
     setLoading(true);
     const { data, error: signInError } = await signIn({ email, password });
     if (signInError) {
       setLoading(false);
-      setError(signInError.message || 'Login failed. Please check your credentials.');
+      setError(signInError.message || t('loginFailedCheck', 'Login failed. Please check your credentials.'));
       return;
     }
     await setProfileAfterAuth(data.user);
@@ -63,7 +65,7 @@ export default function Login() {
               className="inline-flex items-center gap-2 text-white/90 hover:text-white text-xs font-semibold uppercase tracking-wider mb-8 transition-colors group"
             >
               <ArrowLeft size={15} className="transition-transform group-hover:-translate-x-1" />
-              Back to WoolConnect Home
+              {t('backToWoolConnectHome', 'Back to WoolConnect Home')}
             </Link>
 
             <div className="flex items-center gap-3">
@@ -72,7 +74,7 @@ export default function Login() {
               </span>
               <div>
                 <span className="text-2xl font-bold tracking-tight text-white block">WoolConnect</span>
-                <span className="text-xs font-medium text-emerald-200">India's Wool Traceability Network</span>
+                <span className="text-xs font-medium text-emerald-200">{t('indiasWoolTraceabilityNetwork', "India's Wool Traceability Network")}</span>
               </div>
             </div>
           </div>
@@ -80,30 +82,30 @@ export default function Login() {
           <div className="relative z-10 my-auto py-8">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 text-emerald-200 text-xs font-semibold backdrop-blur-md mb-5 border border-white/15">
               <Sparkles size={14} className="text-amber-300" />
-              Verified Pastoralist & Buyer Marketplace
+              {t('verifiedPastoralistMarketplace', 'Verified Pastoralist & Buyer Marketplace')}
             </div>
 
             <h2 className="text-3xl xl:text-4xl font-bold tracking-tight text-white leading-tight">
-              Fair value for every fleece, <br />
-              <span className="text-emerald-200">full provenance for every thread.</span>
+              {t('fairValueEveryFleece', 'Fair value for every fleece,')} <br />
+              <span className="text-emerald-200">{t('fullProvenanceEveryThread', 'full provenance for every thread.')}</span>
             </h2>
 
             <p className="mt-4 text-white/80 text-sm xl:text-base leading-relaxed max-w-md">
-              Connect directly with verified pastoralists, track lots with QR-verified digital passports, and stay ahead with real-time APMC mandi intelligence.
+              {t('connectDirectlyPastoralists', 'Connect directly with verified pastoralists, track lots with QR-verified digital passports, and stay ahead with real-time APMC mandi intelligence.')}
             </p>
 
             <div className="mt-8 grid grid-cols-2 gap-3 max-w-md">
               <div className="p-3.5 rounded-2xl bg-white/10 border border-white/15 backdrop-blur-sm">
                 <div className="flex items-center gap-2 text-emerald-300 font-semibold text-xs mb-1">
-                  <QrCode size={16} /> QR Traceability
+                  <QrCode size={16} /> {t('qrTraceability', 'QR Traceability')}
                 </div>
-                <p className="text-xs text-white/75">From sheep shearing flock to finished textiles.</p>
+                <p className="text-xs text-white/75">{t('fromSheepShearing', 'From sheep shearing flock to finished textiles.')}</p>
               </div>
               <div className="p-3.5 rounded-2xl bg-white/10 border border-white/15 backdrop-blur-sm">
                 <div className="flex items-center gap-2 text-amber-300 font-semibold text-xs mb-1">
-                  <TrendingUp size={16} /> Mandi Rates
+                  <TrendingUp size={16} /> {t('mandiRates', 'Mandi Rates')}
                 </div>
-                <p className="text-xs text-white/75">Live market prices across 8 major Indian states.</p>
+                <p className="text-xs text-white/75">{t('liveMarketPrices', 'Live market prices across 8 major Indian states.')}</p>
               </div>
             </div>
           </div>
@@ -111,11 +113,11 @@ export default function Login() {
           <div className="relative z-10 pt-6 border-t border-white/15 flex items-center justify-between text-xs text-white/75">
             <div className="flex items-center gap-2">
               <ShieldCheck size={16} className="text-emerald-300 shrink-0" />
-              <span>Government & APMC standard aligned</span>
+              <span>{t('govApmcAligned', 'Government & APMC standard aligned')}</span>
             </div>
             <div className="flex items-center gap-1 font-semibold text-white">
               <Award size={15} className="text-amber-300" />
-              <span>ISO 9001 Compliant</span>
+              <span>{t('isoCertified', 'ISO 9001 Compliant')}</span>
             </div>
           </div>
         </div>
@@ -134,24 +136,24 @@ export default function Login() {
               to="/"
               className="text-xs font-semibold text-textSecondary hover:text-primary flex items-center gap-1"
             >
-              <ArrowLeft size={14} /> Back Home
+              <ArrowLeft size={14} /> {t('backHome', 'Back Home')}
             </Link>
           </div>
 
           <div className="w-full max-w-md">
             <div className="mb-6">
               <div className="inline-flex lg:hidden items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-primary bg-primaryLight px-2.5 py-1 rounded-full mb-3">
-                <Sparkles size={12} /> Indian Wool Network
+                <Sparkles size={12} /> {t('indianWoolNetwork', 'Indian Wool Network')}
               </div>
-              <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-textPrimary">Sign In</h1>
+              <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-textPrimary">{t('signIn', 'Sign In')}</h1>
               <p className="text-sm text-textSecondary mt-1">
-                Access your batches, mandi prices, and wool orders
+                {t('accessBatchesPrices', 'Access your batches, mandi prices, and wool orders')}
               </p>
             </div>
 
             <form onSubmit={handleLogin} noValidate>
               <Input
-                label="Email Address"
+                label={t('emailAddress', 'Email Address')}
                 type="email"
                 id="email"
                 name="email"
@@ -164,14 +166,14 @@ export default function Login() {
               />
 
               <Input
-                label="Password"
+                label={t('password', 'Password')}
                 type={showPassword ? 'text' : 'password'}
                 id="password"
                 name="password"
                 icon={Lock}
                 value={password}
                 onChange={e => setPassword(e.target.value)}
-                placeholder="Enter your password"
+                placeholder={t('enterPassword', 'Enter your password')}
                 autoComplete="current-password"
                 required
                 rightElement={
@@ -179,7 +181,7 @@ export default function Login() {
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
                     className="text-textMuted hover:text-textPrimary p-1 transition-colors focus:outline-none"
-                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                    aria-label={showPassword ? t('hidePassword', 'Hide password') : t('showPassword', 'Show password')}
                   >
                     {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                   </button>
@@ -195,13 +197,13 @@ export default function Login() {
                     onChange={e => setRememberMe(e.target.checked)}
                     className="rounded border-border text-primary focus:ring-primary h-4 w-4 rounded-md cursor-pointer accent-primary"
                   />
-                  Remember me
+                  {t('rememberMe', 'Remember me')}
                 </label>
                 <Link
                   to="/forgot-password"
                   className="text-primary hover:text-primaryDark font-semibold transition-colors whitespace-nowrap"
                 >
-                  Forgot password?
+                  {t('forgotPassword', 'Forgot password?')}
                 </Link>
               </div>
 
@@ -226,7 +228,7 @@ export default function Login() {
               )}
 
               <Button
-                title="Sign In to Dashboard"
+                title={t('signInToDashboard', 'Sign In to Dashboard')}
                 type="submit"
                 loading={loading}
                 icon={ArrowRight}
@@ -236,12 +238,12 @@ export default function Login() {
 
               <div className="text-center mt-6 pt-5 border-t border-border/60">
                 <p className="text-sm text-textSecondary">
-                  New to WoolConnect?{' '}
+                  {t('newToWoolConnect', 'New to WoolConnect?')}{' '}
                   <Link
                     to="/register"
                     className="font-bold text-primary hover:text-primaryDark transition-colors inline-flex items-center gap-1 group"
                   >
-                    Create an account
+                    {t('createAccount', 'Create an account')}
                     <ArrowRight size={14} className="transition-transform group-hover:translate-x-0.5" />
                   </Link>
                 </p>
@@ -250,7 +252,7 @@ export default function Login() {
           </div>
 
           <p className="mt-8 text-center text-xs text-textMuted max-w-sm px-2">
-            Secure, encrypted authentication aligned with Ministry of Textiles & APMC guidelines.
+            {t('secureEncryptedAuth', 'Secure, encrypted authentication aligned with Ministry of Textiles & APMC guidelines.')}
           </p>
         </div>
       </div>
