@@ -171,14 +171,14 @@ export default function FarmerTracking() {
                     <span className="text-[10px] uppercase font-bold text-textMuted block">{t('origin')}</span>
                     <span className="font-semibold text-textPrimary flex items-center gap-1 mt-0.5 truncate">
                       <MapPin size={11} className="text-primary shrink-0" />
-                      {batch.district || 'Bikaner'}, {batch.state || 'Rajasthan'}
+                      {batch.district || t('bikaner')}, {batch.state || t('rajasthan')}
                     </span>
                   </div>
                   <div>
                     <span className="text-[10px] uppercase font-bold text-textMuted block">{t('shearingDate')}</span>
                     <span className="font-semibold text-textPrimary flex items-center gap-1 mt-0.5 truncate">
                       <Calendar size={11} className="text-textMuted shrink-0" />
-                      {batch.shearing_date ? new Date(batch.shearing_date).toLocaleDateString() : 'Recent Clip'}
+                      {batch.shearing_date ? new Date(batch.shearing_date).toLocaleDateString() : t('recentClip')}
                     </span>
                   </div>
                 </div>

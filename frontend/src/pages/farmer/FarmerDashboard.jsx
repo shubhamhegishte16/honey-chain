@@ -65,32 +65,32 @@ export default function FarmerDashboard() {
 
   const quickActions = [
     {
-      label: 'Record New Batch',
-      desc: 'Mint fresh wool lot & QR code',
+      label: t('recordNewBatch'),
+      desc: t('mintFreshWoolLot'),
       icon: ClipboardPlus,
       route: '/batches/add',
       tone: 'bg-primary text-white',
       accent: 'border-primary/30 hover:border-primary',
     },
     {
-      label: 'Sell in Marketplace',
-      desc: 'List lots for verified buyers & mills',
+      label: t('sellInMarketplaceLabel'),
+      desc: t('listLotsForVerified'),
       icon: Store,
       route: '/farmer/marketplace',
       tone: 'bg-accent text-white',
       accent: 'border-accent/30 hover:border-accent',
     },
     {
-      label: 'Trace Batches',
-      desc: 'Track scouring & delivery stages',
+      label: t('traceBatchesLabel'),
+      desc: t('trackScouringDelivery'),
       icon: Package,
       route: '/farmer/tracking',
       tone: 'bg-info text-white',
       accent: 'border-info/30 hover:border-info',
     },
     {
-      label: 'Mandi Rates',
-      desc: 'Live state prices & trends',
+      label: t('mandiRatesLabel'),
+      desc: t('liveStatePrices'),
       icon: TrendingUp,
       route: '/farmer/market',
       tone: 'bg-emerald-600 text-white',
@@ -109,7 +109,7 @@ export default function FarmerDashboard() {
           <div className="max-w-xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-emerald-200 border border-white/15 text-xs font-semibold backdrop-blur-md mb-3">
               <Sparkles size={13} className="text-amber-300" />
-              <span>WOOLCONNECT</span>
+              <span>{t('woolconnectSparkles')}</span>
             </div>
 
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight leading-tight">
@@ -121,11 +121,11 @@ export default function FarmerDashboard() {
 
             <p className="mt-2.5 flex items-center gap-1.5 text-xs sm:text-sm text-white/80">
               <MapPin size={14} className="text-emerald-300" />
-              <span>{profile?.district || 'Bikaner'}, {profile?.state || 'Rajasthan'}</span>
+              <span>{profile?.district || t('bikaner')}, {profile?.state || t('rajasthan')}</span>
               {profile?.flockSize ? (
                 <>
                   <span className="mx-1 opacity-40">•</span>
-                  <span>Flock Size: {profile.flockSize} Sheep</span>
+                  <span>{t('flockSizeLabel')}: {profile.flockSize} {t('sheepCount')}</span>
                 </>
               ) : null}
             </p>
@@ -160,7 +160,7 @@ export default function FarmerDashboard() {
               <Package size={22} />
             </span>
             <span className="text-[11px] font-bold text-primary bg-primaryLight/60 px-2.5 py-1 rounded-full uppercase tracking-wider">
-              On-Farm
+              {t('onFarm')}
             </span>
           </div>
 
@@ -170,7 +170,7 @@ export default function FarmerDashboard() {
               {inventory !== null ? `${inventory.toLocaleString()} kg` : '0 kg'}
             </p>
             <p className="text-xs text-textSecondary mt-1.5 flex items-center gap-1">
-              <span>Across active recorded batches</span>
+              <span>{t('acrossActiveBatches')}</span>
             </p>
           </div>
         </div>
@@ -213,7 +213,7 @@ export default function FarmerDashboard() {
               <QrCode size={22} />
             </span>
             <span className="text-[11px] font-bold text-sky-700 bg-sky-50 px-2.5 py-1 rounded-full uppercase tracking-wider">
-              100% Verified
+              {t('hundredPercentVerified')}
             </span>
           </div>
 
@@ -237,7 +237,7 @@ export default function FarmerDashboard() {
       <section className="mt-10 animate-enter delay-2">
         <div className="section-heading mb-4">
           <div>
-            <p className="eyebrow text-primary"><Sparkles size={13} /> Quick Tools</p>
+            <p className="eyebrow text-primary"><Sparkles size={13} /> {t('quickTools')}</p>
             <h2 className="text-xl font-bold text-textPrimary">{t('whatToDo')}</h2>
           </div>
         </div>
@@ -271,7 +271,7 @@ export default function FarmerDashboard() {
       <section className="mt-12 animate-enter delay-3">
         <div className="section-heading mb-4">
           <div>
-            <p className="eyebrow text-primary"><Layers size={13} /> Harvest Ledger</p>
+            <p className="eyebrow text-primary"><Layers size={13} /> {t('harvestLedger')}</p>
             <h2 className="text-xl font-bold text-textPrimary">{t('myWool')}</h2>
           </div>
           <Link to="/farmer/tracking" className="text-link">
@@ -331,7 +331,7 @@ export default function FarmerDashboard() {
                     <MapPin size={12} /> {batch.district}, {batch.state}
                   </span>
                   <span className="font-bold text-primary inline-flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
-                    Details <ArrowUpRight size={14} />
+                    {t('detailsArrow')} <ArrowUpRight size={14} />
                   </span>
                 </div>
               </div>

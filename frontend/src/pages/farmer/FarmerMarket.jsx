@@ -172,7 +172,7 @@ export default function FarmerMarket() {
                       )}
                       <span>
                         {Number(selected.change_percent || 0) >= 0 ? '+' : ''}
-                        {selected.change_percent}% (14-day trend)
+                        {selected.change_percent}% {t('fourteenDayTrend')}
                       </span>
                     </span>
                     <span className="text-xs text-textMuted">{t('change')}: {selected.change_percent}%</span>
@@ -263,7 +263,7 @@ export default function FarmerMarket() {
                       <span className="text-xs text-textSecondary"> /kg</span>
                     </div>
                     <span className="text-xs font-bold text-primary inline-flex items-center gap-0.5">
-                      View details →
+                      {t('viewDetailsArrow')}
                     </span>
                   </div>
                 </div>
