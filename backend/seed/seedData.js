@@ -886,7 +886,7 @@ Turn stacked wool sacks fortnightly to prevent core temperature build-up and swe
         ],
         tags: ['Storage', 'Monsoon', 'Warehousing'],
         views: 198,
-        youtubeUrl: null,
+        youtubeUrl: 'https://www.youtube.com/watch?v=ZrcRCIPuoKY',
       },
       {
         title: 'Wool Scouring, Carding, & Processing Basics',
@@ -926,7 +926,7 @@ Premordant with 10% weight of fibre potassium alum to lock natural pigments and 
         ],
         tags: ['Dyeing', 'Artisan', 'Natural Colors'],
         views: 180,
-        youtubeUrl: null,
+        youtubeUrl: 'https://www.youtube.com/watch?v=GKuRnyD5q6k',
       },
       {
         title: 'Maximizing Direct-to-Buyer Revenue on Digital Marketplaces',
@@ -946,7 +946,7 @@ Always state exact quantity, provide high-resolution natural light photos, and l
         ],
         tags: ['Marketplace', 'Direct Selling', 'Farmer Profit'],
         views: 420,
-        youtubeUrl: null,
+        youtubeUrl: 'https://youtu.be/aQs3p0zV6gE',
       }
     ]);
 
