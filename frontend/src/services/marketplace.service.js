@@ -12,18 +12,30 @@ const normalizeListing = (listing = {}) => ({
 
 export async function getListings({ state, woolType, search } = {}) {
   const query = new URLSearchParams();
+
   if (state) query.append('state', state);
   if (woolType) query.append('woolType', woolType);
   if (search) query.append('search', search);
-  const result = await apiRequest(`/marketplace?${query.toString()}`, { method: 'GET' });
-  return result.error ? result : { ...result, data: (result.data || []).map(normalizeListing) };
+
+  const result = await apiRequest(
+    `/marketplace/listings?${query.toString()}`,
+    { method: 'GET' }
+  );
+
+  return result.error
+    ? result
+    : {
+        ...result,
+        data: (result.data || []).map(normalizeListing),
+      };
 }
 
 export async function placeOrder({ listingId }) {
-  // The authenticated user is the buyer. Start with a single-kg order so the
-  // marketplace action is valid even before a dedicated checkout screen exists.
   return await apiRequest('/orders', {
     method: 'POST',
-    body: JSON.stringify({ listingId, quantityKg: 1 }),
+    body: JSON.stringify({
+      listingId,
+      quantityKg: 1,
+    }),
   });
 }
