@@ -1,19 +1,29 @@
-import React, { useEffect, useState } from 'react';
-import { getActiveProcessing } from '../../services/processor.service';
-import { Activity, ArrowDown, Settings } from 'lucide-react';
+import React, { useEffect, useState, useCallback } from 'react';
+import { getActiveProcessing, updateProcessingRequestStatus } from '../../services/processor.service';
+import { Activity, ArrowDown, Settings, CheckCircle } from 'lucide-react';
 
 export default function ActiveProcessing() {
   const [batches, setBatches] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [actionLoading, setActionLoading] = useState({});
 
-  useEffect(() => {
-    async function load() {
-      const res = await getActiveProcessing();
-      if (!res.error) setBatches(res.data);
-      setLoading(false);
-    }
-    load();
+  const load = useCallback(async () => {
+    setLoading(true);
+    const res = await getActiveProcessing();
+    if (!res.error) setBatches(res.data);
+    setLoading(false);
   }, []);
+
+  useEffect(() => { load(); }, [load]);
+
+  const handleComplete = async (requestId) => {
+    setActionLoading(prev => ({ ...prev, [requestId]: true }));
+    const res = await updateProcessingRequestStatus(requestId, 'completed');
+    if (!res.error) {
+      setBatches(prev => prev.filter(b => b.id !== requestId));
+    }
+    setActionLoading(prev => ({ ...prev, [requestId]: false }));
+  };
 
   return (
     <main className="page-shell">
@@ -31,8 +41,10 @@ export default function ActiveProcessing() {
             <div key={batch.id} className="p-6 rounded-3xl bg-surface border border-border shadow-sm">
               <div className="flex justify-between items-start mb-6">
                 <div>
-                  <h2 className="text-xl font-bold text-textPrimary">Batch {batch.id}</h2>
-                  <p className="text-sm text-textSecondary mt-1">Starting Qty: {batch.originalQuantity} kg • Current Qty: {batch.quantity} kg</p>
+                  <h2 className="text-xl font-bold text-textPrimary">Batch {batch.batchIdDisplay}</h2>
+                  <p className="text-sm text-textSecondary mt-1">
+                    {batch.woolType} · {batch.quantity} kg · Farmer: {batch.farmerName}
+                  </p>
                 </div>
                 <span className="px-3 py-1 bg-primaryLight text-primary text-xs font-bold uppercase rounded-md flex items-center gap-1">
                   <Settings size={14}/> {batch.stage}
@@ -50,7 +62,7 @@ export default function ActiveProcessing() {
                     <React.Fragment key={stage}>
                       <div className="flex-1 min-w-0 flex flex-col items-center relative">
                         <div className={`grid h-10 w-10 place-items-center rounded-full border-2 z-10 ${status === 'completed' ? 'bg-emerald-500 border-emerald-500 text-white' : status === 'active' ? 'bg-primary border-primary text-white ring-4 ring-primaryLight' : 'bg-surface border-border text-textMuted'}`}>
-                          <span className="text-xs font-bold">{i + 1}</span>
+                          {status === 'completed' ? <CheckCircle size={18} /> : <span className="text-xs font-bold">{i + 1}</span>}
                         </div>
                         <p className={`mt-2 text-xs font-bold text-center ${status === 'completed' ? 'text-emerald-700' : status === 'active' ? 'text-primary' : 'text-textMuted'}`}>{stage}</p>
                         {hist && hist.out && (
@@ -66,31 +78,26 @@ export default function ActiveProcessing() {
                 })}
               </div>
 
-              {/* Active Stage Form */}
-              {batch.history.find(h => h.status === 'active') && (
-                <div className="mt-6 p-5 rounded-2xl bg-primaryLight/30 border border-primary/20">
-                  <h3 className="font-bold text-sm text-primary mb-4 flex items-center gap-2"><Activity size={16}/> Update Active Stage: {batch.stage}</h3>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-                    <div>
-                      <label className="block text-xs font-semibold text-textSecondary mb-1.5">Input Quantity (kg)</label>
-                      <input type="number" defaultValue={batch.quantity} className="w-full px-3 py-2 bg-surface border border-border rounded-xl text-sm focus:outline-none focus:border-primary" />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-semibold text-textSecondary mb-1.5">Output Quantity (kg)</label>
-                      <input type="number" placeholder="Enter output..." className="w-full px-3 py-2 bg-surface border border-border rounded-xl text-sm focus:outline-none focus:border-primary" />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-semibold text-textSecondary mb-1.5">Operator</label>
-                      <input type="text" placeholder="Operator name..." className="w-full px-3 py-2 bg-surface border border-border rounded-xl text-sm focus:outline-none focus:border-primary" />
-                    </div>
-                    <div className="flex items-end">
-                      <button className="w-full px-4 py-2 bg-primary text-white font-bold text-sm rounded-xl hover:bg-primaryDark transition-colors shadow-sm">
-                        Complete Stage
-                      </button>
-                    </div>
+              {/* Complete Stage Action */}
+              <div className="mt-6 p-5 rounded-2xl bg-primaryLight/30 border border-primary/20">
+                <h3 className="font-bold text-sm text-primary mb-4 flex items-center gap-2"><Activity size={16}/> Mark Service Completed: {batch.stage}</h3>
+                <div className="flex items-center gap-4">
+                  <div className="flex-1">
+                    <p className="text-xs text-textSecondary">
+                      Request ID: <span className="font-semibold">{batch.requestId || batch.id}</span> ·
+                      Farmer: {batch.farmerName} ·
+                      Qty: {batch.quantity} kg
+                    </p>
                   </div>
+                  <button
+                    disabled={!!actionLoading[batch.id]}
+                    onClick={() => handleComplete(batch.id)}
+                    className="px-5 py-2 bg-primary text-white font-bold text-sm rounded-xl hover:bg-primaryDark transition-colors shadow-sm disabled:opacity-60 whitespace-nowrap"
+                  >
+                    {actionLoading[batch.id] ? 'Updating…' : 'Mark Completed'}
+                  </button>
                 </div>
-              )}
+              </div>
             </div>
           ))}
         </div>
@@ -98,3 +105,5 @@ export default function ActiveProcessing() {
     </main>
   );
 }
+
+

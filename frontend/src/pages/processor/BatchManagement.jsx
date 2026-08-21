@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getBatches } from '../../services/processor.service';
-import { Network, Tag } from 'lucide-react';
+import { Network, Tag, MapPin } from 'lucide-react';
 
 export default function BatchManagement() {
   const [batches, setBatches] = useState([]);
@@ -29,9 +29,16 @@ export default function BatchManagement() {
         <div className="grid gap-4">
           {batches.map(batch => (
             <div key={batch.id} className="p-5 rounded-2xl bg-surface border border-border shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-              <div>
-                <p className="font-bold text-sm text-textPrimary flex items-center gap-2"><Tag size={14} className="text-primary"/> {batch.id}</p>
-                <p className="text-xs text-textSecondary mt-1">Grade: {batch.grade} • {batch.qty} kg • Location: {batch.location}</p>
+              <div className="flex-1 min-w-0">
+                <p className="font-bold text-sm text-textPrimary flex items-center gap-2"><Tag size={14} className="text-primary"/> {batch.batchId}</p>
+                <p className="text-xs text-textSecondary mt-1">
+                  {batch.woolType} · Grade: {batch.grade} · {batch.qty} kg
+                </p>
+                <p className="text-[11px] text-textMuted mt-0.5">Farmer: {batch.owner}</p>
+                <p className="text-[11px] text-textMuted mt-0.5 flex items-center gap-1">
+                  <MapPin size={10}/> {batch.location}
+                </p>
+                <p className="text-[11px] text-textMuted mt-0.5">Updated: {batch.date}</p>
                 {batch.children?.length > 0 && (
                   <div className="mt-3 p-3 bg-background rounded-xl border border-border/50">
                     <p className="text-[11px] font-bold text-textMuted uppercase mb-1">Child Batches</p>
@@ -50,3 +57,4 @@ export default function BatchManagement() {
     </main>
   );
 }
+

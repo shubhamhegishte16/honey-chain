@@ -1,80 +1,130 @@
 // src/services/processor.service.js
-// Mock data for Processor Panel frontend development
+import { apiRequest } from './api';
 
-const mockData = {
-  stats: {
-    pendingRequests: 5,
-    incomingBatches: 3,
-    activeProcessing: 4,
-    completedBatches: 28,
-    totalProcessingVolume: 1250,
-    totalProcessedVolume: 8700,
-  },
-  requests: [
-    { id: 'REQ-001', date: '2023-10-24', source: 'Farm Co.', quantity: 150, grade: 'A', status: 'pending' },
-    { id: 'REQ-002', date: '2023-10-23', source: 'Valley Sheep', quantity: 80, grade: 'B', status: 'accepted' },
-  ],
-  incomingBatches: [
-    { id: 'WOL-MH-102', date: '2023-10-25', source: 'Warehouse A', quantity: 120, grade: 'A', status: 'transit' },
-  ],
-  activeProcessing: [
-    {
-      id: 'WOL-MH-001',
-      quantity: 82,
-      originalQuantity: 82,
-      stage: 'Sorting',
-      history: [
-        { stage: 'Washing', in: 82, out: 77, loss: 5, status: 'completed' },
-        { stage: 'Drying', in: 77, out: 75, loss: 2, status: 'completed' },
-        { stage: 'Sorting', in: 75, out: null, loss: null, status: 'active' },
-      ],
-      stages: ['Washing', 'Drying', 'Sorting', 'Carding', 'Spinning', 'Dyeing', 'Completed']
-    }
-  ],
-  history: [
-    { id: 'WOL-MH-099', date: '2023-10-15', originalQty: 100, finalQty: 85, status: 'completed' }
-  ],
-  batches: [
-    { id: 'WOL-MH-001', parent: null, children: ['WOL-MH-001-P01'], qty: 82, grade: 'A', owner: 'Processor', location: 'Facility 1' }
-  ],
-  processed: [
-    { id: 'WOL-MH-001-P01', originalId: 'WOL-MH-001', qty: 70, type: 'Spun Yarn', date: '2023-10-20', status: 'ready' }
-  ]
-};
+// ─── Normalizers ─────────────────────────────────────────────────────────────
+const normalizeRequest = (r = {}) => ({
+  ...r,
+  id: r.id || r._id,
+  // For components that expect flat fields:
+  batchIdDisplay: r.batch?.batchId || r.batchId || '—',
+  woolType: r.batch?.woolType || '—',
+  grade: r.batch?.qualityGrade || '—',
+  quantity: r.quantityKg || 0,
+  farmerName: r.farmer?.name || r.farmerName || '—',
+  processorName: r.processor?.name || r.processorName || '—',
+  date: r.preferredDate ? new Date(r.preferredDate).toLocaleDateString('en-IN') : '—',
+  completedOn: r.completionDate ? new Date(r.completionDate).toLocaleDateString('en-IN') : null,
+});
 
-const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+const normalizeBatch = (b = {}) => ({
+  ...b,
+  id: b.id || b._id,
+  batchId: b.batchId || '—',
+  woolType: b.woolType || '—',
+  grade: b.qualityGrade || '—',
+  quantity: b.quantityKg || 0,
+  originalQuantity: b.quantityKg || 0,
+  farmerName: b.farmer?.name || '—',
+  location: b.currentLocation || '—',
+  date: b.updatedAt ? new Date(b.updatedAt).toLocaleDateString('en-IN') : '—',
+  // Map wool batch status to display-friendly status
+  status: (() => {
+    if (b.status === 'processing_requested') return 'transit';
+    if (b.status === 'in_processing') return 'in_progress';
+    if (b.status === 'processed') return 'completed';
+    return b.status || 'unknown';
+  })(),
+});
 
+// ─── Stats ────────────────────────────────────────────────────────────────────
 export const getProcessorStats = async () => {
-  await delay(500);
-  return { error: false, data: mockData.stats };
+  return apiRequest('/processing/stats', { method: 'GET' });
 };
 
+// ─── Processing Requests ──────────────────────────────────────────────────────
 export const getProcessingRequests = async () => {
-  await delay(500);
-  return { error: false, data: mockData.requests };
+  const res = await apiRequest('/processing/requests', { method: 'GET' });
+  if (res.error) return res;
+  return { ...res, data: (res.data || []).map(normalizeRequest) };
 };
 
+export const updateProcessingRequestStatus = async (requestId, status, outputNotes = '') => {
+  return apiRequest(`/processing/requests/${requestId}/status`, {
+    method: 'PATCH',
+    body: JSON.stringify({ status, outputNotes }),
+  });
+};
+
+// ─── Incoming Batches ─────────────────────────────────────────────────────────
 export const getIncomingBatches = async () => {
-  await delay(500);
-  return { error: false, data: mockData.incomingBatches };
+  const res = await apiRequest('/processing/incoming', { method: 'GET' });
+  if (res.error) return res;
+  return { ...res, data: (res.data || []).map(normalizeBatch) };
 };
 
+export const markBatchReceived = async (batchMongoId) => {
+  return apiRequest(`/processing/batches/${batchMongoId}/receive`, { method: 'PATCH' });
+};
+
+// ─── Active Processing ────────────────────────────────────────────────────────
 export const getActiveProcessing = async () => {
-  await delay(500);
-  return { error: false, data: mockData.activeProcessing };
+  const res = await apiRequest('/processing/active', { method: 'GET' });
+  if (res.error) return res;
+  // Map ProcessingRequest docs into shape expected by ActiveProcessing.jsx
+  return {
+    ...res,
+    data: (res.data || []).map(r => ({
+      ...normalizeRequest(r),
+      stage: r.serviceType || 'Processing',
+      stages: [r.serviceType || 'Processing', 'Quality Check', 'Packaging', 'Completed'],
+      history: [
+        { stage: r.serviceType || 'Processing', status: 'active', in: r.quantityKg, out: null },
+      ],
+    })),
+  };
 };
 
+// ─── Processing History ───────────────────────────────────────────────────────
 export const getProcessingHistory = async () => {
-  await delay(500);
-  return { error: false, data: mockData.history };
+  const res = await apiRequest('/processing/history', { method: 'GET' });
+  if (res.error) return res;
+  return {
+    ...res,
+    data: (res.data || []).map(r => ({
+      ...normalizeRequest(r),
+      originalQty: r.quantityKg || 0,
+      finalQty: r.quantityKg || 0,
+    })),
+  };
 };
 
-export const getBatches = async () => {
-  await delay(500);
-  return { error: false, data: mockData.batches };
-};
-
+// ─── Processed Products ───────────────────────────────────────────────────────
 export const getProcessedProducts = async () => {
-  await delay(500);
-  return { error: false, data: mockData.processed };
+  const res = await apiRequest('/processing/products', { method: 'GET' });
+  if (res.error) return res;
+  return {
+    ...res,
+    data: (res.data || []).map(b => ({
+      ...normalizeBatch(b),
+      type: b.woolType || '—',
+      qty: b.quantityKg || 0,
+      originalId: b.batchId || '—',
+    })),
+  };
 };
+
+// ─── Batch Management ─────────────────────────────────────────────────────────
+export const getBatches = async () => {
+  const res = await apiRequest('/processing/batches', { method: 'GET' });
+  if (res.error) return res;
+  return {
+    ...res,
+    data: (res.data || []).map(b => ({
+      ...normalizeBatch(b),
+      qty: b.quantityKg || 0,
+      owner: b.farmer?.name || '—',
+      children: [],
+    })),
+  };
+};
+
