@@ -14,7 +14,7 @@ const normalizeBatch = (batch = {}) => ({
 });
 
 export async function getPendingQualityBatches() {
-  const result = await apiRequest('/batches', { method: 'GET' });
+  const result = await apiRequest('/admin/batches', { method: 'GET' });
   if (result.error) return result;
   return { ...result, data: (result.data || []).filter(batch => batch.status === 'produced').map(normalizeBatch) };
 }
