@@ -819,6 +819,41 @@ Supplement grazing with protein-rich mineral blocks and legumes to ensure high q
         tags: ['Sheep Health', 'Disease Prevention', 'Nutrition'],
         views: 185,
         youtubeUrl: 'https://www.youtube.com/watch?v=JYASAHeFRKg',
+        targetProblems: ['poor-quality'],
+        recommendedSeasons: ['monsoon', 'processing'],
+        interests: ['sheep-care'],
+        practicalSteps: [
+          {
+            step: 1,
+            title: "Check the Animal",
+            description: "Observe the sheep regularly and look for visible signs that require attention.",
+            icon: "🔍"
+          },
+          {
+            step: 2,
+            title: "Provide Basic Care",
+            description: "Follow the care practices described in the relevant Sheep Care training resource.",
+            icon: "❤️"
+          },
+          {
+            step: 3,
+            title: "Maintain Clean Conditions",
+            description: "Keep the animal's surroundings clean, dry and suitable.",
+            icon: "🧼"
+          },
+          {
+            step: 4,
+            title: "Follow Feeding Guidance",
+            description: "Use the nutritional feed recommendations and mineral blocks provided by the training material.",
+            icon: "🌿"
+          },
+          {
+            step: 5,
+            title: "Monitor Regularly",
+            description: "Continue checking the animals and follow the recommended vaccination routine.",
+            icon: "📋"
+          }
+        ]
       },
       {
         title: 'Modern Shearing Practices & Sheep Welfare',
@@ -842,6 +877,47 @@ Immediately skirt the belly wool, leg pieces, and heavily soiled tags away from 
         tags: ['Shearing', 'Staple Length', 'Wool Quality'],
         views: 240,
         youtubeUrl: 'https://www.youtube.com/watch?v=N7CpW1mBodc',
+        targetProblems: ['shearing-problem', 'dirty-wool'],
+        recommendedSeasons: ['shearing'],
+        interests: ['shearing', 'wool-quality'],
+        practicalSteps: [
+          {
+            step: 1,
+            title: "Prepare the Area",
+            description: "Prepare a clean and suitable dry area for shearing.",
+            icon: "🧹"
+          },
+          {
+            step: 2,
+            title: "Prepare the Equipment",
+            description: "Check that the shearing equipment is clean and ready before starting.",
+            icon: "✂️"
+          },
+          {
+            step: 3,
+            title: "Prepare the Sheep",
+            description: "Handle and position the sheep safely before shearing.",
+            icon: "🐑"
+          },
+          {
+            step: 4,
+            title: "Shear Carefully",
+            description: "Follow the recommended shearing method and avoid unnecessary damage to the animal or fleece.",
+            icon: "⚡"
+          },
+          {
+            step: 5,
+            title: "Separate the Fleece",
+            description: "Keep the main fleece separate from lower-quality or contaminated wool.",
+            icon: "🧶"
+          },
+          {
+            step: 6,
+            title: "Prepare for Storage",
+            description: "Keep the harvested fleece clean and dry before further handling.",
+            icon: "📦"
+          }
+        ]
       },
       {
         title: 'Central Wool Board Grading Standards & Micron Metrics',
@@ -864,6 +940,47 @@ Clean skirting before weighing increases batch valuation by up to 25-30% on the 
         tags: ['Grading', 'Micron', 'Standards', 'Pricing'],
         views: 315,
         youtubeUrl: 'https://www.youtube.com/watch?v=Ksc8wY_VFJk',
+        targetProblems: ['discolored-wool', 'poor-quality'],
+        recommendedSeasons: ['shearing', 'processing'],
+        interests: ['wool-quality'],
+        practicalSteps: [
+          {
+            step: 1,
+            title: "Prepare the Wool",
+            description: "Spread or prepare the wool so that it can be examined properly.",
+            icon: "📜"
+          },
+          {
+            step: 2,
+            title: "Check Cleanliness",
+            description: "Look for dirt, vegetable matter and other contamination.",
+            icon: "🔍"
+          },
+          {
+            step: 3,
+            title: "Check Fibre Characteristics",
+            description: "Examine the visible characteristics used by the training material for quality assessment.",
+            icon: "📏"
+          },
+          {
+            step: 4,
+            title: "Separate Different Quality",
+            description: "Keep noticeably different quality portions separate where appropriate.",
+            icon: "✂️"
+          },
+          {
+            step: 5,
+            title: "Assign the Quality / Grade",
+            description: "Use the grading guidance provided by the training resource (Grade A, B, or C).",
+            icon: "🏆"
+          },
+          {
+            step: 6,
+            title: "Label the Batch",
+            description: "Keep the graded wool identified with its relevant batch QR information.",
+            icon: "🏷️"
+          }
+        ]
       },
       {
         title: 'Monsoon Wool Storage & Moisture Prevention Protocol',
@@ -887,6 +1004,41 @@ Turn stacked wool sacks fortnightly to prevent core temperature build-up and swe
         tags: ['Storage', 'Monsoon', 'Warehousing'],
         views: 198,
         youtubeUrl: 'https://www.youtube.com/watch?v=ZrcRCIPuoKY',
+        targetProblems: ['damp-wool', 'mold-smell'],
+        recommendedSeasons: ['monsoon'],
+        interests: ['storage', 'wool-quality'],
+        practicalSteps: [
+          {
+            step: 1,
+            title: "Dry the Wool",
+            description: "Make sure freshly collected wool is dry before placing it into storage.",
+            icon: "💧"
+          },
+          {
+            step: 2,
+            title: "Clean the Storage Area",
+            description: "Use a clean, dry and well-ventilated storage area.",
+            icon: "📦"
+          },
+          {
+            step: 3,
+            title: "Keep Wool Off the Floor",
+            description: "Place wool on a raised, clean surface instead of directly on the floor.",
+            icon: "⬆️"
+          },
+          {
+            step: 4,
+            title: "Protect from Moisture",
+            description: "Keep stored wool away from rain, damp walls and other sources of moisture.",
+            icon: "☔"
+          },
+          {
+            step: 5,
+            title: "Check Regularly",
+            description: "Inspect stored wool for dampness, mould or unusual smell.",
+            icon: "🔍"
+          }
+        ]
       },
       {
         title: 'Wool Scouring, Carding, & Processing Basics',
@@ -907,6 +1059,47 @@ Carding aligns the tangled wool fibers into straight rows, creating a soft web o
         tags: ['Processing', 'Carding', 'Scouring'],
         views: 210,
         youtubeUrl: 'https://www.youtube.com/watch?v=MXM31v49Xtw',
+        targetProblems: ['dirty-wool', 'matted-wool'],
+        recommendedSeasons: ['processing'],
+        interests: ['processing'],
+        practicalSteps: [
+          {
+            step: 1,
+            title: "Prepare the Wool",
+            description: "Prepare the wool according to the processing method being used.",
+            icon: "🧺"
+          },
+          {
+            step: 2,
+            title: "Sort the Material",
+            description: "Separate wool according to the required processing category.",
+            icon: "✂️"
+          },
+          {
+            step: 3,
+            title: "Clean / Wash",
+            description: "Follow the cleaning or washing procedure specified by the relevant training resource.",
+            icon: "🧼"
+          },
+          {
+            step: 4,
+            title: "Process the Wool",
+            description: "Continue with the appropriate processing stage such as washing, sorting, carding or spinning.",
+            icon: "⚙️"
+          },
+          {
+            step: 5,
+            title: "Check the Result",
+            description: "Inspect the processed material for the expected quality and fiber alignment.",
+            icon: "🔍"
+          },
+          {
+            step: 6,
+            title: "Prepare for Next Stage",
+            description: "Keep the processed wool ready for the next processing or product stage.",
+            icon: "🧶"
+          }
+        ]
       },
       {
         title: 'Natural Dyeing with Himalayan Botanicals & Mineral Mordants',
@@ -927,6 +1120,47 @@ Premordant with 10% weight of fibre potassium alum to lock natural pigments and 
         tags: ['Dyeing', 'Artisan', 'Natural Colors'],
         views: 180,
         youtubeUrl: 'https://www.youtube.com/watch?v=GKuRnyD5q6k',
+        targetProblems: ['dyeing-problem'],
+        recommendedSeasons: ['processing'],
+        interests: ['processing'],
+        practicalSteps: [
+          {
+            step: 1,
+            title: "Select the Dye Material",
+            description: "Choose the botanical material recommended by the training resource.",
+            icon: "🌿"
+          },
+          {
+            step: 2,
+            title: "Prepare the Wool",
+            description: "Prepare and scour the wool before introducing it to the dyeing process.",
+            icon: "🧺"
+          },
+          {
+            step: 3,
+            title: "Prepare the Mordant",
+            description: "Prepare the mordant (alum) according to the instructions in the training resource.",
+            icon: "🧪"
+          },
+          {
+            step: 4,
+            title: "Prepare the Dye Bath",
+            description: "Prepare the dye material and dyeing bath as described by the resource.",
+            icon: "🎨"
+          },
+          {
+            step: 5,
+            title: "Dye the Wool",
+            description: "Place the prepared wool into the dyeing process and follow the stated procedure.",
+            icon: "✨"
+          },
+          {
+            step: 6,
+            title: "Rinse and Dry",
+            description: "Complete the finishing rinse and drying process described in the resource.",
+            icon: "☀️"
+          }
+        ]
       },
       {
         title: 'Maximizing Direct-to-Buyer Revenue on Digital Marketplaces',
@@ -947,6 +1181,47 @@ Always state exact quantity, provide high-resolution natural light photos, and l
         tags: ['Marketplace', 'Direct Selling', 'Farmer Profit'],
         views: 420,
         youtubeUrl: 'https://youtu.be/aQs3p0zV6gE',
+        targetProblems: ['selling-problem'],
+        recommendedSeasons: ['processing'],
+        interests: ['selling'],
+        practicalSteps: [
+          {
+            step: 1,
+            title: "Prepare Wool Information",
+            description: "Keep important details ready: quantity, grade, origin district and shearing date.",
+            icon: "📋"
+          },
+          {
+            step: 2,
+            title: "Check Market Information",
+            description: "Review available market price info before deciding on a selling price.",
+            icon: "📊"
+          },
+          {
+            step: 3,
+            title: "Create a Listing",
+            description: "Enter the wool batch details into the WoolConnect marketplace listing.",
+            icon: "📱"
+          },
+          {
+            step: 4,
+            title: "Add Clear Information",
+            description: "Provide clear photos, weight in kg, price per kg, and quality grade.",
+            icon: "📷"
+          },
+          {
+            step: 5,
+            title: "Review the Listing",
+            description: "Check the listing before making it live to verified buyers.",
+            icon: "✅"
+          },
+          {
+            step: 6,
+            title: "Respond to Buyer Interest",
+            description: "Follow the marketplace process for buyer inquiries and order dispatches.",
+            icon: "💰"
+          }
+        ]
       }
     ]);
 

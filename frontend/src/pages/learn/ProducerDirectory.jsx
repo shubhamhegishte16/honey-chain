@@ -1,0 +1,970 @@
+import React, { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { ArrowLeft, Users, MapPin, Search, ChevronDown, BookOpen, ArrowRight, X } from 'lucide-react';
+import Card from '../../components/ui/Card';
+import { useLanguage } from '../../context/LanguageContext';
+
+// ─── Static state → region map ─────────────────────────────────────────────
+export const STATE_REGIONS = {
+  'Rajasthan':        ['Bikaner', 'Jaisalmer', 'Jodhpur', 'Nagaur', 'Pali'],
+  'Gujarat':          ['Kutch', 'Banaskantha', 'Patan', 'Surendranagar'],
+  'Maharashtra':      ['Ahmednagar', 'Sangli', 'Satara'],
+  'Jammu & Kashmir':  ['Leh', 'Kargil', 'Srinagar', 'Anantnag'],
+  'Himachal Pradesh': ['Kinnaur', 'Lahaul & Spiti', 'Kullu', 'Shimla'],
+  'Uttarakhand':      ['Chamoli', 'Pithoragarh', 'Uttarkashi'],
+  'Karnataka':        ['Bellary', 'Bijapur', 'Gadag'],
+  'Telangana':        ['Mahbubnagar', 'Nalgonda', 'Warangal'],
+};
+
+// ─── Demo producer/artisan dataset ─────────────────────────────────────────
+// NOTE: These are fictional sample profiles for the WoolConnect hackathon prototype.
+const PRODUCERS = [
+  // Rajasthan
+  { id: 'p-001', name: 'Demo Wool Producer – Bikaner', type: 'Wool Producer', state: 'Rajasthan', region: 'Bikaner',
+    specialization: 'Wool Quality & Storage', skills: ['Wool Grading', 'Wool Handling', 'Storage'],
+    description: 'Demo profile for the WoolConnect prototype. Focuses on fine Chokla and Magra wool grading and safe monsoon storage.',
+    trainingCategories: ['wool-quality', 'storage'] },
+  { id: 'p-002', name: 'Demo Wool Artisan – Jaisalmer', type: 'Artisan', state: 'Rajasthan', region: 'Jaisalmer',
+    specialization: 'Wool Products & Natural Dyeing', skills: ['Dyeing', 'Processing', 'Product Design'],
+    description: 'Demo artisan profile. Creates hand-dyed woollen rugs using traditional desert botanical dyes.',
+    trainingCategories: ['processing', 'selling'] },
+  { id: 'p-003', name: 'Demo Wool Producer – Jodhpur', type: 'Wool Producer', state: 'Rajasthan', region: 'Jodhpur',
+    specialization: 'Sheep Care & Shearing', skills: ['Sheep Care', 'Shearing', 'Wool Grading'],
+    description: 'Demo profile focusing on humane shearing and pre-shearing sheep health management.',
+    trainingCategories: ['sheep-care', 'shearing'] },
+  { id: 'p-004', name: 'Demo Wool Seller – Nagaur', type: 'Wool Producer', state: 'Rajasthan', region: 'Nagaur',
+    specialization: 'Digital Marketplace & Selling', skills: ['Digital Selling', 'QR Traceability', 'Pricing'],
+    description: 'Demo profile. Sells raw Nali wool directly to mills via digital platforms.',
+    trainingCategories: ['selling', 'wool-quality'] },
+  { id: 'p-005', name: 'Demo Artisan – Pali', type: 'Artisan', state: 'Rajasthan', region: 'Pali',
+    specialization: 'Weaving & Processing', skills: ['Wool Processing', 'Carding', 'Weaving'],
+    description: 'Demo artisan profile. Specialises in hand-woven Pali wool blankets and scouring techniques.',
+    trainingCategories: ['processing', 'wool-quality'] },
+
+  // Gujarat
+  { id: 'p-006', name: 'Demo Wool Producer – Kutch', type: 'Wool Producer', state: 'Gujarat', region: 'Kutch',
+    specialization: 'Shearing & Wool Handling', skills: ['Shearing', 'Wool Handling', 'Storage'],
+    description: 'Demo profile. Raises Patanwadi sheep in Kutch and practices clean shearing techniques.',
+    trainingCategories: ['shearing', 'storage'] },
+  { id: 'p-007', name: 'Demo Artisan – Banaskantha', type: 'Artisan', state: 'Gujarat', region: 'Banaskantha',
+    specialization: 'Embroidery & Wool Crafts', skills: ['Processing', 'Dyeing', 'Product Design'],
+    description: 'Demo artisan creating embroidered woollen products using Patanwadi fleece.',
+    trainingCategories: ['processing', 'selling'] },
+  { id: 'p-008', name: 'Demo Wool Producer – Patan', type: 'Wool Producer', state: 'Gujarat', region: 'Patan',
+    specialization: 'Wool Grading & Storage', skills: ['Wool Grading', 'Storage', 'Wool Handling'],
+    description: 'Demo profile. Maintains grade-A certified fleece with proper moisture storage protocols.',
+    trainingCategories: ['wool-quality', 'storage'] },
+  { id: 'p-009', name: 'Demo Artisan – Surendranagar', type: 'Artisan', state: 'Gujarat', region: 'Surendranagar',
+    specialization: 'Natural Dyeing & Selling', skills: ['Dyeing', 'Digital Selling', 'Processing'],
+    description: 'Demo artisan producing natural-dyed yarn and marketing directly to buyers online.',
+    trainingCategories: ['processing', 'selling'] },
+
+  // Maharashtra
+  { id: 'p-010', name: 'Demo Wool Producer – Ahmednagar', type: 'Wool Producer', state: 'Maharashtra', region: 'Ahmednagar',
+    specialization: 'Sheep Care & Shearing', skills: ['Sheep Care', 'Shearing', 'Wool Grading'],
+    description: 'Demo profile. Deccani sheep farmer focusing on veterinary care and efficient shearing.',
+    trainingCategories: ['sheep-care', 'shearing'] },
+  { id: 'p-011', name: 'Demo Artisan – Sangli', type: 'Artisan', state: 'Maharashtra', region: 'Sangli',
+    specialization: 'Woollen Textiles & Selling', skills: ['Processing', 'Wool Handling', 'Digital Selling'],
+    description: 'Demo artisan profile. Processes raw Deccani fleece into handloom textiles sold online.',
+    trainingCategories: ['processing', 'selling'] },
+  { id: 'p-012', name: 'Demo Wool Producer – Satara', type: 'Wool Producer', state: 'Maharashtra', region: 'Satara',
+    specialization: 'Storage & Quality', skills: ['Storage', 'Wool Grading', 'Wool Handling'],
+    description: 'Demo profile. Prioritises post-monsoon wool storage and grade certification.',
+    trainingCategories: ['storage', 'wool-quality'] },
+
+  // Jammu & Kashmir
+  { id: 'p-013', name: 'Demo Wool Producer – Leh', type: 'Wool Producer', state: 'Jammu & Kashmir', region: 'Leh',
+    specialization: 'Pashmina & Wool Handling', skills: ['Wool Handling', 'Wool Grading', 'Shearing'],
+    description: 'Demo profile. Herds Changthangi goats for Pashmina; also handles coarse Changra wool.',
+    trainingCategories: ['wool-quality', 'shearing'] },
+  { id: 'p-014', name: 'Demo Artisan – Kargil', type: 'Artisan', state: 'Jammu & Kashmir', region: 'Kargil',
+    specialization: 'Ladakhi Wool Crafts', skills: ['Processing', 'Dyeing', 'Product Design'],
+    description: 'Demo artisan profile. Produces traditional Ladakhi woollen products using local fleece.',
+    trainingCategories: ['processing', 'selling'] },
+  { id: 'p-015', name: 'Demo Wool Producer – Srinagar', type: 'Wool Producer', state: 'Jammu & Kashmir', region: 'Srinagar',
+    specialization: 'Sheep Care & Selling', skills: ['Sheep Care', 'Digital Selling', 'Wool Grading'],
+    description: 'Demo profile. Sells Kashmir wool directly to buyers using QR-based traceability.',
+    trainingCategories: ['sheep-care', 'selling'] },
+  { id: 'p-016', name: 'Demo Artisan – Anantnag', type: 'Artisan', state: 'Jammu & Kashmir', region: 'Anantnag',
+    specialization: 'Kani Shawl Crafting', skills: ['Processing', 'Dyeing', 'Weaving'],
+    description: 'Demo artisan creating Kani shawls with naturally dyed Kashmiri wool.',
+    trainingCategories: ['processing', 'wool-quality'] },
+
+  // Himachal Pradesh
+  { id: 'p-017', name: 'Demo Wool Producer – Kinnaur', type: 'Wool Producer', state: 'Himachal Pradesh', region: 'Kinnaur',
+    specialization: 'High-Altitude Sheep Care', skills: ['Sheep Care', 'Shearing', 'Storage'],
+    description: 'Demo profile. Manages Rampur Bushair sheep at high altitude with seasonal shearing.',
+    trainingCategories: ['sheep-care', 'shearing'] },
+  { id: 'p-018', name: 'Demo Artisan – Lahaul & Spiti', type: 'Artisan', state: 'Himachal Pradesh', region: 'Lahaul & Spiti',
+    specialization: 'Tribal Wool Textiles', skills: ['Processing', 'Dyeing', 'Product Design'],
+    description: 'Demo artisan producing traditional Lahauli woollen garments.',
+    trainingCategories: ['processing', 'selling'] },
+  { id: 'p-019', name: 'Demo Artisan – Kullu', type: 'Artisan', state: 'Himachal Pradesh', region: 'Kullu',
+    specialization: 'Kullu Shawls & Natural Dyeing', skills: ['Dyeing', 'Processing', 'Selling'],
+    description: 'Demo artisan profile. Hand-spins and naturally dyes Kullu shawls from organic Himachali wool.',
+    trainingCategories: ['processing', 'selling'] },
+  { id: 'p-020', name: 'Demo Wool Producer – Shimla', type: 'Wool Producer', state: 'Himachal Pradesh', region: 'Shimla',
+    specialization: 'Wool Quality & Grading', skills: ['Wool Grading', 'Shearing', 'Storage'],
+    description: 'Demo profile. Sources and grades Angora and Gaddi wool near Shimla districts.',
+    trainingCategories: ['wool-quality', 'storage'] },
+
+  // Uttarakhand
+  { id: 'p-021', name: 'Demo Wool Producer – Chamoli', type: 'Wool Producer', state: 'Uttarakhand', region: 'Chamoli',
+    specialization: 'Sheep Care & Shearing', skills: ['Sheep Care', 'Shearing', 'Wool Handling'],
+    description: 'Demo profile. Manages flocks in the Nanda Devi region with seasonal alpine grazing.',
+    trainingCategories: ['sheep-care', 'shearing'] },
+  { id: 'p-022', name: 'Demo Artisan – Pithoragarh', type: 'Artisan', state: 'Uttarakhand', region: 'Pithoragarh',
+    specialization: 'Woollen Textiles & Dyeing', skills: ['Dyeing', 'Processing', 'Product Design'],
+    description: 'Demo artisan creating Kumaoni woollen shawls and rugs from locally sourced fleece.',
+    trainingCategories: ['processing', 'selling'] },
+  { id: 'p-023', name: 'Demo Wool Producer – Uttarkashi', type: 'Wool Producer', state: 'Uttarakhand', region: 'Uttarkashi',
+    specialization: 'Storage & Selling', skills: ['Storage', 'Digital Selling', 'Wool Grading'],
+    description: 'Demo profile. Stores and grades alpine wool before digital market listing.',
+    trainingCategories: ['storage', 'selling'] },
+
+  // Karnataka
+  { id: 'p-024', name: 'Demo Wool Producer – Bellary', type: 'Wool Producer', state: 'Karnataka', region: 'Bellary',
+    specialization: 'Sheep Breeding & Shearing', skills: ['Sheep Care', 'Shearing', 'Wool Handling'],
+    description: 'Demo profile. Breeds Bellary and Deccani cross sheep; focuses on clean shearing.',
+    trainingCategories: ['sheep-care', 'shearing'] },
+  { id: 'p-025', name: 'Demo Artisan – Bijapur', type: 'Artisan', state: 'Karnataka', region: 'Bijapur',
+    specialization: 'Kasuti Embroidery & Wool', skills: ['Processing', 'Product Design', 'Selling'],
+    description: 'Demo artisan weaving Kasuti-style embroidery into woollen textiles for premium markets.',
+    trainingCategories: ['processing', 'selling'] },
+  { id: 'p-026', name: 'Demo Wool Producer – Gadag', type: 'Wool Producer', state: 'Karnataka', region: 'Gadag',
+    specialization: 'Wool Quality & Storage', skills: ['Wool Grading', 'Storage', 'Wool Handling'],
+    description: 'Demo profile. Maintains Grade-A Deccani wool batches with proper baling and humidity control.',
+    trainingCategories: ['wool-quality', 'storage'] },
+
+  // Telangana
+  { id: 'p-027', name: 'Demo Wool Producer – Mahbubnagar', type: 'Wool Producer', state: 'Telangana', region: 'Mahbubnagar',
+    specialization: 'Sheep Care & Selling', skills: ['Sheep Care', 'Digital Selling', 'Wool Grading'],
+    description: 'Demo profile. Nellore sheep farmer exploring digital wool selling platforms.',
+    trainingCategories: ['sheep-care', 'selling'] },
+  { id: 'p-028', name: 'Demo Artisan – Nalgonda', type: 'Artisan', state: 'Telangana', region: 'Nalgonda',
+    specialization: 'Pochampally Wool Weaving', skills: ['Processing', 'Dyeing', 'Product Design'],
+    description: 'Demo artisan weaving Pochampally-inspired ikat patterns using naturally dyed wool yarn.',
+    trainingCategories: ['processing', 'wool-quality'] },
+  { id: 'p-029', name: 'Demo Wool Producer – Warangal', type: 'Wool Producer', state: 'Telangana', region: 'Warangal',
+    specialization: 'Storage & Processing', skills: ['Storage', 'Wool Processing', 'Shearing'],
+    description: 'Demo profile. Stores and processes Telangana wool in a small family cooperative.',
+    trainingCategories: ['storage', 'processing'] },
+];
+
+// ─── Translation Lookups for Demo Data ──────────────────────────────────────
+const STATE_TRANSLATIONS = {
+  hi: {
+    'Rajasthan': 'राजस्थान',
+    'Gujarat': 'गुजरात',
+    'Maharashtra': 'महाराष्ट्र',
+    'Jammu & Kashmir': 'जम्मू और कश्मीर',
+    'Himachal Pradesh': 'हिमाचल प्रदेश',
+    'Uttarakhand': 'उत्तराखंड',
+    'Karnataka': 'कर्नाटक',
+    'Telangana': 'तेलंगाना'
+  },
+  mr: {
+    'Rajasthan': 'राजस्थान',
+    'Gujarat': 'गुजरात',
+    'Maharashtra': 'महाराष्ट्र',
+    'Jammu & Kashmir': 'जम्मू आणि काश्मीर',
+    'Himachal Pradesh': 'हिमाचल प्रदेश',
+    'Uttarakhand': 'उत्तराखंड',
+    'Karnataka': 'कर्नाटक',
+    'Telangana': 'तेलंगणा'
+  }
+};
+
+const REGION_TRANSLATIONS = {
+  hi: {
+    'Bikaner': 'बीकानेर',
+    'Jaisalmer': 'जैसलमेर',
+    'Jodhpur': 'जोधपुर',
+    'Nagaur': 'नागौर',
+    'Pali': 'पाली',
+    'Kutch': 'कच्छ',
+    'Banaskantha': 'बनासकांठा',
+    'Patan': 'पाटन',
+    'Surendranagar': 'सुरेंद्रनगर',
+    'Ahmednagar': 'अहमदनगर',
+    'Sangli': 'सांगली',
+    'Satara': 'सतारा',
+    'Leh': 'लेह',
+    'Kargil': 'कारगिल',
+    'Srinagar': 'श्रीनगर',
+    'Anantnag': 'अनंतनाग',
+    'Kinnaur': 'किन्नौर',
+    'Lahaul & Spiti': 'लाहौल और स्पीति',
+    'Kullu': 'कुल्लू',
+    'Shimla': 'शिमला',
+    'Chamoli': 'चमोली',
+    'Pithoragarh': 'पिथौरागढ़',
+    'Uttarkashi': 'उत्तरकाशी',
+    'Bellary': 'बेल्लारी',
+    'Bijapur': 'बीजापुर',
+    'Gadag': 'गदग',
+    'Mahbubnagar': 'महबूबनगर',
+    'Nalgonda': 'नालगोंडा',
+    'Warangal': 'वारंगल'
+  },
+  mr: {
+    'Bikaner': 'बीकानेर',
+    'Jaisalmer': 'जैसलमेर',
+    'Jodhpur': 'जोधपुर',
+    'Nagaur': 'नागौर',
+    'Pali': 'पाली',
+    'Kutch': 'कच्छ',
+    'Banaskantha': 'बनासकांठा',
+    'Patan': 'पाटण',
+    'Surendranagar': 'सुरेंद्रनगर',
+    'Ahmednagar': 'अहमदनगर',
+    'Sangli': 'सांगली',
+    'Satara': 'सातारा',
+    'Leh': 'लेह',
+    'Kargil': 'कारगिल',
+    'Srinagar': 'श्रीनगर',
+    'Anantnag': 'अनंतनाग',
+    'Kinnaur': 'किन्नौर',
+    'Lahaul & Spiti': 'लाहौल आणि स्पिती',
+    'Kullu': 'कुल्लू',
+    'Shimla': 'शिमला',
+    'Chamoli': 'चमोली',
+    'Pithoragarh': 'पिथोरागढ',
+    'Uttarkashi': 'उत्तरकाशी',
+    'Bellary': 'बेल्लारी',
+    'Bijapur': 'विजापूर',
+    'Gadag': 'गदग',
+    'Mahbubnagar': 'महबूबनगर',
+    'Nalgonda': 'नलगोंडा',
+    'Warangal': 'वारंगल'
+  }
+};
+
+const SKILL_TRANSLATIONS = {
+  hi: {
+    'Wool Grading': 'ऊन की ग्रेडिंग',
+    'Wool Handling': 'ऊन संभालना',
+    'Storage': 'भंडारण',
+    'Dyeing': 'रंगाई',
+    'Processing': 'प्रसंस्करण',
+    'Product Design': 'उत्पाद डिज़ाइन',
+    'Sheep Care': 'भेड़ की देखभाल',
+    'Shearing': 'कतराई',
+    'Digital Selling': 'डिजिटल बिक्री',
+    'QR Traceability': 'क्यूआर ट्रेसिबिलिटी',
+    'Pricing': 'मूल्य निर्धारण',
+    'Wool Processing': 'ऊन प्रसंस्करण',
+    'Carding': 'धुनाई (कार्डिंग)',
+    'Weaving': 'बुनाई'
+  },
+  mr: {
+    'Wool Grading': 'लोकर प्रतवारी',
+    'Wool Handling': 'लोकर हाताळणी',
+    'Storage': 'साठवण',
+    'Dyeing': 'रंगकाम',
+    'Processing': 'प्रक्रिया',
+    'Product Design': 'उत्पादन डिझाईन',
+    'Sheep Care': 'मेंढ्यांची काळजी',
+    'Shearing': 'कातरणी',
+    'Digital Selling': 'डिजिटल विक्री',
+    'QR Traceability': 'क्यूआर ट्रेसिबिलिटी',
+    'Pricing': 'दर निश्चिती',
+    'Wool Processing': 'लोकर प्रक्रिया',
+    'Carding': 'कार्डिंग',
+    'Weaving': 'विणकाम'
+  }
+};
+
+const SPEC_TRANSLATIONS = {
+  hi: {
+    'Wool Quality & Storage': 'ऊन की गुणवत्ता और भंडारण',
+    'Wool Products & Natural Dyeing': 'ऊन उत्पाद और प्राकृतिक रंगाई',
+    'Sheep Care & Shearing': 'भेड़ की देखभाल और कतराई',
+    'Digital Marketplace & Selling': 'डिजिटल मार्केटप्लेस और बिक्री',
+    'Weaving & Processing': 'बुनाई और प्रसंस्करण',
+    'Shearing & Wool Handling': 'कतराई और ऊन संभालना',
+    'Embroidery & Wool Crafts': 'कढ़ाई और ऊन शिल्प',
+    'Woollen Textiles & Selling': 'ऊनी वस्त्र और बिक्री',
+    'Storage & Quality': 'भंडारण और गुणवत्ता',
+    'Pashmina & Wool Handling': 'पश्मीना और ऊन संभालना',
+    'Ladakhi Wool Crafts': 'लद्दाखी ऊन शिल्प',
+    'Sheep Care & Selling': 'भेड़ की देखभाल और बिक्री',
+    'Kani Shawl Crafting': 'कनी शॉल निर्माण',
+    'High-Altitude Sheep Care': 'उच्च-ऊंचाई पर भेड़ की देखभाल',
+    'Tribal Wool Textiles': 'आदिवासी ऊन वस्त्र',
+    'Kullu Shawls & Natural Dyeing': 'कुल्लू शॉल और प्राकृतिक रंगाई',
+    'Wool Quality & Grading': 'ऊन की गुणवत्ता और ग्रेडिंग',
+    'Woollen Textiles & Dyeing': 'ऊनी वस्त्र और रंगाई',
+    'Storage & Selling': 'भंडारण और बिक्री',
+    'Sheep Breeding & Shearing': 'भेड़ प्रजनन और कतराई',
+    'Kasuti Embroidery & Wool': 'कसूती कढ़ाई और ऊन',
+    'Storage & Processing': 'भंडारण और प्रसंस्करण',
+    'Pochampally Wool Weaving': 'पोचमपल्ली ऊन बुनाई'
+  },
+  mr: {
+    'Wool Quality & Storage': 'लोकर गुणवत्ता आणि साठवण',
+    'Wool Products & Natural Dyeing': 'लोकरीची उत्पादने आणि नैसर्गिक रंगकाम',
+    'Sheep Care & Shearing': 'मेंढ्यांची काळजी आणि कातरणी',
+    'Digital Marketplace & Selling': 'डिजिटल मार्केटप्लेस आणि विक्री',
+    'Weaving & Processing': 'विणकाम आणि प्रक्रिया',
+    'Shearing & Wool Handling': 'कातरणी आणि लोकर हाताळणी',
+    'Embroidery & Wool Crafts': 'भरतकाम आणि लोकर हस्तकला',
+    'Woollen Textiles & Selling': 'लोकरीचे कापड आणि विक्री',
+    'Storage & Quality': 'साठवणूक आणि गुणवत्ता',
+    'Pashmina & Wool Handling': 'पश्मिना आणि लोकर हाताळणी',
+    'Ladakhi Wool Crafts': 'लडाखी लोकर हस्तकला',
+    'Sheep Care & Selling': 'मेंढ्यांची काळजी आणि विक्री',
+    'Kani Shawl Crafting': 'कणी शाल निर्मिती',
+    'High-Altitude Sheep Care': 'उंच भागातील मेंढ्यांची काळजी',
+    'Tribal Wool Textiles': 'आदिवासी लोकर कापड',
+    'Kullu Shawls & Natural Dyeing': 'कुल्लू शाल आणि नैसर्गिक रंगकाम',
+    'Wool Quality & Grading': 'लोकर गुणवत्ता आणि प्रतवारी',
+    'Woollen Textiles & Dyeing': 'लोकरीचे कापड आणि रंगकाम',
+    'Storage & Selling': 'साठवणूक आणि विक्री',
+    'Sheep Breeding & Shearing': 'मेंढी प्रजनन आणि कातरणी',
+    'Kasuti Embroidery & Wool': 'कसुती भरतकाम आणि लोकर',
+    'Storage & Processing': 'साठवणूक आणि प्रक्रिया',
+    'Pochampally Wool Weaving': 'पोचमपल्ली लोकर विणकाम'
+  }
+};
+
+const translateName = (name, lang) => {
+  if (lang === 'en') return name;
+  let translated = name;
+  if (lang === 'hi') {
+    translated = translated.replace('Demo Wool Producer', 'डेमो ऊन उत्पादक');
+    translated = translated.replace('Demo Wool Artisan', 'डेमो ऊन कारीगर');
+    translated = translated.replace('Demo Artisan', 'डेमो कारीगर');
+    translated = translated.replace('Demo Wool Seller', 'डेमो ऊन विक्रेता');
+  } else if (lang === 'mr') {
+    translated = translated.replace('Demo Wool Producer', 'डेमो लोकर उत्पादक');
+    translated = translated.replace('Demo Wool Artisan', 'डेमो लोकर कारागीर');
+    translated = translated.replace('Demo Artisan', 'डेमो कारागीर');
+    translated = translated.replace('Demo Wool Seller', 'डेमो लोकर विक्रेता');
+  }
+  
+  // Replace region dash character variations
+  const regionsList = Object.values(STATE_REGIONS).flat();
+  regionsList.forEach(r => {
+    const translit = REGION_TRANSLATIONS[lang]?.[r] || r;
+    translated = translated.replace(`– ${r}`, `– ${translit}`);
+    translated = translated.replace(`— ${r}`, `— ${translit}`);
+    translated = translated.replace(`- ${r}`, `- ${translit}`);
+  });
+  return translated;
+};
+
+const translateDescription = (desc, lang) => {
+  if (lang === 'en') return desc;
+  if (lang === 'hi') {
+    if (desc.includes('Focuses on fine Chokla and Magra')) {
+      return 'वूलकनेक्ट प्रोटोटाइप के लिए डेमो प्रोफाइल। बढ़िया चोकला और मगरा ऊन ग्रेडिंग और सुरक्षित मानसून भंडारण पर ध्यान केंद्रित करता है।';
+    }
+    if (desc.includes('desert botanical dyes')) {
+      return 'डेमो कारीगर प्रोफाइल। पारंपरिक मरुस्थलीय जैविक रंगों का उपयोग करके हाथ से रंगे हुए ऊनी कालीनों का निर्माण करता है।';
+    }
+    if (desc.includes('humane shearing and pre-shearing')) {
+      return 'डेमो प्रोफाइल। दयालु कतरन और कतरन से पहले भेड़ स्वास्थ्य प्रबंधन पर ध्यान केंद्रित करता है।';
+    }
+    if (desc.includes('Sells raw Nali wool directly')) {
+      return 'डेमो प्रोफाइल। डिजिटल प्लेटफॉर्म के माध्यम से मिलों को सीधे कच्ची नाली ऊन बेचता है।';
+    }
+    if (desc.includes('hand-woven Pali wool blankets')) {
+      return 'डेमो कारीगर प्रोफाइल। हाथ से बुने हुए पाली ऊनी कंबलों और स्कौरिंग तकनीकों में विशेषज्ञता रखता है।';
+    }
+    if (desc.includes('Raises Patanwadi sheep')) {
+      return 'डेमो प्रोफाइल। कच्छ में पाटनवाड़ी भेड़ पालता है और स्वच्छ कतरन तकनीकों का अभ्यास करता है।';
+    }
+    if (desc.includes('embroidered woollen products')) {
+      return 'पाटनवाड़ी ऊन का उपयोग करके कढ़ाईदार ऊनी उत्पाद बनाने वाला डेमो कारीगर।';
+    }
+    if (desc.includes('Maintains grade-A certified fleece')) {
+      return 'डेमो प्रोफाइल। उचित नमी भंडारण नियमों के साथ ग्रेड-ए प्रमाणित ऊन का रखरखाव करता है।';
+    }
+    if (desc.includes('producing natural-dyed yarn')) {
+      return 'डेमो कारीगर। प्राकृतिक रूप से रंगे धागे का उत्पादन और ऑनलाइन खरीदारों को सीधे विपणन करता है।';
+    }
+    if (desc.includes('Deccani sheep farmer')) {
+      return 'डेमो प्रोफाइल। दक्कनी भेड़ किसान जो पशु चिकित्सा देखभाल और कुशल कतरन पर ध्यान केंद्रित करता है।';
+    }
+    if (desc.includes('Processes raw Deccani fleece')) {
+      return 'डेमो कारीगर प्रोफाइल। ऑनलाइन बेचे जाने वाले हथकरघा वस्त्रों में कच्ची दक्कनी ऊन का प्रसंस्करण करता है।';
+    }
+    if (desc.includes('Satara')) {
+      return 'डेमो प्रोफाइल। मानसून के बाद ऊन भंडारण और ग्रेड प्रमाणीकरण को प्राथमिकता देता है।';
+    }
+    if (desc.includes('Changthangi goats')) {
+      return 'डेमो प्रोफाइल। पश्मीना के लिए चांगथांगी बकरियों का पालन करता है; चांगरा ऊन भी संभालता है।';
+    }
+    if (desc.includes('traditional Ladakhi')) {
+      return 'डेमो कारीगर प्रोफाइल। स्थानीय ऊन का उपयोग करके पारंपरिक लद्दाख के ऊनी उत्पाद बनाता है।';
+    }
+    if (desc.includes('Kashmir wool directly')) {
+      return 'डेमो प्रोफाइल। क्यूआर-आधारित पता लगाने की क्षमता का उपयोग करके सीधे खरीदारों को कश्मीर ऊन बेचता है।';
+    }
+    if (desc.includes('Kani shawls')) {
+      return 'प्राकृतिक रूप से रंगे कश्मीरी ऊन से कनी शॉल बनाने वाला डेमो कारीगर।';
+    }
+    if (desc.includes('Rampur Bushair')) {
+      return 'डेमो प्रोफाइल। मौसमी कतरन के साथ उच्च ऊंचाई पर रामपुर बुशहर भेड़ों का प्रबंधन करता है।';
+    }
+    if (desc.includes('traditional Lahauli')) {
+      return 'पारंपरिक लाहौली ऊनी कपड़े बनाने वाला डेमो कारीगर।';
+    }
+    if (desc.includes('Hand-spins and naturally dyes')) {
+      return 'डेमो कारीगर प्रोफाइल। जैविक हिमाचली ऊन से कुल्लू शॉल को हाथ से कातता है और प्राकृतिक रूप से रंगता है।';
+    }
+    if (desc.includes('Shimla')) {
+      return 'डेमो प्रोफाइल। शिमला जिलों के पास अंगोरा और गद्दी ऊन का स्रोत और ग्रेडिंग करता है।';
+    }
+    if (desc.includes('Nanda Devi')) {
+      return 'डेमो प्रोफाइल। मौसमी घास के मैदानों में चराई के साथ नंदा देवी क्षेत्र में झुंडों का प्रबंधन करता है।';
+    }
+    if (desc.includes('Kumaoni woollen shawls')) {
+      return 'स्थानीय स्तर पर प्राप्त ऊन से कुमाऊंनी ऊनी शॉल और कालीन बनाने वाला डेमो कारीगर।';
+    }
+    if (desc.includes('alpine wool before')) {
+      return 'डेमो प्रोफाइल। डिजिटल बाजार में सूचीबद्ध करने से पहले अल्पाइन ऊन का भंडारण और ग्रेडिंग करता है।';
+    }
+    if (desc.includes('Bellary and Deccani')) {
+      return 'डेमो प्रोफाइल। बेल्लारी और दक्कनी संकर भेड़ों का पालन करता है; स्वच्छ कतरन पर ध्यान केंद्रित करता है।';
+    }
+    if (desc.includes('Kasuti-style embroidery')) {
+      return 'प्रीमियम बाजारों के लिए ऊनी कपड़ों में कसूती शैली की कढ़ाई बुनने वाला डेमो कारीगर।';
+    }
+    if (desc.includes('Deccani wool batches')) {
+      return 'डेमो प्रोफाइल। उचित नमी नियंत्रण के साथ ग्रेड-ए दक्कनी ऊन के जत्थों का रखरखाव करता है।';
+    }
+    if (desc.includes('Nellore sheep farmer')) {
+      return 'डेमो प्रोफाइल। नेल्लोर भेड़ किसान जो डिजिटल ऊन बिक्री प्लेटफार्मों की खोज कर रहा है।';
+    }
+    if (desc.includes('Pochampally-inspired ikat')) {
+      return 'प्राकृतिक रूप से रंगे ऊनी धागे का उपयोग करके पोचमपल्ली से प्रेरित इकत पैटर्न बुनने वाला डेमो कारीगर।';
+    }
+    if (desc.includes('Telangana wool in a small')) {
+      return 'डेमो प्रोफाइल। एक छोटे पारिवारिक सहकारी समिति में तेलंगाना ऊन का भंडारण और प्रसंस्करण करता है।';
+    }
+  } else if (lang === 'mr') {
+    if (desc.includes('Focuses on fine Chokla and Magra')) {
+      return 'वूलकनेक्ट प्रोटोटाइपसाठी डेमो प्रोफाइल. उत्तम चोकला आणि मगरा लोकर प्रतवारी आणि सुरक्षित मान्सून साठवणुकीवर लक्ष केंद्रित करते.';
+    }
+    if (desc.includes('desert botanical dyes')) {
+      return 'डेमो कारागीर प्रोफाइल. पारंपारिक वाळवंटी वनस्पती रंगांचा वापर करून हाताने रंगवलेले लोकरीचे चटई तयार करतो.';
+    }
+    if (desc.includes('humane shearing and pre-shearing')) {
+      return 'डेमो प्रोफाइल. मानवी कातरणी आणि कातरणीपूर्वी मेंढीच्या आरोग्य व्यवस्थापनावर लक्ष केंद्रित करते.';
+    }
+    if (desc.includes('Sells raw Nali wool directly')) {
+      return 'डेमो प्रोफाइल. डिजिटल प्लॅटफॉर्मद्वारे थेट गिरण्यांना कच्ची नाली लोकर विकतो.';
+    }
+    if (desc.includes('hand-woven Pali wool blankets')) {
+      return 'डेमो कारागीर प्रोफाइल. हाताने विणलेल्या पाली लोकरीच्या घोंगड्या आणि प्रक्रिया तंत्रात विशेष प्राविण्य आहे.';
+    }
+    if (desc.includes('Raises Patanwadi sheep')) {
+      return 'डेमो प्रोफाइल. कच्छमध्ये पाटणवाडी मेंढ्या पाळतात आणि स्वच्छ कातरणी तंत्राचा सराव करतात.';
+    }
+    if (desc.includes('embroidered woollen products')) {
+      return 'पाटणवाडी लोकरीचा वापर करून भरतकाम केलेली लोकरी उत्पादने तयार करणारा डेमो कारागीर.';
+    }
+    if (desc.includes('Maintains grade-A certified fleece')) {
+      return 'डेमो प्रोफाइल. योग्य आर्द्रता साठवण प्रोटोकॉलसह ग्रेड-ए प्रमाणित लोकर राखते.';
+    }
+    if (desc.includes('producing natural-dyed yarn')) {
+      return 'डेमो कारागीर. नैसर्गिकरित्या रंगवलेले सूत तयार करतो आणि थेट ग्राहकांना ऑनलाइन विकतो.';
+    }
+    if (desc.includes('Deccani sheep farmer')) {
+      return 'डेमो प्रोफाइल. दख्खनी मेंढी शेतकरी जो पशुवैद्यकीय काळजी आणि कार्यक्षम कातरणीवर लक्ष केंद्रित करतो.';
+    }
+    if (desc.includes('Processes raw Deccani fleece')) {
+      return 'डेमो कारागीर प्रोफाइल. ऑनलाइन विकल्या जाणाऱ्या हातमाग कापडात कच्च्या दख्खनी लोकरीवर प्रक्रिया करतो.';
+    }
+    if (desc.includes('Satara')) {
+      return 'डेमो प्रोफाइल. मान्सूननंतरच्या लोकर साठवणुकीला आणि ग्रेड प्रमाणपत्राला प्राधान्य देते.';
+    }
+    if (desc.includes('Changthangi goats')) {
+      return 'डेमो प्रोफाइल. पश्मिनासाठी चांगथांगी शेळ्या पाळतात; चांगरा लोकर देखील हाताळतात.';
+    }
+    if (desc.includes('traditional Ladakhi')) {
+      return 'डेमो कारागीर प्रोफाइल. स्थानिक लोकर वापरून पारंपारिक लडाखी लोकरीच्या वस्तू तयार करतो.';
+    }
+    if (desc.includes('Kashmir wool directly')) {
+      return 'डेमो प्रोफाइल. क्यूआर-आधारित ट्रेसिबिलिटी वापरून थेट खरेदीदारांना काश्मीर लोकर विकतो.';
+    }
+    if (desc.includes('Kani shawls')) {
+      return 'नैसर्गिकरित्या रंगवलेल्या काश्मिरी लोकरीपासून कानी शाल तयार करणारा डेमो कारागीर.';
+    }
+    if (desc.includes('Rampur Bushair')) {
+      return 'डेमो प्रोफाइल. हंगामी कातरणीसह उंच भागातील रामपूर बुशायर मेंढ्यांचे व्यवस्थापन करतो.';
+    }
+    if (desc.includes('traditional Lahauli')) {
+      return 'पारंपारिक लाहौली लोकरीचे कपडे तयार करणारा डेमो कारागीर.';
+    }
+    if (desc.includes('Hand-spins and naturally dyes')) {
+      return 'डेमो कारागीर प्रोफाइल. सेंद्रिय हिमाचली लोकरीपासून कुल्लू शाल हाताने विणतो आणि नैसर्गिकरित्या रंगवतो.';
+    }
+    if (desc.includes('Shimla')) {
+      return 'डेमो प्रोफाइल. शिमला जिल्ह्यांजवळ अंगोरा आणि गद्दी लोकरीचे संकलन आणि प्रतवारी करतो.';
+    }
+    if (desc.includes('Nanda Devi')) {
+      return 'डेमो प्रोफाइल. नंदा देवी प्रदेशातील कळपांचे हंगामी चरण्याच्या व्यवस्थापनासह नियंत्रण करतो.';
+    }
+    if (desc.includes('Kumaoni woollen shawls')) {
+      return 'स्थानिक पातळीवर मिळणाऱ्या लोकरीपासून कुमाउनी लोकरीच्या शाली आणि चटया तयार करणारा डेमो कारागीर.';
+    }
+    if (desc.includes('alpine wool before')) {
+      return 'डेमो प्रोफाइल. डिजिटल बाजारात सूचीबद्ध करण्यापूर्वी अल्पाइन लोकरीची साठवणूक आणि प्रतवारी करतो.';
+    }
+    if (desc.includes('Bellary and Deccani')) {
+      return 'डेमो प्रोफाइल. बेल्लारी आणि दख्खनी संकरित मेंढ्या पाळतात; स्वच्छ कातरणीवर लक्ष केंद्रित करते.';
+    }
+    if (desc.includes('Kasuti-style embroidery')) {
+      return 'प्रीमियम बाजारपेठेसाठी लोकरीच्या कपड्यांमध्ये कसुती पद्धतीचे भरतकाम करणारा डेमो कारागीर.';
+    }
+    if (desc.includes('Deccani wool batches')) {
+      return 'डेमो प्रोफाइल. योग्य आर्द्रता नियंत्रणासह ग्रेड-ए दख्खनी लोकरीचे जत्थे राखते.';
+    }
+    if (desc.includes('Nellore sheep farmer')) {
+      return 'डेमो प्रोफाइल. नेल्लोर मेंढी शेतकरी जो डिजिटल लोकर विक्री प्लॅटफॉर्म शोधत आहे.';
+    }
+    if (desc.includes('Pochampally-inspired ikat')) {
+      return 'नैसर्गिकरित्या रंगवलेल्या लोकरीच्या सुताचा वापर करून पोचमपल्ली-प्रेरित इकत नमुने विणणारा डेमो कारागीर.';
+    }
+    if (desc.includes('Telangana wool in a small')) {
+      return 'डेमो प्रोफाइल. लहान कौटुंबिक सहकारी संस्थेत तेलंगणा लोकरीची साठवणूक आणि प्रक्रिया करतो.';
+    }
+  }
+  return desc;
+};
+
+// ─── Training category display info generator ──────────────────────────────
+const CATEGORY_INFO = (t) => ({
+  'sheep-care':  { label: t('catSheepCare'),   color: 'bg-rose-50 text-rose-700 border-rose-200' },
+  'shearing':    { label: t('catShearing'),     color: 'bg-amber-50 text-amber-800 border-amber-200' },
+  'wool-quality':{ label: t('catWoolQuality'), color: 'bg-sky-50 text-sky-700 border-sky-200' },
+  'storage':     { label: t('catStorage'),      color: 'bg-indigo-50 text-indigo-700 border-indigo-200' },
+  'processing':  { label: t('catProcessing'),   color: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
+  'selling':     { label: t('catSelling'),      color: 'bg-purple-50 text-purple-700 border-purple-200' },
+});
+
+// ─── Profile Detail Panel ──────────────────────────────────────────────────
+function ProfilePanel({ producer, onClose, navigate }) {
+  const { t, language } = useLanguage();
+  if (!producer) return null;
+
+  const translatedName = translateName(producer.name, language);
+  const translatedSpecialization = SPEC_TRANSLATIONS[language]?.[producer.specialization] || producer.specialization;
+  const translatedDescription = translateDescription(producer.description, language);
+  const translatedState = STATE_TRANSLATIONS[language]?.[producer.state] || producer.state;
+  const translatedRegion = REGION_TRANSLATIONS[language]?.[producer.region] || producer.region;
+  const translatedSkills = producer.skills.map(skill => SKILL_TRANSLATIONS[language]?.[skill] || skill);
+  const categoryInfo = CATEGORY_INFO(t);
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
+      {/* Backdrop */}
+      <div
+        className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+        onClick={onClose}
+      />
+
+      {/* Panel */}
+      <div className="relative z-10 w-full sm:max-w-xl bg-surface rounded-t-3xl sm:rounded-3xl shadow-2xl overflow-y-auto max-h-[90vh] sm:max-h-[85vh]">
+        {/* Handle bar (mobile) */}
+        <div className="flex justify-center pt-3 pb-1 sm:hidden">
+          <div className="w-10 h-1 rounded-full bg-border" />
+        </div>
+
+        <div className="p-6 sm:p-8">
+          {/* Close */}
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 grid h-8 w-8 place-items-center rounded-full bg-background hover:bg-border/40 transition-colors"
+            aria-label="Close"
+          >
+            <X size={16} className="text-textMuted" />
+          </button>
+
+          {/* Type badge */}
+          <span className={`inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider mb-3 ${
+            producer.type === 'Artisan'
+              ? 'bg-purple-100 text-purple-700'
+              : 'bg-emerald-100 text-emerald-700'
+          }`}>
+            {producer.type === 'Artisan' ? t('artisanType') : t('producerType')}
+          </span>
+
+          <h2 className="text-xl sm:text-2xl font-extrabold text-textPrimary leading-tight mb-1">
+            {translatedName}
+          </h2>
+
+          <p className="flex items-center gap-1.5 text-sm text-textMuted font-medium mb-4">
+            <MapPin size={14} />
+            {translatedRegion}, {translatedState}
+          </p>
+
+          <div className="p-4 rounded-xl bg-background border border-border/60 mb-5">
+            <p className="text-[10px] font-bold uppercase tracking-wider text-textMuted mb-1">{t('specialization')}</p>
+            <p className="text-sm font-semibold text-textPrimary">{translatedSpecialization}</p>
+          </div>
+
+          <div className="mb-5">
+            <p className="text-[10px] font-bold uppercase tracking-wider text-textMuted mb-2">{t('skills')}</p>
+            <div className="flex flex-wrap gap-2">
+              {translatedSkills.map(skill => (
+                <span key={skill} className="px-2.5 py-1 rounded-lg bg-background border border-border text-xs text-textSecondary font-medium">
+                  {skill}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          <p className="text-sm text-textSecondary leading-relaxed mb-6">
+            {translatedDescription}
+          </p>
+
+          {/* Recommended Training */}
+          <div className="border-t border-border/60 pt-5">
+            <div className="flex items-center gap-2 mb-3">
+              <BookOpen size={16} className="text-primary" />
+              <p className="text-sm font-bold text-textPrimary">{t('recommendedTraining')}</p>
+            </div>
+            <p className="text-xs text-textMuted mb-3">
+              {language === 'hi' ? 'इस प्रोफाइल की विशेषज्ञता और कौशल के आधार पर:' :
+               language === 'mr' ? 'या प्रोफाइलच्या विशेषज्ञता आणि कौशल्यांवर आधारित:' :
+               "Based on this profile's specialization and skills:"}
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {producer.trainingCategories.map(catKey => {
+                const info = categoryInfo[catKey];
+                if (!info) return null;
+                return (
+                  <button
+                    key={catKey}
+                    onClick={() => { onClose(); navigate(`/learn/category/${catKey}`); }}
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold border ${info.color} transition-all hover:-translate-y-0.5 hover:shadow-sm`}
+                  >
+                    <span>{info.label}</span>
+                    <ArrowRight size={12} />
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          <p className="text-[10px] text-textMuted/60 mt-5 italic">
+            {language === 'hi' ? '* यह वूलकनेक्ट प्रोटोटाइप के लिए बनाई गई एक डेमो प्रोफाइल है। कोई वास्तविक व्यक्ति नहीं।' :
+             language === 'mr' ? '* वूलकनेक्ट प्रोटोटाइपसाठी तयार केलेले हे एक नमुना प्रोफाईल आहे. वास्तविक व्यक्ती नाही.' :
+             '* This is a sample/demo profile created for the WoolConnect hackathon prototype. Not a real person.'}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Producer Card ─────────────────────────────────────────────────────────
+function ProducerCard({ producer, onViewDetails }) {
+  const { t, language } = useLanguage();
+  const translatedName = translateName(producer.name, language);
+  const translatedSpecialization = SPEC_TRANSLATIONS[language]?.[producer.specialization] || producer.specialization;
+  const translatedState = STATE_TRANSLATIONS[language]?.[producer.state] || producer.state;
+  const translatedRegion = REGION_TRANSLATIONS[language]?.[producer.region] || producer.region;
+  const translatedSkills = producer.skills.map(skill => SKILL_TRANSLATIONS[language]?.[skill] || skill);
+
+  return (
+    <Card
+      interactive={false}
+      className="flex flex-col justify-between p-5 group"
+    >
+      <div>
+        <div className="flex items-start justify-between gap-2 mb-3">
+          <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${
+            producer.type === 'Artisan'
+              ? 'bg-purple-100 text-purple-700'
+              : 'bg-emerald-100 text-emerald-700'
+          }`}>
+            {producer.type === 'Artisan' ? t('artisanType') : t('producerType')}
+          </span>
+          <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-background border border-border text-textMuted text-sm font-bold">
+            {translatedName.charAt(0)}
+          </span>
+        </div>
+
+        <h3 className="text-base font-bold text-textPrimary leading-snug mb-1">
+          {translatedName}
+        </h3>
+
+        <p className="flex items-center gap-1 text-xs text-textMuted font-medium mb-3">
+          <MapPin size={12} />
+          {translatedRegion}, {translatedState}
+        </p>
+
+        <div className="mb-3">
+          <p className="text-[10px] text-textMuted uppercase tracking-wider font-semibold mb-1">{t('specialization')}</p>
+          <p className="text-xs text-textSecondary font-medium">{translatedSpecialization}</p>
+        </div>
+
+        <div className="flex flex-wrap gap-1.5">
+          {translatedSkills.slice(0, 3).map(skill => (
+            <span key={skill} className="px-2 py-0.5 rounded-md bg-background border border-border/80 text-[11px] text-textMuted font-medium">
+              {skill}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      <button
+        onClick={() => onViewDetails(producer)}
+        className="mt-5 w-full py-2.5 rounded-xl bg-primary text-white text-sm font-bold hover:bg-primaryDark transition-all active:scale-[0.98] flex items-center justify-center gap-2 shadow-sm"
+      >
+        <span>{t('viewDetails')}</span>
+        <ArrowRight size={14} />
+      </button>
+    </Card>
+  );
+}
+
+// ─── Main Page ─────────────────────────────────────────────────────────────
+export default function ProducerDirectory() {
+  const navigate = useNavigate();
+  const { t, language } = useLanguage();
+  const [selectedState, setSelectedState] = useState('');
+  const [selectedRegion, setSelectedRegion] = useState('');
+  const [selectedType, setSelectedType] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedProducer, setSelectedProducer] = useState(null);
+
+  const states = Object.keys(STATE_REGIONS);
+  const regions = selectedState ? STATE_REGIONS[selectedState] : [];
+
+  // Reset region when state changes
+  const handleStateChange = (e) => {
+    setSelectedState(e.target.value);
+    setSelectedRegion('');
+  };
+
+  const filtered = useMemo(() => {
+    return PRODUCERS.filter(p => {
+      if (selectedState && p.state !== selectedState) return false;
+      if (selectedRegion && p.region !== selectedRegion) return false;
+      
+      let dbType = selectedType;
+      if (selectedType === t('producerType')) dbType = 'Wool Producer';
+      if (selectedType === t('artisanType')) dbType = 'Artisan';
+      if (selectedType && p.type !== dbType) return false;
+
+      if (searchQuery.trim()) {
+        const q = searchQuery.toLowerCase();
+        const translatedName = translateName(p.name, language).toLowerCase();
+        const translatedSpecialization = (SPEC_TRANSLATIONS[language]?.[p.specialization] || p.specialization).toLowerCase();
+        const translatedSkills = p.skills.map(skill => SKILL_TRANSLATIONS[language]?.[skill] || skill).map(s => s.toLowerCase());
+
+        return (
+          p.name.toLowerCase().includes(q) ||
+          translatedName.includes(q) ||
+          p.specialization.toLowerCase().includes(q) ||
+          translatedSpecialization.includes(q) ||
+          p.skills.some(s => s.toLowerCase().includes(q)) ||
+          translatedSkills.some(s => s.includes(q)) ||
+          p.region.toLowerCase().includes(q) ||
+          (REGION_TRANSLATIONS[language]?.[p.region] || '').toLowerCase().includes(q) ||
+          p.state.toLowerCase().includes(q) ||
+          (STATE_TRANSLATIONS[language]?.[p.state] || '').toLowerCase().includes(q)
+        );
+      }
+      return true;
+    });
+  }, [selectedState, selectedRegion, selectedType, searchQuery, language, t]);
+
+  const hasFilters = selectedState || selectedRegion || selectedType || searchQuery.trim();
+
+  return (
+    <>
+      <main className="page-shell animate-enter">
+        {/* Back */}
+        <button
+          onClick={() => navigate('/learn')}
+          className="inline-flex items-center gap-1.5 text-sm font-semibold text-textSecondary hover:text-primary mb-6 transition-colors"
+        >
+          <ArrowLeft size={16} />
+          <span>{t('backToLearn')}</span>
+        </button>
+
+        {/* Header */}
+        <section className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#2d3a6b] via-[#3b4d8a] to-[#4a5faa] text-white p-7 sm:p-10 shadow-xl mb-8">
+          <div className="hero-orb orb-one opacity-15" />
+          <div className="hero-orb orb-two opacity-10" />
+          <div className="relative z-10">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-blue-200 border border-white/15 text-xs font-semibold backdrop-blur-md mb-4">
+              <Users size={13} />
+              <span>{t('producersAndArtisans')}</span>
+            </div>
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight leading-tight">
+              {t('producersAndArtisans')}
+            </h1>
+            <p className="mt-2 text-sm sm:text-base text-white/80 max-w-xl leading-relaxed">
+              {t('exploreProducersDesc')}
+            </p>
+            <p className="mt-3 inline-flex items-center gap-1.5 text-[11px] bg-white/10 px-3 py-1.5 rounded-full text-blue-200 border border-white/10">
+              {language === 'hi' ? '⚠️ वूलकनेक्ट प्रोटोटाइप के लिए नमूना प्रोफाइल - वास्तविक व्यक्ति नहीं' :
+               language === 'mr' ? '⚠️ वूलकनेक्ट प्रोटोटाइपसाठी नमुना प्रोफाइल - वास्तविक व्यक्ती नाही' :
+               '⚠️ Sample profiles for WoolConnect prototype — not real individuals'}
+            </p>
+          </div>
+        </section>
+
+        {/* Filters */}
+        <section className="bg-surface rounded-2xl border border-border/80 shadow-sm p-5 mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {/* Search */}
+            <div className="relative lg:col-span-1">
+              <input
+                type="text"
+                placeholder={t('searchNameSkill')}
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+                className="w-full pl-10 pr-4 py-3 rounded-xl bg-background text-textPrimary placeholder:text-textMuted text-sm font-medium focus:outline-none focus:ring-1 focus:ring-primary border border-border/60 transition-all"
+              />
+              <Search className="absolute left-3.5 top-3.5 text-textMuted" size={15} />
+            </div>
+
+            {/* State */}
+            <div className="relative">
+              <select
+                value={selectedState}
+                onChange={handleStateChange}
+                className="w-full appearance-none px-4 py-3 rounded-xl bg-background text-textPrimary text-sm font-medium focus:outline-none focus:ring-1 focus:ring-primary border border-border/60 transition-all cursor-pointer pr-8"
+              >
+                <option value="">{t('selectState')}</option>
+                {states.map(s => (
+                  <option key={s} value={s}>
+                    {STATE_TRANSLATIONS[language]?.[s] || s}
+                  </option>
+                ))}
+              </select>
+              <ChevronDown size={15} className="absolute right-3 top-3.5 text-textMuted pointer-events-none" />
+            </div>
+
+            {/* Region */}
+            <div className="relative">
+              <select
+                value={selectedRegion}
+                onChange={e => setSelectedRegion(e.target.value)}
+                disabled={!selectedState}
+                className="w-full appearance-none px-4 py-3 rounded-xl bg-background text-textPrimary text-sm font-medium focus:outline-none focus:ring-1 focus:ring-primary border border-border/60 transition-all cursor-pointer pr-8 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <option value="">{t('selectRegion')}</option>
+                {regions.map(r => (
+                  <option key={r} value={r}>
+                    {REGION_TRANSLATIONS[language]?.[r] || r}
+                  </option>
+                ))}
+              </select>
+              <ChevronDown size={15} className="absolute right-3 top-3.5 text-textMuted pointer-events-none" />
+            </div>
+
+            {/* Type */}
+            <div className="relative">
+              <select
+                value={selectedType}
+                onChange={e => setSelectedType(e.target.value)}
+                className="w-full appearance-none px-4 py-3 rounded-xl bg-background text-textPrimary text-sm font-medium focus:outline-none focus:ring-1 focus:ring-primary border border-border/60 transition-all cursor-pointer pr-8"
+              >
+                <option value="">{t('allTypes')}</option>
+                <option value="Wool Producer">{t('producerType')}</option>
+                <option value="Artisan">{t('artisanType')}</option>
+              </select>
+              <ChevronDown size={15} className="absolute right-3 top-3.5 text-textMuted pointer-events-none" />
+            </div>
+          </div>
+
+          {/* Active filter chips + clear */}
+          {hasFilters && (
+            <div className="flex flex-wrap items-center gap-2 mt-4 pt-4 border-t border-border/60">
+              <span className="text-xs text-textMuted font-medium">{t('activeFilters')}</span>
+              {selectedState && (
+                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold">
+                  {STATE_TRANSLATIONS[language]?.[selectedState] || selectedState}
+                  <button onClick={() => { setSelectedState(''); setSelectedRegion(''); }} aria-label="Remove state filter"><X size={11} /></button>
+                </span>
+              )}
+              {selectedRegion && (
+                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold">
+                  {REGION_TRANSLATIONS[language]?.[selectedRegion] || selectedRegion}
+                  <button onClick={() => setSelectedRegion('')} aria-label="Remove region filter"><X size={11} /></button>
+                </span>
+              )}
+              {selectedType && (
+                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold">
+                  {selectedType === 'Wool Producer' ? t('producerType') : selectedType === 'Artisan' ? t('artisanType') : selectedType}
+                  <button onClick={() => setSelectedType('')} aria-label="Remove type filter"><X size={11} /></button>
+                </span>
+              )}
+              {searchQuery && (
+                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold">
+                  "{searchQuery}"
+                  <button onClick={() => setSearchQuery('')} aria-label="Clear search"><X size={11} /></button>
+                </span>
+              )}
+              <button
+                onClick={() => { setSelectedState(''); setSelectedRegion(''); setSelectedType(''); setSearchQuery(''); }}
+                className="text-xs text-red-600 font-semibold hover:underline ml-1"
+              >
+                {t('clearAll')}
+              </button>
+            </div>
+          )}
+        </section>
+
+        {/* Results */}
+        <section>
+          <div className="flex items-center justify-between mb-5">
+            <p className="text-sm font-semibold text-textSecondary">
+              {filtered.length === 0 ? t('noProducersFound') : `${filtered.length} ${t('producersFound')}`}
+            </p>
+          </div>
+
+          {filtered.length === 0 ? (
+            <div className="p-12 text-center rounded-3xl bg-surface border border-border flex flex-col items-center">
+              <span className="grid h-14 w-14 place-items-center rounded-3xl bg-blue-50 text-blue-600 mb-3">
+                <Users size={28} />
+              </span>
+              <h3 className="font-bold text-base text-textPrimary">{t('noProducersFound')}</h3>
+              <p className="text-xs sm:text-sm text-textSecondary max-w-sm mt-1 mb-4">
+                {t('noProducersHelp')}
+              </p>
+              {hasFilters && (
+                <button
+                  onClick={() => { setSelectedState(''); setSelectedRegion(''); setSelectedType(''); setSearchQuery(''); }}
+                  className="px-4 py-2 bg-primary text-white text-xs font-bold rounded-xl transition-colors shadow-sm hover:bg-primaryDark"
+                >
+                  {t('clearFilters')}
+                </button>
+              )}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              {filtered.map(producer => (
+                <ProducerCard
+                  key={producer.id}
+                  producer={producer}
+                  onViewDetails={setSelectedProducer}
+                />
+              ))}
+            </div>
+          )}
+        </section>
+      </main>
+
+      {/* Profile Detail Panel */}
+      {selectedProducer && (
+        <ProfilePanel
+          producer={selectedProducer}
+          onClose={() => setSelectedProducer(null)}
+          navigate={navigate}
+        />
+      )}
+    </>
+  );
+}

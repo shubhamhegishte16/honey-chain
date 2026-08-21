@@ -42,6 +42,7 @@ import MarketplaceManagement from './pages/admin/MarketplaceManagement';
 import LearnLanding from './pages/learn/LearnLanding';
 import ResourceListing from './pages/learn/ResourceListing';
 import ResourceDetails from './pages/learn/ResourceDetails';
+import ProducerDirectory from './pages/learn/ProducerDirectory';
 
 import ArtisanDashboard from './pages/artisan/ArtisanDashboard';
 import ArtisanBatches from './pages/artisan/ArtisanBatches';
@@ -325,6 +326,7 @@ export default function App() {
       <Route path="/learn" element={<Protected allowedRoles={['farmer', 'artisan', 'buyer', 'processor', 'admin']}><LearnLanding /></Protected>} />
       <Route path="/learn/category/:categoryName" element={<Protected allowedRoles={['farmer', 'artisan', 'buyer', 'processor', 'admin']}><ResourceListing /></Protected>} />
       <Route path="/learn/resource/:id" element={<Protected allowedRoles={['farmer', 'artisan', 'buyer', 'processor', 'admin']}><ResourceDetails /></Protected>} />
+      <Route path="/learn/producers" element={<Protected allowedRoles={['farmer', 'artisan', 'buyer', 'processor', 'admin']}><ProducerDirectory /></Protected>} />
 
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

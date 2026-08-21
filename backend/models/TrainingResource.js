@@ -57,6 +57,21 @@ const trainingResourceSchema = new mongoose.Schema({
     type: String,
     default: null,
   },
+  targetProblems: [{
+    type: String,
+  }],
+  recommendedSeasons: [{
+    type: String,
+  }],
+  interests: [{
+    type: String,
+  }],
+  practicalSteps: [{
+    step: { type: Number },
+    title: { type: String },
+    description: { type: String },
+    icon: { type: String }
+  }],
 }, {
   timestamps: true,
   toJSON: {
