@@ -1,2 +1,0 @@
-These are the 17 files supplied in the conversation and packaged into this archive.
-Note: the project references additional files that have NOT yet been supplied; see the assistant response for the remaining-file list.
