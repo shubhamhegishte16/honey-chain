@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, BookOpen, Clock, Award, Eye, User, Tag, CheckCircle, CheckCircle2, Volume2 } from 'lucide-react';
+import { ArrowLeft, BookOpen, Clock, Award, Eye, User, Tag, CheckCircle, CheckCircle2, Volume2, AlertCircle } from 'lucide-react';
 import { getTrainingResourceById } from '../../services/training.service';
 import Card from '../../components/ui/Card';
 import VoiceLearningPlayer from '../../components/learn/VoiceLearningPlayer';
 import { isResourceCompleted, toggleResourceCompletion, markResourceCompleted } from '../../services/learningProgress.service';
 import { useLanguage } from '../../context/LanguageContext';
 import { getTranslatedResource } from '../../services/trainingTranslations.service';
+import { speakWithLanguage } from '../../utils/ttsVoice.util';
 
 export default function ResourceDetails() {
   const { id } = useParams();
@@ -17,6 +18,8 @@ export default function ResourceDetails() {
   const [error, setError] = useState(null);
   const [completed, setCompleted] = useState(false);
   const [completedSteps, setCompletedSteps] = useState({});
+  // null = no error; string = voice unavailability message to display in step guide
+  const [stepVoiceError, setStepVoiceError] = useState(null);
 
   const resource = rawResource ? getTranslatedResource(rawResource, language) : null;
 
@@ -220,22 +223,27 @@ export default function ResourceDetails() {
                 const steps = resource.practicalSteps || [];
                 if (steps.length === 0) return null;
 
-                // Voice synthesis for steps
+                // Voice synthesis for steps — uses shared ttsVoice utility
+                // so the language mapping is identical to VoiceLearningPlayer
                 const handleListenToSteps = () => {
-                  if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
-                  const synth = window.speechSynthesis;
-                  synth.cancel();
-
+                  setStepVoiceError(null); // clear previous error
                   let stepText = `${resource.title}. `;
                   steps.forEach((s, idx) => {
                     const title = typeof s === 'string' ? s : s.title || `${t('step')} ${idx + 1}`;
-                    const desc = typeof s === 'string' ? '' : s.description || '';
+                    const desc  = typeof s === 'string' ? '' : s.description || '';
                     stepText += `${t('step')} ${idx + 1}: ${title}. ${desc}. `;
                   });
 
-                  const utterance = new SpeechSynthesisUtterance(stepText);
-                  utterance.rate = 0.9; // Farmer-friendly comfortable reading pace
-                  synth.speak(utterance);
+                  speakWithLanguage(stepText, language, {
+                    rate: 0.9,
+                    onVoiceUnavailable: (voiceCode) => {
+                      // No Marathi/Hindi voice on this browser — show a clear message
+                      setStepVoiceError(
+                        `${voiceCode} ${t('regionalVoiceNotAvailable')}`
+                      );
+                    },
+                    onError: (e) => console.error('Step TTS error:', e),
+                  });
                 };
 
                 const defaultIcons = ['💧', '📦', '⬆️', '☔', '🔍', '✂️', '🧶', '🎨', '💰', '🐑'];
@@ -263,6 +271,14 @@ export default function ResourceDetails() {
                         <span>🔊 {t('listenToSteps')}</span>
                       </button>
                     </div>
+
+                    {/* Voice unavailability warning */}
+                    {stepVoiceError && (
+                      <div className="mb-4 p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs flex items-center gap-2">
+                        <AlertCircle size={15} className="shrink-0 text-amber-600" />
+                        <span>{stepVoiceError}</span>
+                      </div>
+                    )}
 
                     {/* Step Cards Flow */}
                     <div className="space-y-4">

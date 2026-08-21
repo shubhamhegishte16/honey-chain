@@ -1,87 +1,75 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Volume2, Play, Pause, Square, AlertCircle, Globe, Check } from 'lucide-react';
+import { Volume2, Play, Pause, Square, AlertCircle, Globe } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
+import {
+  getVoiceCode,
+  findVoice,
+  isVoiceAvailable,
+  loadVoices,
+} from '../../utils/ttsVoice.util';
 
+// All selectable TTS voices shown in the language dropdown
 const SUPPORTED_LANGUAGES = [
-  { code: 'en-IN', nativeName: 'English', fallbackCode: 'en' },
-  { code: 'hi-IN', nativeName: 'हिंदी', fallbackCode: 'hi' },
-  { code: 'mr-IN', nativeName: 'मराठी', fallbackCode: 'mr' },
-  { code: 'gu-IN', nativeName: 'ગુજરાતી', fallbackCode: 'gu' },
-  { code: 'pa-IN', nativeName: 'ਪੰਜਾਬੀ', fallbackCode: 'pa' },
-  { code: 'bn-IN', nativeName: 'বাংলা', fallbackCode: 'bn' },
-  { code: 'kn-IN', nativeName: 'ಕನ್ನಡ', fallbackCode: 'kn' },
-  { code: 'te-IN', nativeName: 'తెలుగు', fallbackCode: 'te' },
-  { code: 'ta-IN', nativeName: 'தமிழ்', fallbackCode: 'ta' },
-  { code: 'ml-IN', nativeName: 'മലയാളം', fallbackCode: 'ml' }
+  { code: 'en-IN', nativeName: 'English' },
+  { code: 'hi-IN', nativeName: 'हिंदी' },
+  { code: 'mr-IN', nativeName: 'मराठी' },
+  { code: 'gu-IN', nativeName: 'ગુજરાતી' },
+  { code: 'pa-IN', nativeName: 'ਪੰਜਾਬੀ' },
+  { code: 'bn-IN', nativeName: 'বাংলা' },
+  { code: 'kn-IN', nativeName: 'ಕನ್ನಡ' },
+  { code: 'te-IN', nativeName: 'తెలుగు' },
+  { code: 'ta-IN', nativeName: 'தமிழ்' },
+  { code: 'ml-IN', nativeName: 'മലയാളം' },
 ];
 
 export default function VoiceLearningPlayer({ resource }) {
   const { t, language } = useLanguage();
 
-  // Map global language code (en, hi, mr) to SpeechSynthesis voice code (en-IN, hi-IN, mr-IN)
-  const defaultVoiceCode = language === 'hi' ? 'hi-IN' : language === 'mr' ? 'mr-IN' : 'en-IN';
+  // Derive BCP-47 voice code from the global app language using the shared mapping
+  const defaultVoiceCode = getVoiceCode(language);
 
   const [selectedLang, setSelectedLang] = useState(defaultVoiceCode);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [isPaused, setIsPaused] = useState(false);
-  const [voices, setVoices] = useState([]);
+  const [isPlaying, setIsPlaying]   = useState(false);
+  const [isPaused, setIsPaused]     = useState(false);
+  // loadedVoices: voices resolved after async load – used for availability UI
+  const [loadedVoices, setLoadedVoices] = useState([]);
   const [voiceAvailable, setVoiceAvailable] = useState(true);
   const [speechSupported, setSpeechSupported] = useState(true);
 
-  const synthRef = useRef(null);
+  const synthRef     = useRef(null);
   const utteranceRef = useRef(null);
 
-  // Sync selectedLang when global site language changes
+  // Sync selectedLang whenever the global site language changes
   useEffect(() => {
-    setSelectedLang(defaultVoiceCode);
+    setSelectedLang(getVoiceCode(language));
   }, [language]);
 
-  // Initialize SpeechSynthesis and load voices
+  // Initialize SpeechSynthesis and subscribe to voice list changes
   useEffect(() => {
     if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
       synthRef.current = window.speechSynthesis;
 
       const updateVoices = () => {
-        const availableVoices = synthRef.current.getVoices();
-        setVoices(availableVoices);
+        setLoadedVoices(synthRef.current.getVoices());
       };
 
+      // Load synchronously if already available (Firefox), else wait for event (Chrome)
       updateVoices();
-      if (synthRef.current.onvoiceschanged !== undefined) {
-        synthRef.current.onvoiceschanged = updateVoices;
-      }
+      synthRef.current.onvoiceschanged = updateVoices;
     } else {
       setSpeechSupported(false);
     }
 
-    return () => {
-      stopSpeech();
-    };
+    return () => { stopSpeech(); };
   }, []);
 
-  // Stop speech if resource ID changes or component unmounts
-  useEffect(() => {
-    stopSpeech();
-  }, [resource?._id || resource?.id]);
+  // Stop speech when navigating to a different resource
+  useEffect(() => { stopSpeech(); }, [resource?._id, resource?.id]);
 
-  // Check voice availability when selected language or voices change
+  // Re-check voice availability whenever selectedLang or voice list changes
   useEffect(() => {
-    if (!synthRef.current) return;
-    
-    const targetLang = SUPPORTED_LANGUAGES.find(l => l.code === selectedLang) || SUPPORTED_LANGUAGES[0];
-    
-    const matchingVoice = voices.find(v => 
-      v.lang === targetLang.code || 
-      v.lang.startsWith(targetLang.fallbackCode)
-    );
-
-    // If English, browser always has fallback. For regional languages check explicitly.
-    if (matchingVoice || targetLang.fallbackCode === 'en') {
-      setVoiceAvailable(true);
-    } else {
-      setVoiceAvailable(false);
-    }
-  }, [selectedLang, voices]);
+    setVoiceAvailable(isVoiceAvailable(loadedVoices, selectedLang));
+  }, [selectedLang, loadedVoices]);
 
   const constructTextToRead = () => {
     if (!resource) return '';
@@ -102,7 +90,7 @@ export default function VoiceLearningPlayer({ resource }) {
     return text;
   };
 
-  const handlePlay = () => {
+  const handlePlay = async () => {
     if (!synthRef.current || !speechSupported) return;
 
     if (isPaused) {
@@ -112,32 +100,28 @@ export default function VoiceLearningPlayer({ resource }) {
       return;
     }
 
-    // Cancel any current speech
     synthRef.current.cancel();
 
     const text = constructTextToRead();
     if (!text.trim()) return;
 
-    const utterance = new SpeechSynthesisUtterance(text);
-    const targetLang = SUPPORTED_LANGUAGES.find(l => l.code === selectedLang) || SUPPORTED_LANGUAGES[0];
+    // Re-fetch voices at play-time so we always have the latest list
+    const freshVoices = await loadVoices();
 
-    // Find voice
-    const matchedVoice = voices.find(v => 
-      v.lang === targetLang.code || 
-      v.lang.startsWith(targetLang.fallbackCode)
-    );
-
-    if (matchedVoice) {
-      utterance.voice = matchedVoice;
+    // If no voice available for this language, block play (don't silently use English)
+    if (!isVoiceAvailable(freshVoices, selectedLang)) {
+      setVoiceAvailable(false);
+      return;
     }
-    utterance.lang = targetLang.code;
-    utterance.rate = 0.95; // Slightly comfortable reading pace for farmers
 
-    utterance.onend = () => {
-      setIsPlaying(false);
-      setIsPaused(false);
-    };
+    const matchedVoice = findVoice(freshVoices, selectedLang);
 
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = selectedLang;
+    if (matchedVoice) utterance.voice = matchedVoice;
+    utterance.rate = 0.95;
+
+    utterance.onend = () => { setIsPlaying(false); setIsPaused(false); };
     utterance.onerror = (e) => {
       console.error('Speech synthesis error:', e);
       setIsPlaying(false);
