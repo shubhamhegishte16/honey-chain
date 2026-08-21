@@ -165,15 +165,17 @@ export default function LandingPage() {
       <header className="sticky top-0 z-40 bg-surface/90 backdrop-blur-md border-b border-border/70 transition-all">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-4">
           {/* Brand Logo */}
-          <Link to="/" className="flex items-center gap-2.5 font-bold text-primary text-xl tracking-tight shrink-0">
-            <span className="grid h-10 w-10 place-items-center rounded-2xl bg-primary text-white shadow-md shadow-primary/20">
-              <Leaf size={20} />
-            </span>
+          <Link to="/" className="flex items-center gap-3 font-bold text-primary text-xl tracking-tight shrink-0 group">
+            <img
+              src="/logo.png"
+              alt="WoolConnect"
+              className="h-12 w-12 sm:h-14 sm:w-14 object-contain rounded-2xl shadow-sm transition-transform group-hover:scale-105"
+            />
             <div className="flex flex-col">
-              <span className="text-xl font-bold tracking-tight text-textPrimary leading-none">
+              <span className="text-xl sm:text-2xl font-black tracking-tight text-textPrimary leading-none">
                 Wool<span className="text-primary">Connect</span>
               </span>
-              <span className="text-[10px] font-semibold text-textMuted uppercase tracking-widest mt-0.5">
+              <span className="text-[11px] font-bold text-textMuted uppercase tracking-widest mt-1">
                 {t('footerFarmToFabric2')}
               </span>
             </div>
@@ -984,11 +986,15 @@ export default function LandingPage() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 pb-10 border-b border-border/70">
             {/* Col 1 */}
             <div className="space-y-3">
-              <Link to="/" className="flex items-center gap-2 font-bold text-primary text-lg">
-                <span className="grid h-8 w-8 place-items-center rounded-xl bg-primary text-white shadow-sm">
-                  <Leaf size={16} />
+              <Link to="/" className="flex items-center gap-2 font-bold text-textPrimary text-lg group">
+                <img
+                  src="/logo.png"
+                  alt="WoolConnect"
+                  className="h-8 w-8 object-contain rounded-xl shadow-xs"
+                />
+                <span className="leading-none">
+                  Wool<span className="text-primary">Connect</span>
                 </span>
-                WoolConnect
               </Link>
               <p className="text-textMuted text-xs leading-relaxed">
                 {t('footerTagline')}

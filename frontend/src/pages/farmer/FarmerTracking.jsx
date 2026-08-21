@@ -115,38 +115,56 @@ export default function FarmerTracking() {
 
       {/* ─── Batches List / Grid ─── */}
       {loading ? (
-        <div className="py-20 flex justify-center">
-          <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="p-5 rounded-3xl bg-surface border border-border/40 shadow-sm animate-skeleton-pulse">
+              <div className="flex items-start gap-3 mb-4">
+                <div className="h-11 w-11 rounded-2xl bg-border/50 shrink-0" />
+                <div className="flex-1 space-y-2 py-1">
+                  <div className="h-4 bg-border/50 rounded w-1/3" />
+                  <div className="h-3 bg-border/30 rounded w-1/4" />
+                </div>
+              </div>
+              <div className="h-16 bg-background rounded-2xl border border-border/30 mb-4" />
+              <div className="flex items-center justify-between pt-3 border-t border-border/30">
+                <div className="flex gap-2">
+                  <div className="h-6 w-14 bg-border/30 rounded-lg" />
+                  <div className="h-6 w-20 bg-border/30 rounded-lg" />
+                </div>
+                <div className="h-4 w-16 bg-border/30 rounded" />
+              </div>
+            </div>
+          ))}
         </div>
       ) : error ? (
-        <div className="p-6 text-center rounded-2xl bg-errorLight/50 border border-error/20 text-error text-sm">
+        <div className="p-6 text-center rounded-2xl bg-errorLight/50 border border-error/20 text-error text-sm animate-fade-in">
           {error}
         </div>
       ) : filteredBatches.length === 0 ? (
-        <div className="p-10 sm:p-16 text-center rounded-3xl bg-surface border border-border flex flex-col items-center animate-fade-in">
+        <div className="p-10 sm:p-16 text-center rounded-3xl bg-surface border border-border flex flex-col items-center animate-fade-in-up">
           <span className="grid h-16 w-16 place-items-center rounded-3xl bg-primaryLight text-primary mb-4 shadow-sm">
             <Package size={32} />
           </span>
           <h3 className="font-bold text-lg text-textPrimary">{t('noWoolFound')}</h3>
-          <p className="text-xs sm:text-sm text-textSecondary max-w-sm mt-1 mb-6">
+          <p className="hidden sm:block text-xs sm:text-sm text-textSecondary max-w-sm mt-1 mb-6">
             {search || activeFilter !== 'all'
               ? t('noWoolSearch')
               : t('noWoolHelp')}
           </p>
           <button
             onClick={() => navigate('/batches/add')}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-primary text-white font-bold text-sm shadow hover:bg-primaryDark transition-all"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-primary text-white font-bold text-sm shadow hover:bg-primaryDark transition-all active:scale-95"
           >
             <ClipboardPlus size={16} />
             <span>{t('recordFirstBatch')}</span>
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-fade-in">
-          {filteredBatches.map(batch => (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {filteredBatches.map((batch, index) => (
             <div
               key={batch.id || batch._id}
-              className="p-5 rounded-3xl bg-surface border border-border/80 shadow-sm hover:shadow-card-hover hover:border-primary/40 transition-all duration-200 flex flex-col justify-between"
+              className={`p-5 rounded-3xl bg-surface border border-border/80 shadow-sm hover:shadow-card-hover hover:border-primary/40 transition-all duration-200 flex flex-col justify-between animate-fade-in-up delay-${Math.min(index + 1, 6)}`}
             >
               <div>
                 <div className="flex items-start justify-between gap-3 mb-3">

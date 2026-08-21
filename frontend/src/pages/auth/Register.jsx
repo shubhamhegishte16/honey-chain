@@ -146,13 +146,15 @@ export default function Register() {
               {t('backToWoolConnectHome', 'Back to WoolConnect Home')}
             </Link>
 
-            <div className="flex items-center gap-3">
-              <span className="grid h-11 w-11 place-items-center rounded-2xl bg-white text-primary shadow-lg">
-                <Leaf size={22} />
-              </span>
+            <div className="flex items-center gap-3.5">
+              <img
+                src="/logo.png"
+                alt="WoolConnect"
+                className="h-16 w-16 object-contain rounded-2xl bg-white p-1 shadow-lg"
+              />
               <div>
-                <span className="text-2xl font-bold tracking-tight text-white block">WoolConnect</span>
-                <span className="text-xs font-medium text-emerald-200">{t('nationalWoolEcosystem', 'National Wool Ecosystem Platform')}</span>
+                <span className="text-2xl font-black tracking-tight text-white block">WoolConnect</span>
+                <span className="text-xs font-semibold text-emerald-200">{t('nationalWoolEcosystem', 'National Wool Ecosystem Platform')}</span>
               </div>
             </div>
           </div>
@@ -203,11 +205,13 @@ export default function Register() {
         <div className="flex-1 flex flex-col items-center bg-surface lg:bg-white px-4 py-8 sm:px-8 lg:px-12 overflow-y-auto">
           {/* Mobile Header */}
           <div className="w-full max-w-xl flex items-center justify-between lg:hidden mb-6">
-            <Link to="/" className="flex items-center gap-2 font-bold text-primary text-base">
-              <span className="grid h-8 w-8 place-items-center rounded-xl bg-primary text-white shadow-sm">
-                <Leaf size={16} />
-              </span>
-              WoolConnect
+            <Link to="/" className="flex items-center gap-2.5 font-black text-textPrimary text-lg">
+              <img
+                src="/logo.png"
+                alt="WoolConnect"
+                className="h-10 w-10 object-contain rounded-xl shadow-xs"
+              />
+              <span>Wool<span className="text-primary">Connect</span></span>
             </Link>
             <Link
               to="/login"

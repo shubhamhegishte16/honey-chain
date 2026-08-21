@@ -63,7 +63,7 @@ export default function ArtisanProcessing() {
             <Cog size={32} />
           </span>
           <h3 className="font-bold text-lg text-textPrimary">{t('noActiveProcessing')}</h3>
-          <p className="text-xs sm:text-sm text-textSecondary max-w-sm mt-1">{t('noActiveProcessingHelp')}</p>
+          <p className="hidden sm:block text-xs sm:text-sm text-textSecondary max-w-sm mt-1">{t('noActiveProcessingHelp')}</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-4">

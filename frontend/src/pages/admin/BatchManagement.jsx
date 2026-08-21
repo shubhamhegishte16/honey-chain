@@ -50,7 +50,8 @@ export default function BatchManagement() {
         </div>
       </div>
 
-      <div className="bg-surface rounded-xl border border-border overflow-hidden shadow-card">
+      {/* Desktop Table View */}
+      <div className="hidden sm:block bg-surface rounded-2xl border border-border overflow-hidden shadow-card">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
             <thead className="bg-background border-b border-border">
@@ -82,6 +83,30 @@ export default function BatchManagement() {
             </tbody>
           </table>
         </div>
+      </div>
+
+      {/* Mobile Card View */}
+      <div className="sm:hidden space-y-3">
+        {filtered.map(b => (
+          <div key={b._id} className="p-4 rounded-2xl bg-surface border border-border shadow-sm space-y-2.5">
+            <div className="flex items-center justify-between">
+              <span className="font-bold text-sm text-textPrimary">{b.batch_id}</span>
+              <BatchStatusBadge status={b.status} />
+            </div>
+            <div className="text-xs text-textSecondary space-y-1">
+              <p><span className="font-medium text-textMuted">{t('farmer')}:</span> {b.farmer_id?.name || t('unknown')}</p>
+              <p><span className="font-medium text-textMuted">{t('woolType')}:</span> {b.wool_type} • <span className="font-bold text-textPrimary">{b.quantity_kg} kg</span></p>
+            </div>
+            <div className="pt-2 border-t border-border/60 text-[11px] text-textMuted flex justify-between">
+              <span>{new Date(b.created_at).toLocaleDateString()}</span>
+            </div>
+          </div>
+        ))}
+        {filtered.length === 0 && (
+          <div className="p-8 text-center bg-surface rounded-2xl border border-border text-sm text-textSecondary">
+            {t('noBatchesFound')}
+          </div>
+        )}
       </div>
     </div>
   );

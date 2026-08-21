@@ -17,45 +17,45 @@ a:hover { color: #3F6B3F; }
 
 @layer components {
   /* ─── Page Shell ─── */
-  .page-shell { @apply max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-10 pb-12; }
+  .page-shell { @apply max-w-6xl mx-auto px-3.5 sm:px-6 lg:px-8 py-3.5 sm:py-7 pb-20 sm:pb-12 overflow-x-hidden; }
 
   /* ─── Hero Panel (Farmer Dashboard) ─── */
   .hero-panel {
-    @apply relative overflow-hidden rounded-[2rem] px-6 py-9 sm:px-10 sm:py-12 text-white;
-    background: linear-gradient(125deg, #244f3e 0%, #3f6b3f 58%, #6f9163 100%);
-    box-shadow: 0 22px 45px rgba(41, 79, 47, .20);
+    @apply relative overflow-hidden rounded-2xl sm:rounded-[2rem] px-4 py-5 sm:px-9 sm:py-10 text-white;
+    background: linear-gradient(135deg, #1c3e27 0%, #2a5035 50%, #3f6b3f 100%);
+    box-shadow: 0 10px 30px -5px rgba(28, 62, 39, 0.15);
   }
-  .hero-panel h1 { @apply mt-4 text-3xl sm:text-4xl lg:text-5xl font-bold leading-[1.1] tracking-tight; }
+  .hero-panel h1 { @apply mt-2 sm:mt-4 text-xl sm:text-3xl lg:text-4xl font-extrabold leading-snug sm:leading-tight tracking-tight; }
   .hero-panel h1 span { color: #e6efd9; }
-  .eyebrow { @apply inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[.14em]; }
+  .eyebrow { @apply inline-flex items-center gap-1.5 text-[10px] sm:text-[11px] font-bold uppercase tracking-[.12em]; }
   .hero-panel .eyebrow { color: #d8ebca; }
-  .hero-copy { @apply mt-4 flex items-center gap-1.5 text-sm text-white/75; }
-  .hero-cta { @apply inline-flex items-center gap-2 rounded-xl bg-white px-4 py-3 text-sm font-bold text-primary shadow-lg transition duration-300 hover:-translate-y-0.5 hover:shadow-xl; }
-  .hero-ghost { @apply rounded-xl border border-white/30 bg-white/10 px-4 py-3 text-sm font-semibold text-white backdrop-blur transition hover:bg-white/20; }
-  .hero-orb { @apply absolute rounded-full bg-white/10 blur-2xl; animation: float 8s ease-in-out infinite; }
+  .hero-copy { @apply mt-2 sm:mt-4 flex items-center gap-1.5 text-xs sm:text-sm text-white/80; }
+  .hero-cta { @apply inline-flex items-center justify-center gap-2 rounded-xl bg-white px-4 py-2.5 text-xs sm:text-sm font-bold text-primary shadow transition hover:bg-emerald-50 active:scale-95; }
+  .hero-ghost { @apply rounded-xl border border-white/30 bg-white/10 px-3.5 py-2.5 text-xs sm:text-sm font-semibold text-white backdrop-blur transition hover:bg-white/20; }
+  .hero-orb { @apply hidden sm:block absolute rounded-full bg-white/10 blur-2xl pointer-events-none; }
   .orb-one { width: 230px; height: 230px; right: -60px; top: -95px; }
-  .orb-two { width: 130px; height: 130px; right: 25%; bottom: -88px; animation-delay: -3s; }
-  .hero-mark { @apply absolute -right-8 bottom-[-58px] h-56 w-56 text-white/10 rotate-[-24deg]; }
+  .orb-two { width: 130px; height: 130px; right: 25%; bottom: -88px; }
+  .hero-mark { @apply absolute -right-8 bottom-[-58px] h-56 w-56 text-white/10 rotate-[-24deg] pointer-events-none; }
 
   /* ─── Dashboard Grid & Metrics ─── */
-  .dashboard-grid { @apply grid gap-4 mt-5 md:grid-cols-3; }
-  .metric-card { @apply relative min-h-[158px] overflow-hidden; background: rgba(255, 255, 255, .85); }
-  .metric-card p { @apply mt-4 text-xs font-semibold uppercase tracking-[.09em] text-textSecondary; }
-  .metric-card strong { @apply mt-1 block text-3xl font-bold tracking-tight text-textPrimary; }
-  .metric-card strong small { @apply ml-1 text-base font-medium text-textSecondary; }
-  .metric-card span { @apply mt-2 block text-xs text-textMuted; }
-  .metric-icon { @apply grid h-10 w-10 place-items-center rounded-xl; }
-  .market-highlight { @apply min-h-[158px]; background: linear-gradient(135deg, #e9f2f5, #ffffff 65%); }
+  .dashboard-grid { @apply grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5 sm:gap-4 mt-4; }
+  .metric-card { @apply relative min-h-[120px] sm:min-h-[148px] overflow-hidden bg-surface p-4 sm:p-5 rounded-2xl border border-border shadow-xs; }
+  .metric-card p { @apply mt-2 sm:mt-3 text-[11px] font-bold uppercase tracking-wider text-textSecondary; }
+  .metric-card strong { @apply mt-0.5 block text-2xl sm:text-3xl font-extrabold tracking-tight text-textPrimary; }
+  .metric-card strong small { @apply ml-1 text-sm font-medium text-textSecondary; }
+  .metric-card span { @apply mt-1 block text-xs text-textMuted; }
+  .metric-icon { @apply grid h-9 w-9 sm:h-10 sm:w-10 place-items-center rounded-xl; }
+  .market-highlight { @apply min-h-[120px] sm:min-h-[148px]; background: linear-gradient(135deg, #e9f2f5, #ffffff 65%); }
 
   /* ─── Trend Chips ─── */
-  .trend-chip { @apply inline-flex items-center gap-1 rounded-full px-2.5 py-1.5 text-xs font-bold; }
+  .trend-chip { @apply inline-flex items-center gap-1 rounded-full px-2 py-1 text-[11px] font-bold; }
   .trend-up { @apply bg-primaryLight text-primary; }
   .trend-down { @apply bg-errorLight text-error; }
 
   /* ─── Section Headings ─── */
-  .section-heading { @apply mb-4 flex items-end justify-between gap-4; }
-  .section-heading h2 { @apply mt-1 text-xl font-bold tracking-tight text-textPrimary; }
-  .text-link { @apply inline-flex items-center gap-1 text-sm font-bold text-primary transition hover:gap-2; }
+  .section-heading { @apply mb-3 sm:mb-4 flex items-end justify-between gap-3; }
+  .section-heading h2 { @apply mt-0.5 text-lg sm:text-xl font-bold tracking-tight text-textPrimary; }
+  .text-link { @apply inline-flex items-center gap-1 text-xs sm:text-sm font-bold text-primary transition hover:gap-1.5; }
 
   /* ─── Action Grid (Quick Actions) ─── */
   .action-grid { @apply grid gap-3 md:grid-cols-3; }
@@ -80,9 +80,12 @@ a:hover { color: #3F6B3F; }
 
   /* ─── Entrance Animations ─── */
   .animate-enter { animation: enter .6s cubic-bezier(.2, .8, .2, 1) both; }
-  .delay-1 { animation-delay: .08s; }
-  .delay-2 { animation-delay: .16s; }
-  .delay-3 { animation-delay: .24s; }
+  .delay-1 { animation-delay: .05s; }
+  .delay-2 { animation-delay: .10s; }
+  .delay-3 { animation-delay: .15s; }
+  .delay-4 { animation-delay: .20s; }
+  .delay-5 { animation-delay: .25s; }
+  .delay-6 { animation-delay: .30s; }
 
   /* ─── Marketplace Hero ─── */
   .market-hero {

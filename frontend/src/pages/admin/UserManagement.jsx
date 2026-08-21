@@ -57,7 +57,8 @@ export default function UserManagement() {
         </div>
       </div>
 
-      <div className="bg-surface rounded-xl border border-border overflow-hidden shadow-card">
+      {/* Desktop Table View */}
+      <div className="hidden sm:block bg-surface rounded-2xl border border-border overflow-hidden shadow-card">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
             <thead className="bg-background border-b border-border">
@@ -107,6 +108,50 @@ export default function UserManagement() {
             </tbody>
           </table>
         </div>
+      </div>
+
+      {/* Mobile Card View */}
+      <div className="sm:hidden space-y-3">
+        {filtered.map(u => (
+          <div key={u._id} className="p-4 rounded-2xl bg-surface border border-border shadow-sm space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <span className="grid h-9 w-9 place-items-center rounded-full bg-primaryLight text-primary text-xs font-bold shrink-0">
+                  {u.name?.charAt(0)?.toUpperCase() || '?'}
+                </span>
+                <div>
+                  <p className="font-bold text-sm text-textPrimary">{u.name}</p>
+                  <p className="text-xs text-textSecondary">{u.email}</p>
+                </div>
+              </div>
+              <span className={`role-badge role-${u.role}`}>{u.role}</span>
+            </div>
+
+            <div className="flex items-center justify-between pt-2 border-t border-border/60 text-xs">
+              <span className="text-textSecondary">{u.state || 'India'}</span>
+              <div className="flex items-center gap-1.5">
+                <span className="text-textMuted font-medium">{t('role')}:</span>
+                <select
+                  value={u.role}
+                  onChange={(e) => updateRole(u._id, e.target.value)}
+                  className="text-xs border border-border rounded-lg px-2 py-1 bg-background text-textPrimary focus:outline-none focus:ring-1 focus:ring-primary font-medium"
+                >
+                  <option value="farmer">{t('roleFarmer')}</option>
+                  <option value="buyer">{t('roleBuyer')}</option>
+                  <option value="processor">{t('roleProcessor')}</option>
+                  <option value="warehouse">{t('roleWarehouse')}</option>
+                  <option value="artisan">{t('roleArtisan')}</option>
+                  <option value="admin">{t('roleAdmin')}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        ))}
+        {filtered.length === 0 && (
+          <div className="p-8 text-center bg-surface rounded-2xl border border-border text-sm text-textSecondary">
+            {t('noUsersFound')}
+          </div>
+        )}
       </div>
     </div>
   );

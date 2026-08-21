@@ -58,7 +58,8 @@ export default function MarketplaceManagement() {
         </div>
       </div>
 
-      <div className="bg-surface rounded-xl border border-border overflow-hidden shadow-card">
+      {/* Desktop Table View */}
+      <div className="hidden sm:block bg-surface rounded-2xl border border-border overflow-hidden shadow-card">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
             <thead className="bg-background border-b border-border">
@@ -105,6 +106,45 @@ export default function MarketplaceManagement() {
             </tbody>
           </table>
         </div>
+      </div>
+
+      {/* Mobile Card View */}
+      <div className="sm:hidden space-y-3">
+        {filtered.map(l => (
+          <div key={l._id} className="p-4 rounded-2xl bg-surface border border-border shadow-sm space-y-2.5">
+            <div className="flex items-center justify-between">
+              <span className="font-bold text-sm text-textPrimary">{l.title || `${l.wool_type} Wool`}</span>
+              <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold capitalize ${
+                l.status === 'active'
+                  ? 'bg-primaryLight text-primary'
+                  : 'bg-errorLight text-error'
+              }`}>
+                {l.status === 'active' ? t('active') : t('inactive')}
+              </span>
+            </div>
+            <div className="text-xs text-textSecondary space-y-1">
+              <p><span className="font-medium text-textMuted">{t('seller')}:</span> {l.seller_id?.name || t('unknown')}</p>
+              <p><span className="font-medium text-textMuted">{t('pricePerKg')}:</span> <span className="font-bold text-textPrimary">₹{l.price_per_kg}</span></p>
+            </div>
+            <div className="pt-2 border-t border-border/60 flex justify-end">
+              <button
+                onClick={() => toggleStatus(l._id, l.status)}
+                className={`text-xs font-semibold px-3 py-1.5 rounded-lg border transition-colors ${
+                  l.status === 'active'
+                    ? 'border-error/30 text-error bg-errorLight/40 hover:bg-errorLight'
+                    : 'border-primary/30 text-primary bg-primaryLight/40 hover:bg-primaryLight'
+                }`}
+              >
+                {l.status === 'active' ? t('deactivate') : t('activate')}
+              </button>
+            </div>
+          </div>
+        ))}
+        {filtered.length === 0 && (
+          <div className="p-8 text-center bg-surface rounded-2xl border border-border text-sm text-textSecondary">
+            {t('noListingsFound')}
+          </div>
+        )}
       </div>
     </div>
   );

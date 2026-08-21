@@ -52,61 +52,55 @@ export default function ArtisanDashboard() {
 
   return (
     <main className="page-shell">
-      {/* Welcome */}
-      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#1c3e27] via-[#2a5035] to-[#3f6b3f] text-white p-6 sm:p-9 shadow-xl animate-enter">
-        <div className="hero-orb orb-one opacity-20" />
-        <div className="hero-orb orb-two opacity-15" />
-
-        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+      {/* Welcome Hero */}
+      <section className="relative overflow-hidden rounded-2xl sm:rounded-3xl bg-gradient-to-r from-[#1c3e27] via-[#2a5035] to-[#3f6b3f] text-white p-4 sm:p-8 shadow-md animate-fade-in-down">
+        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="max-w-xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-emerald-200 border border-white/15 text-xs font-semibold backdrop-blur-md mb-3">
-              <Sparkles size={13} className="text-amber-300" />
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/15 text-emerald-200 border border-white/15 text-[11px] font-semibold mb-2">
+              <img src="/logo.png" alt="Emblem" className="h-3.5 w-3.5 object-contain rounded-full" />
               <span>WOOLCONNECT</span>
             </div>
 
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight leading-tight">
-              {t('namaste')}, {profile?.name?.split(' ')[0] || t('artisanFallback')}. <br />
-              <span className="text-emerald-200 font-medium text-xl sm:text-2xl lg:text-3xl">
-                {t('manageWorkOnePlace')}
-              </span>
+            <h1 className="text-xl sm:text-3xl font-extrabold tracking-tight leading-tight">
+              {t('namaste')}, {profile?.name?.split(' ')[0] || t('artisanFallback')}
             </h1>
 
-            <p className="mt-2.5 flex items-center gap-1.5 text-xs sm:text-sm text-white/80">
-              <MapPin size={14} className="text-emerald-300" />
+            <p className="mt-1 flex items-center gap-1 text-xs text-white/80">
+              <MapPin size={13} className="text-emerald-300 shrink-0" />
               <span>{profile?.district || ''}{profile?.district && profile?.state ? ', ' : ''}{profile?.state || ''}</span>
             </p>
           </div>
 
-          <div className="flex flex-wrap sm:flex-nowrap gap-3 shrink-0">
+          <div className="shrink-0 pt-1 sm:pt-0">
             <button
               onClick={() => navigate('/artisan/batches')}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 rounded-2xl bg-white text-primary font-bold text-sm shadow-md hover:bg-emerald-50 hover:shadow-lg transition-all duration-200 active:scale-[0.98]"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white text-primary font-bold text-xs sm:text-sm shadow-sm hover:bg-emerald-50 active:scale-95 transition-all"
             >
-              <Package size={17} />
+              <Package size={16} />
               <span>{t('viewAssignedWool')}</span>
             </button>
           </div>
         </div>
       </section>
 
-      {/* Metric cards */}
-      <section className="dashboard-grid md:grid-cols-4 animate-enter delay-1">
-        {cards.map(card => {
+      {/* Metric cards (2x2 on mobile, 4-col on desktop) */}
+      <section className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-4 mt-3 sm:mt-5">
+        {cards.map((card, idx) => {
           const Icon = card.icon;
           return (
             <button
               key={card.label}
               onClick={() => navigate(card.route)}
-              className="glass-card p-5 sm:p-6 flex flex-col justify-between text-left"
+              className={`bg-surface p-3.5 sm:p-5 rounded-2xl border border-border/80 shadow-xs flex flex-col justify-between text-left hover:border-primary/40 active:scale-95 transition-all animate-fade-in-up delay-${Math.min(idx + 1, 6)}`}
             >
               <div className="flex items-center justify-between">
-                <span className={`grid h-11 w-11 place-items-center rounded-2xl ${card.tone}`}>
-                  <Icon size={22} />
+                <span className={`grid h-9 w-9 sm:h-10 sm:w-10 place-items-center rounded-xl ${card.tone}`}>
+                  <Icon size={19} />
                 </span>
               </div>
-              <div className="mt-4">
-                <p className="text-xs font-bold uppercase tracking-wider text-textMuted">{card.label}</p>
-                <p className="text-3xl font-extrabold text-textPrimary mt-1 tracking-tight">
+              <div className="mt-3">
+                <p className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-textMuted">{card.label}</p>
+                <p className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-textPrimary mt-0.5 tracking-tight">
                   {loading ? '–' : card.value}
                 </p>
               </div>
@@ -115,33 +109,32 @@ export default function ArtisanDashboard() {
         })}
       </section>
 
-      {/* Primary actions */}
-      <section className="mt-10 animate-enter delay-2">
-        <div className="section-heading mb-4">
+      {/* Primary actions (2-col on mobile) */}
+      <section className="mt-6 sm:mt-10 animate-fade-in-up delay-4">
+        <div className="section-heading mb-3">
           <div>
-            <p className="eyebrow text-primary"><Sparkles size={13} /> {t('quickActions')}</p>
-            <h2 className="text-xl font-bold text-textPrimary">{t('manageWorkOnePlace')}</h2>
+            <p className="eyebrow text-primary"><Sparkles size={12} /> {t('quickActions')}</p>
+            <h2 className="text-lg sm:text-xl font-bold text-textPrimary">{t('manageWorkOnePlace')}</h2>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3.5">
           {primaryActions.map(action => {
             const Icon = action.icon;
             return (
               <button
                 key={action.label}
                 onClick={() => navigate(action.route)}
-                className={`flex items-center gap-3.5 p-4 rounded-2xl bg-surface border ${action.accent} shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-card-hover text-left group`}
+                className="flex flex-col sm:flex-row items-start sm:items-center gap-2.5 sm:gap-3 p-3.5 sm:p-4 rounded-2xl bg-surface border border-border/80 shadow-xs hover:border-primary/40 hover:shadow-sm active:scale-95 transition-all text-left group min-h-[75px]"
               >
-                <span className={`grid h-11 w-11 shrink-0 place-items-center rounded-2xl ${action.tone} shadow-sm`}>
-                  <Icon size={20} />
+                <span className={`grid h-10 w-10 shrink-0 place-items-center rounded-xl ${action.tone} shadow-xs`}>
+                  <Icon size={19} />
                 </span>
                 <div className="min-w-0 flex-1">
-                  <p className="font-bold text-sm text-textPrimary group-hover:text-primary transition-colors leading-tight">
+                  <p className="font-bold text-xs sm:text-sm text-textPrimary group-hover:text-primary transition-colors leading-tight">
                     {action.label}
                   </p>
                 </div>
-                <ChevronRight size={16} className="text-textMuted transition-transform group-hover:translate-x-1 group-hover:text-primary shrink-0" />
               </button>
             );
           })}
@@ -149,7 +142,7 @@ export default function ArtisanDashboard() {
       </section>
 
       {/* Recent assigned wool */}
-      <section className="mt-12 animate-enter delay-3">
+      <section className="mt-12 animate-fade-in-up delay-5">
         <div className="section-heading mb-4">
           <div>
             <p className="eyebrow text-primary"><Package size={13} /> {t('assignedWool')}</p>
@@ -162,8 +155,18 @@ export default function ArtisanDashboard() {
         </div>
 
         {loading ? (
-          <div className="py-12 flex justify-center">
-            <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+            {[1, 2].map((i) => (
+              <div key={i} className="p-4 sm:p-5 rounded-2xl bg-surface border border-border/40 shadow-sm animate-skeleton-pulse flex items-center justify-between gap-3">
+                <div className="flex items-center gap-3 w-full">
+                  <div className="h-10 w-10 rounded-xl bg-border/50 shrink-0" />
+                  <div className="space-y-2 flex-1">
+                    <div className="h-4 bg-border/50 rounded w-1/2" />
+                    <div className="h-3 bg-border/30 rounded w-1/3" />
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         ) : requests.length === 0 ? (
           <div className="p-8 sm:p-12 text-center rounded-3xl bg-surface border border-border flex flex-col items-center">
@@ -171,7 +174,7 @@ export default function ArtisanDashboard() {
               <Package size={28} />
             </span>
             <h3 className="font-bold text-base text-textPrimary">{t('noBatchesAssigned')}</h3>
-            <p className="text-xs sm:text-sm text-textSecondary max-w-sm mt-1">{t('noBatchesAssignedHelp')}</p>
+            <p className="hidden sm:block text-xs sm:text-sm text-textSecondary max-w-sm mt-1">{t('noBatchesAssignedHelp')}</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">

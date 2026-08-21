@@ -10,10 +10,12 @@ export default function LanguageGate({ children, active }) {
     <div className="min-h-screen bg-background px-4 py-10 flex items-center justify-center">
       <div className="w-full max-w-xl rounded-3xl border border-border bg-surface p-6 sm:p-8 shadow-card-lg">
         <div className="text-center">
-          <span className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-primary text-white">
-            <Leaf size={28} />
-          </span>
-          <h1 className="mt-4 text-2xl font-extrabold text-textPrimary">WOOLCONNECT</h1>
+          <img
+            src="/logo.png"
+            alt="WoolConnect Logo"
+            className="mx-auto h-20 w-20 object-contain rounded-3xl shadow-md mb-3"
+          />
+          <h1 className="mt-1 text-2xl sm:text-3xl font-black text-textPrimary tracking-tight">WOOLCONNECT</h1>
           <div className="mt-3 space-y-1 text-base font-semibold text-textSecondary">
             <p>{t('chooseLanguage')}</p>
             <p>{t('chooseLanguageHi')}</p>
