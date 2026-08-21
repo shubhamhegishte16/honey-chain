@@ -17,6 +17,21 @@ const STATE_CODES = {
   'Andhra Pradesh': 'AP',
 };
 
+const BATCH_ID_YEAR = '2026';
+const BATCH_ID_START = 125;
+const DUPLICATE_KEY_CODE = 11000;
+
+async function getNextBatchId(stateCode) {
+  const batchIdPattern = new RegExp(`^WV-[A-Z]{2}-${BATCH_ID_YEAR}-\\d{6}$`);
+  const existingBatches = await WoolBatch.find({ batchId: { $regex: batchIdPattern } }).select('batchId').lean();
+  const highestNumber = existingBatches.reduce((highest, batch) => {
+    const match = batch.batchId.match(/-(\d{6})$/);
+    return match ? Math.max(highest, Number(match[1])) : highest;
+  }, BATCH_ID_START - 1);
+
+  return `WV-${stateCode}-${BATCH_ID_YEAR}-${String(highestNumber + 1).padStart(6, '0')}`;
+}
+
 export async function createBatch(req, res, next) {
   try {
     const { woolType, quantityKg, shearingDate, state, district, village, farmLocation, color, initialCondition, notes, images } = req.body;
@@ -26,30 +41,35 @@ export async function createBatch(req, res, next) {
     }
 
     const stateCode = STATE_CODES[state] || state.slice(0, 2).toUpperCase();
-    const count = await WoolBatch.countDocuments();
-    const batchNumber = String(count + 125).padStart(6, '0');
-    const batchId = `WV-${stateCode}-2026-${batchNumber}`;
-
-    const batch = await WoolBatch.create({
-      batchId,
-      farmer: req.user._id,
-      woolType,
-      quantityKg: Number(quantityKg),
-      origin: {
-        state,
-        district,
-        village: village || '',
-        farmLocation: farmLocation || `${district} Pastoral Grazing Area`,
-      },
-      shearingDate: new Date(shearingDate),
-      color: color || 'Natural White',
-      initialCondition: initialCondition || 'Raw Greasy Wool',
-      notes: notes || '',
-      images: images && images.length > 0 ? images : ['https://images.unsplash.com/photo-1516467508483-a7212febe31a?w=800&auto=format&fit=crop&q=60'],
-      qualityGrade: 'Pending Inspection',
-      currentLocation: `${district}, ${state} (Farmer Farm)`,
-      status: 'produced',
-    });
+    let batch;
+    for (let attempt = 0; attempt < 5; attempt += 1) {
+      const batchId = await getNextBatchId(stateCode);
+      try {
+        batch = await WoolBatch.create({
+          batchId,
+          farmer: req.user._id,
+          woolType,
+          quantityKg: Number(quantityKg),
+          origin: {
+            state,
+            district,
+            village: village || '',
+            farmLocation: farmLocation || `${district} Pastoral Grazing Area`,
+          },
+          shearingDate: new Date(shearingDate),
+          color: color || 'Natural White',
+          initialCondition: initialCondition || 'Raw Greasy Wool',
+          notes: notes || '',
+          images: images && images.length > 0 ? images : ['https://images.unsplash.com/photo-1516467508483-a7212febe31a?w=800&auto=format&fit=crop&q=60'],
+          qualityGrade: 'Pending Inspection',
+          currentLocation: `${district}, ${state} (Farmer Farm)`,
+          status: 'produced',
+        });
+        break;
+      } catch (error) {
+        if (error?.code !== DUPLICATE_KEY_CODE || attempt === 4) throw error;
+      }
+    }
 
     // Record initial Traceability Event
     await TraceabilityEvent.create({

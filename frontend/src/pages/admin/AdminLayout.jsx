@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Users, Package, ShoppingCart } from 'lucide-react';
+import { LayoutDashboard, Users, Package, ShoppingCart, ClipboardCheck } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
 
 function useSidebarLinks() {
@@ -10,6 +10,7 @@ function useSidebarLinks() {
     { to: '/admin/users', label: t('users'), icon: Users },
     { to: '/admin/batches', label: t('batches'), icon: Package },
     { to: '/admin/marketplace', label: t('marketplace'), icon: ShoppingCart },
+    { to: '/quality', label: t('qualityAssurance'), icon: ClipboardCheck },
   ];
 }
 
