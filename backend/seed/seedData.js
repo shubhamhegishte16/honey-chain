@@ -823,11 +823,36 @@ Supplement grazing with protein-rich mineral blocks and legumes to ensure high q
         recommendedSeasons: ['monsoon', 'processing'],
         interests: ['sheep-care'],
         practicalSteps: [
-          'Review vaccination record for sheep pox, PPR, and enterotoxemia.',
-          'Administer pre-monsoon deworming treatment to the entire flock.',
-          'Install protein-rich mineral licking blocks in shelter pens.',
-          'Clean and disinfect feeding troughs and water basins weekly.',
-          'Isolate sick animals immediately into quarantine enclosures.'
+          {
+            step: 1,
+            title: "Check the Animal",
+            description: "Observe the sheep regularly and look for visible signs that require attention.",
+            icon: "🔍"
+          },
+          {
+            step: 2,
+            title: "Provide Basic Care",
+            description: "Follow the care practices described in the relevant Sheep Care training resource.",
+            icon: "❤️"
+          },
+          {
+            step: 3,
+            title: "Maintain Clean Conditions",
+            description: "Keep the animal's surroundings clean, dry and suitable.",
+            icon: "🧼"
+          },
+          {
+            step: 4,
+            title: "Follow Feeding Guidance",
+            description: "Use the nutritional feed recommendations and mineral blocks provided by the training material.",
+            icon: "🌿"
+          },
+          {
+            step: 5,
+            title: "Monitor Regularly",
+            description: "Continue checking the animals and follow the recommended vaccination routine.",
+            icon: "📋"
+          }
         ]
       },
       {
@@ -856,11 +881,42 @@ Immediately skirt the belly wool, leg pieces, and heavily soiled tags away from 
         recommendedSeasons: ['shearing'],
         interests: ['shearing', 'wool-quality'],
         practicalSteps: [
-          'Keep sheep off wet pastures 12 hours prior to shearing.',
-          'Oil and sharpen clipper blades before starting shearing strokes.',
-          'Maintain continuous flat contact between clipper and skin without second cuts.',
-          'Throw fleece flat onto skirting table immediately after shearing.',
-          'Skirt off belly wool, leg pieces, and soiled tags into separate Grade C sacks.'
+          {
+            step: 1,
+            title: "Prepare the Area",
+            description: "Prepare a clean and suitable dry area for shearing.",
+            icon: "🧹"
+          },
+          {
+            step: 2,
+            title: "Prepare the Equipment",
+            description: "Check that the shearing equipment is clean and ready before starting.",
+            icon: "✂️"
+          },
+          {
+            step: 3,
+            title: "Prepare the Sheep",
+            description: "Handle and position the sheep safely before shearing.",
+            icon: "🐑"
+          },
+          {
+            step: 4,
+            title: "Shear Carefully",
+            description: "Follow the recommended shearing method and avoid unnecessary damage to the animal or fleece.",
+            icon: "⚡"
+          },
+          {
+            step: 5,
+            title: "Separate the Fleece",
+            description: "Keep the main fleece separate from lower-quality or contaminated wool.",
+            icon: "🧶"
+          },
+          {
+            step: 6,
+            title: "Prepare for Storage",
+            description: "Keep the harvested fleece clean and dry before further handling.",
+            icon: "📦"
+          }
         ]
       },
       {
@@ -888,11 +944,42 @@ Clean skirting before weighing increases batch valuation by up to 25-30% on the 
         recommendedSeasons: ['shearing', 'processing'],
         interests: ['wool-quality'],
         practicalSteps: [
-          'Measure representative staple lengths across main fleece blanket.',
-          'Inspect vegetable matter percentage (burrs/seeds) under clean light.',
-          'Sort main fleece into Grade A (under 25 micron) or Grade B (25-32 micron).',
-          'Package stained and coarse leg wool into Grade C bags.',
-          'Attach WoolConnect digital quality assessment certificate.'
+          {
+            step: 1,
+            title: "Prepare the Wool",
+            description: "Spread or prepare the wool so that it can be examined properly.",
+            icon: "📜"
+          },
+          {
+            step: 2,
+            title: "Check Cleanliness",
+            description: "Look for dirt, vegetable matter and other contamination.",
+            icon: "🔍"
+          },
+          {
+            step: 3,
+            title: "Check Fibre Characteristics",
+            description: "Examine the visible characteristics used by the training material for quality assessment.",
+            icon: "📏"
+          },
+          {
+            step: 4,
+            title: "Separate Different Quality",
+            description: "Keep noticeably different quality portions separate where appropriate.",
+            icon: "✂️"
+          },
+          {
+            step: 5,
+            title: "Assign the Quality / Grade",
+            description: "Use the grading guidance provided by the training resource (Grade A, B, or C).",
+            icon: "🏆"
+          },
+          {
+            step: 6,
+            title: "Label the Batch",
+            description: "Keep the graded wool identified with its relevant batch QR information.",
+            icon: "🏷️"
+          }
         ]
       },
       {
@@ -921,11 +1008,36 @@ Turn stacked wool sacks fortnightly to prevent core temperature build-up and swe
         recommendedSeasons: ['monsoon'],
         interests: ['storage', 'wool-quality'],
         practicalSteps: [
-          'Prepare a clean, dry, and leak-proof storage shed.',
-          'Ensure raw wool is completely dry (<14% moisture) before packing.',
-          'Stack wool sacks on elevated wooden pallets at least 15 cm above ground.',
-          'Maintain cross-ventilation during dry weather and seal during heavy rainfall.',
-          'Inspect stored wool fortnightly for moisture, warmth, or mould growth.'
+          {
+            step: 1,
+            title: "Dry the Wool",
+            description: "Make sure freshly collected wool is dry before placing it into storage.",
+            icon: "💧"
+          },
+          {
+            step: 2,
+            title: "Clean the Storage Area",
+            description: "Use a clean, dry and well-ventilated storage area.",
+            icon: "📦"
+          },
+          {
+            step: 3,
+            title: "Keep Wool Off the Floor",
+            description: "Place wool on a raised, clean surface instead of directly on the floor.",
+            icon: "⬆️"
+          },
+          {
+            step: 4,
+            title: "Protect from Moisture",
+            description: "Keep stored wool away from rain, damp walls and other sources of moisture.",
+            icon: "☔"
+          },
+          {
+            step: 5,
+            title: "Check Regularly",
+            description: "Inspect stored wool for dampness, mould or unusual smell.",
+            icon: "🔍"
+          }
         ]
       },
       {
@@ -951,11 +1063,42 @@ Carding aligns the tangled wool fibers into straight rows, creating a soft web o
         recommendedSeasons: ['processing'],
         interests: ['processing'],
         practicalSteps: [
-          'Open up greasy fleece and shake off loose dirt and dust particles.',
-          'Wash wool in warm soapy water (50-55°C) using neutral detergent.',
-          'Rinse scoured fleece in clean lukewarm water and squeeze excess moisture.',
-          'Air dry scoured wool in shaded outdoor racks.',
-          'Pass clean dry wool through carding rollers to align fibers into slivers.'
+          {
+            step: 1,
+            title: "Prepare the Wool",
+            description: "Prepare the wool according to the processing method being used.",
+            icon: "🧺"
+          },
+          {
+            step: 2,
+            title: "Sort the Material",
+            description: "Separate wool according to the required processing category.",
+            icon: "✂️"
+          },
+          {
+            step: 3,
+            title: "Clean / Wash",
+            description: "Follow the cleaning or washing procedure specified by the relevant training resource.",
+            icon: "🧼"
+          },
+          {
+            step: 4,
+            title: "Process the Wool",
+            description: "Continue with the appropriate processing stage such as washing, sorting, carding or spinning.",
+            icon: "⚙️"
+          },
+          {
+            step: 5,
+            title: "Check the Result",
+            description: "Inspect the processed material for the expected quality and fiber alignment.",
+            icon: "🔍"
+          },
+          {
+            step: 6,
+            title: "Prepare for Next Stage",
+            description: "Keep the processed wool ready for the next processing or product stage.",
+            icon: "🧶"
+          }
         ]
       },
       {
@@ -981,11 +1124,42 @@ Premordant with 10% weight of fibre potassium alum to lock natural pigments and 
         recommendedSeasons: ['processing'],
         interests: ['processing'],
         practicalSteps: [
-          'Scour wool thoroughly to ensure 100% grease removal before dyeing.',
-          'Dissolve potassium alum (10% weight of dry yarn) in warm water as mordant.',
-          'Simmer yarn in mordant bath at 80°C for 45 minutes.',
-          'Prepare natural botanical dye extract (madder root, walnut hull, or pomegranate).',
-          'Immerse mordanted yarn into dye bath and stir gently for even color absorption.'
+          {
+            step: 1,
+            title: "Select the Dye Material",
+            description: "Choose the botanical material recommended by the training resource.",
+            icon: "🌿"
+          },
+          {
+            step: 2,
+            title: "Prepare the Wool",
+            description: "Prepare and scour the wool before introducing it to the dyeing process.",
+            icon: "🧺"
+          },
+          {
+            step: 3,
+            title: "Prepare the Mordant",
+            description: "Prepare the mordant (alum) according to the instructions in the training resource.",
+            icon: "🧪"
+          },
+          {
+            step: 4,
+            title: "Prepare the Dye Bath",
+            description: "Prepare the dye material and dyeing bath as described by the resource.",
+            icon: "🎨"
+          },
+          {
+            step: 5,
+            title: "Dye the Wool",
+            description: "Place the prepared wool into the dyeing process and follow the stated procedure.",
+            icon: "✨"
+          },
+          {
+            step: 6,
+            title: "Rinse and Dry",
+            description: "Complete the finishing rinse and drying process described in the resource.",
+            icon: "☀️"
+          }
         ]
       },
       {
@@ -1011,11 +1185,42 @@ Always state exact quantity, provide high-resolution natural light photos, and l
         recommendedSeasons: ['processing'],
         interests: ['selling'],
         practicalSteps: [
-          'Take high-resolution natural light photos of your graded wool batch.',
-          'Log batch details (weight, breed, shearing date, grade) on WoolConnect.',
-          'Generate and attach digital QR batch traceability code.',
-          'Check live state Mandi prices to quote fair competitive rates.',
-          'Publish listing directly to connect with verified textile mill buyers.'
+          {
+            step: 1,
+            title: "Prepare Wool Information",
+            description: "Keep important details ready: quantity, grade, origin district and shearing date.",
+            icon: "📋"
+          },
+          {
+            step: 2,
+            title: "Check Market Information",
+            description: "Review available market price info before deciding on a selling price.",
+            icon: "📊"
+          },
+          {
+            step: 3,
+            title: "Create a Listing",
+            description: "Enter the wool batch details into the WoolConnect marketplace listing.",
+            icon: "📱"
+          },
+          {
+            step: 4,
+            title: "Add Clear Information",
+            description: "Provide clear photos, weight in kg, price per kg, and quality grade.",
+            icon: "📷"
+          },
+          {
+            step: 5,
+            title: "Review the Listing",
+            description: "Check the listing before making it live to verified buyers.",
+            icon: "✅"
+          },
+          {
+            step: 6,
+            title: "Respond to Buyer Interest",
+            description: "Follow the marketplace process for buyer inquiries and order dispatches.",
+            icon: "💰"
+          }
         ]
       }
     ]);

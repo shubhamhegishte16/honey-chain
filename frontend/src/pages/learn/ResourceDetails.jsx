@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, BookOpen, Clock, Award, Eye, User, Tag, CheckCircle, CheckCircle2 } from 'lucide-react';
+import { ArrowLeft, BookOpen, Clock, Award, Eye, User, Tag, CheckCircle, CheckCircle2, Volume2 } from 'lucide-react';
 import { getTrainingResourceById } from '../../services/training.service';
 import Card from '../../components/ui/Card';
 import VoiceLearningPlayer from '../../components/learn/VoiceLearningPlayer';
@@ -13,6 +13,24 @@ export default function ResourceDetails() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [completed, setCompleted] = useState(false);
+  const [completedSteps, setCompletedSteps] = useState({});
+
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem('woolconnect_completed_steps');
+      if (stored) setCompletedSteps(JSON.parse(stored));
+    } catch (e) {}
+  }, []);
+
+  const toggleStepCheck = (stepKey) => {
+    setCompletedSteps(prev => {
+      const updated = { ...prev, [stepKey]: !prev[stepKey] };
+      try {
+        localStorage.setItem('woolconnect_completed_steps', JSON.stringify(updated));
+      } catch (e) {}
+      return updated;
+    });
+  };
 
   useEffect(() => {
     async function loadResource() {
@@ -192,33 +210,134 @@ export default function ResourceDetails() {
                 <p className="text-sm text-textSecondary italic">{resource.summary}</p>
               </div>
 
+              {/* 📋 Step-by-Step Guide (Farmer-Friendly Design) */}
+              {(() => {
+                const steps = resource.practicalSteps || [];
+                if (steps.length === 0) return null;
+
+                // Voice synthesis for steps
+                const handleListenToSteps = () => {
+                  if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
+                  const synth = window.speechSynthesis;
+                  synth.cancel();
+
+                  let stepText = `Step by step guide for ${resource.title}. `;
+                  steps.forEach((s, idx) => {
+                    const title = typeof s === 'string' ? s : s.title || `Step ${idx + 1}`;
+                    const desc = typeof s === 'string' ? '' : s.description || '';
+                    stepText += `Step ${idx + 1}: ${title}. ${desc}. `;
+                  });
+
+                  const utterance = new SpeechSynthesisUtterance(stepText);
+                  utterance.rate = 0.9; // Farmer-friendly comfortable reading pace
+                  synth.speak(utterance);
+                };
+
+                const defaultIcons = ['💧', '📦', '⬆️', '☔', '🔍', '✂️', '🧶', '🎨', '💰', '🐑'];
+
+                return (
+                  <div className="mb-8 p-6 sm:p-7 rounded-3xl bg-surface border-2 border-emerald-100 shadow-md">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 pb-4 border-b border-border/70">
+                      <div>
+                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 text-emerald-900 text-xs font-extrabold mb-1.5">
+                          <span>📋 PRACTICAL PROCEDURE</span>
+                        </div>
+                        <h2 className="text-xl sm:text-2xl font-black text-textPrimary tracking-tight">
+                          Step-by-Step Guide
+                        </h2>
+                        <p className="text-xs text-textSecondary font-semibold">
+                          Follow these simple steps for best results:
+                        </p>
+                      </div>
+
+                      <button
+                        onClick={handleListenToSteps}
+                        className="self-start sm:self-auto px-4 py-2 rounded-2xl bg-emerald-700 hover:bg-emerald-800 text-white font-extrabold text-xs transition-all shadow-sm flex items-center gap-2"
+                      >
+                        <Volume2 size={16} />
+                        <span>🔊 Listen to Steps</span>
+                      </button>
+                    </div>
+
+                    {/* Step Cards Flow */}
+                    <div className="space-y-4">
+                      {steps.map((item, idx) => {
+                        const stepNum = typeof item === 'object' && item.step ? item.step : idx + 1;
+                        const title = typeof item === 'object' ? item.title : item;
+                        const description = typeof item === 'object' ? item.description : '';
+                        const icon = typeof item === 'object' && item.icon ? item.icon : defaultIcons[idx % defaultIcons.length];
+                        const stepKey = `step_${resource._id || resource.id}_${idx}`;
+                        const isStepDone = completedSteps[stepKey];
+
+                        return (
+                          <React.Fragment key={idx}>
+                            <div
+                              onClick={() => toggleStepCheck(stepKey)}
+                              className={`group relative p-5 rounded-2xl border-2 transition-all duration-200 cursor-pointer flex items-start gap-4 ${
+                                isStepDone
+                                  ? 'bg-emerald-50/70 border-emerald-300'
+                                  : 'bg-background border-border/80 hover:border-primary/50 hover:shadow-md'
+                              }`}
+                            >
+                              {/* Large Step Circle / Number */}
+                              <div className="flex flex-col items-center shrink-0">
+                                <span className={`grid h-12 w-12 place-items-center rounded-2xl text-lg font-black shadow-sm transition-transform group-hover:scale-105 ${
+                                  isStepDone
+                                    ? 'bg-emerald-600 text-white'
+                                    : 'bg-primary text-white'
+                                }`}>
+                                  {isStepDone ? '✓' : stepNum}
+                                </span>
+                              </div>
+
+                              {/* Title & Description */}
+                              <div className="flex-1 pt-0.5">
+                                <div className="flex items-center gap-2 mb-1">
+                                  <span className="text-xl">{icon}</span>
+                                  <h3 className="text-base sm:text-lg font-extrabold text-textPrimary tracking-tight uppercase">
+                                    {title}
+                                  </h3>
+                                </div>
+                                {description && (
+                                  <p className="text-sm text-textSecondary font-medium leading-relaxed mt-1">
+                                    {description}
+                                  </p>
+                                )}
+                              </div>
+
+                              {/* Interactive Step Check Circle */}
+                              <button
+                                aria-label="Toggle step complete"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  toggleStepCheck(stepKey);
+                                }}
+                                className={`grid h-7 w-7 place-items-center rounded-full border-2 transition-all ${
+                                  isStepDone
+                                    ? 'bg-emerald-600 border-emerald-600 text-white'
+                                    : 'border-border text-transparent hover:border-emerald-500'
+                                }`}
+                              >
+                                <CheckCircle2 size={18} fill={isStepDone ? 'currentColor' : 'none'} className={isStepDone ? 'text-white' : 'text-transparent'} />
+                              </button>
+                            </div>
+
+                            {/* Down Arrow Flow Connector */}
+                            {idx < steps.length - 1 && (
+                              <div className="flex justify-center my-1 text-emerald-600/60">
+                                <span className="text-lg font-black">↓</span>
+                              </div>
+                            )}
+                          </React.Fragment>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })()}
+
               {/* Voice Learning Component */}
               <VoiceLearningPlayer resource={resource} />
-
-              {/* Step-by-Step Guide Section */}
-              {resource.practicalSteps && resource.practicalSteps.length > 0 && (
-                <div className="mb-6 p-6 rounded-2xl bg-surface border border-border/80 shadow-sm">
-                  <div className="flex items-center gap-2 mb-4 pb-3 border-b border-border/60">
-                    <span className="text-lg font-bold text-textPrimary">📋 Step-by-Step Guide</span>
-                  </div>
-                  <div className="space-y-3">
-                    {resource.practicalSteps.map((step, stepIdx) => (
-                      <div
-                        key={stepIdx}
-                        className="flex items-start gap-3.5 p-3.5 rounded-xl bg-background border border-border/60 transition-all hover:border-primary/40"
-                      >
-                        <span className="grid h-7 w-7 shrink-0 place-items-center rounded-xl bg-primary text-white text-xs font-extrabold shadow-xs">
-                          {stepIdx + 1}
-                        </span>
-                        <div className="pt-0.5">
-                          <p className="text-xs font-bold text-textMuted uppercase tracking-wider mb-0.5">Step {stepIdx + 1}</p>
-                          <p className="text-sm text-textPrimary leading-relaxed font-medium">{step}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
 
               {/* YouTube Video Section */}
               {(() => {

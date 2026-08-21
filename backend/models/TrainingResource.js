@@ -67,7 +67,10 @@ const trainingResourceSchema = new mongoose.Schema({
     type: String,
   }],
   practicalSteps: [{
-    type: String,
+    step: { type: Number },
+    title: { type: String },
+    description: { type: String },
+    icon: { type: String }
   }],
 }, {
   timestamps: true,
