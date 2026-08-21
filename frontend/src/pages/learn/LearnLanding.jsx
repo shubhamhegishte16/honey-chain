@@ -294,9 +294,9 @@ export default function LearnLanding() {
               <Users size={22} />
             </span>
             <div>
-              <h3 className="text-lg font-bold text-textPrimary mb-1">Producers & Artisans</h3>
+              <h3 className="text-lg font-bold text-textPrimary mb-1">{t('producersAndArtisans')}</h3>
               <p className="text-sm text-textSecondary leading-relaxed max-w-md">
-                Explore wool producers and artisans by state and region and discover useful training resources.
+                {t('exploreProducersDesc')}
               </p>
             </div>
           </div>
@@ -304,7 +304,7 @@ export default function LearnLanding() {
             onClick={() => navigate('/learn/producers')}
             className="shrink-0 inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-[#3b4d8a] text-white font-bold text-sm shadow-md hover:bg-[#2d3a6b] transition-all duration-200 active:scale-[0.98] hover:-translate-y-0.5 hover:shadow-lg whitespace-nowrap"
           >
-            <span>Explore Producers & Artisans</span>
+            <span>{t('exploreProducersBtn')}</span>
             <ArrowRight size={15} />
           </button>
         </div>
