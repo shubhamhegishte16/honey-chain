@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, BookOpen, Clock, Award, Eye, User, Tag, CheckCircle } from 'lucide-react';
+import { ArrowLeft, BookOpen, Clock, Award, Eye, User, Tag, CheckCircle, CheckCircle2 } from 'lucide-react';
 import { getTrainingResourceById } from '../../services/training.service';
 import Card from '../../components/ui/Card';
+import VoiceLearningPlayer from '../../components/learn/VoiceLearningPlayer';
+import { isResourceCompleted, toggleResourceCompletion, markResourceCompleted } from '../../services/learningProgress.service';
 
 export default function ResourceDetails() {
   const { id } = useParams();
@@ -10,6 +12,7 @@ export default function ResourceDetails() {
   const [resource, setResource] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [completed, setCompleted] = useState(false);
 
   useEffect(() => {
     async function loadResource() {
@@ -21,6 +24,7 @@ export default function ResourceDetails() {
           setError('Failed to fetch the resource details.');
         } else {
           setResource(data);
+          setCompleted(isResourceCompleted(data._id || data.id));
         }
       } catch (err) {
         setError('An unexpected error occurred.');
@@ -31,6 +35,32 @@ export default function ResourceDetails() {
     }
     loadResource();
   }, [id]);
+
+  // Scroll to bottom auto-completion detector
+  useEffect(() => {
+    const handleScroll = () => {
+      if (completed || !resource) return;
+      const windowHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+
+      // When user reaches ~85% down the page, auto-mark completed
+      if (scrollTop + windowHeight >= documentHeight - 150) {
+        markResourceCompleted(resource._id || resource.id);
+        setCompleted(true);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [completed, resource]);
+
+  const handleToggleCompletion = () => {
+    if (!resource) return;
+    const resId = resource._id || resource.id;
+    const newState = toggleResourceCompletion(resId);
+    setCompleted(newState);
+  };
 
   const renderContent = (text = '') => {
     return text.split('\n').map((line, idx) => {
@@ -72,14 +102,30 @@ export default function ResourceDetails() {
 
   return (
     <main className="page-shell animate-enter">
-      {/* Back button */}
-      <button
-        onClick={() => navigate(-1)}
-        className="inline-flex items-center gap-1.5 text-sm font-semibold text-textSecondary hover:text-primary mb-6 transition-colors"
-      >
-        <ArrowLeft size={16} />
-        <span>Back</span>
-      </button>
+      {/* Back button & Completion Button Bar */}
+      <div className="flex items-center justify-between gap-4 mb-6">
+        <button
+          onClick={() => navigate(-1)}
+          className="inline-flex items-center gap-1.5 text-sm font-semibold text-textSecondary hover:text-primary transition-colors"
+        >
+          <ArrowLeft size={16} />
+          <span>Back</span>
+        </button>
+
+        {resource && (
+          <button
+            onClick={handleToggleCompletion}
+            className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-sm ${
+              completed
+                ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
+                : 'bg-surface border border-border text-textSecondary hover:text-primary hover:border-primary/40'
+            }`}
+          >
+            <CheckCircle2 size={16} className={completed ? 'text-emerald-600' : 'text-textMuted'} />
+            <span>{completed ? '✓ Completed' : 'Mark as Complete'}</span>
+          </button>
+        )}
+      </div>
 
       {loading ? (
         <div className="py-20 flex flex-col items-center justify-center">
@@ -119,6 +165,12 @@ export default function ResourceDetails() {
                   <Eye size={11} />
                   {resource.views} views
                 </span>
+
+                {completed && (
+                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
+                    ✓ Completed
+                  </span>
+                )}
               </div>
 
               <h1 className="text-2xl sm:text-3xl font-extrabold text-textPrimary tracking-tight mb-3">
@@ -139,6 +191,9 @@ export default function ResourceDetails() {
                 <p className="text-xs font-bold uppercase tracking-wider text-textMuted mb-1">Summary</p>
                 <p className="text-sm text-textSecondary italic">{resource.summary}</p>
               </div>
+
+              {/* Voice Learning Component */}
+              <VoiceLearningPlayer resource={resource} />
 
               {/* YouTube Video Section */}
               {(() => {
@@ -163,7 +218,7 @@ export default function ResourceDetails() {
                     <div className="flex items-center gap-2 mb-3">
                       <span className="text-base sm:text-lg font-bold text-textPrimary">📺 Training Video</span>
                       <span className="px-2 py-0.5 rounded bg-red-100 text-red-800 text-[10px] font-bold uppercase tracking-wider">
-                        Hindi Video
+                        Video Guide
                       </span>
                     </div>
                     <div className="relative w-full pb-[56.25%] h-0 rounded-2xl overflow-hidden shadow-md border border-border/80 bg-black">
@@ -232,9 +287,29 @@ export default function ResourceDetails() {
                 </div>
               </Card>
             )}
+
+            {/* Mark as Complete Bottom Sticky Card */}
+            <Card interactive={false} className="p-6 bg-gradient-to-br from-emerald-50 to-teal-50 border-emerald-200">
+              <h4 className="text-sm font-bold text-emerald-950 mb-1">Track Learning Progress</h4>
+              <p className="text-xs text-emerald-800 mb-4">
+                Finished studying this module? Mark it as complete to update your training stats.
+              </p>
+              <button
+                onClick={handleToggleCompletion}
+                className={`w-full py-2.5 px-4 rounded-xl font-bold text-xs transition-all shadow-sm flex items-center justify-center gap-2 ${
+                  completed
+                    ? 'bg-emerald-600 text-white hover:bg-emerald-700'
+                    : 'bg-primary text-white hover:bg-primaryDark'
+                }`}
+              >
+                <CheckCircle2 size={16} />
+                <span>{completed ? 'Completed' : 'Mark as Complete'}</span>
+              </button>
+            </Card>
           </div>
         </div>
       )}
     </main>
   );
 }
+
