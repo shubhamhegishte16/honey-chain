@@ -4,8 +4,11 @@ import { useLanguage } from '../../context/LanguageContext';
 import {
   getVoiceCode,
   findVoice,
-  isVoiceAvailable,
   loadVoices,
+  cancelGTTS,
+  pauseGTTS,
+  resumeGTTS,
+  speakWithGTTS,
 } from '../../utils/ttsVoice.util';
 
 // All selectable TTS voices shown in the language dropdown
@@ -33,8 +36,9 @@ export default function VoiceLearningPlayer({ resource }) {
   const [isPaused, setIsPaused]     = useState(false);
   // loadedVoices: voices resolved after async load – used for availability UI
   const [loadedVoices, setLoadedVoices] = useState([]);
-  const [voiceAvailable, setVoiceAvailable] = useState(true);
   const [speechSupported, setSpeechSupported] = useState(true);
+  // Track whether we are using the gTTS audio fallback for current playback
+  const usingFallbackRef = useRef(false);
 
   const synthRef     = useRef(null);
   const utteranceRef = useRef(null);
@@ -66,11 +70,6 @@ export default function VoiceLearningPlayer({ resource }) {
   // Stop speech when navigating to a different resource
   useEffect(() => { stopSpeech(); }, [resource?._id, resource?.id]);
 
-  // Re-check voice availability whenever selectedLang or voice list changes
-  useEffect(() => {
-    setVoiceAvailable(isVoiceAvailable(loadedVoices, selectedLang));
-  }, [selectedLang, loadedVoices]);
-
   const constructTextToRead = () => {
     if (!resource) return '';
     let text = `${resource.title}. `;
@@ -91,66 +90,82 @@ export default function VoiceLearningPlayer({ resource }) {
   };
 
   const handlePlay = async () => {
-    if (!synthRef.current || !speechSupported) return;
+    if (!speechSupported && typeof window === 'undefined') return;
 
     if (isPaused) {
-      synthRef.current.resume();
+      if (usingFallbackRef.current) {
+        resumeGTTS();
+      } else if (synthRef.current) {
+        synthRef.current.resume();
+      }
       setIsPlaying(true);
       setIsPaused(false);
       return;
     }
 
-    synthRef.current.cancel();
+    // Cancel any ongoing
+    cancelGTTS();
+    if (synthRef.current) synthRef.current.cancel();
 
     const text = constructTextToRead();
     if (!text.trim()) return;
 
     // Re-fetch voices at play-time so we always have the latest list
     const freshVoices = await loadVoices();
-
-    // If no voice available for this language, block play (don't silently use English)
-    if (!isVoiceAvailable(freshVoices, selectedLang)) {
-      setVoiceAvailable(false);
-      return;
-    }
-
     const matchedVoice = findVoice(freshVoices, selectedLang);
 
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = selectedLang;
-    if (matchedVoice) utterance.voice = matchedVoice;
-    utterance.rate = 0.95;
-
-    utterance.onend = () => { setIsPlaying(false); setIsPaused(false); };
-    utterance.onerror = (e) => {
+    const onPlayEnd = () => { setIsPlaying(false); setIsPaused(false); usingFallbackRef.current = false; };
+    const onPlayError = (e) => {
       console.error('Speech synthesis error:', e);
       setIsPlaying(false);
       setIsPaused(false);
+      usingFallbackRef.current = false;
     };
 
-    utteranceRef.current = utterance;
-    synthRef.current.speak(utterance);
+    if (matchedVoice || selectedLang.startsWith('en')) {
+      // Use native SpeechSynthesis
+      usingFallbackRef.current = false;
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = selectedLang;
+      if (matchedVoice) utterance.voice = matchedVoice;
+      utterance.rate = 0.95;
+      utterance.onend = onPlayEnd;
+      utterance.onerror = onPlayError;
+      utteranceRef.current = utterance;
+      synthRef.current.speak(utterance);
+    } else {
+      // Fallback: Google Translate TTS
+      usingFallbackRef.current = true;
+      speakWithGTTS(text, selectedLang, { onEnd: onPlayEnd, onError: onPlayError });
+    }
+
     setIsPlaying(true);
     setIsPaused(false);
   };
 
   const handlePause = () => {
-    if (synthRef.current && isPlaying && !isPaused) {
-      synthRef.current.pause();
+    if (isPlaying && !isPaused) {
+      if (usingFallbackRef.current) {
+        pauseGTTS();
+      } else if (synthRef.current) {
+        synthRef.current.pause();
+      }
       setIsPaused(true);
       setIsPlaying(false);
     }
   };
 
   const stopSpeech = () => {
+    cancelGTTS();
     if (synthRef.current) {
       synthRef.current.cancel();
     }
     setIsPlaying(false);
     setIsPaused(false);
+    usingFallbackRef.current = false;
   };
 
-  if (!speechSupported) {
+  if (!speechSupported && typeof window === 'undefined') {
     return (
       <div className="p-4 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs font-semibold">
         Text-to-speech is not supported on this browser.
@@ -190,14 +205,6 @@ export default function VoiceLearningPlayer({ resource }) {
           </select>
         </div>
       </div>
-
-      {/* Voice Warning Notice if unavailable */}
-      {!voiceAvailable && (
-        <div className="mb-4 p-3 rounded-xl bg-amber-500/20 border border-amber-400/40 text-amber-200 text-xs flex items-center gap-2">
-          <AlertCircle size={16} className="shrink-0 text-amber-300" />
-          <span>{t('regionalVoiceNotAvailable')}</span>
-        </div>
-      )}
 
       {/* Control Buttons */}
       <div className="flex flex-wrap items-center gap-3">
