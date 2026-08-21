@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { CheckCircle, AlertTriangle, Info, X } from 'lucide-react';
+import { useLanguage } from '../../context/LanguageContext';
 
 const ICONS = {
   success: CheckCircle,
@@ -28,6 +29,7 @@ const PROGRESS_STYLES = {
 export default function Toast({ id, message, type = 'info', duration = 4000, onDismiss }) {
   const [exiting, setExiting] = useState(false);
   const Icon = ICONS[type] || ICONS.info;
+  const { t } = useLanguage();
 
   useEffect(() => {
     if (duration <= 0) return;
@@ -53,7 +55,7 @@ export default function Toast({ id, message, type = 'info', duration = 4000, onD
       <button
         onClick={handleDismiss}
         className="shrink-0 text-textMuted hover:text-textPrimary transition-colors mt-0.5"
-        aria-label="Dismiss"
+        aria-label={t('dismiss', 'Dismiss')}
       >
         <X size={15} />
       </button>

@@ -14,15 +14,17 @@ import {
   Bookmark
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { useLanguage } from '../../context/LanguageContext';
 import { getUserOrders } from '../../services/order.service';
 import { getListings } from '../../services/marketplace.service';
 
 export default function BuyerDashboard() {
   const { profile } = useAuth();
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
   const [recommendations, setRecommendations] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   async function loadData() {
     if (!profile?.id) return;
@@ -56,32 +58,32 @@ export default function BuyerDashboard() {
 
   const quickActions = [
     {
-      label: 'Find Wool',
-      desc: 'Browse marketplace listings',
+      label: t('findWool', 'Find Wool'),
+      desc: t('browseMarketplaceListings', 'Browse marketplace listings'),
       icon: Search,
       route: '/buyer/marketplace',
       tone: 'bg-primary text-white',
       accent: 'border-primary/30 hover:border-primary',
     },
     {
-      label: 'My Orders',
-      desc: 'View active and past orders',
+      label: t('myOrders', 'My Orders'),
+      desc: t('viewActivePastOrders', 'View active and past orders'),
       icon: ShoppingCart,
       route: '/buyer/orders',
       tone: 'bg-accent text-white',
       accent: 'border-accent/30 hover:border-accent',
     },
     {
-      label: 'Track Deliveries',
-      desc: 'Real-time order tracking',
+      label: t('trackDeliveries', 'Track Deliveries'),
+      desc: t('realtimeOrderTracking', 'Real-time order tracking'),
       icon: Package,
       route: '/buyer/tracking',
       tone: 'bg-info text-white',
       accent: 'border-info/30 hover:border-info',
     },
     {
-      label: 'Saved Wool',
-      desc: 'Your bookmarked listings',
+      label: t('savedWool', 'Saved Wool'),
+      desc: t('yourBookmarkedListings', 'Your bookmarked listings'),
       icon: Bookmark,
       route: '/buyer/saved',
       tone: 'bg-emerald-600 text-white',
@@ -91,11 +93,11 @@ export default function BuyerDashboard() {
 
   const getStatusBadge = (status) => {
     switch(status) {
-      case 'placed': return <span className="px-2 py-1 bg-amber-100 text-amber-800 text-[10px] font-bold uppercase rounded-md">Placed</span>;
-      case 'confirmed': return <span className="px-2 py-1 bg-blue-100 text-blue-800 text-[10px] font-bold uppercase rounded-md">Confirmed</span>;
-      case 'processing': return <span className="px-2 py-1 bg-indigo-100 text-indigo-800 text-[10px] font-bold uppercase rounded-md">Processing</span>;
-      case 'dispatched': return <span className="px-2 py-1 bg-sky-100 text-sky-800 text-[10px] font-bold uppercase rounded-md">Dispatched</span>;
-      case 'delivered': return <span className="px-2 py-1 bg-emerald-100 text-emerald-800 text-[10px] font-bold uppercase rounded-md">Delivered</span>;
+      case 'placed': return <span className="px-2 py-1 bg-amber-100 text-amber-800 text-[10px] font-bold uppercase rounded-md">{t('placed', 'Placed')}</span>;
+      case 'confirmed': return <span className="px-2 py-1 bg-blue-100 text-blue-800 text-[10px] font-bold uppercase rounded-md">{t('confirmed', 'Confirmed')}</span>;
+      case 'processing': return <span className="px-2 py-1 bg-indigo-100 text-indigo-800 text-[10px] font-bold uppercase rounded-md">{t('processing', 'Processing')}</span>;
+      case 'dispatched': return <span className="px-2 py-1 bg-sky-100 text-sky-800 text-[10px] font-bold uppercase rounded-md">{t('dispatched', 'Dispatched')}</span>;
+      case 'delivered': return <span className="px-2 py-1 bg-emerald-100 text-emerald-800 text-[10px] font-bold uppercase rounded-md">{t('delivered', 'Delivered')}</span>;
       default: return <span className="px-2 py-1 bg-gray-100 text-gray-800 text-[10px] font-bold uppercase rounded-md">{status}</span>;
     }
   };
@@ -111,13 +113,13 @@ export default function BuyerDashboard() {
           <div className="max-w-xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-emerald-200 border border-white/15 text-xs font-semibold backdrop-blur-md mb-3">
               <Sparkles size={13} className="text-amber-300" />
-              <span>WoolConnect Buyer Portal</span>
+              <span>{t('woolconnectBuyerPortal', 'WoolConnect Buyer Portal')}</span>
             </div>
 
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight leading-tight">
-              Welcome, {profile?.name?.split(' ')[0] || 'Buyer'}. <br />
+              {t('welcome', 'Welcome')}, {profile?.name?.split(' ')[0] || 'Buyer'}. <br />
               <span className="text-emerald-200 font-medium text-xl sm:text-2xl lg:text-3xl">
-                Find verified wool with a complete digital history.
+                {t('findVerifiedWoolHistory', 'Find verified wool with a complete digital history.')}
               </span>
             </h1>
 
@@ -139,7 +141,7 @@ export default function BuyerDashboard() {
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 rounded-2xl bg-white text-primary font-bold text-sm shadow-md hover:bg-emerald-50 hover:shadow-lg transition-all duration-200 active:scale-[0.98]"
             >
               <Search size={17} />
-              <span>Find Wool</span>
+              <span>{t('findWool', 'Find Wool')}</span>
             </button>
           </div>
         </div>
@@ -155,12 +157,12 @@ export default function BuyerDashboard() {
             </span>
           </div>
           <div className="mt-4">
-            <p className="text-xs font-bold uppercase tracking-wider text-textMuted">Active Orders</p>
+            <p className="text-xs font-bold uppercase tracking-wider text-textMuted">{t('activeOrders', 'Active Orders')}</p>
             <p className="text-3xl font-extrabold text-textPrimary mt-1 tracking-tight">
               {activeOrders.length}
             </p>
             <p className="text-xs text-textSecondary mt-1.5 flex items-center gap-1">
-              <span>Orders currently processing or in transit</span>
+              <span>{t('activeOrdersDesc', 'Orders currently processing or in transit')}</span>
             </p>
           </div>
         </div>
@@ -173,12 +175,12 @@ export default function BuyerDashboard() {
             </span>
           </div>
           <div className="mt-4">
-            <p className="text-xs font-bold uppercase tracking-wider text-textMuted">Delivered Orders</p>
+            <p className="text-xs font-bold uppercase tracking-wider text-textMuted">{t('deliveredOrders', 'Delivered Orders')}</p>
             <p className="text-3xl font-extrabold text-textPrimary mt-1 tracking-tight">
               {deliveredOrders.length}
             </p>
             <p className="text-xs text-textSecondary mt-1.5 flex items-center gap-1">
-              <span>Successfully received</span>
+              <span>{t('successfullyReceived', 'Successfully received')}</span>
             </p>
           </div>
         </div>
@@ -191,12 +193,12 @@ export default function BuyerDashboard() {
             </span>
           </div>
           <div className="mt-4">
-            <p className="text-xs font-bold uppercase tracking-wider text-textMuted">Total Wool Sourced</p>
+            <p className="text-xs font-bold uppercase tracking-wider text-textMuted">{t('totalWoolSourced', 'Total Wool Sourced')}</p>
             <p className="text-3xl font-extrabold text-textPrimary mt-1 tracking-tight">
               {totalVolume.toLocaleString()} <span className="text-base text-textSecondary font-semibold">kg</span>
             </p>
             <p className="text-xs text-textSecondary mt-1.5 flex items-center gap-1">
-              <span>Lifetime volume</span>
+              <span>{t('lifetimeVolume', 'Lifetime volume')}</span>
             </p>
           </div>
         </div>
@@ -206,8 +208,8 @@ export default function BuyerDashboard() {
       <section className="mt-10 animate-enter delay-2">
         <div className="section-heading mb-4">
           <div>
-            <p className="eyebrow text-primary"><Sparkles size={13} /> Navigation</p>
-            <h2 className="text-xl font-bold text-textPrimary">Quick Actions</h2>
+            <p className="eyebrow text-primary"><Sparkles size={13} /> {t('navigation', 'Navigation')}</p>
+            <h2 className="text-xl font-bold text-textPrimary">{t('quickActions', 'Quick Actions')}</h2>
           </div>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">

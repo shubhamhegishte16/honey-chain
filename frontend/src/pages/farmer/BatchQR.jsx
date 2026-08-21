@@ -16,8 +16,10 @@ import {
 import Card from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
 import { getBatchById } from '../../services/batches.service';
+import { useLanguage } from '../../context/LanguageContext';
 
 export default function BatchQR() {
+  const { t } = useLanguage();
   const { id } = useParams();
   const navigate = useNavigate();
   const [batch, setBatch] = useState(null);
@@ -61,11 +63,11 @@ export default function BatchQR() {
           className="inline-flex items-center gap-1.5 text-xs font-semibold text-textSecondary hover:text-primary transition-colors group"
         >
           <ArrowLeft size={15} className="transition-transform group-hover:-translate-x-0.5" />
-          <span>Back to Batch Details</span>
+          <span>{t('backToPassport')}</span>
         </Link>
 
         <span className="text-xs text-primary font-bold flex items-center gap-1">
-          <ShieldCheck size={14} /> Tamper-Evident Passport
+          <ShieldCheck size={14} /> {t('woolPassport')}
         </span>
       </div>
 
@@ -74,7 +76,7 @@ export default function BatchQR() {
           <span className="grid h-12 w-12 place-items-center rounded-2xl bg-primaryLight text-primary mx-auto mb-3">
             <QrCode size={24} />
           </span>
-          <h1 className="text-2xl font-bold text-textPrimary">Lot QR Code Passport</h1>
+          <h1 className="text-2xl font-bold text-textPrimary">{t('qrCode')} {t('woolPassport')}</h1>
           <p className="text-xs sm:text-sm text-textSecondary mt-1">
             Scan with any smartphone camera to inspect verified farm origin, micron grade, and chain of custody.
           </p>
@@ -111,7 +113,7 @@ export default function BatchQR() {
                 className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-surface border border-border text-xs font-bold text-textPrimary hover:border-primary/50 hover:bg-background transition-all shadow-sm"
               >
                 <Download size={14} className="text-primary" />
-                <span>Download PNG</span>
+                <span>{t('downloadPng')}</span>
               </button>
 
               <button
@@ -119,7 +121,7 @@ export default function BatchQR() {
                 className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-surface border border-border text-xs font-bold text-textPrimary hover:border-primary/50 hover:bg-background transition-all shadow-sm"
               >
                 {copied ? <CheckCircle2 size={14} className="text-emerald-700" /> : <Copy size={14} className="text-primary" />}
-                <span>{copied ? 'Link Copied!' : 'Copy Link'}</span>
+                <span>{copied ? t('linkCopied') : t('copyLink')}</span>
               </button>
 
               <button
@@ -127,7 +129,7 @@ export default function BatchQR() {
                 className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-surface border border-border text-xs font-bold text-textPrimary hover:border-primary/50 hover:bg-background transition-all shadow-sm"
               >
                 <Printer size={14} className="text-primary" />
-                <span>Print Tag</span>
+                <span>{t('printTag')}</span>
               </button>
             </div>
           </div>

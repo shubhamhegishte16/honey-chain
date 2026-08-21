@@ -1,13 +1,17 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { LayoutDashboard, Users, Package, ShoppingCart } from 'lucide-react';
+import { useLanguage } from '../../context/LanguageContext';
 
-const SIDEBAR_LINKS = [
-  { to: '/admin', label: 'Dashboard', icon: LayoutDashboard },
-  { to: '/admin/users', label: 'Users', icon: Users },
-  { to: '/admin/batches', label: 'Batches', icon: Package },
-  { to: '/admin/marketplace', label: 'Marketplace', icon: ShoppingCart },
-];
+function useSidebarLinks() {
+  const { t } = useLanguage();
+  return [
+    { to: '/admin', label: t('dashboard'), icon: LayoutDashboard },
+    { to: '/admin/users', label: t('users'), icon: Users },
+    { to: '/admin/batches', label: t('batches'), icon: Package },
+    { to: '/admin/marketplace', label: t('marketplace'), icon: ShoppingCart },
+  ];
+}
 
 function SidebarLink({ to, label, icon: Icon }) {
   const { pathname } = useLocation();
@@ -24,13 +28,17 @@ function SidebarLink({ to, label, icon: Icon }) {
 }
 
 export default function AdminLayout({ children }) {
+  const { t } = useLanguage();
+  const SIDEBAR_LINKS = useSidebarLinks();
+  const { pathname } = useLocation();
+
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 md:py-8">
       <div className="flex gap-6 min-h-[calc(100vh-12rem)]">
         {/* Sidebar — desktop only */}
         <aside className="admin-sidebar rounded-xl py-4">
           <p className="px-6 mb-4 text-[11px] font-bold uppercase tracking-widest text-textMuted">
-            Admin Panel
+            {t('adminPanel')}
           </p>
           <nav className="space-y-0.5">
             {SIDEBAR_LINKS.map(link => (
@@ -43,7 +51,6 @@ export default function AdminLayout({ children }) {
         <div className="md:hidden w-full">
           <div className="flex gap-1 overflow-x-auto pb-3 mb-4 border-b border-border/60">
             {SIDEBAR_LINKS.map(link => {
-              const { pathname } = useLocation();
               const isActive = pathname === link.to;
               return (
                 <Link

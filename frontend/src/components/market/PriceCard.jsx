@@ -1,4 +1,5 @@
 import Card from '../ui/Card';
+import { useLanguage } from '../../context/LanguageContext';
 
 export default function PriceCard({
   price,
@@ -7,6 +8,7 @@ export default function PriceCard({
   woolType,
   state,
 }) {
+  const { t } = useLanguage();
   const actualPrice = price ?? pricePerKg ?? 0;
   const change = Number(changePercent || 0);
 
@@ -32,9 +34,9 @@ export default function PriceCard({
         </div>
 
         <div className="text-right">
-          <p className="text-textMuted text-xs">Market Price</p>
+          <p className="text-textMuted text-xs">{t('marketPrice')}</p>
           <p className="text-textSecondary text-xs mt-1">
-            Current rate
+            {t('currentRate')}
           </p>
         </div>
       </div>

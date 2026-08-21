@@ -15,12 +15,14 @@ import {
 import Input from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
 import { useAuth } from '../../context/AuthContext';
+import { useLanguage } from '../../context/LanguageContext';
 import { createWoolBatch } from '../../services/batches.service';
 import { INDIAN_STATES, DISTRICTS_BY_STATE, WOOL_TYPES } from '../../constants/states';
 
 export default function AddWoolBatch() {
   const { profile } = useAuth();
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   const [form, setForm] = useState({
     woolType: 'Chokla',
@@ -53,13 +55,13 @@ export default function AddWoolBatch() {
 
   function validate() {
     const e = {};
-    if (!form.woolType) e.woolType = 'Select wool breed';
+    if (!form.woolType) e.woolType = t('selectWoolBreed', 'Select wool breed');
     if (!form.quantity || isNaN(Number(form.quantity)) || Number(form.quantity) <= 0) {
-      e.quantity = 'Enter a valid positive quantity in kg';
+      e.quantity = t('validQtyRequired', 'Enter a valid positive quantity in kg');
     }
-    if (!form.shearingDate) e.shearingDate = 'Enter shearing date';
-    if (!form.state) e.state = 'Select state';
-    if (!form.district) e.district = 'Select district';
+    if (!form.shearingDate) e.shearingDate = t('shearingDateRequired', 'Enter shearing date');
+    if (!form.state) e.state = t('selectState', 'Select state');
+    if (!form.district) e.district = t('selectDistrict', 'Select district');
     setErrors(e);
     return Object.keys(e).length === 0;
   }
@@ -84,7 +86,7 @@ export default function AddWoolBatch() {
 
     setLoading(false);
     if (error) {
-      setSubmitError(error.message || 'Failed to record wool batch. Please try again.');
+      setSubmitError(error.message || t('failedRecordBatch', 'Failed to record wool batch. Please try again.'));
       return;
     }
     navigate(`/batches/${data.id || data._id}/details`, { replace: true });
@@ -103,24 +105,24 @@ export default function AddWoolBatch() {
           className="inline-flex items-center gap-1.5 text-xs font-semibold text-textSecondary hover:text-primary transition-colors group"
         >
           <ArrowLeft size={15} className="transition-transform group-hover:-translate-x-0.5" />
-          <span>Back to Batches</span>
+          <span>{t('backToBatches', 'Back to My Wool')}</span>
         </Link>
 
         <span className="text-xs text-textMuted font-medium flex items-center gap-1">
-          <Sparkles size={12} className="text-primary" /> Automatic QR Passport Minting
+          <Sparkles size={12} className="text-primary" /> {t('automaticQrMinting', 'Automatic QR Passport Minting')}
         </span>
       </div>
 
       <div className="rounded-3xl bg-surface border border-border/80 p-6 sm:p-10 shadow-card animate-enter">
         <div className="mb-8">
           <div className="eyebrow text-primary mb-1">
-            <ClipboardPlus size={13} /> Harvest Registration
+            <ClipboardPlus size={13} /> {t('harvestRegistration', 'Harvest Registration')}
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-textPrimary">
-            Record New Wool Batch
+            {t('recordNewWool', 'Record New Wool Batch')}
           </h1>
           <p className="text-xs sm:text-sm text-textSecondary mt-1">
-            Log your shearing lot details to generate an instant tamper-evident QR code and traceability passport.
+            {t('logShearingLotDetails', 'Log your shearing lot details to generate an instant tamper-evident QR code and traceability passport.')}
           </p>
         </div>
 
@@ -128,7 +130,7 @@ export default function AddWoolBatch() {
           {/* Section 1: Wool Breed / Variety */}
           <div className="mb-6">
             <label className="block font-bold text-sm text-textPrimary mb-2.5">
-              Wool Breed / Type <span className="text-primary font-bold">*</span>
+              {t('woolBreedType', 'Wool Breed / Type')} <span className="text-primary font-bold">*</span>
             </label>
             <div className="flex flex-wrap gap-2">
               {WOOL_TYPES.map(breed => (
@@ -153,7 +155,7 @@ export default function AddWoolBatch() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 mb-2">
             <div>
               <Input
-                label="Batch Quantity (kg)"
+                label={t('batchQuantityKg', 'Batch Quantity (kg)')}
                 id="quantity"
                 type="number"
                 icon={Scale}
@@ -164,7 +166,7 @@ export default function AddWoolBatch() {
                 required
               />
               <div className="flex items-center gap-1.5 -mt-2 mb-4">
-                <span className="text-[11px] text-textMuted font-medium">Quick add:</span>
+                <span className="text-[11px] text-textMuted font-medium">{t('quickAdd', 'Quick add')}:</span>
                 {[50, 100, 200, 500].map(kg => (
                   <button
                     key={kg}
@@ -179,7 +181,7 @@ export default function AddWoolBatch() {
             </div>
 
             <Input
-              label="Shearing / Harvest Date"
+              label={t('shearingDate', 'Shearing Date')}
               id="shearingDate"
               type="date"
               icon={Calendar}
@@ -193,13 +195,13 @@ export default function AddWoolBatch() {
           {/* Section 3: Location */}
           <div className="pt-4 border-t border-border/60 mb-6">
             <p className="text-xs font-bold uppercase tracking-wider text-textMuted mb-3">
-              Origin & Location
+              {t('originLocation', 'Origin & Location')}
             </p>
 
             {/* State Pills */}
             <div className="mb-3">
               <label className="block font-semibold text-xs text-textSecondary uppercase tracking-wider mb-2">
-                State <span className="text-primary font-bold">*</span>
+                {t('state', 'State')} <span className="text-primary font-bold">*</span>
               </label>
               <div className="flex flex-wrap gap-1.5 max-h-28 overflow-y-auto pr-1 pb-1">
                 {INDIAN_STATES.map(s => (
@@ -224,7 +226,7 @@ export default function AddWoolBatch() {
             {districts.length > 0 && (
               <div className="mt-3 mb-4">
                 <label className="block font-semibold text-xs text-textSecondary uppercase tracking-wider mb-2">
-                  District in {form.state} <span className="text-primary font-bold">*</span>
+                  {t('district', 'District')} <span className="text-primary font-bold">*</span>
                 </label>
                 <div className="flex flex-wrap gap-1.5 max-h-24 overflow-y-auto pr-1 pb-1">
                   {districts.map(d => (
@@ -248,7 +250,7 @@ export default function AddWoolBatch() {
             )}
 
             <Input
-              label="Farm / Shed Location (Optional)"
+              label={`${t('farmLocation', 'Farm / Shed Location')} (Optional)`}
               id="farmLocation"
               icon={MapPin}
               value={form.farmLocation}
@@ -260,7 +262,7 @@ export default function AddWoolBatch() {
           {/* Section 4: Notes */}
           <div className="pt-4 border-t border-border/60 mb-6">
             <Input
-              label="Lot Notes & Quality Observations (Optional)"
+              label={t('notesAndObservations', 'Lot Notes & Quality Observations (Optional)')}
               id="notes"
               multiline
               value={form.notes}
@@ -277,7 +279,7 @@ export default function AddWoolBatch() {
 
           <div className="flex flex-col sm:flex-row items-center gap-3 pt-2">
             <Button
-              title="Record Batch & Generate QR Code"
+              title={t('submitWool', 'Save Wool & Generate QR')}
               type="submit"
               loading={loading}
               icon={ArrowRight}
@@ -285,7 +287,7 @@ export default function AddWoolBatch() {
               className="shadow-md"
             />
             <Button
-              title="Cancel"
+              title={t('cancel', 'Cancel')}
               variant="text"
               onClick={() => navigate('/farmer/tracking')}
               fullWidth={false}

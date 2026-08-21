@@ -1,8 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Leaf } from 'lucide-react';
+import { useLanguage } from '../../context/LanguageContext';
 
 export default function Footer() {
+  const { t } = useLanguage();
   return (
     <footer className="mt-auto border-t border-border/70 bg-surface/80 backdrop-blur-sm">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
@@ -17,11 +19,11 @@ export default function Footer() {
             <span className="text-xs text-textMuted ml-1">© {new Date().getFullYear()}</span>
           </div>
           <div className="flex items-center gap-5 text-xs text-textSecondary font-medium">
-            <Link to="/about" className="hover:text-primary transition-colors">About Mission</Link>
+            <Link to="/about" className="hover:text-primary transition-colors">{t('aboutMission', 'About Mission')}</Link>
             <span>·</span>
-            <span>Farm to Fabric</span>
+            <span>{t('farmToFabric', 'Farm to Fabric')}</span>
             <span>·</span>
-            <span className="text-primary font-semibold">100% Traceable</span>
+            <span className="text-primary font-semibold">{t('hundredPercentTraceable', '100% Traceable')}</span>
           </div>
         </div>
       </div>

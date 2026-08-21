@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Search } from 'lucide-react';
 import { apiRequest } from '../../services/api';
 import { SkeletonTable } from '../../components/ui/Skeleton';
+import { useLanguage } from '../../context/LanguageContext';
 
 export default function MarketplaceManagement() {
+  const { t } = useLanguage();
   const [listings, setListings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -44,13 +46,13 @@ export default function MarketplaceManagement() {
   return (
     <div className="space-y-5 animate-enter">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <h1 className="text-2xl font-bold text-textPrimary">Marketplace Management</h1>
+        <h1 className="text-2xl font-bold text-textPrimary">{t('marketplaceManagement')}</h1>
         <div className="flex items-center gap-2 min-h-[40px] px-3 rounded-xl border border-border bg-surface text-textSecondary transition-colors focus-within:border-primary/50 focus-within:ring-2 focus-within:ring-primary/10 w-full sm:w-64">
           <Search size={16} />
           <input
             value={search}
             onChange={e => setSearch(e.target.value)}
-            placeholder="Search listings…"
+            placeholder={t('searchListings')}
             className="flex-1 bg-transparent border-none outline-none text-sm text-textPrimary placeholder:text-textMuted"
           />
         </div>
@@ -61,18 +63,18 @@ export default function MarketplaceManagement() {
           <table className="w-full text-left text-sm">
             <thead className="bg-background border-b border-border">
               <tr>
-                <th className="p-4 font-semibold text-textSecondary text-xs uppercase tracking-wider">Listing</th>
-                <th className="p-4 font-semibold text-textSecondary text-xs uppercase tracking-wider">Seller</th>
-                <th className="p-4 font-semibold text-textSecondary text-xs uppercase tracking-wider">Price/kg</th>
-                <th className="p-4 font-semibold text-textSecondary text-xs uppercase tracking-wider">Status</th>
-                <th className="p-4 font-semibold text-textSecondary text-xs uppercase tracking-wider">Actions</th>
+                <th className="p-4 font-semibold text-textSecondary text-xs uppercase tracking-wider">{t('listing')}</th>
+                <th className="p-4 font-semibold text-textSecondary text-xs uppercase tracking-wider">{t('seller')}</th>
+                <th className="p-4 font-semibold text-textSecondary text-xs uppercase tracking-wider">{t('pricePerKg')}</th>
+                <th className="p-4 font-semibold text-textSecondary text-xs uppercase tracking-wider">{t('status')}</th>
+                <th className="p-4 font-semibold text-textSecondary text-xs uppercase tracking-wider">{t('actions')}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border/60">
               {filtered.map(l => (
                 <tr key={l._id} className="hover:bg-background/60 transition-colors">
                   <td className="p-4 font-medium text-textPrimary">{l.title || `${l.wool_type} Wool`}</td>
-                  <td className="p-4 text-textSecondary">{l.seller_id?.name || 'Unknown'}</td>
+                  <td className="p-4 text-textSecondary">{l.seller_id?.name || t('unknown')}</td>
                   <td className="p-4 font-semibold text-textPrimary">₹{l.price_per_kg}</td>
                   <td className="p-4">
                     <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold capitalize ${
@@ -80,7 +82,7 @@ export default function MarketplaceManagement() {
                         ? 'bg-primaryLight text-primary'
                         : 'bg-errorLight text-error'
                     }`}>
-                      {l.status}
+                      {l.status === 'active' ? t('active') : t('inactive')}
                     </span>
                   </td>
                   <td className="p-4">
@@ -92,13 +94,13 @@ export default function MarketplaceManagement() {
                           : 'border-primary/30 text-primary bg-primaryLight/40 hover:bg-primaryLight'
                       }`}
                     >
-                      {l.status === 'active' ? 'Deactivate' : 'Activate'}
+                      {l.status === 'active' ? t('deactivate') : t('activate')}
                     </button>
                   </td>
                 </tr>
               ))}
               {filtered.length === 0 && (
-                <tr><td colSpan="5" className="p-8 text-center text-textSecondary">No listings found.</td></tr>
+                <tr><td colSpan="5" className="p-8 text-center text-textSecondary">{t('noListingsFound')}</td></tr>
               )}
             </tbody>
           </table>

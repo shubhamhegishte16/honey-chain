@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLanguage } from '../../context/LanguageContext';
 
 export default function Button({
   title,
@@ -14,6 +15,7 @@ export default function Button({
   icon: Icon,
   ...props
 }) {
+  const { t } = useLanguage();
   const baseStyles = 'inline-flex items-center justify-center font-semibold rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 disabled:opacity-60 disabled:cursor-not-allowed';
   
   const sizeStyles = {
@@ -47,7 +49,7 @@ export default function Button({
             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
           </svg>
-          <span>Processing…</span>
+          <span>{t('processingRequest')}</span>
         </span>
       ) : (
         <span className="inline-flex items-center gap-2">

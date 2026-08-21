@@ -1,9 +1,12 @@
 import { useState } from 'react';
 import { Routes, Route, Navigate, Link, useNavigate, useLocation } from 'react-router-dom';
-import { Leaf, LogOut, MapPin, Menu, X } from 'lucide-react';
+import { ChevronDown, Leaf, LogOut, MapPin, Menu, X } from 'lucide-react';
 import { useAuth } from './context/AuthContext';
+import { useLanguage } from './context/LanguageContext';
 import { signOut } from './services/auth.service';
 import Footer from './components/ui/Footer';
+import LanguageGate from './components/ui/LanguageGate';
+import LanguageSelector from './components/ui/LanguageSelector';
 import LandingPage from './pages/LandingPage';
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
@@ -56,29 +59,30 @@ function NavLink({ to, children, onClick }) {
 
 function Layout({ children }) {
   const { profile } = useAuth();
+  const { t } = useLanguage();
   const nav = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const farmerLinks = [
-    { to: '/', label: 'Dashboard' },
-    { to: '/farmer/market', label: 'Prices' },
-    { to: '/farmer/marketplace', label: 'Marketplace' },
-    { to: '/farmer/tracking', label: 'Tracking' },
-    { to: '/learn', label: 'Learn' },
+    { to: '/', label: t('dashboard') },
+    { to: '/farmer/market', label: t('market') },
+    { to: '/farmer/marketplace', label: t('marketplace') },
+    { to: '/farmer/tracking', label: t('tracking') },
+    { to: '/learn', label: t('learn') },
   ];
 
   const adminLinks = [
-    { to: '/admin', label: 'Dashboard' },
-    { to: '/admin/users', label: 'Users' },
-    { to: '/admin/batches', label: 'Batches' },
-    { to: '/admin/marketplace', label: 'Marketplace' },
+    { to: '/admin', label: t('dashboard') },
+    { to: '/admin/users', label: t('users') },
+    { to: '/admin/batches', label: t('batches') },
+    { to: '/admin/marketplace', label: t('marketplace') },
   ];
 
   const buyerLinks = [
-    { to: '/buyer/dashboard', label: 'Dashboard' },
+    { to: '/buyer/dashboard', label: t('dashboard') },
     { to: '/buyer/marketplace', label: 'Find Wool' },
     { to: '/buyer/orders', label: 'My Orders' },
-    { to: '/buyer/tracking', label: 'Tracking' },
+    { to: '/buyer/tracking', label: t('tracking') },
     { to: '/buyer/analytics', label: 'Analytics' },
     { to: '/buyer/saved', label: 'Saved' },
   ];
@@ -86,7 +90,7 @@ function Layout({ children }) {
   const links = profile?.role === 'admin' ? adminLinks
     : profile?.role === 'farmer' ? farmerLinks
     : profile?.role === 'buyer' ? buyerLinks
-    : profile?.role === 'artisan' ? [{ to: '/', label: 'Marketplace' }, { to: '/learn', label: 'Learn' }]
+    : profile?.role === 'artisan' ? [{ to: '/', label: t('marketplace') }, { to: '/learn', label: t('learn') }]
     : buyerLinks;
 
   return (
@@ -111,6 +115,9 @@ function Layout({ children }) {
           {/* Right side */}
           {profile && (
             <div className="flex items-center gap-3">
+              <div className="hidden md:block">
+                <LanguageSelector />
+              </div>
               {/* User info */}
               <div className="hidden md:flex items-center gap-2">
                 <span className="grid h-8 w-8 place-items-center rounded-full bg-primaryLight text-primary text-xs font-bold">
@@ -131,7 +138,7 @@ function Layout({ children }) {
                 onClick={async () => { await signOut(); nav('/login'); }}
               >
                 <LogOut size={15} />
-                <span className="hidden lg:inline">Logout</span>
+                <span className="hidden lg:inline">{t('logout')}</span>
               </button>
 
               {/* Mobile hamburger */}
@@ -163,7 +170,7 @@ function Layout({ children }) {
           <div className="fixed top-0 right-0 bottom-0 z-50 w-72 bg-surface shadow-card-lg animate-slide-in-right">
             <div className="flex items-center justify-between p-4 border-b border-border/60">
               <span className="font-bold text-primary flex items-center gap-2">
-                <Leaf size={16} /> Menu
+                <Leaf size={16} /> {t('more')}
               </span>
               <button
                 onClick={() => setMobileOpen(false)}
@@ -196,12 +203,16 @@ function Layout({ children }) {
               ))}
             </nav>
 
+            <div className="px-4">
+              <LanguageSelector compact />
+            </div>
+
             <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-border/60">
               <button
                 onClick={async () => { setMobileOpen(false); await signOut(); nav('/login'); }}
                 className="flex items-center gap-2 text-sm font-medium text-red-600 hover:text-red-700"
               >
-                <LogOut size={16} /> Log out
+                <LogOut size={16} /> {t('logout')}
               </button>
             </div>
           </div>
@@ -220,7 +231,8 @@ function Layout({ children }) {
 
 function Protected({ children, allowedRoles }) {
   // BYPASS LOGIN FOR TESTING
-  return <Layout>{children}</Layout>;
+  const { profile } = useAuth();
+  return <LanguageGate active={Boolean(profile)}><Layout>{children}</Layout></LanguageGate>;
 }
 
 function HomeRedirect() {
@@ -231,10 +243,10 @@ function HomeRedirect() {
     </div>
   );
   if (!profile) return <LandingPage />;
-  if (profile.role === 'admin') return <Navigate to="/admin" replace />;
-  if (profile.role === 'farmer') return <Layout><FarmerDashboard /></Layout>;
-  if (profile.role === 'buyer') return <Navigate to="/buyer/dashboard" replace />;
-  return <Layout><MarketplaceExperience allowBuying={profile.role === 'buyer'} /></Layout>;
+  if (profile.role === 'admin') return <LanguageGate active><Navigate to="/admin" replace /></LanguageGate>;
+  if (profile.role === 'farmer') return <LanguageGate active><Layout><FarmerDashboard /></Layout></LanguageGate>;
+  if (profile.role === 'buyer') return <LanguageGate active><Navigate to="/buyer/dashboard" replace /></LanguageGate>;
+  return <LanguageGate active><Layout><MarketplaceExperience allowBuying={profile.role === 'buyer'} /></Layout></LanguageGate>;
 }
 
 export default function App() {

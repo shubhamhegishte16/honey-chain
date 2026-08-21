@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import Card from '../../components/ui/Card';
 import { getAllStatePrices, getMarketNews, getPriceHistory } from '../../services/market.service';
+import { useLanguage } from '../../context/LanguageContext';
 
 function Sparkline({ history, rising = true }) {
   if (!history || history.length < 2) return null;
@@ -55,6 +56,7 @@ function Sparkline({ history, rising = true }) {
 }
 
 export default function FarmerMarket() {
+  const { t } = useLanguage();
   const [prices, setPrices] = useState([]);
   const [news, setNews] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -108,13 +110,13 @@ export default function FarmerMarket() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
           <div className="eyebrow text-primary mb-1">
-            <Sparkles size={13} /> Mandi Price Intelligence
+            <Sparkles size={13} /> {t('todayWoolPrice')}
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-textPrimary">
-            Wool Mandi Rates & Trends
+            {t('todayWoolPrice')}
           </h1>
           <p className="text-xs sm:text-sm text-textSecondary mt-0.5">
-            Real-time daily spot prices gathered from APMC trading hubs across India
+            {t('market')}
           </p>
         </div>
 
@@ -124,7 +126,7 @@ export default function FarmerMarket() {
           className="self-start sm:self-auto inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-surface border border-border text-xs font-semibold text-textSecondary hover:text-primary hover:border-primary/40 transition-colors"
         >
           <RefreshCw size={14} className={loading ? 'animate-spin' : ''} />
-          <span>Refresh Rates</span>
+          <span>{t('refreshRates')}</span>
         </button>
       </div>
 
@@ -144,7 +146,7 @@ export default function FarmerMarket() {
                       {selected.wool_type}
                     </span>
                     <span className="text-xs font-semibold text-textMuted flex items-center gap-1">
-                      <MapPin size={12} /> {selected.state} Mandi
+                      <MapPin size={12} /> {t('region')}: {selected.state}
                     </span>
                   </div>
 
@@ -173,13 +175,13 @@ export default function FarmerMarket() {
                         {selected.change_percent}% (14-day trend)
                       </span>
                     </span>
-                    <span className="text-xs text-textMuted">Updated today 09:00 AM</span>
+                    <span className="text-xs text-textMuted">{t('change')}: {selected.change_percent}%</span>
                   </div>
                 </div>
 
                 <div className="flex flex-col items-start md:items-end justify-between self-stretch">
                   <span className="text-[11px] font-bold uppercase tracking-wider text-textMuted mb-2">
-                    14-Day Price Curve
+                    {t('market')}
                   </span>
                   <Sparkline
                     history={selected.history}
@@ -198,7 +200,7 @@ export default function FarmerMarket() {
                 type="text"
                 value={search}
                 onChange={e => setSearch(e.target.value)}
-                placeholder="Search breed or state..."
+                placeholder={t('searchBreedState')}
                 className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-border bg-surface text-sm text-textPrimary placeholder:text-textMuted focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
               />
             </div>
@@ -275,9 +277,9 @@ export default function FarmerMarket() {
               <div className="section-heading mb-4">
                 <div>
                   <p className="eyebrow text-primary">
-                    <Newspaper size={13} /> Market Intelligence
+                    <Newspaper size={13} /> {t('market')}
                   </p>
-                  <h2 className="text-xl font-bold text-textPrimary">Mandi Bulletins & Trade Updates</h2>
+                  <h2 className="text-xl font-bold text-textPrimary">{t('mandiBulletins')}</h2>
                 </div>
               </div>
 
