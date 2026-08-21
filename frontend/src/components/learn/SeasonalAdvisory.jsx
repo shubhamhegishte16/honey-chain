@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { CloudRain, Sun, Scissors, Hammer, TrendingUp, Calendar, ChevronRight, CheckCircle, ExternalLink } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useLanguage } from '../../context/LanguageContext';
+import { TRAINING_TRANSLATIONS } from '../../services/trainingTranslations.service';
 
-const SEASONS = [
+const BASE_SEASONS = [
   {
     key: 'monsoon',
     title: 'Monsoon',
@@ -58,16 +60,29 @@ const SEASONS = [
 
 export default function SeasonalAdvisory({ resources = [] }) {
   const navigate = useNavigate();
+  const { t, language } = useLanguage();
+
+  const langSeasons = TRAINING_TRANSLATIONS[language]?.seasons;
+
+  const seasons = BASE_SEASONS.map(s => {
+    const override = langSeasons?.[s.key];
+    return {
+      ...s,
+      title: override?.title || s.title,
+      monthsLabel: override?.monthsLabel || s.monthsLabel,
+      recommendedActions: override?.actions || s.recommendedActions
+    };
+  });
 
   // Auto-select season based on current month
   const getCurrentSeasonKey = () => {
     const currentMonth = new Date().getMonth();
-    const matched = SEASONS.find(s => s.months.includes(currentMonth));
+    const matched = seasons.find(s => s.months.includes(currentMonth));
     return matched ? matched.key : 'monsoon';
   };
 
   const [selectedSeasonKey, setSelectedSeasonKey] = useState(getCurrentSeasonKey());
-  const activeSeason = SEASONS.find(s => s.key === selectedSeasonKey) || SEASONS[0];
+  const activeSeason = seasons.find(s => s.key === selectedSeasonKey) || seasons[0];
 
   // Find matching guide resource
   const matchedResource = resources.find(r => 
@@ -82,17 +97,17 @@ export default function SeasonalAdvisory({ resources = [] }) {
         <div>
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-semibold border border-emerald-200 mb-2">
             <Calendar size={13} />
-            <span>Seasonal Advisory</span>
+            <span>{t('seasonalAdvisoryTitle')}</span>
           </div>
-          <h2 className="text-2xl font-bold text-textPrimary">Recommended for This Season</h2>
+          <h2 className="text-2xl font-bold text-textPrimary">{t('recommendedForThisSeason')}</h2>
           <p className="text-sm text-textSecondary mt-1">
-            Focus areas & essential action items for current flock cycle
+            {t('seasonalFocusDesc')}
           </p>
         </div>
 
         {/* Season Selector Tabs */}
         <div className="flex items-center gap-1.5 p-1.5 rounded-2xl bg-background border border-border/80 self-start sm:self-auto overflow-x-auto max-w-full">
-          {SEASONS.map(s => {
+          {seasons.map(s => {
             const isSelected = s.key === selectedSeasonKey;
             const Icon = s.icon;
             return (
@@ -120,7 +135,7 @@ export default function SeasonalAdvisory({ resources = [] }) {
           <div>
             <div className="flex items-center justify-between gap-2 mb-4">
               <span className={`px-3 py-1 rounded-full text-xs font-bold border ${activeSeason.badgeColor}`}>
-                Current Season
+                {t('currentSeason')}
               </span>
               <span className="text-xs text-white/80 font-medium">
                 {activeSeason.monthsLabel}
@@ -131,14 +146,14 @@ export default function SeasonalAdvisory({ resources = [] }) {
               {activeSeason.title}
             </h3>
             <p className="text-xs text-white/80 leading-relaxed mt-2">
-              Targeted protocols to safeguard fleece quality, maintain animal welfare, and optimize profitability.
+              {t('seasonalFocusDesc')}
             </p>
           </div>
 
           {matchedResource && (
             <div className="mt-8 pt-4 border-t border-white/15">
               <p className="text-[11px] font-semibold text-emerald-200 uppercase tracking-wider mb-1">
-                Featured Guide
+                {t('featuredGuide')}
               </p>
               <p className="text-xs font-bold text-white line-clamp-1 mb-3">
                 {matchedResource.title}
@@ -147,7 +162,7 @@ export default function SeasonalAdvisory({ resources = [] }) {
                 onClick={() => navigate(`/learn/resource/${matchedResource._id || matchedResource.id}`)}
                 className="w-full py-2.5 px-4 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs border border-white/20 backdrop-blur-md transition-all flex items-center justify-center gap-1.5"
               >
-                <span>Learn Guide</span>
+                <span>{t('learnGuide')}</span>
                 <ChevronRight size={14} />
               </button>
             </div>
@@ -158,7 +173,7 @@ export default function SeasonalAdvisory({ resources = [] }) {
         <div className="lg:col-span-2 flex flex-col justify-between bg-background/50 rounded-2xl p-6 border border-border/60">
           <div>
             <h4 className="text-sm font-extrabold uppercase tracking-wider text-textMuted mb-4">
-              Recommended Action Items:
+              {t('recommendedActionItems')}
             </h4>
             <ul className="space-y-3">
               {activeSeason.recommendedActions.map((action, idx) => (
@@ -175,13 +190,13 @@ export default function SeasonalAdvisory({ resources = [] }) {
           {matchedResource && (
             <div className="mt-6 pt-4 border-t border-border/60 flex items-center justify-between">
               <span className="text-xs text-textMuted">
-                Read full research guide & official protocols
+                {t('readFullProtocols')}
               </span>
               <button
                 onClick={() => navigate(`/learn/resource/${matchedResource._id || matchedResource.id}`)}
                 className="inline-flex items-center gap-1.5 text-xs font-bold text-primary hover:text-primaryDark transition-colors"
               >
-                <span>Read Detailed Guide</span>
+                <span>{t('readDetailedGuide')}</span>
                 <ExternalLink size={14} />
               </button>
             </div>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Volume2, Play, Pause, Square, AlertCircle, Globe, Check } from 'lucide-react';
+import { useLanguage } from '../../context/LanguageContext';
 
 const SUPPORTED_LANGUAGES = [
   { code: 'en-IN', nativeName: 'English', fallbackCode: 'en' },
@@ -15,7 +16,12 @@ const SUPPORTED_LANGUAGES = [
 ];
 
 export default function VoiceLearningPlayer({ resource }) {
-  const [selectedLang, setSelectedLang] = useState('en-IN');
+  const { t, language } = useLanguage();
+
+  // Map global language code (en, hi, mr) to SpeechSynthesis voice code (en-IN, hi-IN, mr-IN)
+  const defaultVoiceCode = language === 'hi' ? 'hi-IN' : language === 'mr' ? 'mr-IN' : 'en-IN';
+
+  const [selectedLang, setSelectedLang] = useState(defaultVoiceCode);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [voices, setVoices] = useState([]);
@@ -24,6 +30,11 @@ export default function VoiceLearningPlayer({ resource }) {
 
   const synthRef = useRef(null);
   const utteranceRef = useRef(null);
+
+  // Sync selectedLang when global site language changes
+  useEffect(() => {
+    setSelectedLang(defaultVoiceCode);
+  }, [language]);
 
   // Initialize SpeechSynthesis and load voices
   useEffect(() => {
@@ -76,17 +87,17 @@ export default function VoiceLearningPlayer({ resource }) {
     if (!resource) return '';
     let text = `${resource.title}. `;
     if (resource.summary) {
-      text += `Summary: ${resource.summary}. `;
+      text += `${t('summary')}: ${resource.summary}. `;
     }
     if (resource.content) {
       // Strip markdown hashes and extra formatting characters
       const cleanContent = resource.content
         .replace(/###|##|#|\*\*|\*/g, '')
         .replace(/\n+/g, '. ');
-      text += `Content: ${cleanContent}. `;
+      text += `${cleanContent}. `;
     }
     if (resource.keyTakeaways && resource.keyTakeaways.length > 0) {
-      text += `Key Takeaways: ${resource.keyTakeaways.join('. ')}.`;
+      text += `${t('keyTakeaways')}: ${resource.keyTakeaways.join('. ')}.`;
     }
     return text;
   };
@@ -171,8 +182,8 @@ export default function VoiceLearningPlayer({ resource }) {
             <Volume2 size={18} />
           </span>
           <div>
-            <h3 className="text-base sm:text-lg font-bold text-white leading-tight">Listen to this Guide</h3>
-            <p className="text-xs text-white/70">Browser regional voice learning reader</p>
+            <h3 className="text-base sm:text-lg font-bold text-white leading-tight">{t('listenToThisGuide')}</h3>
+            <p className="text-xs text-white/70">{t('browserRegionalReader')}</p>
           </div>
         </div>
 
@@ -200,7 +211,7 @@ export default function VoiceLearningPlayer({ resource }) {
       {!voiceAvailable && (
         <div className="mb-4 p-3 rounded-xl bg-amber-500/20 border border-amber-400/40 text-amber-200 text-xs flex items-center gap-2">
           <AlertCircle size={16} className="shrink-0 text-amber-300" />
-          <span>Regional voice is not available on this device. Fallback audio will be used.</span>
+          <span>{t('regionalVoiceNotAvailable')}</span>
         </div>
       )}
 
@@ -212,7 +223,7 @@ export default function VoiceLearningPlayer({ resource }) {
             className="px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-emerald-950 font-extrabold text-xs transition-all shadow-md flex items-center gap-2"
           >
             <Play size={15} fill="currentColor" />
-            <span>{isPaused ? 'Resume' : 'Play Audio'}</span>
+            <span>{isPaused ? t('resume') : t('playAudio')}</span>
           </button>
         ) : (
           <button
@@ -220,7 +231,7 @@ export default function VoiceLearningPlayer({ resource }) {
             className="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-amber-950 font-extrabold text-xs transition-all shadow-md flex items-center gap-2"
           >
             <Pause size={15} fill="currentColor" />
-            <span>Pause</span>
+            <span>{t('pause')}</span>
           </button>
         )}
 
@@ -230,13 +241,13 @@ export default function VoiceLearningPlayer({ resource }) {
           className="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 disabled:opacity-40 disabled:cursor-not-allowed text-white font-bold text-xs border border-white/15 transition-all flex items-center gap-2"
         >
           <Square size={14} fill="currentColor" />
-          <span>Stop</span>
+          <span>{t('stop')}</span>
         </button>
 
         {(isPlaying || isPaused) && (
           <span className="text-xs text-emerald-300 font-semibold animate-pulse flex items-center gap-1.5 ml-auto">
             <span className="h-2 w-2 rounded-full bg-emerald-400" />
-            {isPaused ? 'Paused' : 'Reading aloud...'}
+            {isPaused ? t('pause') : t('readingAloud')}
           </span>
         )}
       </div>

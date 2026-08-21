@@ -17,8 +17,10 @@ import {
   AlertTriangle
 } from 'lucide-react';
 import { setLastSelectedProblem } from '../../services/smartRecommendation.service';
+import { useLanguage } from '../../context/LanguageContext';
+import { TRAINING_TRANSLATIONS } from '../../services/trainingTranslations.service';
 
-const PROBLEMS = [
+const BASE_PROBLEMS = [
   {
     id: 'damp-wool',
     title: 'Damp / Wet Wool',
@@ -158,14 +160,28 @@ const PROBLEMS = [
 
 export default function WoolProblemGuide({ resources = [] }) {
   const navigate = useNavigate();
-  const [selectedProblemId, setSelectedProblemId] = useState(PROBLEMS[0].id);
+  const { t, language } = useLanguage();
+
+  const langProblems = TRAINING_TRANSLATIONS[language]?.problems;
+
+  const problems = BASE_PROBLEMS.map(p => {
+    const override = langProblems?.[p.id];
+    return {
+      ...p,
+      title: override?.title || p.title,
+      possibleCause: override?.cause || p.possibleCause,
+      recommendedAction: override?.actions || p.recommendedAction
+    };
+  });
+
+  const [selectedProblemId, setSelectedProblemId] = useState(problems[0].id);
 
   const handleSelectProblem = (id) => {
     setSelectedProblemId(id);
     setLastSelectedProblem(id);
   };
 
-  const selectedProblem = PROBLEMS.find(p => p.id === selectedProblemId) || PROBLEMS[0];
+  const selectedProblem = problems.find(p => p.id === selectedProblemId) || problems[0];
 
   // Match existing training resource based on keyword/category
   const matchedResource = resources.find(r => 
@@ -182,17 +198,17 @@ export default function WoolProblemGuide({ resources = [] }) {
       <div className="mb-6 pb-4 border-b border-border/60">
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 text-amber-800 text-xs font-semibold border border-amber-200 mb-2">
           <Search size={13} />
-          <span>Diagnostic Helper</span>
+          <span>{t('diagnosticHelper')}</span>
         </div>
-        <h2 className="text-2xl font-bold text-textPrimary">Identify Your Wool Problem</h2>
+        <h2 className="text-2xl font-bold text-textPrimary">{t('identifyWoolProblem')}</h2>
         <p className="text-sm text-textSecondary mt-1">
-          Select the issue you are facing to get immediate causes, actions, and expert guides
+          {t('selectIssueDesc')}
         </p>
       </div>
 
       {/* Grid of Problem Chips */}
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-3 gap-3 mb-8">
-        {PROBLEMS.map(p => {
+        {problems.map(p => {
           const isSelected = p.id === selectedProblemId;
           const IconComponent = p.icon;
           return (
@@ -225,7 +241,7 @@ export default function WoolProblemGuide({ resources = [] }) {
                 {React.createElement(selectedProblem.icon, { size: 20 })}
               </span>
               <div>
-                <span className="text-[10px] uppercase font-bold text-primary tracking-wider">Selected Problem</span>
+                <span className="text-[10px] uppercase font-bold text-primary tracking-wider">{t('selectedProblem')}</span>
                 <h3 className="text-xl font-extrabold text-textPrimary">{selectedProblem.title}</h3>
               </div>
             </div>
@@ -237,7 +253,7 @@ export default function WoolProblemGuide({ resources = [] }) {
                   className="px-4 py-2 rounded-xl bg-primary text-white font-bold text-xs hover:bg-primaryDark transition-colors shadow-sm flex items-center gap-1.5"
                 >
                   <BookOpen size={14} />
-                  <span>Read Guide</span>
+                  <span>{t('viewTrainingGuide')}</span>
                 </button>
 
                 {hasVideo && (
@@ -246,7 +262,7 @@ export default function WoolProblemGuide({ resources = [] }) {
                     className="px-4 py-2 rounded-xl bg-red-600 text-white font-bold text-xs hover:bg-red-700 transition-colors shadow-sm flex items-center gap-1.5"
                   >
                     <Video size={14} />
-                    <span>Watch Video</span>
+                    <span>{t('watchVideo')}</span>
                   </button>
                 )}
               </div>
@@ -258,7 +274,7 @@ export default function WoolProblemGuide({ resources = [] }) {
             <div className="p-4 rounded-xl bg-surface border border-border/70">
               <div className="flex items-center gap-2 text-rose-600 font-bold text-xs uppercase tracking-wider mb-2">
                 <AlertTriangle size={15} />
-                <span>Possible Cause</span>
+                <span>{t('possibleCause')}</span>
               </div>
               <p className="text-sm text-textSecondary leading-relaxed font-medium">
                 {selectedProblem.possibleCause}
@@ -269,7 +285,7 @@ export default function WoolProblemGuide({ resources = [] }) {
             <div className="p-4 rounded-xl bg-surface border border-border/70">
               <div className="flex items-center gap-2 text-emerald-700 font-bold text-xs uppercase tracking-wider mb-2">
                 <CheckCircle2 size={15} />
-                <span>Recommended Action</span>
+                <span>{t('recommendedAction')}</span>
               </div>
               <ul className="space-y-2">
                 {selectedProblem.recommendedAction.map((act, i) => (
@@ -286,7 +302,7 @@ export default function WoolProblemGuide({ resources = [] }) {
           {matchedResource && (
             <div className="mt-6 pt-4 border-t border-border/60 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-surface/60 p-4 rounded-xl">
               <div>
-                <p className="text-[10px] font-bold text-textMuted uppercase">Recommended Training Resource</p>
+                <p className="text-[10px] font-bold text-textMuted uppercase">{t('recommendedTrainingResource')}</p>
                 <p className="text-sm font-bold text-textPrimary">{matchedResource.title}</p>
                 <p className="text-xs text-textSecondary line-clamp-1 mt-0.5">{matchedResource.summary}</p>
               </div>
@@ -294,7 +310,7 @@ export default function WoolProblemGuide({ resources = [] }) {
                 onClick={() => navigate(`/learn/resource/${matchedResource._id || matchedResource.id}`)}
                 className="text-xs font-bold text-primary hover:underline shrink-0 flex items-center gap-1"
               >
-                <span>View Training Guide</span>
+                <span>{t('viewTrainingGuide')}</span>
                 <ArrowRight size={13} />
               </button>
             </div>

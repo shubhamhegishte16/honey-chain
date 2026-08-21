@@ -5,15 +5,20 @@ import { getTrainingResourceById } from '../../services/training.service';
 import Card from '../../components/ui/Card';
 import VoiceLearningPlayer from '../../components/learn/VoiceLearningPlayer';
 import { isResourceCompleted, toggleResourceCompletion, markResourceCompleted } from '../../services/learningProgress.service';
+import { useLanguage } from '../../context/LanguageContext';
+import { getTranslatedResource } from '../../services/trainingTranslations.service';
 
 export default function ResourceDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [resource, setResource] = useState(null);
+  const { t, language } = useLanguage();
+  const [rawResource, setRawResource] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [completed, setCompleted] = useState(false);
   const [completedSteps, setCompletedSteps] = useState({});
+
+  const resource = rawResource ? getTranslatedResource(rawResource, language) : null;
 
   useEffect(() => {
     try {
@@ -39,13 +44,13 @@ export default function ResourceDetails() {
       try {
         const { data, error } = await getTrainingResourceById(id);
         if (error) {
-          setError('Failed to fetch the resource details.');
+          setError(t('somethingWrongWool'));
         } else {
-          setResource(data);
+          setRawResource(data);
           setCompleted(isResourceCompleted(data._id || data.id));
         }
       } catch (err) {
-        setError('An unexpected error occurred.');
+        setError(t('somethingWrongWool'));
         console.error(err);
       } finally {
         setLoading(false);
@@ -127,7 +132,7 @@ export default function ResourceDetails() {
           className="inline-flex items-center gap-1.5 text-sm font-semibold text-textSecondary hover:text-primary transition-colors"
         >
           <ArrowLeft size={16} />
-          <span>Back</span>
+          <span>{t('backToLearn')}</span>
         </button>
 
         {resource && (
@@ -139,8 +144,8 @@ export default function ResourceDetails() {
                 : 'bg-surface border border-border text-textSecondary hover:text-primary hover:border-primary/40'
             }`}
           >
-            <CheckCircle2 size={16} className={completed ? 'text-emerald-600' : 'text-textMuted'} />
-            <span>{completed ? '✓ Completed' : 'Mark as Complete'}</span>
+            {completed ? <CheckCircle size={15} /> : <CheckCircle2 size={15} />}
+            <span>{completed ? `✓ ${t('completed')}` : t('markAsComplete')}</span>
           </button>
         )}
       </div>
@@ -148,16 +153,16 @@ export default function ResourceDetails() {
       {loading ? (
         <div className="py-20 flex flex-col items-center justify-center">
           <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-          <p className="text-xs text-textSecondary mt-3 font-semibold">Loading resource details...</p>
+          <p className="text-xs text-textSecondary mt-3 font-semibold">{t('loading')}...</p>
         </div>
       ) : error || !resource ? (
         <div className="p-8 text-center rounded-2xl border border-rose-100 bg-rose-50/50">
-          <p className="text-sm font-semibold text-rose-700">{error || 'Resource not found.'}</p>
+          <p className="text-sm font-semibold text-rose-700">{error || t('noResourcesFound')}</p>
           <button
             onClick={() => navigate('/learn')}
             className="mt-4 px-4 py-2 bg-primary text-white text-xs font-bold rounded-xl transition-colors shadow-sm"
           >
-            Back to Learn
+            {t('backToLearn')}
           </button>
         </div>
       ) : (
@@ -181,12 +186,12 @@ export default function ResourceDetails() {
 
                 <span className="flex items-center gap-1 text-[11px] text-textMuted font-medium">
                   <Eye size={11} />
-                  {resource.views} views
+                  {resource.views} {t('views')}
                 </span>
 
                 {completed && (
                   <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
-                    ✓ Completed
+                    ✓ {t('completed')}
                   </span>
                 )}
               </div>
@@ -198,15 +203,15 @@ export default function ResourceDetails() {
               <div className="flex flex-wrap items-center gap-4 text-xs text-textMuted border-b border-border/60 pb-5 mb-5">
                 <span className="flex items-center gap-1">
                   <User size={12} />
-                  <span>By: {resource.author}</span>
+                  <span>{t('byAuthor')} {resource.author}</span>
                 </span>
                 <span>•</span>
-                <span>Category: {resource.category}</span>
+                <span>{t('categoryLabel')} {resource.category}</span>
               </div>
 
               {/* Summary Block */}
               <div className="p-4 rounded-xl bg-background border-l-4 border-l-primary/60 mb-6">
-                <p className="text-xs font-bold uppercase tracking-wider text-textMuted mb-1">Summary</p>
+                <p className="text-xs font-bold uppercase tracking-wider text-textMuted mb-1">{t('summary')}</p>
                 <p className="text-sm text-textSecondary italic">{resource.summary}</p>
               </div>
 
@@ -221,11 +226,11 @@ export default function ResourceDetails() {
                   const synth = window.speechSynthesis;
                   synth.cancel();
 
-                  let stepText = `Step by step guide for ${resource.title}. `;
+                  let stepText = `${resource.title}. `;
                   steps.forEach((s, idx) => {
-                    const title = typeof s === 'string' ? s : s.title || `Step ${idx + 1}`;
+                    const title = typeof s === 'string' ? s : s.title || `${t('step')} ${idx + 1}`;
                     const desc = typeof s === 'string' ? '' : s.description || '';
-                    stepText += `Step ${idx + 1}: ${title}. ${desc}. `;
+                    stepText += `${t('step')} ${idx + 1}: ${title}. ${desc}. `;
                   });
 
                   const utterance = new SpeechSynthesisUtterance(stepText);
@@ -240,13 +245,13 @@ export default function ResourceDetails() {
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 pb-4 border-b border-border/70">
                       <div>
                         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 text-emerald-900 text-xs font-extrabold mb-1.5">
-                          <span>📋 PRACTICAL PROCEDURE</span>
+                          <span>📋 {t('practicalProcedure')}</span>
                         </div>
                         <h2 className="text-xl sm:text-2xl font-black text-textPrimary tracking-tight">
-                          Step-by-Step Guide
+                          {t('stepByStepGuide')}
                         </h2>
                         <p className="text-xs text-textSecondary font-semibold">
-                          Follow these simple steps for best results:
+                          {t('followSimpleSteps')}
                         </p>
                       </div>
 
@@ -255,7 +260,7 @@ export default function ResourceDetails() {
                         className="self-start sm:self-auto px-4 py-2 rounded-2xl bg-emerald-700 hover:bg-emerald-800 text-white font-extrabold text-xs transition-all shadow-sm flex items-center gap-2"
                       >
                         <Volume2 size={16} />
-                        <span>🔊 Listen to Steps</span>
+                        <span>🔊 {t('listenToSteps')}</span>
                       </button>
                     </div>
 
@@ -456,4 +461,3 @@ export default function ResourceDetails() {
     </main>
   );
 }
-

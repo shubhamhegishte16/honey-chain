@@ -21,57 +21,8 @@ import WoolProblemGuide from '../../components/learn/WoolProblemGuide';
 import SmartRecommendations from '../../components/learn/SmartRecommendations';
 import LearningProgressModal from '../../components/learn/LearningProgressModal';
 import { calculateProgressStats } from '../../services/learningProgress.service';
-
-const CATEGORIES = [
-  {
-    key: 'sheep-care',
-    title: 'Sheep Care',
-    desc: 'Best practices for flock health, feeding, and disease prevention.',
-    icon: Heart,
-    color: 'bg-rose-50 text-rose-700 border-rose-100 hover:border-rose-300',
-    dbCategories: ['Sheep Management']
-  },
-  {
-    key: 'shearing',
-    title: 'Shearing',
-    desc: 'Modern techniques for clean, stress-free fleece removal.',
-    icon: Scissors,
-    color: 'bg-amber-50 text-amber-800 border-amber-100 hover:border-amber-300',
-    dbCategories: ['Wool Shearing']
-  },
-  {
-    key: 'wool-quality',
-    title: 'Wool Quality',
-    desc: 'Understanding micron grades, skirting, and grading standards.',
-    icon: Award,
-    color: 'bg-sky-50 text-sky-700 border-sky-100 hover:border-sky-300',
-    dbCategories: ['Wool Handling', 'Wool Grading']
-  },
-  {
-    key: 'storage',
-    title: 'Storage',
-    desc: 'Protecting wool inventory from humidity, pests, and moisture.',
-    icon: Warehouse,
-    color: 'bg-indigo-50 text-indigo-700 border-indigo-100 hover:border-indigo-300',
-    dbCategories: ['Wool Storage']
-  },
-  {
-    key: 'processing',
-    title: 'Processing',
-    desc: 'Scouring, carding, and dyeing methods to add premium value.',
-    icon: Hammer,
-    color: 'bg-emerald-50 text-emerald-700 border-emerald-100 hover:border-emerald-300',
-    dbCategories: ['Wool Processing', 'Dyeing', 'Product Development']
-  },
-  {
-    key: 'selling',
-    title: 'Selling',
-    desc: 'Maximizing returns using direct marketplace listings and QR codes.',
-    icon: TrendingUp,
-    color: 'bg-purple-50 text-purple-700 border-purple-100 hover:border-purple-300',
-    dbCategories: ['Marketing', 'Digital Selling']
-  }
-];
+import { useLanguage } from '../../context/LanguageContext';
+import { TRAINING_TRANSLATIONS, getTranslatedResource } from '../../services/trainingTranslations.service';
 
 const CATEGORY_MAP_FOR_STATS = {
   'sheep-care': { label: 'Sheep Care', dbCategories: ['Sheep Management'] },
@@ -84,18 +35,64 @@ const CATEGORY_MAP_FOR_STATS = {
 
 export default function LearnLanding() {
   const navigate = useNavigate();
+  const { t, language } = useLanguage();
   const [searchQuery, setSearchQuery] = useState('');
   const [counts, setCounts] = useState({});
-  const [allResources, setAllResources] = useState([]);
+  const [rawResources, setRawResources] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isProgressOpen, setIsProgressOpen] = useState(false);
   const [progressStats, setProgressStats] = useState({ overallPercentage: 0, completedCount: 0, totalCount: 0, categoryBreakdown: [] });
+
+  const categories = [
+    {
+      key: 'sheep-care',
+      title: t('catSheepCare'),
+      desc: t('descSheepCare'),
+      icon: Heart,
+      color: 'bg-rose-50 text-rose-700 border-rose-100 hover:border-rose-300',
+    },
+    {
+      key: 'shearing',
+      title: t('catShearing'),
+      desc: t('descShearing'),
+      icon: Scissors,
+      color: 'bg-amber-50 text-amber-800 border-amber-100 hover:border-amber-300',
+    },
+    {
+      key: 'wool-quality',
+      title: t('catWoolQuality'),
+      desc: t('descWoolQuality'),
+      icon: Award,
+      color: 'bg-sky-50 text-sky-700 border-sky-100 hover:border-sky-300',
+    },
+    {
+      key: 'storage',
+      title: t('catStorage'),
+      desc: t('descStorage'),
+      icon: Warehouse,
+      color: 'bg-indigo-50 text-indigo-700 border-indigo-100 hover:border-indigo-300',
+    },
+    {
+      key: 'processing',
+      title: t('catProcessing'),
+      desc: t('descProcessing'),
+      icon: Hammer,
+      color: 'bg-emerald-50 text-emerald-700 border-emerald-100 hover:border-emerald-300',
+    },
+    {
+      key: 'selling',
+      title: t('catSelling'),
+      desc: t('descSelling'),
+      icon: TrendingUp,
+      color: 'bg-purple-50 text-purple-700 border-purple-100 hover:border-purple-300',
+    }
+  ];
 
   const loadResourcesAndStats = async () => {
     try {
       const { data, error } = await getTrainingResources();
       if (!error && data) {
-        setAllResources(data);
+        setRawResources(data);
 
         // Count resources per category
         const categoryCounts = {
@@ -141,6 +138,9 @@ export default function LearnLanding() {
     return () => window.removeEventListener('learning_progress_updated', handleProgressUpdate);
   }, []);
 
+  // Translated resources array
+  const resources = rawResources.map(r => getTranslatedResource(r, language));
+
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
@@ -159,21 +159,21 @@ export default function LearnLanding() {
           <div className="max-w-xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-emerald-200 border border-white/15 text-xs font-semibold backdrop-blur-md mb-4">
               <BookOpen size={13} />
-              <span>Knowledge & Training Center</span>
+              <span>{t('knowledgeTrainingCenter')}</span>
             </div>
 
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight">
-              Learn & Grow.
+              {t('learnAndGrow')}
             </h1>
             <p className="mt-3 text-base text-white/80 leading-relaxed">
-              Boost your flock yield, enhance wool grading, and maximize profits with guidance from agricultural and textile experts.
+              {t('boostFlockYield')}
             </p>
 
             {/* Search Form */}
             <form onSubmit={handleSearchSubmit} className="mt-6 relative max-w-md">
               <input
                 type="text"
-                placeholder="Search guides, standards, or shearing protocols..."
+                placeholder={t('searchGuidesStandards')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-11 pr-4 py-3 rounded-2xl bg-white text-textPrimary placeholder:text-textMuted text-sm font-medium shadow-md focus:outline-none focus:ring-2 focus:ring-emerald-400 transition-all border border-transparent"
@@ -183,7 +183,7 @@ export default function LearnLanding() {
                 type="submit"
                 className="absolute right-2 top-2 px-4 py-1.5 rounded-xl bg-primary text-white font-bold text-xs hover:bg-primaryDark transition-colors shadow-sm"
               >
-                Search
+                {t('search')}
               </button>
             </form>
           </div>
@@ -193,7 +193,7 @@ export default function LearnLanding() {
             <div>
               <div className="flex items-center justify-between gap-2 mb-2">
                 <span className="text-xs font-bold text-emerald-200 flex items-center gap-1.5">
-                  <Trophy size={14} /> My Learning
+                  <Trophy size={14} /> {t('myLearningProgress')}
                 </span>
                 <span className="text-xs font-extrabold text-white">
                   {progressStats.overallPercentage}%
@@ -208,7 +208,7 @@ export default function LearnLanding() {
               </div>
 
               <p className="text-xs text-white/80">
-                Completed <strong className="text-white font-bold">{progressStats.completedCount}</strong> of {progressStats.totalCount} resources
+                {t('completed')} <strong className="text-white font-bold">{progressStats.completedCount}</strong> / {progressStats.totalCount} {t('completedResources')}
               </p>
             </div>
 
@@ -217,7 +217,7 @@ export default function LearnLanding() {
               className="mt-4 w-full py-2 rounded-xl bg-white text-primary font-extrabold text-xs hover:bg-emerald-50 transition-colors shadow-sm flex items-center justify-center gap-1.5"
             >
               <BarChart2 size={14} />
-              <span>Track Progress</span>
+              <span>{t('trackProgressBtn')}</span>
             </button>
           </div>
         </div>
@@ -225,30 +225,30 @@ export default function LearnLanding() {
 
       {/* 1. Smart Recommendations Section */}
       <section className="animate-enter delay-1">
-        <SmartRecommendations resources={allResources} />
+        <SmartRecommendations resources={resources} />
       </section>
 
       {/* 2. Seasonal Farmer Advisory Section */}
       <section className="animate-enter delay-2">
-        <SeasonalAdvisory resources={allResources} />
+        <SeasonalAdvisory resources={resources} />
       </section>
 
       {/* 3. Wool Problem Identification Guide Section */}
       <section className="animate-enter delay-3">
-        <WoolProblemGuide resources={allResources} />
+        <WoolProblemGuide resources={resources} />
       </section>
 
       {/* 4. Training Categories Grid */}
       <section className="animate-enter delay-4">
         <div className="section-heading mb-6">
           <div>
-            <p className="eyebrow text-primary"><Sparkles size={13} /> Training Modules</p>
-            <h2 className="text-2xl font-bold text-textPrimary">Select a Category</h2>
+            <p className="eyebrow text-primary"><Sparkles size={13} /> {t('trainingModules')}</p>
+            <h2 className="text-2xl font-bold text-textPrimary">{t('selectCategory')}</h2>
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {CATEGORIES.map((cat) => {
+          {categories.map((cat) => {
             const IconComponent = cat.icon;
             const resourceCount = counts[cat.key] ?? 0;
 
@@ -272,10 +272,10 @@ export default function LearnLanding() {
                 
                 <div className="mt-6 flex items-center justify-between w-full border-t border-border/60 pt-4">
                   <span className="text-xs text-textMuted font-medium">
-                    {loading ? 'Loading...' : `${resourceCount} ${resourceCount === 1 ? 'Resource' : 'Resources'}`}
+                    {loading ? t('loading') : `${resourceCount} ${t('completedResources')}`}
                   </span>
                   <span className="text-xs font-bold text-primary group-hover:translate-x-1 transition-transform flex items-center gap-1">
-                    <span>Explore</span>
+                    <span>{t('startLearning')}</span>
                     <ArrowRight size={14} />
                   </span>
                 </div>

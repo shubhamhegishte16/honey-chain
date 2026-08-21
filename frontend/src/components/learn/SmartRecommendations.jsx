@@ -7,20 +7,22 @@ import {
   getSmartRecommendations 
 } from '../../services/smartRecommendation.service';
 import { getProgress } from '../../services/learningProgress.service';
-
-const AVAILABLE_INTERESTS = [
-  { key: 'sheep-care', label: 'Sheep Care', icon: Heart },
-  { key: 'shearing', label: 'Shearing', icon: Scissors },
-  { key: 'wool-quality', label: 'Wool Quality', icon: Award },
-  { key: 'storage', label: 'Storage', icon: Warehouse },
-  { key: 'processing', label: 'Processing', icon: Hammer },
-  { key: 'selling', label: 'Selling', icon: TrendingUp }
-];
+import { useLanguage } from '../../context/LanguageContext';
 
 export default function SmartRecommendations({ resources = [] }) {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [userInterests, setUserInterests] = useState([]);
   const [recommendations, setRecommendations] = useState([]);
+
+  const availableInterests = [
+    { key: 'sheep-care', label: t('catSheepCare'), icon: Heart },
+    { key: 'shearing', label: t('catShearing'), icon: Scissors },
+    { key: 'wool-quality', label: t('catWoolQuality'), icon: Award },
+    { key: 'storage', label: t('catStorage'), icon: Warehouse },
+    { key: 'processing', label: t('catProcessing'), icon: Hammer },
+    { key: 'selling', label: t('catSelling'), icon: TrendingUp }
+  ];
 
   const refreshRecommendations = () => {
     const interests = getUserInterests();
@@ -58,18 +60,18 @@ export default function SmartRecommendations({ resources = [] }) {
         <div>
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 text-amber-800 text-xs font-semibold border border-amber-200 mb-2">
             <Sparkles size={13} />
-            <span>Personalized Learning</span>
+            <span>{t('personalizedLearning')}</span>
           </div>
-          <h2 className="text-2xl font-bold text-textPrimary">Recommended for You</h2>
+          <h2 className="text-2xl font-bold text-textPrimary">{t('recommendedForYou')}</h2>
           <p className="text-sm text-textSecondary mt-1">
-            Tailored based on your interests, current season, diagnostic problem & learning progress
+            {t('tailoredRecommendations')}
           </p>
         </div>
 
         {/* Quick Interest Chips Selector */}
         <div className="flex flex-wrap items-center gap-1.5">
-          <span className="text-[11px] font-bold uppercase text-textMuted mr-1">Filter Interests:</span>
-          {AVAILABLE_INTERESTS.map(item => {
+          <span className="text-[11px] font-bold uppercase text-textMuted mr-1">{t('filterInterests')}</span>
+          {availableInterests.map(item => {
             const isSelected = userInterests.includes(item.key);
             const IconComp = item.icon;
             return (
@@ -137,7 +139,7 @@ export default function SmartRecommendations({ resources = [] }) {
                   }}
                   className="px-3.5 py-1.5 rounded-xl bg-primary text-white font-bold text-xs group-hover:bg-primaryDark transition-colors shadow-sm flex items-center gap-1"
                 >
-                  <span>Start Learning</span>
+                  <span>{t('startLearning')}</span>
                   <ArrowRight size={13} />
                 </button>
               </div>
