@@ -195,6 +195,31 @@ export default function ResourceDetails() {
               {/* Voice Learning Component */}
               <VoiceLearningPlayer resource={resource} />
 
+              {/* Step-by-Step Guide Section */}
+              {resource.practicalSteps && resource.practicalSteps.length > 0 && (
+                <div className="mb-6 p-6 rounded-2xl bg-surface border border-border/80 shadow-sm">
+                  <div className="flex items-center gap-2 mb-4 pb-3 border-b border-border/60">
+                    <span className="text-lg font-bold text-textPrimary">📋 Step-by-Step Guide</span>
+                  </div>
+                  <div className="space-y-3">
+                    {resource.practicalSteps.map((step, stepIdx) => (
+                      <div
+                        key={stepIdx}
+                        className="flex items-start gap-3.5 p-3.5 rounded-xl bg-background border border-border/60 transition-all hover:border-primary/40"
+                      >
+                        <span className="grid h-7 w-7 shrink-0 place-items-center rounded-xl bg-primary text-white text-xs font-extrabold shadow-xs">
+                          {stepIdx + 1}
+                        </span>
+                        <div className="pt-0.5">
+                          <p className="text-xs font-bold text-textMuted uppercase tracking-wider mb-0.5">Step {stepIdx + 1}</p>
+                          <p className="text-sm text-textPrimary leading-relaxed font-medium">{step}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {/* YouTube Video Section */}
               {(() => {
                 const getYouTubeEmbedUrl = (url) => {

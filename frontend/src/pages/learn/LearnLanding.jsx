@@ -18,6 +18,7 @@ import {
 import { getTrainingResources } from '../../services/training.service';
 import SeasonalAdvisory from '../../components/learn/SeasonalAdvisory';
 import WoolProblemGuide from '../../components/learn/WoolProblemGuide';
+import SmartRecommendations from '../../components/learn/SmartRecommendations';
 import LearningProgressModal from '../../components/learn/LearningProgressModal';
 import { calculateProgressStats } from '../../services/learningProgress.service';
 
@@ -222,18 +223,23 @@ export default function LearnLanding() {
         </div>
       </section>
 
-      {/* 1. Seasonal Farmer Advisory Section */}
+      {/* 1. Smart Recommendations Section */}
       <section className="animate-enter delay-1">
+        <SmartRecommendations resources={allResources} />
+      </section>
+
+      {/* 2. Seasonal Farmer Advisory Section */}
+      <section className="animate-enter delay-2">
         <SeasonalAdvisory resources={allResources} />
       </section>
 
-      {/* 2. Wool Problem Identification Guide Section */}
-      <section className="animate-enter delay-2">
+      {/* 3. Wool Problem Identification Guide Section */}
+      <section className="animate-enter delay-3">
         <WoolProblemGuide resources={allResources} />
       </section>
 
-      {/* 3. Training Categories Grid */}
-      <section className="animate-enter delay-3">
+      {/* 4. Training Categories Grid */}
+      <section className="animate-enter delay-4">
         <div className="section-heading mb-6">
           <div>
             <p className="eyebrow text-primary"><Sparkles size={13} /> Training Modules</p>

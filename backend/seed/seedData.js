@@ -819,6 +819,16 @@ Supplement grazing with protein-rich mineral blocks and legumes to ensure high q
         tags: ['Sheep Health', 'Disease Prevention', 'Nutrition'],
         views: 185,
         youtubeUrl: 'https://www.youtube.com/watch?v=JYASAHeFRKg',
+        targetProblems: ['poor-quality'],
+        recommendedSeasons: ['monsoon', 'processing'],
+        interests: ['sheep-care'],
+        practicalSteps: [
+          'Review vaccination record for sheep pox, PPR, and enterotoxemia.',
+          'Administer pre-monsoon deworming treatment to the entire flock.',
+          'Install protein-rich mineral licking blocks in shelter pens.',
+          'Clean and disinfect feeding troughs and water basins weekly.',
+          'Isolate sick animals immediately into quarantine enclosures.'
+        ]
       },
       {
         title: 'Modern Shearing Practices & Sheep Welfare',
@@ -842,6 +852,16 @@ Immediately skirt the belly wool, leg pieces, and heavily soiled tags away from 
         tags: ['Shearing', 'Staple Length', 'Wool Quality'],
         views: 240,
         youtubeUrl: 'https://www.youtube.com/watch?v=N7CpW1mBodc',
+        targetProblems: ['shearing-problem', 'dirty-wool'],
+        recommendedSeasons: ['shearing'],
+        interests: ['shearing', 'wool-quality'],
+        practicalSteps: [
+          'Keep sheep off wet pastures 12 hours prior to shearing.',
+          'Oil and sharpen clipper blades before starting shearing strokes.',
+          'Maintain continuous flat contact between clipper and skin without second cuts.',
+          'Throw fleece flat onto skirting table immediately after shearing.',
+          'Skirt off belly wool, leg pieces, and soiled tags into separate Grade C sacks.'
+        ]
       },
       {
         title: 'Central Wool Board Grading Standards & Micron Metrics',
@@ -864,6 +884,16 @@ Clean skirting before weighing increases batch valuation by up to 25-30% on the 
         tags: ['Grading', 'Micron', 'Standards', 'Pricing'],
         views: 315,
         youtubeUrl: 'https://www.youtube.com/watch?v=Ksc8wY_VFJk',
+        targetProblems: ['discolored-wool', 'poor-quality'],
+        recommendedSeasons: ['shearing', 'processing'],
+        interests: ['wool-quality'],
+        practicalSteps: [
+          'Measure representative staple lengths across main fleece blanket.',
+          'Inspect vegetable matter percentage (burrs/seeds) under clean light.',
+          'Sort main fleece into Grade A (under 25 micron) or Grade B (25-32 micron).',
+          'Package stained and coarse leg wool into Grade C bags.',
+          'Attach WoolConnect digital quality assessment certificate.'
+        ]
       },
       {
         title: 'Monsoon Wool Storage & Moisture Prevention Protocol',
@@ -887,6 +917,16 @@ Turn stacked wool sacks fortnightly to prevent core temperature build-up and swe
         tags: ['Storage', 'Monsoon', 'Warehousing'],
         views: 198,
         youtubeUrl: 'https://www.youtube.com/watch?v=ZrcRCIPuoKY',
+        targetProblems: ['damp-wool', 'mold-smell'],
+        recommendedSeasons: ['monsoon'],
+        interests: ['storage', 'wool-quality'],
+        practicalSteps: [
+          'Prepare a clean, dry, and leak-proof storage shed.',
+          'Ensure raw wool is completely dry (<14% moisture) before packing.',
+          'Stack wool sacks on elevated wooden pallets at least 15 cm above ground.',
+          'Maintain cross-ventilation during dry weather and seal during heavy rainfall.',
+          'Inspect stored wool fortnightly for moisture, warmth, or mould growth.'
+        ]
       },
       {
         title: 'Wool Scouring, Carding, & Processing Basics',
@@ -907,6 +947,16 @@ Carding aligns the tangled wool fibers into straight rows, creating a soft web o
         tags: ['Processing', 'Carding', 'Scouring'],
         views: 210,
         youtubeUrl: 'https://www.youtube.com/watch?v=MXM31v49Xtw',
+        targetProblems: ['dirty-wool', 'matted-wool'],
+        recommendedSeasons: ['processing'],
+        interests: ['processing'],
+        practicalSteps: [
+          'Open up greasy fleece and shake off loose dirt and dust particles.',
+          'Wash wool in warm soapy water (50-55°C) using neutral detergent.',
+          'Rinse scoured fleece in clean lukewarm water and squeeze excess moisture.',
+          'Air dry scoured wool in shaded outdoor racks.',
+          'Pass clean dry wool through carding rollers to align fibers into slivers.'
+        ]
       },
       {
         title: 'Natural Dyeing with Himalayan Botanicals & Mineral Mordants',
@@ -927,6 +977,16 @@ Premordant with 10% weight of fibre potassium alum to lock natural pigments and 
         tags: ['Dyeing', 'Artisan', 'Natural Colors'],
         views: 180,
         youtubeUrl: 'https://www.youtube.com/watch?v=GKuRnyD5q6k',
+        targetProblems: ['dyeing-problem'],
+        recommendedSeasons: ['processing'],
+        interests: ['processing'],
+        practicalSteps: [
+          'Scour wool thoroughly to ensure 100% grease removal before dyeing.',
+          'Dissolve potassium alum (10% weight of dry yarn) in warm water as mordant.',
+          'Simmer yarn in mordant bath at 80°C for 45 minutes.',
+          'Prepare natural botanical dye extract (madder root, walnut hull, or pomegranate).',
+          'Immerse mordanted yarn into dye bath and stir gently for even color absorption.'
+        ]
       },
       {
         title: 'Maximizing Direct-to-Buyer Revenue on Digital Marketplaces',
@@ -947,6 +1007,16 @@ Always state exact quantity, provide high-resolution natural light photos, and l
         tags: ['Marketplace', 'Direct Selling', 'Farmer Profit'],
         views: 420,
         youtubeUrl: 'https://youtu.be/aQs3p0zV6gE',
+        targetProblems: ['selling-problem'],
+        recommendedSeasons: ['processing'],
+        interests: ['selling'],
+        practicalSteps: [
+          'Take high-resolution natural light photos of your graded wool batch.',
+          'Log batch details (weight, breed, shearing date, grade) on WoolConnect.',
+          'Generate and attach digital QR batch traceability code.',
+          'Check live state Mandi prices to quote fair competitive rates.',
+          'Publish listing directly to connect with verified textile mill buyers.'
+        ]
       }
     ]);
 

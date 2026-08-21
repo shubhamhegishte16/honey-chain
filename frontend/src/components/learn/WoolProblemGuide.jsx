@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   Droplets, 
@@ -16,6 +16,7 @@ import {
   CheckCircle2,
   AlertTriangle
 } from 'lucide-react';
+import { setLastSelectedProblem } from '../../services/smartRecommendation.service';
 
 const PROBLEMS = [
   {
@@ -159,6 +160,11 @@ export default function WoolProblemGuide({ resources = [] }) {
   const navigate = useNavigate();
   const [selectedProblemId, setSelectedProblemId] = useState(PROBLEMS[0].id);
 
+  const handleSelectProblem = (id) => {
+    setSelectedProblemId(id);
+    setLastSelectedProblem(id);
+  };
+
   const selectedProblem = PROBLEMS.find(p => p.id === selectedProblemId) || PROBLEMS[0];
 
   // Match existing training resource based on keyword/category
@@ -192,7 +198,7 @@ export default function WoolProblemGuide({ resources = [] }) {
           return (
             <button
               key={p.id}
-              onClick={() => setSelectedProblemId(p.id)}
+              onClick={() => handleSelectProblem(p.id)}
               className={`p-3.5 rounded-2xl border text-left flex items-center gap-3 transition-all duration-200 ${
                 isSelected 
                   ? `${p.activeBg} shadow-md border-transparent ring-2 ring-offset-2 ring-primary/40`
