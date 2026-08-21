@@ -15,22 +15,27 @@ import {
 import BatchStatusBadge from '../../components/batch/BatchStatusBadge';
 import { getBatchById } from '../../services/batches.service';
 import { getTrackingEvents } from '../../services/tracking.service';
+import { useLanguage } from '../../context/LanguageContext';
 
-const EVENT_CONFIG = {
-  produced: { label: 'Sheared & Produced', icon: '🐑', tone: 'bg-emerald-50 text-emerald-800 border-emerald-300' },
-  quality_checked: { label: 'Quality Graded', icon: '🔬', tone: 'bg-sky-50 text-sky-800 border-sky-300' },
-  sorted: { label: 'Graded & Sorted', icon: '📑', tone: 'bg-purple-50 text-purple-800 border-purple-300' },
-  stored: { label: 'Warehouse Vaulted', icon: '🏬', tone: 'bg-amber-50 text-amber-900 border-amber-300' },
-  processed: { label: 'Scoured & Carded', icon: '🧵', tone: 'bg-teal-50 text-teal-800 border-teal-300' },
-  listed: { label: 'Listed in Marketplace', icon: '🛒', tone: 'bg-indigo-50 text-indigo-800 border-indigo-300' },
-  sold: { label: 'Order Confirmed', icon: '💰', tone: 'bg-emerald-50 text-emerald-800 border-emerald-300' },
-  dispatched: { label: 'In Transit', icon: '🚚', tone: 'bg-blue-50 text-blue-800 border-blue-300' },
-  delivered: { label: 'Delivered', icon: '✨', tone: 'bg-green-50 text-green-800 border-green-300' },
-};
+function getEventConfig(t) {
+  return {
+    produced: { label: t('evShearedProduced'), icon: '🐑', tone: 'bg-emerald-50 text-emerald-800 border-emerald-300' },
+    quality_checked: { label: t('evQualityGraded'), icon: '🔬', tone: 'bg-sky-50 text-sky-800 border-sky-300' },
+    sorted: { label: t('evGradedSorted'), icon: '📑', tone: 'bg-purple-50 text-purple-800 border-purple-300' },
+    stored: { label: t('evWarehouseVaulted'), icon: '🏬', tone: 'bg-amber-50 text-amber-900 border-amber-300' },
+    processed: { label: t('evScouredCarded'), icon: '🧵', tone: 'bg-teal-50 text-teal-800 border-teal-300' },
+    listed: { label: t('evListedMarketplace'), icon: '🛒', tone: 'bg-indigo-50 text-indigo-800 border-indigo-300' },
+    sold: { label: t('evOrderConfirmed'), icon: '💰', tone: 'bg-emerald-50 text-emerald-800 border-emerald-300' },
+    dispatched: { label: t('evInTransit'), icon: '🚚', tone: 'bg-blue-50 text-blue-800 border-blue-300' },
+    delivered: { label: t('evDelivered'), icon: '✨', tone: 'bg-green-50 text-green-800 border-green-300' },
+  };
+}
 
 export default function WoolPassport() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { t } = useLanguage();
+  const EVENT_CONFIG = getEventConfig(t);
   const [batch, setBatch] = useState(null);
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -46,7 +51,7 @@ export default function WoolPassport() {
         ]);
 
         if (batchRes.error) {
-          setError(batchRes.error.message || 'Failed to load batch.');
+          setError(batchRes.error.message || t('somethingWrongWool'));
         } else {
           setBatch(batchRes.data);
         }
@@ -56,15 +61,15 @@ export default function WoolPassport() {
           evList.push({
             id: 'ev-initial',
             event_type: 'produced',
-            actorName: batchRes.data.users?.name || 'Pastoralist Producer',
+            actorName: batchRes.data.users?.name || t('pastoralistProducer'),
             location: `${batchRes.data.district || ''}, ${batchRes.data.state || ''}`,
-            description: `Batch registered. Weight: ${batchRes.data.quantity_kg} kg ${batchRes.data.wool_type}.`,
+            description: t('batchRegisteredDesc').replace('{qty}', batchRes.data.quantity_kg).replace('{type}', batchRes.data.wool_type),
             event_timestamp: batchRes.data.shearing_date || new Date().toISOString(),
           });
         }
         setEvents(evList);
       } catch (err) {
-        setError('Something went wrong loading the passport.');
+        setError(t('somethingWrongPassport'));
       } finally {
         setLoading(false);
       }
@@ -87,9 +92,9 @@ export default function WoolPassport() {
       <main className="page-shell">
         <div className="p-8 text-center rounded-3xl bg-rose-50 text-rose-800 border border-rose-200 mt-10">
           <Package size={32} className="mx-auto mb-3" />
-          <h3 className="font-bold text-lg">Batch Not Found</h3>
-          <p className="mt-1 text-sm">{error || 'This wool batch could not be found.'}</p>
-          <button onClick={() => navigate(-1)} className="mt-4 px-4 py-2 bg-rose-100 rounded-lg text-sm font-semibold hover:bg-rose-200">Go Back</button>
+          <h3 className="font-bold text-lg">{t('batchNotFoundTitle')}</h3>
+          <p className="mt-1 text-sm">{error || t('batchCouldNotBeFound')}</p>
+          <button onClick={() => navigate(-1)} className="mt-4 px-4 py-2 bg-rose-100 rounded-lg text-sm font-semibold hover:bg-rose-200">{t('goBack')}</button>
         </div>
       </main>
     );
@@ -98,7 +103,7 @@ export default function WoolPassport() {
   return (
     <main className="page-shell max-w-3xl mx-auto">
       <button onClick={() => navigate(-1)} className="mb-6 flex items-center gap-1.5 text-sm font-medium text-textSecondary hover:text-textPrimary transition-colors">
-        <ArrowLeft size={16} /> Back
+        <ArrowLeft size={16} /> {t('back')}
       </button>
 
       {/* Passport Header */}
@@ -106,7 +111,7 @@ export default function WoolPassport() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-emerald-200 border border-white/15 text-xs font-semibold backdrop-blur-md mb-3">
-              <QrCode size={13} /> Digital Wool Passport
+              <QrCode size={13} /> {t('digitalWoolPassport')}
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">{batch.batch_id}</h1>
             <p className="text-white/80 text-sm mt-1 flex items-center gap-1.5">
@@ -126,26 +131,26 @@ export default function WoolPassport() {
         {/* Origin */}
         <div className="p-5 rounded-2xl bg-surface border border-border shadow-sm">
           <h3 className="font-bold text-textPrimary flex items-center gap-2 mb-3">
-            <MapPin size={16} className="text-primary" /> Origin
+            <MapPin size={16} className="text-primary" /> {t('originLabel')}
           </h3>
           <dl className="space-y-2 text-sm">
-            <div className="flex justify-between"><dt className="text-textSecondary">State</dt><dd className="font-semibold text-textPrimary">{batch.state || '—'}</dd></div>
-            <div className="flex justify-between"><dt className="text-textSecondary">District</dt><dd className="font-semibold text-textPrimary">{batch.district || '—'}</dd></div>
-            {batch.farm_location && <div className="flex justify-between"><dt className="text-textSecondary">Farm</dt><dd className="font-semibold text-textPrimary">{batch.farm_location}</dd></div>}
-            <div className="flex justify-between"><dt className="text-textSecondary">Producer</dt><dd className="font-semibold text-textPrimary">{batch.users?.name || '—'}</dd></div>
+            <div className="flex justify-between"><dt className="text-textSecondary">{t('stateLabel')}</dt><dd className="font-semibold text-textPrimary">{batch.state || '—'}</dd></div>
+            <div className="flex justify-between"><dt className="text-textSecondary">{t('districtLabel')}</dt><dd className="font-semibold text-textPrimary">{batch.district || '—'}</dd></div>
+            {batch.farm_location && <div className="flex justify-between"><dt className="text-textSecondary">{t('farmLabel')}</dt><dd className="font-semibold text-textPrimary">{batch.farm_location}</dd></div>}
+            <div className="flex justify-between"><dt className="text-textSecondary">{t('producerLabel')}</dt><dd className="font-semibold text-textPrimary">{batch.users?.name || '—'}</dd></div>
           </dl>
         </div>
 
         {/* Batch Details */}
         <div className="p-5 rounded-2xl bg-surface border border-border shadow-sm">
           <h3 className="font-bold text-textPrimary flex items-center gap-2 mb-3">
-            <Package size={16} className="text-primary" /> Batch Information
+            <Package size={16} className="text-primary" /> {t('batchInformation')}
           </h3>
           <dl className="space-y-2 text-sm">
-            <div className="flex justify-between"><dt className="text-textSecondary">Wool Type</dt><dd className="font-semibold text-textPrimary">{batch.wool_type}</dd></div>
-            <div className="flex justify-between"><dt className="text-textSecondary">Quantity</dt><dd className="font-semibold text-textPrimary">{batch.quantity_kg} kg</dd></div>
-            <div className="flex justify-between"><dt className="text-textSecondary">Shearing Date</dt><dd className="font-semibold text-textPrimary">{batch.shearing_date ? new Date(batch.shearing_date).toLocaleDateString('en-IN') : '—'}</dd></div>
-            {batch.color && <div className="flex justify-between"><dt className="text-textSecondary">Color</dt><dd className="font-semibold text-textPrimary capitalize">{batch.color}</dd></div>}
+            <div className="flex justify-between"><dt className="text-textSecondary">{t('woolTypeLabel')}</dt><dd className="font-semibold text-textPrimary">{batch.wool_type}</dd></div>
+            <div className="flex justify-between"><dt className="text-textSecondary">{t('quantityKg')}</dt><dd className="font-semibold text-textPrimary">{batch.quantity_kg} kg</dd></div>
+            <div className="flex justify-between"><dt className="text-textSecondary">{t('shearingDateLabel')}</dt><dd className="font-semibold text-textPrimary">{batch.shearing_date ? new Date(batch.shearing_date).toLocaleDateString('en-IN') : '—'}</dd></div>
+            {batch.color && <div className="flex justify-between"><dt className="text-textSecondary">{t('colorLabel')}</dt><dd className="font-semibold text-textPrimary capitalize">{batch.color}</dd></div>}
           </dl>
         </div>
       </div>
@@ -153,34 +158,34 @@ export default function WoolPassport() {
       {/* Quality Section */}
       <div className="p-5 rounded-2xl bg-surface border border-border shadow-sm mb-8 animate-enter delay-2">
         <h3 className="font-bold text-textPrimary flex items-center gap-2 mb-4">
-          <ShieldCheck size={16} className="text-primary" /> Quality Verification
+          <ShieldCheck size={16} className="text-primary" /> {t('qualityVerification')}
         </h3>
         {batch.qualityAssessment ? (
           <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-2 text-sm">
-            {batch.qualityAssessment.grade && <div className="flex justify-between"><dt className="text-textSecondary">Grade</dt><dd className="font-semibold text-textPrimary">{batch.qualityAssessment.grade}</dd></div>}
-            {batch.qualityAssessment.fiberAppearance && <div className="flex justify-between"><dt className="text-textSecondary">Fiber Appearance</dt><dd className="font-semibold text-textPrimary">{batch.qualityAssessment.fiberAppearance}</dd></div>}
-            {batch.qualityAssessment.cleanliness && <div className="flex justify-between"><dt className="text-textSecondary">Cleanliness</dt><dd className="font-semibold text-textPrimary">{batch.qualityAssessment.cleanliness}</dd></div>}
-            {batch.qualityAssessment.moistureCondition && <div className="flex justify-between"><dt className="text-textSecondary">Moisture</dt><dd className="font-semibold text-textPrimary">{batch.qualityAssessment.moistureCondition}</dd></div>}
-            {batch.qualityAssessment.stapleLength && <div className="flex justify-between"><dt className="text-textSecondary">Staple Length</dt><dd className="font-semibold text-textPrimary">{batch.qualityAssessment.stapleLength}</dd></div>}
-            {batch.qualityAssessment.micronEstimate && <div className="flex justify-between"><dt className="text-textSecondary">Micron</dt><dd className="font-semibold text-textPrimary">{batch.qualityAssessment.micronEstimate}</dd></div>}
-            {batch.qualityAssessment.inspector && <div className="flex justify-between"><dt className="text-textSecondary">Inspector</dt><dd className="font-semibold text-textPrimary">{batch.qualityAssessment.inspector}</dd></div>}
+            {batch.qualityAssessment.grade && <div className="flex justify-between"><dt className="text-textSecondary">{t('gradeLabel')}</dt><dd className="font-semibold text-textPrimary">{batch.qualityAssessment.grade}</dd></div>}
+            {batch.qualityAssessment.fiberAppearance && <div className="flex justify-between"><dt className="text-textSecondary">{t('fiberAppearance')}</dt><dd className="font-semibold text-textPrimary">{batch.qualityAssessment.fiberAppearance}</dd></div>}
+            {batch.qualityAssessment.cleanliness && <div className="flex justify-between"><dt className="text-textSecondary">{t('cleanliness')}</dt><dd className="font-semibold text-textPrimary">{batch.qualityAssessment.cleanliness}</dd></div>}
+            {batch.qualityAssessment.moistureCondition && <div className="flex justify-between"><dt className="text-textSecondary">{t('moisture')}</dt><dd className="font-semibold text-textPrimary">{batch.qualityAssessment.moistureCondition}</dd></div>}
+            {batch.qualityAssessment.stapleLength && <div className="flex justify-between"><dt className="text-textSecondary">{t('stapleLength')}</dt><dd className="font-semibold text-textPrimary">{batch.qualityAssessment.stapleLength}</dd></div>}
+            {batch.qualityAssessment.micronEstimate && <div className="flex justify-between"><dt className="text-textSecondary">{t('micron')}</dt><dd className="font-semibold text-textPrimary">{batch.qualityAssessment.micronEstimate}</dd></div>}
+            {batch.qualityAssessment.inspector && <div className="flex justify-between"><dt className="text-textSecondary">{t('inspector')}</dt><dd className="font-semibold text-textPrimary">{batch.qualityAssessment.inspector}</dd></div>}
           </dl>
         ) : (
-          <p className="text-sm text-textSecondary">Quality assessment data not yet available for this batch.</p>
+          <p className="text-sm text-textSecondary">{t('qualityDataNotAvailable')}</p>
         )}
       </div>
 
       {/* Wool Journey Timeline */}
       <div className="rounded-3xl bg-surface border border-border/80 p-6 sm:p-8 shadow-card animate-enter delay-3">
         <div className="pb-5 border-b border-border/70 mb-8">
-          <div className="eyebrow text-primary mb-1"><Layers size={13} /> Provenance Ledger</div>
-          <h2 className="text-xl sm:text-2xl font-extrabold text-textPrimary">Wool Journey</h2>
-          <p className="text-xs text-textSecondary mt-0.5">Complete traceability timeline for this batch.</p>
+          <div className="eyebrow text-primary mb-1"><Layers size={13} /> {t('provenanceLedger')}</div>
+          <h2 className="text-xl sm:text-2xl font-extrabold text-textPrimary">{t('woolJourneyTitle')}</h2>
+          <p className="text-xs text-textSecondary mt-0.5">{t('completeTraceabilityTimeline')}</p>
         </div>
 
         {events.length === 0 ? (
           <div className="p-8 text-center bg-background rounded-2xl border border-border text-textSecondary text-sm">
-            No traceability events recorded yet for this batch.
+            {t('pending')}
           </div>
         ) : (
           <div className="relative pl-6 sm:pl-8 space-y-8 before:absolute before:left-[11px] sm:before:left-[15px] before:top-3 before:bottom-3 before:w-0.5 before:bg-gradient-to-b before:from-primary before:via-border before:to-border">

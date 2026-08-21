@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getListingById } from '../../services/marketplace.service';
 import { ShoppingBag, MapPin, Sparkles, AlertCircle, ArrowLeft, ShieldCheck, ChevronRight } from 'lucide-react';
+import { useLanguage } from '../../context/LanguageContext';
 
 export default function ListingDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [listing, setListing] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -16,7 +18,7 @@ export default function ListingDetails() {
       setLoading(true);
       const res = await getListingById(id);
       if (res.error) {
-        setError(res.error.message || 'Failed to load listing.');
+        setError(res.error.message || t('couldNotLoadListing'));
       } else {
         setListing(res.data);
       }
@@ -40,10 +42,10 @@ export default function ListingDetails() {
       <main className="page-shell">
         <div className="p-8 text-center rounded-3xl bg-rose-50 text-rose-800 border border-rose-200 mt-10">
           <AlertCircle size={32} className="mx-auto mb-3" />
-          <h3 className="font-bold text-lg">Listing Unavailable</h3>
-          <p className="mt-1 text-sm">{error || 'This listing could not be found or is no longer available.'}</p>
+          <h3 className="font-bold text-lg">{t('listingUnavailable')}</h3>
+          <p className="mt-1 text-sm">{error || t('listingNotFound')}</p>
           <button onClick={() => navigate(-1)} className="mt-4 px-4 py-2 bg-rose-100 rounded-lg text-sm font-semibold hover:bg-rose-200">
-            Go Back
+            {t('goBack')}
           </button>
         </div>
       </main>
@@ -64,7 +66,7 @@ export default function ListingDetails() {
   return (
     <main className="page-shell max-w-5xl mx-auto">
       <button onClick={() => navigate(-1)} className="mb-6 flex items-center gap-1.5 text-sm font-medium text-textSecondary hover:text-textPrimary transition-colors">
-        <ArrowLeft size={16} /> Back to Marketplace
+        <ArrowLeft size={16} /> {t('backToMarketplace')}
       </button>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -87,7 +89,7 @@ export default function ListingDetails() {
                 </div>
                 <div className="text-right">
                   <p className="text-3xl font-black text-emerald-700">₹{listing.price_per_kg}</p>
-                  <p className="text-sm font-medium text-textMuted uppercase tracking-wider">Per kg</p>
+                  <p className="text-sm font-medium text-textMuted uppercase tracking-wider">{t('perKg')}</p>
                 </div>
               </div>
             </div>
@@ -96,33 +98,33 @@ export default function ListingDetails() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div className="p-6 rounded-3xl bg-surface border border-border shadow-sm">
               <h3 className="font-bold text-textPrimary flex items-center gap-2 mb-4">
-                <ShieldCheck size={18} className="text-primary" /> Quality Summary
+                <ShieldCheck size={18} className="text-primary" /> {t('qualitySummary')}
               </h3>
               <ul className="space-y-3 text-sm text-textSecondary">
                 <li className="flex justify-between border-b border-border/50 pb-2">
-                  <span>Grade</span> <strong className="text-textPrimary">{listing.grade || 'Standard'}</strong>
+                  <span>{t('gradeLabel')}</span> <strong className="text-textPrimary">{listing.grade || t('standard')}</strong>
                 </li>
                 <li className="flex justify-between border-b border-border/50 pb-2">
-                  <span>Micron Estimate</span> <strong className="text-textPrimary">22µ - 24µ</strong>
+                  <span>{t('micronEstimate')}</span> <strong className="text-textPrimary">22µ - 24µ</strong>
                 </li>
                 <li className="flex justify-between border-b border-border/50 pb-2">
-                  <span>Staple Length</span> <strong className="text-textPrimary">70mm</strong>
+                  <span>{t('stapleLength')}</span> <strong className="text-textPrimary">70mm</strong>
                 </li>
                 <li className="flex justify-between border-b border-border/50 pb-2">
-                  <span>Condition</span> <strong className="text-textPrimary">Scoured</strong>
+                  <span>{t('condition')}</span> <strong className="text-textPrimary">{t('scoured')}</strong>
                 </li>
               </ul>
-              <p className="mt-4 text-[10px] uppercase font-bold text-textMuted text-center bg-background py-1.5 rounded-lg border border-border/50">AI-assisted pre-screening</p>
+              <p className="mt-4 text-[10px] uppercase font-bold text-textMuted text-center bg-background py-1.5 rounded-lg border border-border/50">{t('aiPreScreening')}</p>
             </div>
 
             <div className="p-6 rounded-3xl bg-surface border border-border shadow-sm">
               <h3 className="font-bold text-textPrimary flex items-center gap-2 mb-4">
-                <MapPin size={18} className="text-primary" /> Producer Info
+                <MapPin size={18} className="text-primary" /> {t('producerInfo')}
               </h3>
               <div className="space-y-1 text-sm text-textSecondary">
                 <p className="font-bold text-textPrimary text-base">{listing.seller_name}</p>
-                <p>Verified Pastoralist</p>
-                <p className="mt-4 text-xs font-semibold uppercase tracking-wider text-primary">Member since 2026</p>
+                <p>{t('verifiedPastoralist')}</p>
+                <p className="mt-4 text-xs font-semibold uppercase tracking-wider text-primary">{t('memberSince2026')}</p>
               </div>
             </div>
           </div>
@@ -133,12 +135,12 @@ export default function ListingDetails() {
           <div className="p-6 rounded-3xl bg-surface border border-primary/20 shadow-card-lg sticky top-24">
             
             <div className="mb-6 pb-6 border-b border-border">
-              <p className="text-sm font-semibold text-textPrimary mb-1">Available Quantity</p>
+              <p className="text-sm font-semibold text-textPrimary mb-1">{t('availableQuantity')}</p>
               <p className="text-2xl font-bold text-primary">{listing.quantity_kg} kg</p>
             </div>
 
             <div className="mb-6">
-              <label className="block text-sm font-semibold text-textPrimary mb-2">Order Quantity (kg)</label>
+              <label className="block text-sm font-semibold text-textPrimary mb-2">{t('orderQuantityKg')}</label>
               <div className="flex items-center rounded-xl border border-border overflow-hidden">
                 <button 
                   onClick={() => handleQuantityChange(-1)} 
@@ -164,7 +166,7 @@ export default function ListingDetails() {
             </div>
 
             <div className="mb-6 flex justify-between items-end">
-              <span className="text-sm font-semibold text-textSecondary">Total</span>
+              <span className="text-sm font-semibold text-textSecondary">{t('total')}</span>
               <span className="text-3xl font-black text-textPrimary">₹{(listing.price_per_kg * quantity).toLocaleString()}</span>
             </div>
 
@@ -173,7 +175,7 @@ export default function ListingDetails() {
               className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-primary text-white rounded-xl font-bold hover:bg-primaryDark transition-all shadow-md active:scale-95"
             >
               <ShoppingBag size={18} />
-              Proceed to Checkout
+              {t('proceedToCheckout')}
             </button>
 
             <button 
@@ -181,7 +183,7 @@ export default function ListingDetails() {
               className="mt-3 w-full flex items-center justify-center gap-2 px-6 py-4 bg-primaryLight/50 text-primary rounded-xl font-bold hover:bg-primaryLight transition-all border border-primary/10"
             >
               <Sparkles size={16} />
-              View Wool Passport
+              {t('viewWoolPassport')}
             </button>
           </div>
         </div>

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ShoppingCart, Package, Search, ArrowRight, MapPin } from 'lucide-react';
 import { getUserOrders } from '../../services/order.service';
+import { useLanguage } from '../../context/LanguageContext';
 
 const STATUS_TABS = ['all', 'placed', 'confirmed', 'processing', 'dispatched', 'delivered', 'cancelled'];
 
@@ -19,6 +20,7 @@ const getStatusBadge = (status) => {
 
 export default function BuyerOrders() {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('all');
@@ -39,8 +41,8 @@ export default function BuyerOrders() {
     <main className="page-shell">
       <div className="section-heading mb-6">
         <div>
-          <p className="eyebrow text-primary"><ShoppingCart size={13} /> Purchase History</p>
-          <h1 className="text-2xl font-extrabold text-textPrimary">My Orders</h1>
+          <p className="eyebrow text-primary"><ShoppingCart size={13} /> {t('purchaseHistory')}</p>
+          <h1 className="text-2xl font-extrabold text-textPrimary">{t('myOrders')}</h1>
         </div>
       </div>
 
@@ -56,7 +58,7 @@ export default function BuyerOrders() {
                 : 'bg-background text-textSecondary hover:text-textPrimary hover:bg-border/40'
             }`}
           >
-            {tab}
+            {t('status' + tab.charAt(0).toUpperCase() + tab.slice(1) + (tab === 'dispatched' || tab === 'delivered' ? 'Tab' : ''))}
           </button>
         ))}
       </div>
@@ -71,18 +73,18 @@ export default function BuyerOrders() {
             <Package size={28} />
           </span>
           <h3 className="font-bold text-base text-textPrimary">
-            {activeTab === 'all' ? 'No orders yet' : `No ${activeTab} orders`}
+            {activeTab === 'all' ? t('noOrdersYet') : t('noStatusOrders').replace('{status}', activeTab)}
           </h3>
           <p className="text-xs sm:text-sm text-textSecondary max-w-sm mt-1 mb-5">
-            {activeTab === 'all' ? 'Start exploring verified wool in the marketplace.' : 'Try selecting a different status filter.'}
+            {activeTab === 'all' ? t('startExploringMarketplace') : t('tryDifferentFilter')}
           </p>
           {activeTab === 'all' ? (
             <button onClick={() => navigate('/buyer/marketplace')} className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-white font-bold text-xs shadow hover:bg-primaryDark transition-all">
-              <Search size={15} /> Find Wool
+              <Search size={15} /> {t('findWool')}
             </button>
           ) : (
             <button onClick={() => setActiveTab('all')} className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-background border border-border text-textPrimary font-bold text-xs hover:bg-border/30 transition-all">
-              View All Orders
+              {t('viewAllOrders')}
             </button>
           )}
         </div>
@@ -101,7 +103,7 @@ export default function BuyerOrders() {
                   </span>
                   <div>
                     <p className="font-bold text-sm text-textPrimary group-hover:text-primary transition-colors">
-                      Order #{order.orderId}
+                      {t('orderHash')}{order.orderId}
                     </p>
                     <p className="text-xs text-textSecondary">
                       {order.woolType} • {order.quantityKg} kg • ₹{order.totalAmount?.toLocaleString()}
@@ -115,8 +117,8 @@ export default function BuyerOrders() {
                 </div>
               </div>
               <div className="mt-3 pt-3 border-t border-border/50 flex items-center justify-between text-xs text-textMuted">
-                <span>Seller: {order.sellerName}</span>
-                <span>Batch: {order.batchId}</span>
+                <span>{t('sellerLabel')}: {order.sellerName}</span>
+                <span>{t('batchLabel')}: {order.batchId}</span>
               </div>
             </div>
           ))}

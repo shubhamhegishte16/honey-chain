@@ -136,14 +136,55 @@ export async function requestProcessing(req, res, next) {
   }
 }
 
+// Allowed status transitions for the processing workflow:
+// requested -> accepted -> in_progress -> completed
+// requested/accepted -> rejected
+const VALID_TRANSITIONS = {
+  requested: ['accepted', 'in_progress', 'rejected'],
+  accepted: ['in_progress', 'rejected'],
+  in_progress: ['in_progress', 'completed'],
+  completed: [],
+  rejected: [],
+};
+
 export async function updateProcessingStatus(req, res, next) {
   try {
     const { id } = req.params;
     const { status, outputNotes } = req.body;
 
+    const allowedStatuses = ['requested', 'accepted', 'in_progress', 'completed', 'rejected'];
+    if (!status || !allowedStatuses.includes(status)) {
+      return res.status(400).json({ success: false, message: 'A valid status is required.' });
+    }
+
     const request = await ProcessingRequest.findById(id).populate('batch');
     if (!request) {
       return res.status(404).json({ success: false, message: 'Processing request not found.' });
+    }
+
+    // Authorization: never rely on frontend role checks alone.
+    // Admins may manage any processing request. Artisans/processors may
+    // only update requests that are actually assigned to them.
+    if (req.user.role !== 'admin') {
+      if (!['artisan', 'processor'].includes(req.user.role)) {
+        return res.status(403).json({ success: false, message: 'You are not authorized to update processing requests.' });
+      }
+      const assignedProcessorId = request.processor?._id ? request.processor._id.toString() : request.processor?.toString();
+      if (assignedProcessorId !== req.user._id.toString()) {
+        return res.status(403).json({ success: false, message: 'This processing request is not assigned to you.' });
+      }
+    }
+
+    // Enforce valid workflow transitions (admins may still only move requests
+    // forward through the defined workflow, unless already in a terminal state).
+    if (status !== request.status) {
+      const allowedNext = VALID_TRANSITIONS[request.status] || [];
+      if (!allowedNext.includes(status)) {
+        return res.status(400).json({
+          success: false,
+          message: `Cannot change status from '${request.status}' to '${status}'.`,
+        });
+      }
     }
 
     request.status = status;

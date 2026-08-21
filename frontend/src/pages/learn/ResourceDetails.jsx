@@ -3,10 +3,12 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, BookOpen, Clock, Award, Eye, User, Tag, CheckCircle } from 'lucide-react';
 import { getTrainingResourceById } from '../../services/training.service';
 import Card from '../../components/ui/Card';
+import { useLanguage } from '../../context/LanguageContext';
 
 export default function ResourceDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [resource, setResource] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -18,12 +20,12 @@ export default function ResourceDetails() {
       try {
         const { data, error } = await getTrainingResourceById(id);
         if (error) {
-          setError('Failed to fetch the resource details.');
+          setError(t('failedFetchResource'));
         } else {
           setResource(data);
         }
       } catch (err) {
-        setError('An unexpected error occurred.');
+        setError(t('unexpectedError'));
         console.error(err);
       } finally {
         setLoading(false);
@@ -78,22 +80,22 @@ export default function ResourceDetails() {
         className="inline-flex items-center gap-1.5 text-sm font-semibold text-textSecondary hover:text-primary mb-6 transition-colors"
       >
         <ArrowLeft size={16} />
-        <span>Back</span>
+        <span>{t('backLabel')}</span>
       </button>
 
       {loading ? (
         <div className="py-20 flex flex-col items-center justify-center">
           <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-          <p className="text-xs text-textSecondary mt-3 font-semibold">Loading resource details...</p>
+          <p className="text-xs text-textSecondary mt-3 font-semibold">{t('loadingResourceDetails')}</p>
         </div>
       ) : error || !resource ? (
         <div className="p-8 text-center rounded-2xl border border-rose-100 bg-rose-50/50">
-          <p className="text-sm font-semibold text-rose-700">{error || 'Resource not found.'}</p>
+          <p className="text-sm font-semibold text-rose-700">{error || t('resourceNotFound')}</p>
           <button
             onClick={() => navigate('/learn')}
             className="mt-4 px-4 py-2 bg-primary text-white text-xs font-bold rounded-xl transition-colors shadow-sm"
           >
-            Back to Learn
+            {t('backToLearn')}
           </button>
         </div>
       ) : (
@@ -117,7 +119,7 @@ export default function ResourceDetails() {
 
                 <span className="flex items-center gap-1 text-[11px] text-textMuted font-medium">
                   <Eye size={11} />
-                  {resource.views} views
+                  {resource.views} {t('viewsSuffix')}
                 </span>
               </div>
 
@@ -128,15 +130,15 @@ export default function ResourceDetails() {
               <div className="flex flex-wrap items-center gap-4 text-xs text-textMuted border-b border-border/60 pb-5 mb-5">
                 <span className="flex items-center gap-1">
                   <User size={12} />
-                  <span>By: {resource.author}</span>
+                  <span>{t('byLabel')}: {resource.author}</span>
                 </span>
                 <span>•</span>
-                <span>Category: {resource.category}</span>
+                <span>{t('categoryColonLabel2')}: {resource.category}</span>
               </div>
 
               {/* Summary Block */}
               <div className="p-4 rounded-xl bg-background border-l-4 border-l-primary/60 mb-6">
-                <p className="text-xs font-bold uppercase tracking-wider text-textMuted mb-1">Summary</p>
+                <p className="text-xs font-bold uppercase tracking-wider text-textMuted mb-1">{t('summaryLabel')}</p>
                 <p className="text-sm text-textSecondary italic">{resource.summary}</p>
               </div>
 
@@ -161,9 +163,9 @@ export default function ResourceDetails() {
                 return (
                   <div className="mb-6">
                     <div className="flex items-center gap-2 mb-3">
-                      <span className="text-base sm:text-lg font-bold text-textPrimary">📺 Training Video</span>
+                      <span className="text-base sm:text-lg font-bold text-textPrimary">📺 {t('trainingVideoLabel')}</span>
                       <span className="px-2 py-0.5 rounded bg-red-100 text-red-800 text-[10px] font-bold uppercase tracking-wider">
-                        Hindi Video
+                        {t('hindiVideoLabel')}
                       </span>
                     </div>
                     <div className="relative w-full pb-[56.25%] h-0 rounded-2xl overflow-hidden shadow-md border border-border/80 bg-black">
@@ -192,7 +194,7 @@ export default function ResourceDetails() {
             <Card interactive={false} className="p-6">
               <h3 className="text-base font-bold text-textPrimary flex items-center gap-2 mb-4 border-b border-border/60 pb-2">
                 <CheckCircle className="text-primary" size={18} />
-                <span>Key Takeaways</span>
+                <span>{t('keyTakeawaysLabel')}</span>
               </h3>
               
               {resource.keyTakeaways && resource.keyTakeaways.length > 0 ? (
@@ -209,7 +211,7 @@ export default function ResourceDetails() {
                   ))}
                 </ul>
               ) : (
-                <p className="text-xs text-textMuted">No key takeaways specified.</p>
+                <p className="text-xs text-textMuted">{t('noKeyTakeawaysSpecified')}</p>
               )}
             </Card>
 
@@ -218,7 +220,7 @@ export default function ResourceDetails() {
               <Card interactive={false} className="p-6">
                 <h3 className="text-base font-bold text-textPrimary flex items-center gap-2 mb-3">
                   <Tag className="text-primary" size={16} />
-                  <span>Related Tags</span>
+                  <span>{t('relatedTagsLabel')}</span>
                 </h3>
                 <div className="flex flex-wrap gap-2">
                   {resource.tags.map((tag) => (

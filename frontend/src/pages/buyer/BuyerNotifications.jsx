@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Bell, CheckCheck, Package, AlertCircle } from 'lucide-react';
 import { apiRequest } from '../../services/api';
+import { useLanguage } from '../../context/LanguageContext';
 
 export default function BuyerNotifications() {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -32,12 +34,12 @@ export default function BuyerNotifications() {
     <main className="page-shell">
       <div className="section-heading mb-6">
         <div>
-          <p className="eyebrow text-primary"><Bell size={13} /> Updates</p>
-          <h1 className="text-2xl font-extrabold text-textPrimary">Notifications</h1>
+          <p className="eyebrow text-primary"><Bell size={13} /> {t('updates')}</p>
+          <h1 className="text-2xl font-extrabold text-textPrimary">{t('notifications')}</h1>
         </div>
         {notifications.some(n => !n.read) && (
           <button onClick={markAllRead} className="text-xs font-bold text-primary flex items-center gap-1 hover:text-primaryDark transition-colors">
-            <CheckCheck size={14} /> Mark all read
+            <CheckCheck size={14} /> {t('markAllRead')}
           </button>
         )}
       </div>
@@ -47,8 +49,8 @@ export default function BuyerNotifications() {
       ) : notifications.length === 0 ? (
         <div className="p-8 sm:p-12 text-center rounded-3xl bg-surface border border-border flex flex-col items-center">
           <span className="grid h-14 w-14 place-items-center rounded-3xl bg-primaryLight text-primary mb-3"><Bell size={28} /></span>
-          <h3 className="font-bold text-base text-textPrimary">No notifications</h3>
-          <p className="text-xs text-textSecondary mt-1">You're all caught up!</p>
+          <h3 className="font-bold text-base text-textPrimary">{t('noNotifications')}</h3>
+          <p className="text-xs text-textSecondary mt-1">{t('caughtUp')}</p>
         </div>
       ) : (
         <div className="space-y-2">

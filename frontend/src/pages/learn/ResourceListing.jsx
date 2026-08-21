@@ -3,10 +3,12 @@ import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { ArrowLeft, BookOpen, Clock, Award, Search, Sparkles, Filter } from 'lucide-react';
 import { getTrainingResources, CATEGORY_LABELS } from '../../services/training.service';
 import Card from '../../components/ui/Card';
+import { useLanguage } from '../../context/LanguageContext';
 
 export default function ResourceListing() {
   const { categoryName } = useParams();
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [searchParams, setSearchParams] = useSearchParams();
   const querySearch = searchParams.get('search') || '';
 
@@ -18,7 +20,7 @@ export default function ResourceListing() {
   const [levelFilter, setLevelFilter] = useState('');
 
   const isAll = categoryName === 'all';
-  const categoryLabel = isAll ? 'All Resources' : (CATEGORY_LABELS[categoryName] || 'Resources');
+  const categoryLabel = isAll ? t('allResourcesLabel') : (CATEGORY_LABELS[categoryName] || t('resourcesFallback'));
 
   useEffect(() => {
     async function fetchResources() {
@@ -32,12 +34,12 @@ export default function ResourceListing() {
         };
         const { data, error } = await getTrainingResources(params);
         if (error) {
-          setError('Failed to load training resources. Please try again.');
+          setError(t('failedLoadResources'));
         } else {
           setResources(data || []);
         }
       } catch (err) {
-        setError('An unexpected error occurred.');
+        setError(t('unexpectedError'));
         console.error(err);
       } finally {
         setLoading(false);
@@ -67,7 +69,7 @@ export default function ResourceListing() {
         className="inline-flex items-center gap-1.5 text-sm font-semibold text-textSecondary hover:text-primary mb-6 transition-colors"
       >
         <ArrowLeft size={16} />
-        <span>Back to Learn</span>
+        <span>{t('backToLearn')}</span>
       </button>
 
       {/* Header */}
@@ -77,7 +79,7 @@ export default function ResourceListing() {
             <BookOpen size={12} /> {categoryLabel}
           </p>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-textPrimary tracking-tight">
-            {isAll ? 'Search All Training Resources' : `${categoryLabel} Guides`}
+            {isAll ? t('searchAllTraining') : `${categoryLabel} ${t('guidesSuffix')}`}
           </h1>
         </div>
       </div>
@@ -88,7 +90,7 @@ export default function ResourceListing() {
         <div className="relative flex-1">
           <input
             type="text"
-            placeholder="Search guides in this category..."
+            placeholder={t('searchInCategory')}
             value={searchTerm}
             onChange={handleSearchChange}
             className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-background text-textPrimary placeholder:text-textMuted text-sm font-medium focus:outline-none focus:ring-1 focus:ring-primary border border-border/60 transition-all"
@@ -104,10 +106,10 @@ export default function ResourceListing() {
             onChange={(e) => setLevelFilter(e.target.value)}
             className="w-full px-3 py-2.5 rounded-xl bg-background text-textPrimary text-sm font-medium focus:outline-none focus:ring-1 focus:ring-primary border border-border/60 transition-all appearance-none cursor-pointer"
           >
-            <option value="">All Levels</option>
-            <option value="Beginner">Beginner</option>
-            <option value="Intermediate">Intermediate</option>
-            <option value="Advanced">Advanced</option>
+            <option value="">{t('allLevelsOption')}</option>
+            <option value="Beginner">{t('levelBeginner')}</option>
+            <option value="Intermediate">{t('levelIntermediate')}</option>
+            <option value="Advanced">{t('levelAdvanced')}</option>
           </select>
         </div>
       </div>
@@ -116,7 +118,7 @@ export default function ResourceListing() {
       {loading ? (
         <div className="py-20 flex flex-col items-center justify-center">
           <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-          <p className="text-xs text-textSecondary mt-3 font-semibold">Loading guides...</p>
+          <p className="text-xs text-textSecondary mt-3 font-semibold">{t('loadingGuides')}</p>
         </div>
       ) : error ? (
         <div className="p-8 text-center rounded-2xl border border-rose-100 bg-rose-50/50">
@@ -125,7 +127,7 @@ export default function ResourceListing() {
             onClick={() => window.location.reload()}
             className="mt-4 px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold rounded-xl transition-colors shadow-sm"
           >
-            Retry
+            {t('retry2')}
           </button>
         </div>
       ) : resources.length === 0 ? (
@@ -133,16 +135,16 @@ export default function ResourceListing() {
           <span className="grid h-14 w-14 place-items-center rounded-3xl bg-primaryLight text-primary mb-3">
             <BookOpen size={28} />
           </span>
-          <h3 className="font-bold text-base text-textPrimary">No resources found</h3>
+          <h3 className="font-bold text-base text-textPrimary">{t('noResourcesFoundTitle')}</h3>
           <p className="text-xs sm:text-sm text-textSecondary max-w-sm mt-1 mb-5">
-            No training resources are available matching the current search parameters or category.
+            {t('noResourcesFoundDesc')}
           </p>
           {(searchTerm || levelFilter) && (
             <button
               onClick={() => { setSearchTerm(''); setLevelFilter(''); setSearchParams({}); }}
               className="px-4 py-2 bg-primary hover:bg-primaryDark text-white text-xs font-bold rounded-xl transition-colors shadow-sm"
             >
-              Clear Filters
+              {t('clearFilters')}
             </button>
           )}
         </div>
@@ -175,7 +177,7 @@ export default function ResourceListing() {
                   {resource.title}
                 </h3>
                 <p className="text-xs font-semibold text-textMuted uppercase tracking-wider mb-2">
-                  Category: {resource.category}
+                  {t('categoryColonLabel')}: {resource.category}
                 </p>
                 <p className="text-sm text-textSecondary leading-relaxed">
                   {resource.summary}
@@ -184,10 +186,10 @@ export default function ResourceListing() {
 
               <div className="mt-6 flex items-center justify-between w-full border-t border-border/40 pt-4">
                 <span className="text-xs text-textMuted font-medium">
-                  {resource.views || 0} views
+                  {resource.views || 0} {t('viewsSuffix')}
                 </span>
                 <span className="text-xs font-bold text-primary group-hover:translate-x-1 transition-transform flex items-center gap-1">
-                  <span>Read Guide</span>
+                  <span>{t('readGuide2')}</span>
                   <ArrowLeft className="rotate-180" size={14} />
                 </span>
               </div>

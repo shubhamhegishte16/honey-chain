@@ -1,5 +1,6 @@
 import QualityAssessment from '../models/QualityAssessment.js';
 import WoolBatch from '../models/WoolBatch.js';
+import ProcessingRequest from '../models/ProcessingRequest.js';
 import TraceabilityEvent from '../models/TraceabilityEvent.js';
 import Notification from '../models/Notification.js';
 
@@ -73,7 +74,49 @@ export async function submitAssessment(req, res, next) {
       return res.status(404).json({ success: false, message: 'Batch not found.' });
     }
 
-    const calculatedScore = finalGrade === 'Grade A' ? 90 : finalGrade === 'Grade B' ? 82 : 70;
+    // Authorization: only an admin, or the artisan/processor actually
+    // assigned to process this batch, may submit a quality assessment for it.
+    if (req.user.role !== 'admin') {
+      if (!['artisan', 'processor'].includes(req.user.role)) {
+        return res.status(403).json({ success: false, message: 'You are not authorized to submit a quality assessment.' });
+      }
+      const assignedRequest = await ProcessingRequest.findOne({
+        batch: batch._id,
+        processor: req.user._id,
+      });
+      if (!assignedRequest) {
+        return res.status(403).json({ success: false, message: 'This wool batch is not assigned to you for processing.' });
+      }
+    }
+
+    // When no explicit final grade is supplied (e.g. an artisan submitting a
+    // processing-stage observation rather than an authorized final grading),
+    // derive a reasonable grade from the observed fields instead of
+    // defaulting to 'Grade A' regardless of actual quality.
+    function deriveGradeFromObservation() {
+      let points = 0;
+      if (fiberAppearance === 'Excellent') points += 3;
+      else if (fiberAppearance === 'Good') points += 2;
+      else if (fiberAppearance === 'Moderate') points += 1;
+
+      if (cleanliness === 'High (Low Dust/Grease)') points += 3;
+      else if (cleanliness === 'Medium') points += 2;
+      else if (cleanliness === 'Low (High Vegetable Matter)') points += 1;
+
+      if (visibleContamination === 'Very Low (<1%)') points += 3;
+      else if (visibleContamination === 'Low (1-3%)') points += 2;
+      else if (visibleContamination === 'Moderate (3-6%)') points += 1;
+
+      if (color === 'Consistent White' || color === 'Cream White') points += 1;
+
+      // max points = 10
+      if (points >= 8) return 'Grade A';
+      if (points >= 5) return 'Grade B';
+      return 'Grade C';
+    }
+
+    const resolvedGrade = finalGrade || deriveGradeFromObservation();
+    const calculatedScore = resolvedGrade === 'Grade A' ? 90 : resolvedGrade === 'Grade B' ? 82 : 70;
 
     let assessment = await QualityAssessment.findOne({ batch: batch._id });
     if (assessment) {
@@ -84,7 +127,7 @@ export async function submitAssessment(req, res, next) {
       assessment.moistureCondition = moistureCondition || assessment.moistureCondition;
       assessment.stapleLengthMm = stapleLengthMm || assessment.stapleLengthMm;
       assessment.micronEstimate = micronEstimate || assessment.micronEstimate;
-      assessment.finalGrade = finalGrade || assessment.finalGrade;
+      assessment.finalGrade = finalGrade || resolvedGrade || assessment.finalGrade;
       assessment.notes = notes !== undefined ? notes : assessment.notes;
       assessment.images = images || assessment.images;
       assessment.isAiAssisted = !!isAiAssisted;
@@ -101,8 +144,8 @@ export async function submitAssessment(req, res, next) {
         moistureCondition: moistureCondition || 'Optimal (<14%)',
         stapleLengthMm: stapleLengthMm || 72,
         micronEstimate: micronEstimate || 22.5,
-        preliminaryGrade: finalGrade || 'Grade A',
-        finalGrade: finalGrade || 'Grade A',
+        preliminaryGrade: finalGrade || resolvedGrade,
+        finalGrade: finalGrade || resolvedGrade,
         confidenceScore: isAiAssisted ? 91 : 98,
         isAiAssisted: !!isAiAssisted,
         notes: notes || '',
@@ -111,7 +154,7 @@ export async function submitAssessment(req, res, next) {
     }
 
     // Update WoolBatch status and grade
-    batch.qualityGrade = finalGrade || 'Grade A';
+    batch.qualityGrade = resolvedGrade;
     batch.qualityScore = calculatedScore;
     if (batch.status === 'produced') {
       batch.status = 'quality_checked';

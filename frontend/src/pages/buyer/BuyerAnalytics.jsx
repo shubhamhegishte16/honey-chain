@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { BarChart3, TrendingUp, Package, IndianRupee, PieChart } from 'lucide-react';
 import { getUserOrders } from '../../services/order.service';
 import Card from '../../components/ui/Card';
+import { useLanguage } from '../../context/LanguageContext';
 
 export default function BuyerAnalytics() {
+  const { t } = useLanguage();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -49,15 +51,15 @@ export default function BuyerAnalytics() {
     <main className="page-shell">
       <div className="section-heading mb-6">
         <div>
-          <p className="eyebrow text-primary"><BarChart3 size={13} /> Statistics</p>
-          <h1 className="text-2xl font-extrabold text-textPrimary">Purchase History & Analytics</h1>
+          <p className="eyebrow text-primary"><BarChart3 size={13} /> {t('statistics')}</p>
+          <h1 className="text-2xl font-extrabold text-textPrimary">{t('purchaseHistoryAnalytics')}</h1>
         </div>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
         <Card className="p-5 flex flex-col justify-center shadow-sm">
           <div className="flex items-center gap-2 text-textSecondary mb-2">
-            <IndianRupee size={16} className="text-primary" /> <span className="text-xs font-bold uppercase tracking-wider">Total Spend</span>
+            <IndianRupee size={16} className="text-primary" /> <span className="text-xs font-bold uppercase tracking-wider">{t('totalSpend')}</span>
           </div>
           <p className="text-2xl sm:text-3xl font-black text-textPrimary">
             {totalSpent.toFixed(1)}Rs
@@ -66,7 +68,7 @@ export default function BuyerAnalytics() {
 
         <Card className="p-5 flex flex-col justify-center shadow-sm">
           <div className="flex items-center gap-2 text-textSecondary mb-2">
-            <Package size={16} className="text-primary" /> <span className="text-xs font-bold uppercase tracking-wider">Total Volume</span>
+            <Package size={16} className="text-primary" /> <span className="text-xs font-bold uppercase tracking-wider">{t('totalVolumeLabel')}</span>
           </div>
           <p className="text-2xl sm:text-3xl font-black text-textPrimary">
             {totalVolume} <span className="text-lg text-textMuted">kg</span>
@@ -75,7 +77,7 @@ export default function BuyerAnalytics() {
 
         <Card className="p-5 flex flex-col justify-center shadow-sm">
           <div className="flex items-center gap-2 text-textSecondary mb-2">
-            <TrendingUp size={16} className="text-primary" /> <span className="text-xs font-bold uppercase tracking-wider">Active Orders</span>
+            <TrendingUp size={16} className="text-primary" /> <span className="text-xs font-bold uppercase tracking-wider">{t('activeOrdersLabel')}</span>
           </div>
           <p className="text-2xl sm:text-3xl font-black text-textPrimary">
             {activeOrders.length}
@@ -84,7 +86,7 @@ export default function BuyerAnalytics() {
 
         <Card className="p-5 flex flex-col justify-center shadow-sm">
           <div className="flex items-center gap-2 text-textSecondary mb-2">
-            <PieChart size={16} className="text-primary" /> <span className="text-xs font-bold uppercase tracking-wider">Completed</span>
+            <PieChart size={16} className="text-primary" /> <span className="text-xs font-bold uppercase tracking-wider">{t('completedLabel')}</span>
           </div>
           <p className="text-2xl sm:text-3xl font-black text-textPrimary">
             {completedOrders.length}
@@ -95,9 +97,9 @@ export default function BuyerAnalytics() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Wool Types Breakdown */}
         <Card className="p-6 shadow-sm border border-border">
-          <h3 className="font-bold text-textPrimary mb-5">Volume by Wool Type</h3>
+          <h3 className="font-bold text-textPrimary mb-5">{t('volumeByWoolType')}</h3>
           {topWoolTypes.length === 0 ? (
-            <p className="text-sm text-textSecondary text-center py-8">No purchase data available yet.</p>
+            <p className="text-sm text-textSecondary text-center py-8">{t('noPurchaseData')}</p>
           ) : (
             <div className="space-y-4">
               {topWoolTypes.map(([type, volume], index) => {
@@ -123,9 +125,9 @@ export default function BuyerAnalytics() {
 
         {/* Recent Purchases List */}
         <Card className="p-6 shadow-sm border border-border flex flex-col">
-          <h3 className="font-bold text-textPrimary mb-5">Recent Activity</h3>
+          <h3 className="font-bold text-textPrimary mb-5">{t('recentActivity')}</h3>
           {orders.length === 0 ? (
-            <p className="text-sm text-textSecondary text-center py-8">No recent orders found.</p>
+            <p className="text-sm text-textSecondary text-center py-8">{t('noRecentOrdersFound')}</p>
           ) : (
             <div className="space-y-4 flex-1">
               {orders.slice(0, 5).map(order => (

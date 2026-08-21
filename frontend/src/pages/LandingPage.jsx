@@ -28,6 +28,8 @@ import {
   Check,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
+import LanguageSelector from '../components/ui/LanguageSelector';
 import { getAllStatePrices } from '../services/market.service';
 
 const WOOL_BREEDS = [
@@ -93,91 +95,46 @@ const WOOL_BREEDS = [
   },
 ];
 
-const ECOSYSTEM_ROLES = [
-  {
-    id: 'farmer',
-    icon: Sprout,
-    title: 'Pastoralists & Farmers',
-    subtitle: 'Digitize your flock clip & eliminate middlemen',
-    points: [
-      'Record fleece weights, sheep breed & shearing dates',
-      'Generate instant QR passports for every harvest lot',
-      'Track real-time APMC mandi benchmark rates',
-      'Receive transparent purchase bids directly from mills',
-    ],
-    cta: 'Register as Farmer',
-    color: 'border-emerald-200 bg-emerald-50/40 text-emerald-800',
-    accentColor: '#3F6B3F',
-  },
-  {
-    id: 'buyer',
-    icon: Building2,
-    title: 'Textile Mills & Sourcing Buyers',
-    subtitle: 'Source authenticated lots with verified provenance',
-    points: [
-      'Inspect lot-level micron tests, clean yield & staple lengths',
-      '100% verified farm origin with tamper-proof QR passports',
-      'Direct contract purchasing with verified pastoralist groups',
-      'Ensure ethical supply chain compliance for international ESG',
-    ],
-    cta: 'Register as Buyer',
-    color: 'border-sky-200 bg-sky-50/40 text-sky-800',
-    accentColor: '#3A6B8A',
-  },
-  {
-    id: 'processor',
-    icon: Factory,
-    title: 'Scourers & Processing Facilities',
-    subtitle: 'Log testing, scouring & carding milestones',
-    points: [
-      'Record scouring yield, moisture regain & vegetable matter',
-      'Update batch chain of custody at each processing stage',
-      'Automated batch certificates ready for dispatch',
-      'Warehouse inventory sync with mill procurement teams',
-    ],
-    cta: 'Register as Processor',
-    color: 'border-amber-200 bg-amber-50/40 text-amber-900',
-    accentColor: '#B9793E',
-  },
-  {
-    id: 'artisan',
-    icon: Palette,
-    title: 'Artisans & Weavers',
-    subtitle: 'Procure authentic desi wool for heritage crafts',
-    points: [
-      'Source authentic single-origin wool for Kullu shawls & carpets',
-      'Attach consumer QR stories to finished handloom items',
-      'Direct access to rare natural black/brown Deccani fleeces',
-      'Fair value compensation directly honoring craft lineage',
-    ],
-    cta: 'Register as Artisan',
-    color: 'border-purple-200 bg-purple-50/40 text-purple-800',
-    accentColor: '#7C3AED',
-  },
-];
+function getEcosystemRoles(t) {
+  return [
+    {
+      id: 'farmer', icon: Sprout, title: t('roleFarmerTitle'), subtitle: t('roleFarmerSubtitle'),
+      points: [t('roleFarmerPt1'), t('roleFarmerPt2'), t('roleFarmerPt3'), t('roleFarmerPt4')],
+      cta: t('roleFarmerCta'), color: 'border-emerald-200 bg-emerald-50/40 text-emerald-800', accentColor: '#3F6B3F',
+    },
+    {
+      id: 'buyer', icon: Building2, title: t('roleBuyerTitle'), subtitle: t('roleBuyerSubtitle'),
+      points: [t('roleBuyerPt1'), t('roleBuyerPt2'), t('roleBuyerPt3'), t('roleBuyerPt4')],
+      cta: t('roleBuyerCta'), color: 'border-sky-200 bg-sky-50/40 text-sky-800', accentColor: '#3A6B8A',
+    },
+    {
+      id: 'processor', icon: Factory, title: t('roleProcessorTitle'), subtitle: t('roleProcessorSubtitle'),
+      points: [t('roleProcessorPt1'), t('roleProcessorPt2'), t('roleProcessorPt3'), t('roleProcessorPt4')],
+      cta: t('roleProcessorCta'), color: 'border-amber-200 bg-amber-50/40 text-amber-900', accentColor: '#B9793E',
+    },
+    {
+      id: 'artisan', icon: Palette, title: t('roleArtisanTitle'), subtitle: t('roleArtisanSubtitle'),
+      points: [t('roleArtisanPt1'), t('roleArtisanPt2'), t('roleArtisanPt3'), t('roleArtisanPt4')],
+      cta: t('roleArtisanCta'), color: 'border-purple-200 bg-purple-50/40 text-purple-800', accentColor: '#7C3AED',
+    },
+  ];
+}
 
-const FAQS = [
-  {
-    q: 'What is WoolConnect?',
-    a: 'WoolConnect is India\'s national digital wool traceability and trade platform. It bridges pastoralist communities, sheep breeders, processing units, spinning mills, and artisans with QR-based provenance tracking and real-time mandi pricing.',
-  },
-  {
-    q: 'Is registration free for farmers and pastoralists?',
-    a: 'Yes, registration for pastoralists, sheep breeders, and farmers is 100% free. Farmers can record batches, generate lot QR codes, and view live market prices at zero cost.',
-  },
-  {
-    q: 'How does QR Code Traceability work?',
-    a: 'When a wool batch is recorded at the farm, a unique cryptographic QR code is generated. As the wool travels through scouring, grading, spinning, and weaving, each step logs its verification parameters onto the batch digital passport.',
-  },
-  {
-    q: 'Where do the mandi market prices come from?',
-    a: 'Our price feeds sync with agricultural produce market committees (APMC) and regional wool development boards across Rajasthan, Gujarat, Maharashtra, Jammu & Kashmir, Himachal Pradesh, Uttarakhand, Karnataka, and Telangana.',
-  },
-];
+function getFaqs(t) {
+  return [
+    { q: t('faq1Q'), a: t('faq1A') },
+    { q: t('faq2Q'), a: t('faq2A') },
+    { q: t('faq3Q'), a: t('faq3A') },
+    { q: t('faq4Q'), a: t('faq4A') },
+  ];
+}
 
 export default function LandingPage() {
   const { profile } = useAuth();
   const navigate = useNavigate();
+  const { t } = useLanguage();
+  const ECOSYSTEM_ROLES = getEcosystemRoles(t);
+  const FAQS = getFaqs(t);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [prices, setPrices] = useState([]);
   const [selectedRole, setSelectedRole] = useState(0);
@@ -217,7 +174,7 @@ export default function LandingPage() {
                 Wool<span className="text-primary">Connect</span>
               </span>
               <span className="text-[10px] font-semibold text-textMuted uppercase tracking-widest mt-0.5">
-                Farm to Fabric
+                {t('footerFarmToFabric2')}
               </span>
             </div>
           </Link>
@@ -225,30 +182,31 @@ export default function LandingPage() {
           {/* Desktop Nav Links */}
           <nav className="hidden lg:flex items-center gap-1 xl:gap-2">
             <a href="#features" className="px-3.5 py-2 rounded-xl text-sm font-medium text-textSecondary hover:text-primary hover:bg-primaryLight/40 transition-colors">
-              Features
+              {t('navFeatures')}
             </a>
             <a href="#mandi-rates" className="px-3.5 py-2 rounded-xl text-sm font-medium text-textSecondary hover:text-primary hover:bg-primaryLight/40 transition-colors">
-              Mandi Rates
+              {t('navMandiRates')}
             </a>
             <a href="#how-it-works" className="px-3.5 py-2 rounded-xl text-sm font-medium text-textSecondary hover:text-primary hover:bg-primaryLight/40 transition-colors">
-              How It Works
+              {t('navHowItWorks')}
             </a>
             <a href="#breeds" className="px-3.5 py-2 rounded-xl text-sm font-medium text-textSecondary hover:text-primary hover:bg-primaryLight/40 transition-colors">
-              Indigenous Breeds
+              {t('navBreeds')}
             </a>
             <a href="#traceability" className="px-3.5 py-2 rounded-xl text-sm font-medium text-textSecondary hover:text-primary hover:bg-primaryLight/40 transition-colors">
-              Traceability
+              {t('navTraceability')}
             </a>
           </nav>
 
           {/* Right Action CTA */}
           <div className="hidden sm:flex items-center gap-3">
+            <LanguageSelector />
             {profile ? (
               <Link
                 to={profile.role === 'admin' ? '/admin' : '/'}
                 className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-white font-semibold text-sm shadow-md hover:bg-primaryDark hover:shadow-lg transition-all"
               >
-                <span>Go to Dashboard</span>
+                <span>{t('goToDashboard')}</span>
                 <ArrowRight size={16} />
               </Link>
             ) : (
@@ -257,13 +215,13 @@ export default function LandingPage() {
                   to="/login"
                   className="px-4 py-2.5 rounded-xl text-sm font-semibold text-textPrimary hover:text-primary hover:bg-primaryLight/50 transition-colors"
                 >
-                  Sign In
+                  {t('footerSignIn')}
                 </Link>
                 <Link
                   to="/register"
                   className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-white font-semibold text-sm shadow-sm hover:bg-primaryDark hover:shadow-md transition-all active:scale-[0.98]"
                 >
-                  <span>Join Free</span>
+                  <span>{t('joinFree')}</span>
                   <ArrowRight size={15} />
                 </Link>
               </>
@@ -289,45 +247,46 @@ export default function LandingPage() {
                 onClick={() => setMobileMenuOpen(false)}
                 className="px-3.5 py-2.5 rounded-xl text-sm font-semibold text-textSecondary hover:bg-primaryLight/50 hover:text-primary"
               >
-                Features
+                {t('navFeatures')}
               </a>
               <a
                 href="#mandi-rates"
                 onClick={() => setMobileMenuOpen(false)}
                 className="px-3.5 py-2.5 rounded-xl text-sm font-semibold text-textSecondary hover:bg-primaryLight/50 hover:text-primary"
               >
-                Live Mandi Rates
+                {t('navLiveMandiRates')}
               </a>
               <a
                 href="#how-it-works"
                 onClick={() => setMobileMenuOpen(false)}
                 className="px-3.5 py-2.5 rounded-xl text-sm font-semibold text-textSecondary hover:bg-primaryLight/50 hover:text-primary"
               >
-                How It Works
+                {t('navHowItWorks')}
               </a>
               <a
                 href="#breeds"
                 onClick={() => setMobileMenuOpen(false)}
                 className="px-3.5 py-2.5 rounded-xl text-sm font-semibold text-textSecondary hover:bg-primaryLight/50 hover:text-primary"
               >
-                Indigenous Breeds
+                {t('navBreeds')}
               </a>
               <a
                 href="#traceability"
                 onClick={() => setMobileMenuOpen(false)}
                 className="px-3.5 py-2.5 rounded-xl text-sm font-semibold text-textSecondary hover:bg-primaryLight/50 hover:text-primary"
               >
-                Traceability
+                {t('navTraceability')}
               </a>
             </nav>
 
             <div className="pt-3 border-t border-border/60 flex flex-col gap-2">
+              <LanguageSelector compact />
               {profile ? (
                 <Link
                   to={profile.role === 'admin' ? '/admin' : '/'}
                   className="w-full py-3 rounded-xl bg-primary text-white font-semibold text-center text-sm shadow-sm"
                 >
-                  Go to Dashboard
+                  {t('goToDashboard')}
                 </Link>
               ) : (
                 <>
@@ -335,13 +294,13 @@ export default function LandingPage() {
                     to="/login"
                     className="w-full py-2.5 rounded-xl border border-border bg-surface text-textPrimary font-semibold text-center text-sm"
                   >
-                    Sign In
+                    {t('footerSignIn')}
                   </Link>
                   <Link
                     to="/register"
                     className="w-full py-2.5 rounded-xl bg-primary text-white font-semibold text-center text-sm shadow-sm"
                   >
-                    Join Free / Create Account
+                    {t('joinFreeCreateAccount')}
                   </Link>
                 </>
               )}
@@ -362,18 +321,18 @@ export default function LandingPage() {
               {/* Eyebrow Badge */}
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-primaryLight/80 text-primary border border-primary/20 text-xs font-bold uppercase tracking-wider mb-6 shadow-sm">
                 <Sparkles size={14} className="text-accent" />
-                <span>National Wool Value Chain Platform</span>
+                <span>{t('nationalWoolPlatform')}</span>
               </div>
 
               {/* Headline */}
               <h1 className="text-4xl sm:text-5xl xl:text-6xl font-extrabold tracking-tight text-textPrimary leading-[1.12]">
-                Digitizing India’s wool <br className="hidden sm:inline" />
-                from <span className="text-primary">sheep to loom.</span>
+                {t('heroHeadlinePre')} <br className="hidden sm:inline" />
+                {t('heroHeadlinePost')} <span className="text-primary">{t('heroHeadlineHighlight')}</span>
               </h1>
 
               {/* Subtitle */}
               <p className="mt-5 text-base sm:text-lg text-textSecondary leading-relaxed max-w-2xl mx-auto lg:mx-0">
-                Direct market linkages for pastoralists, transparent QR lot passports for textile mills, and real-time APMC mandi pricing across India's wool heartlands.
+                {t('heroSubtitle')}
               </p>
 
               {/* CTAs */}
@@ -382,7 +341,7 @@ export default function LandingPage() {
                   to="/register"
                   className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-2xl bg-primary text-white font-bold text-base shadow-lg shadow-primary/25 hover:bg-primaryDark hover:shadow-xl transition-all duration-200 active:scale-[0.98]"
                 >
-                  <span>Start Free Today</span>
+                  <span>{t('startFreeToday')}</span>
                   <ArrowRight size={18} />
                 </Link>
 
@@ -391,14 +350,14 @@ export default function LandingPage() {
                   className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl bg-surface border border-border text-textPrimary font-semibold text-base shadow-sm hover:border-primary/40 hover:bg-primaryLight/20 transition-all"
                 >
                   <TrendingUp size={18} className="text-primary" />
-                  <span>Explore Mandi Rates</span>
+                  <span>{t('exploreMandiRates')}</span>
                 </a>
 
                 <Link
                   to="/login"
                   className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-4 py-3.5 text-sm font-semibold text-textSecondary hover:text-primary"
                 >
-                  <span>Demo Sign In →</span>
+                  <span>{t('demoSignIn')}</span>
                 </Link>
               </div>
 
@@ -406,15 +365,15 @@ export default function LandingPage() {
               <div className="mt-10 pt-8 border-t border-border/70 flex flex-wrap items-center justify-center lg:justify-start gap-6 text-xs font-semibold text-textSecondary">
                 <div className="flex items-center gap-2">
                   <CheckCircle2 size={16} className="text-primary shrink-0" />
-                  <span>100% Free for Pastoralists</span>
+                  <span>{t('trustFreeForPastoralists')}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <QrCode size={16} className="text-accent shrink-0" />
-                  <span>Tamper-Proof QR Passports</span>
+                  <span>{t('trustTamperProofQr')}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <ShieldCheck size={16} className="text-info shrink-0" />
-                  <span>APMC Benchmark Aligned</span>
+                  <span>{t('trustApmcAligned')}</span>
                 </div>
               </div>
             </div>
@@ -427,8 +386,8 @@ export default function LandingPage() {
                   <TrendingUp size={16} />
                 </span>
                 <div>
-                  <p className="text-[11px] font-bold text-textMuted uppercase">Mandi Benchmark</p>
-                  <p className="text-xs font-bold text-primary">+14.2% Seasonal Gain</p>
+                  <p className="text-[11px] font-bold text-textMuted uppercase">{t('mandiBenchmark')}</p>
+                  <p className="text-xs font-bold text-primary">{t('seasonalGain')}</p>
                 </div>
               </div>
 
@@ -441,31 +400,31 @@ export default function LandingPage() {
                       <Package size={20} />
                     </span>
                     <div>
-                      <p className="text-xs font-bold uppercase tracking-wider text-textMuted">Live Lot Passport</p>
+                      <p className="text-xs font-bold uppercase tracking-wider text-textMuted">{t('liveLotPassport')}</p>
                       <h3 className="font-bold text-textPrimary text-base">Batch #WC-2026-CHOKLA</h3>
                     </div>
                   </div>
                   <span className="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 font-bold text-xs border border-emerald-300/60">
-                    Verified Lot
+                    {t('verifiedLot')}
                   </span>
                 </div>
 
                 {/* Card Specs Grid */}
                 <div className="grid grid-cols-3 gap-3 my-5">
                   <div className="p-3 rounded-2xl bg-background border border-border/70 text-center">
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-textMuted">Weight</p>
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-textMuted">{t('weightLabel')}</p>
                     <p className="text-lg font-bold text-textPrimary mt-0.5">850 kg</p>
-                    <span className="text-[10px] text-emerald-700 font-semibold">Spring Clip</span>
+                    <span className="text-[10px] text-emerald-700 font-semibold">{t('springClip')}</span>
                   </div>
                   <div className="p-3 rounded-2xl bg-background border border-border/70 text-center">
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-textMuted">Micron</p>
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-textMuted">{t('micronLabel')}</p>
                     <p className="text-lg font-bold text-primary mt-0.5">28.4 µm</p>
-                    <span className="text-[10px] text-textSecondary">Chokla Pure</span>
+                    <span className="text-[10px] text-textSecondary">{t('choklaPure')}</span>
                   </div>
                   <div className="p-3 rounded-2xl bg-background border border-border/70 text-center">
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-textMuted">Yield</p>
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-textMuted">{t('yieldLabel')}</p>
                     <p className="text-lg font-bold text-accent mt-0.5">68.5%</p>
-                    <span className="text-[10px] text-textSecondary">Clean Fleece</span>
+                    <span className="text-[10px] text-textSecondary">{t('cleanFleece')}</span>
                   </div>
                 </div>
 
@@ -473,13 +432,13 @@ export default function LandingPage() {
                 <div className="space-y-2 text-xs">
                   <div className="flex items-center justify-between p-2.5 rounded-xl bg-primaryLight/30 border border-primary/10">
                     <span className="text-textSecondary flex items-center gap-1.5">
-                      <MapPin size={14} className="text-primary" /> Origin Flock
+                      <MapPin size={14} className="text-primary" /> {t('originFlock')}
                     </span>
                     <strong className="text-textPrimary">Bikaner Mandi, Rajasthan</strong>
                   </div>
                   <div className="flex items-center justify-between p-2.5 rounded-xl bg-background border border-border/70">
                     <span className="text-textSecondary flex items-center gap-1.5">
-                      <Clock size={14} className="text-textMuted" /> Sheared On
+                      <Clock size={14} className="text-textMuted" /> {t('shearedOn')}
                     </span>
                     <strong className="text-textPrimary">14 Aug 2026</strong>
                   </div>
@@ -492,15 +451,15 @@ export default function LandingPage() {
                       <QrCode size={36} className="text-textPrimary" />
                     </div>
                     <div>
-                      <p className="text-xs font-bold text-textPrimary">Scan-To-Verify</p>
-                      <p className="text-[11px] text-textSecondary">Digital Provenance Passport</p>
+                      <p className="text-xs font-bold text-textPrimary">{t('scanToVerify')}</p>
+                      <p className="text-[11px] text-textSecondary">{t('digitalProvenancePassport')}</p>
                     </div>
                   </div>
                   <Link
                     to="/register"
                     className="px-3.5 py-2 rounded-xl bg-primary text-white text-xs font-bold hover:bg-primaryDark transition-colors shadow-sm shrink-0"
                   >
-                    View Passport →
+                    {t('viewPassportArrow')}
                   </Link>
                 </div>
               </div>
@@ -537,13 +496,13 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-14">
             <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-primary bg-primaryLight px-3 py-1.5 rounded-full mb-3">
-              <Layers size={13} /> Integrated Architecture
+              <Layers size={13} /> {t('integratedArchitecture')}
             </div>
             <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-textPrimary">
-              Transforming India’s wool ecosystem with trust and technology
+              {t('featuresHeadline')}
             </h2>
             <p className="mt-4 text-base text-textSecondary">
-              From high-altitude Himalayan grazing meadows to export mills and heritage looms, WoolConnect unifies every tier of the trade.
+              {t('featuresSubtext')}
             </p>
           </div>
 
@@ -554,13 +513,13 @@ export default function LandingPage() {
                 <span className="grid h-12 w-12 place-items-center rounded-2xl bg-emerald-50 text-emerald-700 mb-5 shadow-sm">
                   <QrCode size={24} />
                 </span>
-                <h3 className="text-xl font-bold text-textPrimary">Cryptographic QR Passports</h3>
+                <h3 className="text-xl font-bold text-textPrimary">{t('feature1Title')}</h3>
                 <p className="mt-3 text-sm text-textSecondary leading-relaxed">
-                  Every lot receives a unique QR code at the farm level recording shearing timestamp, sheep breed, micron test grades, and farmer credentials.
+                  {t('feature1Desc')}
                 </p>
               </div>
               <div className="mt-6 pt-4 border-t border-border/60 flex items-center gap-2 text-xs font-bold text-primary">
-                <CheckCircle2 size={15} /> 100% Anti-counterfeit verification
+                <CheckCircle2 size={15} /> {t('feature1Tag')}
               </div>
             </div>
 
@@ -570,13 +529,13 @@ export default function LandingPage() {
                 <span className="grid h-12 w-12 place-items-center rounded-2xl bg-amber-50 text-amber-800 mb-5 shadow-sm">
                   <TrendingUp size={24} />
                 </span>
-                <h3 className="text-xl font-bold text-textPrimary">APMC Mandi Price Intelligence</h3>
+                <h3 className="text-xl font-bold text-textPrimary">{t('feature2Title')}</h3>
                 <p className="mt-3 text-sm text-textSecondary leading-relaxed">
-                  Real-time market rates gathered from key wool trading centers like Bikaner, Jamnagar, Leh, and Solapur empower pastoralists to negotiate fair returns.
+                  {t('feature2Desc')}
                 </p>
               </div>
               <div className="mt-6 pt-4 border-t border-border/60 flex items-center gap-2 text-xs font-bold text-accent">
-                <CheckCircle2 size={15} /> Transparent price discovery
+                <CheckCircle2 size={15} /> {t('feature2Tag')}
               </div>
             </div>
 
@@ -586,13 +545,13 @@ export default function LandingPage() {
                 <span className="grid h-12 w-12 place-items-center rounded-2xl bg-sky-50 text-sky-800 mb-5 shadow-sm">
                   <Store size={24} />
                 </span>
-                <h3 className="text-xl font-bold text-textPrimary">Direct Buyer & Mill Linkages</h3>
+                <h3 className="text-xl font-bold text-textPrimary">{t('feature3Title')}</h3>
                 <p className="mt-3 text-sm text-textSecondary leading-relaxed">
-                  Textile mills, yarn spinners, and exporters source graded desi and merino wool directly from pastoralist producer organizations without intermediaries.
+                  {t('feature3Desc')}
                 </p>
               </div>
               <div className="mt-6 pt-4 border-t border-border/60 flex items-center gap-2 text-xs font-bold text-info">
-                <CheckCircle2 size={15} /> Direct contracts & verified lots
+                <CheckCircle2 size={15} /> {t('feature3Tag')}
               </div>
             </div>
           </div>
@@ -604,13 +563,13 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-accent bg-accentLight px-3 py-1.5 rounded-full mb-3">
-              <Sparkles size={13} /> Step-by-Step Flow
+              <Sparkles size={13} /> {t('stepByStepFlow')}
             </div>
             <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-textPrimary">
-              How wool travels seamlessly from pasture to fabric
+              {t('howItWorksHeadline')}
             </h2>
             <p className="mt-3 text-base text-textSecondary">
-              A transparent 4-stage digital trail ensuring every stakeholder gains fair value and verified provenance.
+              {t('howItWorksSubtext')}
             </p>
           </div>
 
@@ -624,13 +583,13 @@ export default function LandingPage() {
                     <Sprout size={20} />
                   </span>
                 </div>
-                <h4 className="text-lg font-bold text-textPrimary">Fleece Harvest & QR</h4>
+                <h4 className="text-lg font-bold text-textPrimary">{t('step1Title')}</h4>
                 <p className="mt-2 text-xs text-textSecondary leading-relaxed">
-                  Farmer records lot weight, breed variety, and shearing location. A tamper-proof QR lot tag is minted instantly.
+                  {t('step1Desc')}
                 </p>
               </div>
               <div className="mt-5 text-[11px] font-semibold text-textMuted bg-surface p-2.5 rounded-xl border border-border/60">
-                🏷️ Batch QR Generated
+                🏷️ {t('step1Tag').replace('🏷️ ', '')}
               </div>
             </div>
 
@@ -643,13 +602,13 @@ export default function LandingPage() {
                     <BarChart3 size={20} />
                   </span>
                 </div>
-                <h4 className="text-lg font-bold text-textPrimary">Mandi Intelligence</h4>
+                <h4 className="text-lg font-bold text-textPrimary">{t('step2Title')}</h4>
                 <p className="mt-2 text-xs text-textSecondary leading-relaxed">
-                  Real-time APMC price benchmarks allow pastoralists to list at competitive rates, eliminating undervaluation.
+                  {t('step2Desc')}
                 </p>
               </div>
               <div className="mt-5 text-[11px] font-semibold text-textMuted bg-surface p-2.5 rounded-xl border border-border/60">
-                📊 Mandi Benchmark Synced
+                📊 {t('step2Tag').replace('📊 ', '')}
               </div>
             </div>
 
@@ -662,13 +621,13 @@ export default function LandingPage() {
                     <Factory size={20} />
                   </span>
                 </div>
-                <h4 className="text-lg font-bold text-textPrimary">Scouring & Grading</h4>
+                <h4 className="text-lg font-bold text-textPrimary">{t('step3Title')}</h4>
                 <p className="mt-2 text-xs text-textSecondary leading-relaxed">
-                  Processing facilities log lab testing results: micron grade, staple length, and clean yield percentage.
+                  {t('step3Desc')}
                 </p>
               </div>
               <div className="mt-5 text-[11px] font-semibold text-textMuted bg-surface p-2.5 rounded-xl border border-border/60">
-                🧪 Quality Certificate Added
+                🧪 {t('step3Tag').replace('🧪 ', '')}
               </div>
             </div>
 
@@ -681,13 +640,13 @@ export default function LandingPage() {
                     <Palette size={20} />
                   </span>
                 </div>
-                <h4 className="text-lg font-bold text-textPrimary">Weaving & Provenance</h4>
+                <h4 className="text-lg font-bold text-textPrimary">{t('step4Title')}</h4>
                 <p className="mt-2 text-xs text-textSecondary leading-relaxed">
-                  Finished carpets, apparel, and shawls carry the origin story directly to end-consumers and international buyers.
+                  {t('step4Desc')}
                 </p>
               </div>
               <div className="mt-5 text-[11px] font-semibold text-textMuted bg-surface p-2.5 rounded-xl border border-border/60">
-                ✨ Consumer Story Verified
+                ✨ {t('step4Tag').replace('✨ ', '')}
               </div>
             </div>
           </div>
@@ -700,20 +659,20 @@ export default function LandingPage() {
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
             <div>
               <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-primary bg-primaryLight px-3 py-1.5 rounded-full mb-2">
-                <Leaf size={13} /> Natural Wealth
+                <Leaf size={13} /> {t('naturalWealth')}
               </div>
               <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-textPrimary">
-                India’s Indigenous Wool Heritage
+                {t('breedsHeadline')}
               </h2>
               <p className="mt-2 text-sm text-textSecondary max-w-xl">
-                Explore the distinctive fiber profiles of native Indian sheep breeds across arid deserts, alpine pastures, and deccan plateaus.
+                {t('breedsSubtext')}
               </p>
             </div>
             <Link
               to="/register"
               className="inline-flex items-center gap-1.5 text-sm font-bold text-primary hover:text-primaryDark self-start md:self-auto"
             >
-              Browse all lots in marketplace →
+              {t('browseAllLots')}
             </Link>
           </div>
 
@@ -740,24 +699,24 @@ export default function LandingPage() {
 
                   <div className="grid grid-cols-2 gap-2.5 my-4 p-3 rounded-2xl bg-background border border-border/60">
                     <div>
-                      <p className="text-[10px] uppercase font-bold text-textMuted">Fiber Diameter</p>
+                      <p className="text-[10px] uppercase font-bold text-textMuted">{t('fiberDiameter')}</p>
                       <p className="text-sm font-bold text-textPrimary">{breed.micron}</p>
                     </div>
                     <div>
-                      <p className="text-[10px] uppercase font-bold text-textMuted">Clean Yield</p>
+                      <p className="text-[10px] uppercase font-bold text-textMuted">{t('cleanYield')}</p>
                       <p className="text-sm font-bold text-primary">{breed.yieldPct}</p>
                     </div>
                   </div>
 
                   <p className="text-xs text-textSecondary leading-relaxed">
-                    <strong className="text-textPrimary font-semibold">Ideal For:</strong> {breed.uses}
+                    <strong className="text-textPrimary font-semibold">{t('idealFor')}</strong> {breed.uses}
                   </p>
                 </div>
 
                 <div className="mt-5 pt-4 border-t border-border/60 flex items-center justify-between text-xs">
-                  <span className="text-textMuted font-medium">Traceable Lot Availability</span>
+                  <span className="text-textMuted font-medium">{t('traceableLotAvailability')}</span>
                   <span className="font-bold text-primary inline-flex items-center gap-1">
-                    Available <Check size={14} />
+                    {t('availableLabel')} <Check size={14} />
                   </span>
                 </div>
               </div>
@@ -771,13 +730,13 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-12">
             <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-primary bg-primaryLight px-3 py-1.5 rounded-full mb-3">
-              <Users size={13} /> Role-Tailored Portals
+              <Users size={13} /> {t('roleTailoredPortals')}
             </div>
             <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-textPrimary">
-              Dedicated interfaces built for every actor in the chain
+              {t('rolePortalsHeadline')}
             </h2>
             <p className="mt-3 text-base text-textSecondary">
-              Switch roles seamlessly and enjoy customized dashboards built for your operational needs.
+              {t('rolePortalsSubtext')}
             </p>
           </div>
 
@@ -854,16 +813,16 @@ export default function LandingPage() {
               <div className="lg:col-span-7">
                 <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 text-emerald-200 border border-white/20 text-xs font-semibold backdrop-blur-md mb-6">
                   <ShieldCheck size={15} className="text-emerald-300" />
-                  <span>Consumer & ESG Compliance Standard</span>
+                  <span>{t('esgComplianceStandard')}</span>
                 </div>
 
                 <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight">
-                  Every thread has a story. <br />
-                  <span className="text-emerald-200">WoolConnect makes it provable.</span>
+                  {t('everyThreadStoryPre')} <br />
+                  <span className="text-emerald-200">{t('everyThreadStoryPost')}</span>
                 </h2>
 
                 <p className="mt-5 text-white/80 text-base sm:text-lg leading-relaxed max-w-xl">
-                  Leading sustainable apparel brands and weavers use WoolConnect to certify desi wool authenticity, empowering buyers to reward pastoralist caretakers with ethical premiums.
+                  {t('traceabilitySpotlightDesc')}
                 </p>
 
                 <div className="mt-8 flex flex-wrap gap-4">
@@ -871,14 +830,14 @@ export default function LandingPage() {
                     to="/register"
                     className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-white text-primary font-bold text-sm shadow-lg hover:bg-emerald-50 transition-all"
                   >
-                    <span>Register Your Flocks or Facility</span>
+                    <span>{t('registerFlocksOrFacility')}</span>
                     <ArrowRight size={16} />
                   </Link>
                   <Link
                     to="/login"
                     className="inline-flex items-center gap-2 px-5 py-3.5 rounded-xl bg-white/10 border border-white/25 text-white font-semibold text-sm backdrop-blur hover:bg-white/20 transition-all"
                   >
-                    <span>Try Platform Demo</span>
+                    <span>{t('tryPlatformDemo')}</span>
                   </Link>
                 </div>
               </div>
@@ -888,29 +847,29 @@ export default function LandingPage() {
                 <div className="w-full max-w-sm rounded-3xl bg-surface text-textPrimary p-6 shadow-2xl border border-white/40 animate-pulse-subtle">
                   <div className="flex items-center justify-between pb-3 border-b border-border/60">
                     <span className="text-xs font-bold text-primary flex items-center gap-1.5 uppercase tracking-wide">
-                      <Sparkles size={14} /> Traceability Check
+                      <Sparkles size={14} /> {t('traceabilityCheck')}
                     </span>
                     <span className="text-[10px] font-bold bg-emerald-100 text-emerald-800 px-2.5 py-0.5 rounded-full">
-                      Authentic
+                      {t('authenticLabel')}
                     </span>
                   </div>
 
                   <div className="my-5 flex flex-col items-center justify-center p-4 rounded-2xl bg-background border border-border/80">
                     <QrCode size={140} className="text-textPrimary" />
-                    <p className="text-[11px] text-textMuted font-mono mt-2">LOT #WC-2026-CHOKLA-84</p>
+                    <p className="text-[11px] text-textMuted font-mono mt-2">{t('lotNumber')}</p>
                   </div>
 
                   <div className="space-y-2 text-xs">
                     <div className="flex justify-between py-1 border-b border-border/40">
-                      <span className="text-textSecondary">Producer</span>
+                      <span className="text-textSecondary">{t('producerLabelLower')}</span>
                       <span className="font-bold text-textPrimary">Ramesh Gurjar (Bikaner)</span>
                     </div>
                     <div className="flex justify-between py-1 border-b border-border/40">
-                      <span className="text-textSecondary">Breed & Grade</span>
+                      <span className="text-textSecondary">{t('breedGradeLabel')}</span>
                       <span className="font-bold text-textPrimary">Chokla • Grade A (28.4µm)</span>
                     </div>
                     <div className="flex justify-between py-1">
-                      <span className="text-textSecondary">Scouring Facility</span>
+                      <span className="text-textSecondary">{t('scouringFacility')}</span>
                       <span className="font-bold text-textPrimary">Rajasthan State Scourers</span>
                     </div>
                   </div>
@@ -927,19 +886,19 @@ export default function LandingPage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
             <div className="p-4">
               <p className="text-3xl sm:text-4xl font-extrabold text-primary font-mono">10,000+</p>
-              <p className="text-xs sm:text-sm font-semibold text-textSecondary mt-1">Pastoralists Connected</p>
+              <p className="text-xs sm:text-sm font-semibold text-textSecondary mt-1">{t('pastoralistsConnected')}</p>
             </div>
             <div className="p-4">
               <p className="text-3xl sm:text-4xl font-extrabold text-accent font-mono">8 States</p>
-              <p className="text-xs sm:text-sm font-semibold text-textSecondary mt-1">Mandi Feeds Monitored</p>
+              <p className="text-xs sm:text-sm font-semibold text-textSecondary mt-1">{t('mandiFeedsMonitored')}</p>
             </div>
             <div className="p-4">
               <p className="text-3xl sm:text-4xl font-extrabold text-info font-mono">50,000+ kg</p>
-              <p className="text-xs sm:text-sm font-semibold text-textSecondary mt-1">Fleece Lots Traced</p>
+              <p className="text-xs sm:text-sm font-semibold text-textSecondary mt-1">{t('fleeceLotsTraced')}</p>
             </div>
             <div className="p-4">
               <p className="text-3xl sm:text-4xl font-extrabold text-emerald-700 font-mono">100%</p>
-              <p className="text-xs sm:text-sm font-semibold text-textSecondary mt-1">Direct Value to Producers</p>
+              <p className="text-xs sm:text-sm font-semibold text-textSecondary mt-1">{t('directValueToProducers')}</p>
             </div>
           </div>
         </div>
@@ -950,10 +909,10 @@ export default function LandingPage() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-primary bg-primaryLight px-3 py-1.5 rounded-full mb-3">
-              <HelpCircle size={13} /> Questions & Answers
+              <HelpCircle size={13} /> {t('questionsAndAnswers')}
             </div>
             <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-textPrimary">
-              Frequently Asked Questions
+              {t('faqHeadline')}
             </h2>
           </div>
 
@@ -996,23 +955,23 @@ export default function LandingPage() {
           <div className="rounded-3xl bg-gradient-to-r from-primary to-primaryDark text-white p-8 sm:p-12 text-center shadow-xl relative overflow-hidden">
             <div className="hero-orb orb-two opacity-20" />
             <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">
-              Ready to elevate your wool trade?
+              {t('readyToElevate')}
             </h2>
             <p className="mt-3 text-white/85 text-sm sm:text-base max-w-xl mx-auto leading-relaxed">
-              Join thousands of pastoralists, spinning mills, and weavers today. Create your account in less than 2 minutes.
+              {t('finalCtaDesc')}
             </p>
             <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
               <Link
                 to="/register"
                 className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-white text-primary font-bold text-base shadow-md hover:bg-emerald-50 transition-all"
               >
-                Create Free Account
+                {t('createFreeAccount')}
               </Link>
               <Link
                 to="/login"
                 className="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-white/10 border border-white/30 text-white font-semibold text-base hover:bg-white/20 transition-all"
               >
-                Sign In with Demo
+                {t('signInWithDemo')}
               </Link>
             </div>
           </div>
@@ -1032,24 +991,24 @@ export default function LandingPage() {
                 WoolConnect
               </Link>
               <p className="text-textMuted text-xs leading-relaxed">
-                National digital wool traceability, APMC mandi intelligence, and direct pastoralist linkages.
+                {t('footerTagline')}
               </p>
             </div>
 
             {/* Col 2 */}
             <div>
-              <p className="font-bold text-textPrimary uppercase tracking-wider text-xs mb-3">Stakeholders</p>
+              <p className="font-bold text-textPrimary uppercase tracking-wider text-xs mb-3">{t('footerStakeholders')}</p>
               <ul className="space-y-2">
-                <li><Link to="/register" className="hover:text-primary transition-colors">Pastoralists & Farmers</Link></li>
-                <li><Link to="/register" className="hover:text-primary transition-colors">Textile Mills & Sourcing</Link></li>
-                <li><Link to="/register" className="hover:text-primary transition-colors">Scouring & Grading Units</Link></li>
-                <li><Link to="/register" className="hover:text-primary transition-colors">Artisans & Handloom Weavers</Link></li>
+                <li><Link to="/register" className="hover:text-primary transition-colors">{t('footerPastoralistsFarmers')}</Link></li>
+                <li><Link to="/register" className="hover:text-primary transition-colors">{t('footerTextileMills')}</Link></li>
+                <li><Link to="/register" className="hover:text-primary transition-colors">{t('footerScouringUnits')}</Link></li>
+                <li><Link to="/register" className="hover:text-primary transition-colors">{t('footerArtisansWeavers')}</Link></li>
               </ul>
             </div>
 
             {/* Col 3 */}
             <div>
-              <p className="font-bold text-textPrimary uppercase tracking-wider text-xs mb-3">Key Indian Breeds</p>
+              <p className="font-bold text-textPrimary uppercase tracking-wider text-xs mb-3">{t('footerKeyBreeds')}</p>
               <ul className="space-y-2">
                 <li><span className="hover:text-primary cursor-default">Chokla (Rajasthan)</span></li>
                 <li><span className="hover:text-primary cursor-default">Patanwadi (Gujarat)</span></li>
@@ -1060,22 +1019,22 @@ export default function LandingPage() {
 
             {/* Col 4 */}
             <div>
-              <p className="font-bold text-textPrimary uppercase tracking-wider text-xs mb-3">Quick Links</p>
+              <p className="font-bold text-textPrimary uppercase tracking-wider text-xs mb-3">{t('footerQuickLinks')}</p>
               <ul className="space-y-2">
-                <li><Link to="/login" className="hover:text-primary transition-colors">Sign In</Link></li>
-                <li><Link to="/register" className="hover:text-primary transition-colors">Register Free</Link></li>
-                <li><a href="#mandi-rates" className="hover:text-primary transition-colors">Live Mandi Prices</a></li>
-                <li><a href="#traceability" className="hover:text-primary transition-colors">QR Traceability Passport</a></li>
+                <li><Link to="/login" className="hover:text-primary transition-colors">{t('footerSignIn')}</Link></li>
+                <li><Link to="/register" className="hover:text-primary transition-colors">{t('footerRegisterFree')}</Link></li>
+                <li><a href="#mandi-rates" className="hover:text-primary transition-colors">{t('footerLiveMandiPrices')}</a></li>
+                <li><a href="#traceability" className="hover:text-primary transition-colors">{t('footerQrPassport')}</a></li>
               </ul>
             </div>
           </div>
 
           <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-textMuted">
-            <p>© {new Date().getFullYear()} WoolConnect. India's Wool Value Chain Network.</p>
+            <p>© {new Date().getFullYear()} {t('footerCopyright')}</p>
             <p className="flex items-center gap-4">
-              <span>Farm to Fabric</span>
+              <span>{t('footerFarmToFabric2')}</span>
               <span>•</span>
-              <span>100% Provenance</span>
+              <span>{t('footerProvenance')}</span>
             </p>
           </div>
         </div>

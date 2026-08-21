@@ -43,6 +43,13 @@ import LearnLanding from './pages/learn/LearnLanding';
 import ResourceListing from './pages/learn/ResourceListing';
 import ResourceDetails from './pages/learn/ResourceDetails';
 
+import ArtisanDashboard from './pages/artisan/ArtisanDashboard';
+import ArtisanBatches from './pages/artisan/ArtisanBatches';
+import ArtisanBatchDetails from './pages/artisan/ArtisanBatchDetails';
+import ArtisanProcessing from './pages/artisan/ArtisanProcessing';
+import ArtisanQuality from './pages/artisan/ArtisanQuality';
+import ArtisanCompleted from './pages/artisan/ArtisanCompleted';
+
 function NavLink({ to, children, onClick }) {
   const { pathname } = useLocation();
   const isActive = pathname === to || (to !== '/' && pathname.startsWith(to));
@@ -80,17 +87,26 @@ function Layout({ children }) {
 
   const buyerLinks = [
     { to: '/buyer/dashboard', label: t('dashboard') },
-    { to: '/buyer/marketplace', label: 'Find Wool' },
-    { to: '/buyer/orders', label: 'My Orders' },
+    { to: '/buyer/marketplace', label: t('findWool') },
+    { to: '/buyer/orders', label: t('myOrders') },
     { to: '/buyer/tracking', label: t('tracking') },
-    { to: '/buyer/analytics', label: 'Analytics' },
-    { to: '/buyer/saved', label: 'Saved' },
+    { to: '/buyer/analytics', label: t('analyticsNav') },
+    { to: '/buyer/saved', label: t('savedNav') },
+  ];
+
+  const artisanLinks = [
+    { to: '/artisan', label: t('dashboard') },
+    { to: '/artisan/batches', label: t('myWool') },
+    { to: '/artisan/processing', label: t('processing') },
+    { to: '/artisan/quality', label: t('quality') },
+    { to: '/artisan/completed', label: t('completed') },
+    { to: '/learn', label: t('helpNav') },
   ];
 
   const links = profile?.role === 'admin' ? adminLinks
     : profile?.role === 'farmer' ? farmerLinks
     : profile?.role === 'buyer' ? buyerLinks
-    : profile?.role === 'artisan' ? [{ to: '/', label: t('marketplace') }, { to: '/learn', label: t('learn') }]
+    : profile?.role === 'artisan' ? artisanLinks
     : buyerLinks;
 
   return (
@@ -151,12 +167,7 @@ function Layout({ children }) {
               </button>
             </div>
           )}
-          {!profile && (
-             <div className="flex items-center gap-3">
-               <span className="text-xs font-bold text-rose-500 bg-rose-100 px-2 py-1 rounded">Test Mode</span>
-               <button className="sm:hidden grid h-9 w-9 place-items-center rounded-lg hover:bg-background transition-colors" onClick={() => setMobileOpen(true)}><Menu size={20} className="text-textPrimary" /></button>
-             </div>
-          )}
+
         </div>
       </header>
 
@@ -230,8 +241,20 @@ function Layout({ children }) {
 }
 
 function Protected({ children, allowedRoles }) {
-  // BYPASS LOGIN FOR TESTING
-  const { profile } = useAuth();
+  const { profile, loading } = useAuth();
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+      </div>
+    );
+  }
+  if (!profile) {
+    return <Navigate to="/login" replace />;
+  }
+  if (allowedRoles && allowedRoles.length > 0 && !allowedRoles.includes(profile.role)) {
+    return <Navigate to="/" replace />;
+  }
   return <LanguageGate active={Boolean(profile)}><Layout>{children}</Layout></LanguageGate>;
 }
 
@@ -246,6 +269,7 @@ function HomeRedirect() {
   if (profile.role === 'admin') return <LanguageGate active><Navigate to="/admin" replace /></LanguageGate>;
   if (profile.role === 'farmer') return <LanguageGate active><Layout><FarmerDashboard /></Layout></LanguageGate>;
   if (profile.role === 'buyer') return <LanguageGate active><Navigate to="/buyer/dashboard" replace /></LanguageGate>;
+  if (profile.role === 'artisan') return <LanguageGate active><Navigate to="/artisan" replace /></LanguageGate>;
   return <LanguageGate active><Layout><MarketplaceExperience allowBuying={profile.role === 'buyer'} /></Layout></LanguageGate>;
 }
 
@@ -267,6 +291,14 @@ export default function App() {
       <Route path="/batches/:id/details" element={<Protected allowedRoles={['farmer']}><BatchDetails /></Protected>} />
       <Route path="/batches/:id/qr" element={<Protected allowedRoles={['farmer']}><BatchQR /></Protected>} />
       <Route path="/batches/:id/traceability" element={<Protected allowedRoles={['farmer']}><BatchTraceability /></Protected>} />
+
+      {/* Artisan Routes */}
+      <Route path="/artisan" element={<Protected allowedRoles={['artisan']}><ArtisanDashboard /></Protected>} />
+      <Route path="/artisan/batches" element={<Protected allowedRoles={['artisan']}><ArtisanBatches /></Protected>} />
+      <Route path="/artisan/batches/:id" element={<Protected allowedRoles={['artisan']}><ArtisanBatchDetails /></Protected>} />
+      <Route path="/artisan/processing" element={<Protected allowedRoles={['artisan']}><ArtisanProcessing /></Protected>} />
+      <Route path="/artisan/quality" element={<Protected allowedRoles={['artisan']}><ArtisanQuality /></Protected>} />
+      <Route path="/artisan/completed" element={<Protected allowedRoles={['artisan']}><ArtisanCompleted /></Protected>} />
 
       {/* Buyer Routes */}
       <Route path="/buyer/dashboard" element={<Protected allowedRoles={['buyer']}><BuyerDashboard /></Protected>} />

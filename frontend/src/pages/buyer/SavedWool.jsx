@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Bookmark, Search, Trash2 } from 'lucide-react';
+import { useLanguage } from '../../context/LanguageContext';
 
 // ponytail: localStorage-only saved wool, backend API when it exists
 function getSavedListings() {
@@ -14,6 +15,7 @@ function removeSavedListing(id) {
 
 export default function SavedWool() {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [listings, setListings] = useState(getSavedListings);
 
   const handleRemove = (id) => {
@@ -24,8 +26,8 @@ export default function SavedWool() {
     <main className="page-shell">
       <div className="section-heading mb-6">
         <div>
-          <p className="eyebrow text-primary"><Bookmark size={13} /> Bookmarks</p>
-          <h1 className="text-2xl font-extrabold text-textPrimary">Saved Wool</h1>
+          <p className="eyebrow text-primary"><Bookmark size={13} /> {t('bookmarks')}</p>
+          <h1 className="text-2xl font-extrabold text-textPrimary">{t('savedWool')}</h1>
         </div>
       </div>
 
@@ -34,12 +36,12 @@ export default function SavedWool() {
           <span className="grid h-14 w-14 place-items-center rounded-3xl bg-primaryLight text-primary mb-3">
             <Bookmark size={28} />
           </span>
-          <h3 className="font-bold text-base text-textPrimary">No saved listings</h3>
+          <h3 className="font-bold text-base text-textPrimary">{t('noSavedListings')}</h3>
           <p className="text-xs sm:text-sm text-textSecondary max-w-sm mt-1 mb-5">
-            Browse the marketplace and bookmark wool listings you're interested in.
+            {t('browseAndBookmark')}
           </p>
           <button onClick={() => navigate('/buyer/marketplace')} className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-white font-bold text-xs shadow hover:bg-primaryDark transition-all">
-            <Search size={15} /> Find Wool
+            <Search size={15} /> {t('findWool')}
           </button>
         </div>
       ) : (
@@ -58,7 +60,7 @@ export default function SavedWool() {
                 onClick={(e) => { e.stopPropagation(); handleRemove(listing.id); }}
                 className="mt-3 pt-3 border-t border-border/50 w-full flex items-center justify-center gap-1.5 text-xs font-semibold text-rose-600 hover:text-rose-700 transition-colors"
               >
-                <Trash2 size={13} /> Remove
+                <Trash2 size={13} /> {t('remove')}
               </button>
             </div>
           ))}
