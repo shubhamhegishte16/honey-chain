@@ -13,7 +13,8 @@ import {
   Sparkles,
   Trophy,
   BarChart2,
-  CheckCircle2
+  CheckCircle2,
+  Users
 } from 'lucide-react';
 import { getTrainingResources } from '../../services/training.service';
 import SeasonalAdvisory from '../../components/learn/SeasonalAdvisory';
@@ -282,6 +283,30 @@ export default function LearnLanding() {
               </button>
             );
           })}
+        </div>
+      </section>
+
+      {/* 5. Producers & Artisans Section */}
+      <section className="animate-enter delay-4">
+        <div className="rounded-2xl bg-gradient-to-r from-[#2d3a6b]/10 via-[#3b4d8a]/8 to-[#4a5faa]/10 border border-blue-200/60 p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5">
+          <div className="flex items-start gap-4">
+            <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-blue-100 text-blue-700 shadow-sm">
+              <Users size={22} />
+            </span>
+            <div>
+              <h3 className="text-lg font-bold text-textPrimary mb-1">Producers & Artisans</h3>
+              <p className="text-sm text-textSecondary leading-relaxed max-w-md">
+                Explore wool producers and artisans by state and region and discover useful training resources.
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={() => navigate('/learn/producers')}
+            className="shrink-0 inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-[#3b4d8a] text-white font-bold text-sm shadow-md hover:bg-[#2d3a6b] transition-all duration-200 active:scale-[0.98] hover:-translate-y-0.5 hover:shadow-lg whitespace-nowrap"
+          >
+            <span>Explore Producers & Artisans</span>
+            <ArrowRight size={15} />
+          </button>
         </div>
       </section>
 
