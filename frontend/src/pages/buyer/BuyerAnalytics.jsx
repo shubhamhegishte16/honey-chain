@@ -1,19 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import { BarChart3, TrendingUp, Package, IndianRupee, PieChart } from 'lucide-react';
-import { getUserOrders } from '../../services/order.service';
+import { getBuyerAnalytics } from '../../services/order.service';
 import Card from '../../components/ui/Card';
 import { useLanguage } from '../../context/LanguageContext';
 
 export default function BuyerAnalytics() {
   const { t } = useLanguage();
-  const [orders, setOrders] = useState([]);
+  const [data, setData] = useState({
+    completedOrders: 0,
+    activeOrders: 0,
+    totalSpent: 0,
+    totalVolume: 0,
+    topWoolTypes: [],
+    recentOrders: []
+  });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function load() {
       setLoading(true);
-      const res = await getUserOrders();
-      if (!res.error) setOrders(res.data || []);
+      const res = await getBuyerAnalytics();
+      if (!res.error && res.data) {
+        setData(res.data);
+      }
       setLoading(false);
     }
     load();
@@ -29,23 +38,7 @@ export default function BuyerAnalytics() {
     );
   }
 
-  // Calculate metrics
-  const completedOrders = orders.filter(o => o.status === 'delivered');
-  const activeOrders = orders.filter(o => !['delivered', 'cancelled'].includes(o.status));
-  
-  const totalSpent = orders.reduce((sum, o) => o.status !== 'cancelled' ? sum + (o.totalAmount || 0) : sum, 0);
-  const totalVolume = orders.reduce((sum, o) => o.status !== 'cancelled' ? sum + (o.quantityKg || 0) : sum, 0);
-  
-  // Group by wool type
-  const woolTypeStats = orders.reduce((acc, o) => {
-    if (o.status !== 'cancelled') {
-      acc[o.woolType] = (acc[o.woolType] || 0) + (o.quantityKg || 0);
-    }
-    return acc;
-  }, {});
-  
-  // Sort wool types by volume
-  const topWoolTypes = Object.entries(woolTypeStats).sort((a, b) => b[1] - a[1]);
+  const { completedOrders, activeOrders, totalSpent, totalVolume, topWoolTypes, recentOrders } = data;
 
   return (
     <main className="page-shell">
@@ -126,11 +119,11 @@ export default function BuyerAnalytics() {
         {/* Recent Purchases List */}
         <Card className="p-6 shadow-sm border border-border flex flex-col">
           <h3 className="font-bold text-textPrimary mb-5">{t('recentActivity')}</h3>
-          {orders.length === 0 ? (
+          {recentOrders.length === 0 ? (
             <p className="text-sm text-textSecondary text-center py-8">{t('noRecentOrdersFound')}</p>
           ) : (
             <div className="space-y-4 flex-1">
-              {orders.slice(0, 5).map(order => (
+              {recentOrders.map(order => (
                 <div key={order.id || order._id} className="flex items-center justify-between pb-3 border-b border-border/50 last:border-0 last:pb-0">
                   <div>
                     <p className="font-bold text-sm text-textPrimary">{order.woolType} <span className="font-normal text-textSecondary">({order.quantityKg} kg)</span></p>

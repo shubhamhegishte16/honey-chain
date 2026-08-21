@@ -67,6 +67,10 @@ const userSchema = new mongoose.Schema({
   primaryBreeds: [{
     type: String,
   }],
+  savedListings: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'MarketplaceListing',
+  }],
 }, {
   timestamps: true,
   toJSON: {

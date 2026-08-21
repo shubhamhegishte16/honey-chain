@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Routes, Route, Navigate, Link, useNavigate, useLocation } from 'react-router-dom';
-import { ChevronDown, Leaf, LogOut, MapPin, Menu, X } from 'lucide-react';
+import { Leaf, LogOut, MapPin, Menu, X, Bell } from 'lucide-react';
 import { useAuth } from './context/AuthContext';
 import { useLanguage } from './context/LanguageContext';
 import { signOut } from './services/auth.service';
@@ -33,6 +33,16 @@ import BuyerProfile from './pages/buyer/BuyerProfile';
 import WoolPassport from './pages/buyer/WoolPassport';
 import BuyerAnalytics from './pages/buyer/BuyerAnalytics';
 
+import ProcessorDashboard from './pages/processor/ProcessorDashboard';
+import ProcessingRequests from './pages/processor/ProcessingRequests';
+import IncomingBatches from './pages/processor/IncomingBatches';
+import ActiveProcessing from './pages/processor/ActiveProcessing';
+import ProcessingHistory from './pages/processor/ProcessingHistory';
+import ProcessorBatchManagement from './pages/processor/BatchManagement';
+import ProcessedProducts from './pages/processor/ProcessedProducts';
+import ProcessorNotifications from './pages/processor/ProcessorNotifications';
+import ProcessorProfile from './pages/processor/ProcessorProfile';
+import ProcessorPassportScanner from './pages/processor/ProcessorPassportScanner';
 import AdminLayout from './pages/admin/AdminLayout';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import UserManagement from './pages/admin/UserManagement';
@@ -104,8 +114,20 @@ function Layout({ children }) {
     { to: '/learn', label: t('helpNav') },
   ];
 
+  const processorLinks = [
+    { to: '/processor/dashboard', label: 'Dashboard' },
+    { to: '/processor/requests', label: 'Processing Requests' },
+    { to: '/processor/incoming', label: 'Incoming Batches' },
+    { to: '/processor/active', label: 'Active Processing' },
+    { to: '/processor/history', label: 'Processing History' },
+    { to: '/processor/batches', label: 'Batch Management' },
+    { to: '/processor/products', label: 'Processed Products' },
+    { to: '/processor/passport', label: 'QR / Wool Passport' },
+  ];
+
   const links = profile?.role === 'admin' ? adminLinks
     : profile?.role === 'farmer' ? farmerLinks
+    : profile?.role === 'processor' ? processorLinks
     : profile?.role === 'buyer' ? buyerLinks
     : profile?.role === 'artisan' ? artisanLinks
     : buyerLinks;
@@ -137,13 +159,19 @@ function Layout({ children }) {
               </div>
               {/* User info */}
               <div className="hidden md:flex items-center gap-2">
-                <span className="grid h-8 w-8 place-items-center rounded-full bg-primaryLight text-primary text-xs font-bold">
-                  {profile.name?.charAt(0)?.toUpperCase() || '?'}
-                </span>
-                <div className="hidden lg:block">
-                  <p className="text-sm font-medium text-textPrimary leading-tight">{profile.name}</p>
-                  <p className="text-[11px] text-textMuted flex items-center gap-0.5"><MapPin size={10} />{profile.district || profile.state || 'India'}</p>
-                </div>
+                <Link to={profile?.role === 'processor' ? '/processor/notifications' : '/buyer/notifications'} className="relative grid h-9 w-9 place-items-center rounded-full hover:bg-background transition-colors text-textSecondary">
+                  <Bell size={18} />
+                  <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-red-500 border-2 border-surface"></span>
+                </Link>
+                <Link to={profile?.role === 'processor' ? '/processor/profile' : '/buyer/profile'} className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+                  <span className="grid h-8 w-8 place-items-center rounded-full bg-primaryLight text-primary text-xs font-bold">
+                    {profile.name?.charAt(0)?.toUpperCase() || '?'}
+                  </span>
+                  <div className="hidden lg:block">
+                    <p className="text-sm font-medium text-textPrimary leading-tight">{profile.name}</p>
+                    <p className="text-[11px] text-textMuted flex items-center gap-0.5"><MapPin size={10} />{profile.district || profile.state || 'India'}</p>
+                  </div>
+                </Link>
               </div>
 
               <div className="hidden sm:block h-6 w-px bg-border" />
@@ -271,6 +299,7 @@ function HomeRedirect() {
   if (profile.role === 'farmer') return <LanguageGate active><Layout><FarmerDashboard /></Layout></LanguageGate>;
   if (profile.role === 'buyer') return <LanguageGate active><Navigate to="/buyer/dashboard" replace /></LanguageGate>;
   if (profile.role === 'artisan') return <LanguageGate active><Navigate to="/artisan" replace /></LanguageGate>;
+  if (profile.role === 'processor') return <LanguageGate active><Navigate to="/processor/dashboard" replace /></LanguageGate>;
   return <LanguageGate active><Layout><MarketplaceExperience allowBuying={profile.role === 'buyer'} /></Layout></LanguageGate>;
 }
 
@@ -316,6 +345,19 @@ export default function App() {
       <Route path="/buyer/profile" element={<Protected allowedRoles={['buyer']}><BuyerProfile /></Protected>} />
       <Route path="/buyer/analytics" element={<Protected allowedRoles={['buyer']}><BuyerAnalytics /></Protected>} />
 
+      {/* Processor Routes */}
+      <Route path="/processor/dashboard" element={<Protected allowedRoles={['processor']}><ProcessorDashboard /></Protected>} />
+      <Route path="/processor/requests" element={<Protected allowedRoles={['processor']}><ProcessingRequests /></Protected>} />
+      <Route path="/processor/incoming" element={<Protected allowedRoles={['processor']}><IncomingBatches /></Protected>} />
+      <Route path="/processor/active" element={<Protected allowedRoles={['processor']}><ActiveProcessing /></Protected>} />
+      <Route path="/processor/history" element={<Protected allowedRoles={['processor']}><ProcessingHistory /></Protected>} />
+      <Route path="/processor/batches" element={<Protected allowedRoles={['processor']}><ProcessorBatchManagement /></Protected>} />
+      <Route path="/processor/products" element={<Protected allowedRoles={['processor']}><ProcessedProducts /></Protected>} />
+      <Route path="/processor/passport" element={<Protected allowedRoles={['processor']}><ProcessorPassportScanner /></Protected>} />
+      <Route path="/processor/passport/:id" element={<Protected allowedRoles={['processor']}><WoolPassport /></Protected>} />
+      <Route path="/processor/notifications" element={<Protected allowedRoles={['processor']}><ProcessorNotifications /></Protected>} />
+      <Route path="/processor/profile" element={<Protected allowedRoles={['processor']}><ProcessorProfile /></Protected>} />
+
       {/* Admin Routes */}
       <Route path="/admin" element={<Protected allowedRoles={['admin']}><AdminLayout><AdminDashboard /></AdminLayout></Protected>} />
       <Route path="/admin/users" element={<Protected allowedRoles={['admin']}><AdminLayout><UserManagement /></AdminLayout></Protected>} />
@@ -332,4 +374,3 @@ export default function App() {
     </Routes>
   );
 }
-

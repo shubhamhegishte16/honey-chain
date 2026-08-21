@@ -121,3 +121,51 @@ export async function getAllDemoUsers(req, res, next) {
     next(error);
   }
 }
+
+export async function getSavedListings(req, res, next) {
+  try {
+    const user = await User.findById(req.user._id).populate({
+      path: 'savedListings',
+      populate: [
+        { path: 'seller', select: 'name email mobile state district organization isVerified' },
+        { path: 'batch' }
+      ]
+    });
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found.' });
+    }
+    res.json({ success: true, data: user.savedListings });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function saveListing(req, res, next) {
+  try {
+    const { listingId } = req.params;
+    const user = await User.findById(req.user._id);
+    if (!user) return res.status(404).json({ success: false, message: 'User not found.' });
+
+    if (!user.savedListings.includes(listingId)) {
+      user.savedListings.push(listingId);
+      await user.save();
+    }
+    res.json({ success: true, message: 'Listing saved successfully.' });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function removeSavedListing(req, res, next) {
+  try {
+    const { listingId } = req.params;
+    const user = await User.findById(req.user._id);
+    if (!user) return res.status(404).json({ success: false, message: 'User not found.' });
+
+    user.savedListings = user.savedListings.filter(id => String(id) !== String(listingId));
+    await user.save();
+    res.json({ success: true, message: 'Listing removed from saved.' });
+  } catch (error) {
+    next(error);
+  }
+}

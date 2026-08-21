@@ -1,25 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Bookmark, Search, Trash2 } from 'lucide-react';
+import { getSavedListings, removeSavedListing } from '../../services/auth.service';
+import { useAuth } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
-
-// ponytail: localStorage-only saved wool, backend API when it exists
-function getSavedListings() {
-  try { return JSON.parse(localStorage.getItem('woolconnect_saved') || '[]'); } catch { return []; }
-}
-function removeSavedListing(id) {
-  const saved = getSavedListings().filter(l => l.id !== id);
-  localStorage.setItem('woolconnect_saved', JSON.stringify(saved));
-  return saved;
-}
 
 export default function SavedWool() {
   const navigate = useNavigate();
+  const { profile } = useAuth();
   const { t } = useLanguage();
-  const [listings, setListings] = useState(getSavedListings);
+  const [listings, setListings] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const handleRemove = (id) => {
-    setListings(removeSavedListing(id));
+  useEffect(() => {
+    async function load() {
+      // In test mode, we might not have a real profile ID for backend auth, 
+      // but if the backend accepts it or we mock it, we load.
+      setLoading(true);
+      const res = await getSavedListings();
+      if (!res.error) setListings(res.data || []);
+      setLoading(false);
+    }
+    load();
+  }, []);
+
+  const handleRemove = async (id) => {
+    // Optimistic update
+    setListings(prev => prev.filter(l => l._id !== id && l.id !== id));
+    await removeSavedListing(id);
   };
 
   return (
@@ -31,7 +39,11 @@ export default function SavedWool() {
         </div>
       </div>
 
-      {listings.length === 0 ? (
+      {loading ? (
+        <div className="py-20 flex justify-center">
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+        </div>
+      ) : listings.length === 0 ? (
         <div className="p-8 sm:p-12 text-center rounded-3xl bg-surface border border-border flex flex-col items-center">
           <span className="grid h-14 w-14 place-items-center rounded-3xl bg-primaryLight text-primary mb-3">
             <Bookmark size={28} />
@@ -47,17 +59,17 @@ export default function SavedWool() {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {listings.map(listing => (
-            <div key={listing.id} className="p-4 rounded-2xl bg-surface border border-border shadow-sm hover:border-primary/40 hover:shadow-md cursor-pointer transition-all group">
-              <div onClick={() => navigate(`/buyer/marketplace/${listing.id}`)}>
-                <p className="font-bold text-sm text-textPrimary group-hover:text-primary">{listing.wool_type} Wool</p>
-                <p className="text-xs text-textSecondary mt-0.5">{listing.seller_name}</p>
+            <div key={listing._id || listing.id} className="p-4 rounded-2xl bg-surface border border-border shadow-sm hover:border-primary/40 hover:shadow-md cursor-pointer transition-all group">
+              <div onClick={() => navigate(`/buyer/marketplace/${listing._id || listing.id}`)}>
+                <p className="font-bold text-sm text-textPrimary group-hover:text-primary">{listing.woolType} Wool</p>
+                <p className="text-xs text-textSecondary mt-0.5">{listing.seller?.name || listing.seller_name}</p>
                 <div className="mt-2 flex justify-between items-center">
-                  <span className="font-bold text-sm text-emerald-700">₹{listing.price_per_kg}/kg</span>
-                  <span className="text-[11px] text-textMuted">{listing.quantity_kg} kg</span>
+                  <span className="font-bold text-sm text-emerald-700">₹{listing.pricePerKg}/kg</span>
+                  <span className="text-[11px] text-textMuted">{listing.quantityKg} kg</span>
                 </div>
               </div>
               <button
-                onClick={(e) => { e.stopPropagation(); handleRemove(listing.id); }}
+                onClick={(e) => { e.stopPropagation(); handleRemove(listing._id || listing.id); }}
                 className="mt-3 pt-3 border-t border-border/50 w-full flex items-center justify-center gap-1.5 text-xs font-semibold text-rose-600 hover:text-rose-700 transition-colors"
               >
                 <Trash2 size={13} /> {t('remove')}
@@ -68,13 +80,4 @@ export default function SavedWool() {
       )}
     </main>
   );
-}
-
-// Export utility so MarketplaceExperience can save listings
-export function saveListing(listing) {
-  const saved = getSavedListings();
-  if (!saved.find(l => l.id === listing.id)) {
-    saved.push({ id: listing.id, wool_type: listing.wool_type, seller_name: listing.seller_name, price_per_kg: listing.price_per_kg, quantity_kg: listing.quantity_kg });
-    localStorage.setItem('woolconnect_saved', JSON.stringify(saved));
-  }
 }

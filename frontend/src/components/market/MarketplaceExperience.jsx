@@ -3,7 +3,8 @@ import { Filter, MapPin, Search, ShoppingBag, Sparkles, Tag, ChevronRight, Bookm
 import { useNavigate } from 'react-router-dom';
 import Card from '../ui/Card';
 import Button from '../ui/Button';
-import { getListings, placeOrder } from '../../services/marketplace.service';
+import { getListings } from '../../services/marketplace.service';
+import { addSavedListing } from '../../services/auth.service';
 import { INDIAN_STATES, WOOL_TYPES } from '../../constants/states';
 import { useLanguage } from '../../context/LanguageContext';
 
@@ -99,7 +100,17 @@ export default function MarketplaceExperience({ allowBuying = false }) {
                   />
                   <span>{listing.quantity_kg} kg {t('available', 'available')}</span>
                   {allowBuying && (
-                    <button onClick={(e) => { e.stopPropagation(); /* saved wool logic */ }} className="absolute top-2 right-2 p-2 rounded-full bg-white/50 hover:bg-white text-textPrimary shadow-sm transition-colors">
+                    <button 
+                      onClick={async (e) => { 
+                        e.stopPropagation(); 
+                        const btn = e.currentTarget;
+                        const icon = btn.querySelector('svg');
+                        icon.classList.add('text-primary', 'fill-primary');
+                        await addSavedListing(listing.id);
+                      }} 
+                      className="absolute top-2 right-2 p-2 rounded-full bg-white/50 hover:bg-white text-textPrimary shadow-sm transition-colors"
+                      title="Save Listing"
+                    >
                       <Bookmark size={16} />
                     </button>
                   )}
