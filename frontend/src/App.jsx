@@ -38,6 +38,7 @@ import AdminDashboard from './pages/admin/AdminDashboard';
 import UserManagement from './pages/admin/UserManagement';
 import BatchManagement from './pages/admin/BatchManagement';
 import MarketplaceManagement from './pages/admin/MarketplaceManagement';
+import QualityCenter from './pages/quality/QualityCenter';
 
 import LearnLanding from './pages/learn/LearnLanding';
 import ResourceListing from './pages/learn/ResourceListing';
@@ -76,6 +77,7 @@ function Layout({ children }) {
     { to: '/admin/users', label: t('users') },
     { to: '/admin/batches', label: t('batches') },
     { to: '/admin/marketplace', label: t('marketplace') },
+    { to: '/quality', label: t('qualityAssurance') },
   ];
 
   const buyerLinks = [
@@ -288,6 +290,7 @@ export default function App() {
       <Route path="/admin/users" element={<Protected allowedRoles={['admin']}><AdminLayout><UserManagement /></AdminLayout></Protected>} />
       <Route path="/admin/batches" element={<Protected allowedRoles={['admin']}><AdminLayout><BatchManagement /></AdminLayout></Protected>} />
       <Route path="/admin/marketplace" element={<Protected allowedRoles={['admin']}><AdminLayout><MarketplaceManagement /></AdminLayout></Protected>} />
+      <Route path="/quality" element={<Protected allowedRoles={['admin']}><AdminLayout><QualityCenter /></AdminLayout></Protected>} />
 
       {/* Learn / Training Routes */}
       <Route path="/learn" element={<Protected allowedRoles={['farmer', 'artisan', 'buyer', 'processor', 'admin']}><LearnLanding /></Protected>} />
