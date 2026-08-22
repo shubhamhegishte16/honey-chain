@@ -171,18 +171,18 @@ export default function LearnLanding() {
             </p>
 
             {/* Search Form */}
-            <form onSubmit={handleSearchSubmit} className="mt-6 relative max-w-md">
+            <form onSubmit={handleSearchSubmit} className="mt-6 flex items-center bg-white rounded-full shadow-md p-1.5 max-w-md focus-within:ring-2 focus-within:ring-emerald-400 transition-all">
+              <Search className="ml-3 mr-2 text-textMuted shrink-0" size={17} />
               <input
                 type="text"
                 placeholder={t('searchGuidesStandards')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-11 pr-4 py-3 rounded-2xl bg-white text-textPrimary placeholder:text-textMuted text-sm font-medium shadow-md focus:outline-none focus:ring-2 focus:ring-emerald-400 transition-all border border-transparent"
+                className="flex-1 min-w-0 bg-transparent text-textPrimary placeholder:text-textMuted text-sm font-medium focus:outline-none py-2"
               />
-              <Search className="absolute left-4 top-3.5 text-textMuted" size={17} />
               <button
                 type="submit"
-                className="absolute right-2 top-2 px-4 py-1.5 rounded-xl bg-primary text-white font-bold text-xs hover:bg-primaryDark transition-colors shadow-sm"
+                className="px-5 py-2.5 rounded-full bg-primary text-white font-bold text-sm hover:bg-primaryDark transition-colors shadow-sm shrink-0"
               >
                 {t('search')}
               </button>

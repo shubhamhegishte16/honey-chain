@@ -19,6 +19,7 @@ export default function ResourceListing() {
   
   const [searchTerm, setSearchTerm] = useState(querySearch);
   const [levelFilter, setLevelFilter] = useState('');
+  const [expandedId, setExpandedId] = useState(null);
 
   const isAll = categoryName === 'all';
 
@@ -157,51 +158,64 @@ export default function ResourceListing() {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {translatedResources.map((resource) => (
-            <Card
-              key={resource.id || resource._id}
-              interactive={true}
-              onClick={() => navigate(`/learn/resource/${resource.id || resource._id}`)}
-              className="flex flex-col justify-between p-6 cursor-pointer hover:-translate-y-0.5 hover:shadow-card-hover transition-all group"
-            >
-              <div>
-                <div className="flex items-center gap-2 mb-3">
-                  <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wide uppercase ${
-                    resource.level === 'Beginner' ? 'bg-emerald-50 text-emerald-700' :
-                    resource.level === 'Intermediate' ? 'bg-amber-50 text-amber-800' :
-                    'bg-rose-50 text-rose-700'
-                  }`}>
-                    {resource.level}
-                  </span>
+          {translatedResources.map((resource) => {
+            const resId = resource.id || resource._id;
+            const isExpanded = expandedId === resId;
+            return (
+              <Card
+                key={resId}
+                interactive={true}
+                onClick={() => setExpandedId(isExpanded ? null : resId)}
+                className="flex flex-col justify-between p-6 cursor-pointer hover:-translate-y-0.5 hover:shadow-card-hover transition-all group"
+              >
+                <div>
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wide uppercase ${
+                      resource.level === 'Beginner' ? 'bg-emerald-50 text-emerald-700' :
+                      resource.level === 'Intermediate' ? 'bg-amber-50 text-amber-800' :
+                      'bg-rose-50 text-rose-700'
+                    }`}>
+                      {resource.level}
+                    </span>
+                    
+                    <span className="flex items-center gap-1 text-[11px] text-textMuted font-medium">
+                      <Clock size={11} />
+                      {resource.duration}
+                    </span>
+                  </div>
+
+                  <h3 className={`text-lg font-bold text-textPrimary group-hover:text-primary transition-colors leading-tight mb-2 ${!isExpanded ? 'line-clamp-2' : ''}`}>
+                    {resource.title}
+                  </h3>
+                  <p className="text-xs font-semibold text-textMuted uppercase tracking-wider mb-2">
+                    {t('categoryLabel')} {resource.category}
+                  </p>
                   
-                  <span className="flex items-center gap-1 text-[11px] text-textMuted font-medium">
-                    <Clock size={11} />
-                    {resource.duration}
-                  </span>
+                  {isExpanded && (
+                    <p className="text-sm text-textSecondary leading-relaxed animate-fade-in mt-2">
+                      {resource.summary}
+                    </p>
+                  )}
                 </div>
 
-                <h3 className="text-lg font-bold text-textPrimary group-hover:text-primary transition-colors leading-tight mb-2">
-                  {resource.title}
-                </h3>
-                <p className="text-xs font-semibold text-textMuted uppercase tracking-wider mb-2">
-                  {t('categoryLabel')} {resource.category}
-                </p>
-                <p className="text-sm text-textSecondary leading-relaxed">
-                  {resource.summary}
-                </p>
-              </div>
-
-              <div className="mt-6 flex items-center justify-between w-full border-t border-border/40 pt-4">
-                <span className="text-xs text-textMuted font-medium">
-                  {resource.views || 0} {t('views')}
-                </span>
-                <span className="text-xs font-bold text-primary group-hover:translate-x-1 transition-transform flex items-center gap-1">
-                  <span>{t('readGuide')}</span>
-                  <ArrowLeft className="rotate-180" size={14} />
-                </span>
-              </div>
-            </Card>
-          ))}
+                <div className="mt-6 flex items-center justify-between w-full border-t border-border/40 pt-4">
+                  <span className="text-xs text-textMuted font-medium">
+                    {resource.views || 0} {t('views')}
+                  </span>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      navigate(`/learn/resource/${resId}`);
+                    }}
+                    className="px-4 py-2 rounded-full bg-primary text-white font-bold text-xs group-hover:bg-primaryDark transition-colors shadow-sm flex items-center gap-1.5"
+                  >
+                    <span>{t('readGuide')}</span>
+                    <ArrowLeft className="rotate-180" size={13} />
+                  </button>
+                </div>
+              </Card>
+            );
+          })}
         </div>
       )}
     </main>

@@ -14,6 +14,7 @@ export default function SmartRecommendations({ resources = [] }) {
   const { t } = useLanguage();
   const [userInterests, setUserInterests] = useState([]);
   const [recommendations, setRecommendations] = useState([]);
+  const [expandedId, setExpandedId] = useState(null);
 
   const availableInterests = [
     { key: 'sheep-care', label: t('catSheepCare'), icon: Heart },
@@ -69,26 +70,28 @@ export default function SmartRecommendations({ resources = [] }) {
         </div>
 
         {/* Quick Interest Chips Selector */}
-        <div className="flex flex-wrap items-center gap-1.5">
-          <span className="text-[11px] font-bold uppercase text-textMuted mr-1">{t('filterInterests')}</span>
-          {availableInterests.map(item => {
-            const isSelected = userInterests.includes(item.key);
-            const IconComp = item.icon;
-            return (
-              <button
-                key={item.key}
-                onClick={() => handleInterestToggle(item.key)}
-                className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-bold transition-all border ${
-                  isSelected 
-                    ? 'bg-primary text-white border-primary shadow-sm' 
-                    : 'bg-background text-textSecondary border-border hover:border-primary/40 hover:text-textPrimary'
-                }`}
-              >
-                {isSelected ? <Check size={12} /> : <IconComp size={12} />}
-                <span>{item.label}</span>
-              </button>
-            );
-          })}
+        <div className="flex flex-col gap-2.5 sm:items-end">
+          <span className="text-[11px] font-bold uppercase text-textMuted">{t('filterInterests')}</span>
+          <div className="flex flex-wrap items-center gap-2 sm:justify-end">
+            {availableInterests.map(item => {
+              const isSelected = userInterests.includes(item.key);
+              const IconComp = item.icon;
+              return (
+                <button
+                  key={item.key}
+                  onClick={() => handleInterestToggle(item.key)}
+                  className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-bold transition-all border ${
+                    isSelected 
+                      ? 'bg-primary text-white border-primary shadow-sm' 
+                      : 'bg-background text-textSecondary border-border hover:border-primary/40 hover:text-textPrimary hover:shadow-sm'
+                  }`}
+                >
+                  {isSelected ? <Check size={13} /> : <IconComp size={13} />}
+                  <span>{item.label}</span>
+                </button>
+              );
+            })}
+          </div>
         </div>
       </div>
 
@@ -96,10 +99,11 @@ export default function SmartRecommendations({ resources = [] }) {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {recommendations.map(res => {
           const resId = res._id || res.id;
+          const isExpanded = expandedId === resId;
           return (
             <div
               key={resId}
-              onClick={() => navigate(`/learn/resource/${resId}`)}
+              onClick={() => setExpandedId(isExpanded ? null : resId)}
               className="flex flex-col justify-between p-6 rounded-2xl bg-background border border-border/70 shadow-sm hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300 cursor-pointer group"
             >
               <div>
@@ -118,13 +122,15 @@ export default function SmartRecommendations({ resources = [] }) {
                   </span>
                 </div>
 
-                <h3 className="text-base font-bold text-textPrimary group-hover:text-primary transition-colors line-clamp-2 mb-2">
+                <h3 className={`text-base font-bold text-textPrimary group-hover:text-primary transition-colors ${!isExpanded ? 'line-clamp-2' : ''} mb-3`}>
                   {res.title}
                 </h3>
 
-                <p className="text-xs text-textSecondary line-clamp-3 leading-relaxed mb-4">
-                  {res.summary}
-                </p>
+                {isExpanded && (
+                  <p className="text-xs text-textSecondary leading-relaxed mb-4 animate-fade-in">
+                    {res.summary}
+                  </p>
+                )}
               </div>
 
               <div className="pt-4 border-t border-border/60 flex items-center justify-between">
@@ -137,7 +143,7 @@ export default function SmartRecommendations({ resources = [] }) {
                     e.stopPropagation();
                     navigate(`/learn/resource/${resId}`);
                   }}
-                  className="px-3.5 py-1.5 rounded-xl bg-primary text-white font-bold text-xs group-hover:bg-primaryDark transition-colors shadow-sm flex items-center gap-1"
+                  className="px-4 py-2 rounded-full bg-primary text-white font-bold text-xs group-hover:bg-primaryDark transition-colors shadow-sm flex items-center gap-1.5"
                 >
                   <span>{t('startLearning')}</span>
                   <ArrowRight size={13} />
