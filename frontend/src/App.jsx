@@ -123,13 +123,13 @@ function Layout({ children }) {
 
   const processorLinks = [
     { to: '/processor/dashboard', label: 'Dashboard' },
-    { to: '/processor/requests', label: 'Processing Requests' },
-    { to: '/processor/incoming', label: 'Incoming Batches' },
-    { to: '/processor/active', label: 'Active Processing' },
-    { to: '/processor/history', label: 'Processing History' },
-    { to: '/processor/batches', label: 'Batch Management' },
-    { to: '/processor/products', label: 'Processed Products' },
-    { to: '/processor/passport', label: 'QR / Wool Passport' },
+    { to: '/processor/requests', label: 'Requests' },
+    { to: '/processor/incoming', label: 'Incoming' },
+    { to: '/processor/active', label: 'Active Jobs' },
+    { to: '/processor/history', label: 'History' },
+    { to: '/processor/batches', label: 'Batches' },
+    { to: '/processor/products', label: 'Products' },
+    { to: '/processor/passport', label: 'QR Scanner' },
   ];
 
   const links = profile?.role === 'admin' ? adminLinks
@@ -152,25 +152,26 @@ function Layout({ children }) {
   return (
     <div className="min-h-screen flex flex-col overflow-x-hidden">
       <header className="sticky top-0 z-30 border-b border-border/70 bg-surface/95 backdrop-blur-md">
-        <div className="max-w-6xl mx-auto px-3.5 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-3">
+        <div className="max-w-[90rem] mx-auto px-3.5 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-2 sm:gap-4">
           {/* Logo with official emblem */}
-          <Link to="/" className="flex items-center gap-2.5 font-extrabold text-textPrimary text-lg sm:text-xl tracking-tight shrink-0 group">
+          <Link to="/" className="flex items-center gap-2 font-extrabold text-textPrimary text-lg sm:text-xl tracking-tight shrink-0 group">
             <img
               src="/logo.png"
               alt="WoolConnect"
-              className="h-11 w-11 sm:h-13 sm:w-13 object-contain rounded-2xl shadow-xs transition-transform group-hover:scale-105"
+              className="h-10 w-10 sm:h-12 sm:w-12 object-contain rounded-xl shadow-xs transition-transform group-hover:scale-105"
             />
-            <span className="leading-none text-xl sm:text-2xl font-black">
+            <span className="leading-none text-lg sm:text-xl font-black">
               Wool<span className="text-primary">Connect</span>
             </span>
           </Link>
 
           {/* Desktop Nav */}
-          <nav className="hidden sm:flex items-center gap-1">
+          <nav className="hidden sm:flex items-center gap-1 sm:gap-1.5 overflow-x-auto max-w-full no-scrollbar py-1">
             {links.map(l => (
               <NavLink key={l.to} to={l.to}>{l.label}</NavLink>
             ))}
           </nav>
+
 
           {/* Right side */}
           {profile ? (

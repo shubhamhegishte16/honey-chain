@@ -14,11 +14,13 @@ import {
   CheckCircle2,
   Clock,
   ArrowUpRight,
+  Cog,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
 import BatchStatusBadge from '../../components/batch/BatchStatusBadge';
 import Button from '../../components/ui/Button';
+import RequestProcessingModal from '../../components/processing/RequestProcessingModal';
 import { getBatchesByFarmer } from '../../services/batches.service';
 
 export default function FarmerTracking() {
@@ -28,6 +30,8 @@ export default function FarmerTracking() {
   const [batches, setBatches] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [selectedBatchForProcessing, setSelectedBatchForProcessing] = useState(null);
+
   const [search, setSearch] = useState('');
   const [activeFilter, setActiveFilter] = useState('all');
   const statusFilters = [
@@ -204,16 +208,22 @@ export default function FarmerTracking() {
 
               {/* Action Shortcuts */}
               <div className="mt-4 pt-3 border-t border-border/60 flex items-center justify-between gap-2 text-xs font-semibold">
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1.5 flex-wrap">
+                  <button
+                    onClick={() => setSelectedBatchForProcessing(batch)}
+                    className="px-2.5 py-1.5 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-700 hover:bg-emerald-100 transition-colors flex items-center gap-1 font-bold"
+                  >
+                    <Cog size={13} /> {t('process', 'Process')}
+                  </button>
                   <button
                     onClick={() => navigate(`/batches/${batch.id || batch._id}/qr`)}
-                    className="px-3 py-1.5 rounded-lg bg-background border border-border text-textSecondary hover:border-primary hover:text-primary transition-colors flex items-center gap-1"
+                    className="px-2.5 py-1.5 rounded-lg bg-background border border-border text-textSecondary hover:border-primary hover:text-primary transition-colors flex items-center gap-1"
                   >
                     <QrCode size={13} /> {t('qr')}
                   </button>
                   <button
                     onClick={() => navigate(`/batches/${batch.id || batch._id}/traceability`)}
-                    className="px-3 py-1.5 rounded-lg bg-background border border-border text-textSecondary hover:border-primary hover:text-primary transition-colors flex items-center gap-1"
+                    className="px-2.5 py-1.5 rounded-lg bg-background border border-border text-textSecondary hover:border-primary hover:text-primary transition-colors flex items-center gap-1"
                   >
                     <Layers size={13} /> {t('woolJourney')}
                   </button>
@@ -221,7 +231,7 @@ export default function FarmerTracking() {
 
                 <button
                   onClick={() => navigate(`/batches/${batch.id || batch._id}/details`)}
-                  className="text-primary hover:text-primaryDark font-bold inline-flex items-center gap-1 group"
+                  className="text-primary hover:text-primaryDark font-bold inline-flex items-center gap-1 group shrink-0"
                 >
                   <span>{t('seeWool')}</span>
                   <ArrowRight size={14} className="transition-transform group-hover:translate-x-0.5" />
@@ -231,6 +241,16 @@ export default function FarmerTracking() {
           ))}
         </div>
       )}
+
+      <RequestProcessingModal
+        batch={selectedBatchForProcessing}
+        isOpen={Boolean(selectedBatchForProcessing)}
+        onClose={() => setSelectedBatchForProcessing(null)}
+        onSuccess={(req) => {
+          setBatches(prev => prev.map(b => (b.id === req.batch_id || b._id === req.batch_id || b.batch_id === req.batch_id) ? { ...b, status: 'processing_requested' } : b));
+        }}
+      />
     </main>
   );
 }
+

@@ -194,9 +194,9 @@ export async function seedDatabase() {
     ]);
 
     // 3. Create Wool Batches
-    const woolImg1 = 'https://images.unsplash.com/photo-1516467508483-a7212febe31a?w=800&auto=format&fit=crop&q=60';
-    const woolImg2 = 'https://images.unsplash.com/photo-1584447141399-be686c4295ba?w=800&auto=format&fit=crop&q=60';
-    const woolImg3 = 'https://images.unsplash.com/photo-1484557052118-f32bd25b45b5?w=800&auto=format&fit=crop&q=60';
+    const woolImg1 = 'https://images.unsplash.com/photo-1500595046743-cd271d694d30?w=800&auto=format&fit=crop&q=80';
+    const woolImg2 = 'https://images.unsplash.com/photo-1584992236310-6edddc08acff?w=800&auto=format&fit=crop&q=80';
+    const woolImg3 = 'https://images.unsplash.com/photo-1511884642898-4c92249e20b6?w=800&auto=format&fit=crop&q=80';
 
     const batches = await WoolBatch.create([
       {

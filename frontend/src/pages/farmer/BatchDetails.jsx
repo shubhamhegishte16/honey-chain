@@ -15,10 +15,12 @@ import {
   CheckCircle2,
   Share2,
   FileText,
+  Cog,
 } from 'lucide-react';
 import Card from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
 import BatchStatusBadge from '../../components/batch/BatchStatusBadge';
+import RequestProcessingModal from '../../components/processing/RequestProcessingModal';
 import { getBatchById } from '../../services/batches.service';
 import { useAuth } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
@@ -35,6 +37,7 @@ export default function BatchDetails() {
   const [batch, setBatch] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [isProcessingModalOpen, setIsProcessingModalOpen] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
@@ -114,6 +117,18 @@ export default function BatchDetails() {
               {t('lotPassportActions', 'Lot Passport Actions')}
             </p>
 
+            {isOwner && (
+              <button
+                onClick={() => setIsProcessingModalOpen(true)}
+                className="w-full flex items-center justify-between p-3.5 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-700 text-white font-bold text-sm shadow-sm hover:brightness-110 active:scale-[0.99] transition-all"
+              >
+                <span className="flex items-center gap-2.5">
+                  <Cog size={18} /> {t('sendToProcessing', 'Send to Processing')}
+                </span>
+                <span className="text-xs bg-white/20 px-2 py-0.5 rounded-full font-semibold">{t('requestMill', 'Request Mill')} →</span>
+              </button>
+            )}
+
             <button
               onClick={() => navigate(`/batches/${batch._id || batch.id}/qr`)}
               className="w-full flex items-center justify-between p-3.5 rounded-2xl bg-primaryLight/50 border border-primary/20 text-primary font-bold text-sm hover:bg-primaryLight transition-colors"
@@ -147,6 +162,16 @@ export default function BatchDetails() {
             )}
           </div>
         </div>
+
+        <RequestProcessingModal
+          batch={batch}
+          isOpen={isProcessingModalOpen}
+          onClose={() => setIsProcessingModalOpen(false)}
+          onSuccess={(updatedReq) => {
+            setBatch(prev => prev ? { ...prev, status: 'processing_requested' } : prev);
+          }}
+        />
+
 
         {/* Right Column: Specification & Origin Details */}
         <div className="lg:col-span-7 space-y-6">

@@ -39,7 +39,8 @@ a:hover { color: #3F6B3F; }
 
   /* ─── Dashboard Grid & Metrics ─── */
   .dashboard-grid { @apply grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5 sm:gap-4 mt-4; }
-  .metric-card { @apply relative min-h-[120px] sm:min-h-[148px] overflow-hidden bg-surface p-4 sm:p-5 rounded-2xl border border-border shadow-xs; }
+  .metric-card { @apply relative min-h-[120px] sm:min-h-[148px] overflow-hidden bg-surface p-4 sm:p-5 rounded-2xl border border-border shadow-sm; }
+
   .metric-card p { @apply mt-2 sm:mt-3 text-[11px] font-bold uppercase tracking-wider text-textSecondary; }
   .metric-card strong { @apply mt-0.5 block text-2xl sm:text-3xl font-extrabold tracking-tight text-textPrimary; }
   .metric-card strong small { @apply ml-1 text-sm font-medium text-textSecondary; }
@@ -172,11 +173,13 @@ a:hover { color: #3F6B3F; }
 
   /* ─── Nav link styles ─── */
   .nav-link {
-    @apply relative px-3 py-1.5 rounded-lg text-sm font-medium text-textSecondary transition-colors duration-200 hover:text-primary hover:bg-primaryLight/50;
+    @apply relative px-2.5 sm:px-3 py-1.5 rounded-lg text-xs lg:text-sm font-semibold text-textSecondary whitespace-nowrap shrink-0 transition-colors duration-200 hover:text-primary hover:bg-primaryLight/50;
   }
   .nav-link-active {
-    @apply text-primary bg-primaryLight/60 font-semibold;
+    @apply text-primary bg-primaryLight/70 font-bold shadow-sm;
   }
+
+
 
   /* ─── Admin sidebar ─── */
   .admin-sidebar {

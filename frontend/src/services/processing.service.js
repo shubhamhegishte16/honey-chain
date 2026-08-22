@@ -25,3 +25,19 @@ export async function updateProcessingRequestStatus(id, status, outputNotes) {
   });
   return result.error ? result : { ...result, data: normalizeRequest(result.data) };
 }
+
+// Fetch available registered processors / mills (optionally filtered by state)
+export async function getProcessors(state) {
+  const url = state ? `/processing/processors?state=${encodeURIComponent(state)}` : '/processing/processors';
+  return apiRequest(url, { method: 'GET' });
+}
+
+// Submit a new processing request for a wool batch
+export async function requestProcessing(payload) {
+  const result = await apiRequest('/processing/requests', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+  return result.error ? result : { ...result, data: normalizeRequest(result.data) };
+}
+
