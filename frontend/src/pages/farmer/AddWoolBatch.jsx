@@ -32,6 +32,7 @@ export default function AddWoolBatch() {
     district: profile?.district || 'Bikaner',
     farmLocation: '',
     notes: '',
+    pricePerKg: '',
   });
 
   const [errors, setErrors] = useState({});
@@ -81,6 +82,7 @@ export default function AddWoolBatch() {
       district: form.district,
       farmLocation: form.farmLocation,
       notes: form.notes,
+      pricePerKg: Number(form.pricePerKg) || 300,
       images: [],
     });
 
@@ -189,6 +191,18 @@ export default function AddWoolBatch() {
               onChange={e => update('shearingDate', e.target.value)}
               error={errors.shearingDate}
               required
+            />
+          </div>
+
+          <div className="mb-6 max-w-sm">
+            <Input
+              label={t('pricePerKg', 'Expected Price (₹ / kg)')}
+              id="pricePerKg"
+              type="number"
+              icon={FileText}
+              value={form.pricePerKg}
+              onChange={e => update('pricePerKg', e.target.value)}
+              placeholder="e.g. 300"
             />
           </div>
 

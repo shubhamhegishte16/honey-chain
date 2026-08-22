@@ -128,7 +128,7 @@ export default function Checkout() {
               <h3 className="font-bold text-textPrimary mb-4">{t('orderSummary')}</h3>
               <div className="flex items-center gap-4">
                 <img
-                  src={listing.image_url || 'https://images.unsplash.com/photo-1516467508483-a7212febe31a?w=200&auto=format&fit=crop&q=70'}
+                  src={(listing.imageUrl || listing.image_url)?.includes('unsplash') ? '/wool-placeholder.jpg' : (listing.imageUrl || listing.image_url || '/wool-placeholder.jpg')}
                   alt={listing.wool_type}
                   className="w-20 h-20 rounded-xl object-cover"
                 />

@@ -2,6 +2,7 @@ import WoolBatch from '../models/WoolBatch.js';
 import TraceabilityEvent from '../models/TraceabilityEvent.js';
 import QualityAssessment from '../models/QualityAssessment.js';
 import Order from '../models/Order.js';
+import MarketplaceListing from '../models/MarketplaceListing.js';
 
 const STATE_CODES = {
   'Rajasthan': 'RJ',
@@ -34,7 +35,7 @@ async function getNextBatchId(stateCode) {
 
 export async function createBatch(req, res, next) {
   try {
-    const { woolType, quantityKg, shearingDate, state, district, village, farmLocation, color, initialCondition, notes, images } = req.body;
+    const { woolType, quantityKg, shearingDate, state, district, village, farmLocation, color, initialCondition, notes, images, pricePerKg } = req.body;
 
     if (!woolType || !quantityKg || !shearingDate || !state || !district) {
       return res.status(400).json({ success: false, message: 'Missing required wool batch fields.' });
@@ -60,16 +61,35 @@ export async function createBatch(req, res, next) {
           color: color || 'Natural White',
           initialCondition: initialCondition || 'Raw Greasy Wool',
           notes: notes || '',
-          images: images && images.length > 0 ? images : ['https://images.unsplash.com/photo-1516467508483-a7212febe31a?w=800&auto=format&fit=crop&q=60'],
+          images: images && images.length > 0 ? images : ['/wool-placeholder.jpg'],
           qualityGrade: 'Pending Inspection',
-          currentLocation: `${district}, ${state} (Farmer Farm)`,
-          status: 'produced',
+          currentLocation: 'WoolConnect National Marketplace',
+          status: 'listed',
         });
         break;
       } catch (error) {
         if (error?.code !== DUPLICATE_KEY_CODE || attempt === 4) throw error;
       }
     }
+
+    // Automatically create a MarketplaceListing
+    await MarketplaceListing.create({
+      batch: batch._id,
+      batchId: batch.batchId,
+      seller: req.user._id,
+      sellerName: req.user.name,
+      woolType,
+      grade: 'Pending Inspection',
+      initialQuantityKg: Number(quantityKg),
+      availableQuantityKg: Number(quantityKg),
+      pricePerKg: pricePerKg ? Number(pricePerKg) : 300,
+      state,
+      district,
+      processingStatus: initialCondition || 'Raw Greasy',
+      imageUrl: batch.images[0],
+      description: notes || `${woolType} wool direct from ${district}, ${state}.`,
+      status: 'active',
+    });
 
     // Record initial Traceability Event
     await TraceabilityEvent.create({
@@ -86,6 +106,18 @@ export async function createBatch(req, res, next) {
         quantityKg: Number(quantityKg),
         color: color || 'Natural White',
       }
+    });
+
+    await TraceabilityEvent.create({
+      batch: batch._id,
+      batchId: batch.batchId,
+      eventType: 'listed',
+      location: `${district}, ${state} / Marketplace`,
+      description: `Automatically listed for sale at ₹${pricePerKg ? Number(pricePerKg) : 300}/kg by ${req.user.name}.`,
+      performedBy: req.user._id,
+      actorName: `${req.user.name} (Seller)`,
+      timestamp: new Date(),
+      metadata: { pricePerKg: pricePerKg ? Number(pricePerKg) : 300, quantityKg: Number(quantityKg) }
     });
 
     res.status(201).json({

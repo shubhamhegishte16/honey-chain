@@ -122,7 +122,7 @@ export default function MarketplaceExperience({ allowBuying = false }) {
               >
                 <div className="listing-image">
                   <img
-                    src={listing.image_url || 'https://images.unsplash.com/photo-1500595046743-cd271d694d30?w=800&auto=format&fit=crop&q=80'}
+                    src={(listing.imageUrl || listing.image_url)?.includes('unsplash') ? '/wool-placeholder.jpg' : (listing.imageUrl || listing.image_url || '/wool-placeholder.jpg')}
                     alt={listing.wool_type}
                   />
                   <span>{listing.quantity_kg} kg {t('available', 'available')}</span>

@@ -106,7 +106,7 @@ export default function MarketplaceBrowser({ allowBuying = false }) {
           {listings.map(l => (
             <Card key={l.id} className="flex flex-col">
               <img
-                src={l.image_url}
+                src={(l.imageUrl || l.image_url)?.includes('unsplash') ? '/wool-placeholder.jpg' : (l.imageUrl || l.image_url || '/wool-placeholder.jpg')}
                 alt={l.wool_type}
                 className="w-full h-32 object-cover rounded-md mb-3 bg-primaryLight"
               />

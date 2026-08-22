@@ -26,7 +26,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
 
 const WOOL_IMAGE_FALLBACK =
-  'https://images.unsplash.com/photo-1516467508483-a7212febe31a?w=800&auto=format&fit=crop&q=60';
+  '/wool-placeholder.jpg';
 
 export default function BatchDetails() {
   const { id } = useParams();
@@ -75,7 +75,8 @@ export default function BatchDetails() {
 
   const isOwner = profile?.id === batch.farmer_id || profile?.id === batch.farmer;
   const images = batch.wool_batch_images || [];
-  const displayImage = images[0]?.image_url || WOOL_IMAGE_FALLBACK;
+  const displayImageRaw = images[0]?.image_url || WOOL_IMAGE_FALLBACK;
+  const displayImage = displayImageRaw?.includes('unsplash') ? WOOL_IMAGE_FALLBACK : displayImageRaw;
 
   return (
     <main className="page-shell max-w-4xl">
