@@ -20,7 +20,7 @@ import producerRoutes from './routes/producerRoutes.js';
 import trainingRoutes from './routes/trainingRoutes.js';
 import notificationRoutes from './routes/notificationRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
-
+import chatbotRoutes from './routes/chatbotRoutes.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -63,7 +63,7 @@ app.use('/api/producers', producerRoutes);
 app.use('/api/training', trainingRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/admin', adminRoutes);
-
+app.use('/api/chatbot', chatbotRoutes);
 // Error Middlewares
 app.use(notFound);
 app.use(errorHandler);

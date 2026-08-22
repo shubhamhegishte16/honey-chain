@@ -8,6 +8,7 @@ import Footer from './components/ui/Footer';
 import LanguageGate from './components/ui/LanguageGate';
 import LanguageSelector from './components/ui/LanguageSelector';
 import MobileBottomNav from './components/ui/MobileBottomNav';
+import ChatbotWidget from './components/ui/ChatbotWidget';
 import LandingPage from './pages/LandingPage';
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
@@ -333,6 +334,7 @@ function Layout({ children }) {
 
       <Footer />
       <MobileBottomNav />
+      <ChatbotWidget />
     </div>
   );
 }
