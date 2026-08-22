@@ -12,7 +12,7 @@ export async function apiRequest(endpoint, options = {}) {
   };
 
   try {
-    const response = await fetch(`/api${endpoint}`, config);
+    const response = await fetch(`https://woolconnect.onrender.com/api${endpoint}`, config);
     const data = await response.json();
 
     if (!response.ok) {

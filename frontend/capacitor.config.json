@@ -1,0 +1,5 @@
+{
+  "appId": "com.woolconnect.app",
+  "appName": "woolconnect-frontend",
+  "webDir": "dist"
+}
