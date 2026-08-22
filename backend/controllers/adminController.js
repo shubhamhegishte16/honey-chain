@@ -7,6 +7,47 @@ import ProcessingRequest from '../models/ProcessingRequest.js';
 import MarketPrice from '../models/MarketPrice.js';
 import { seedDatabase } from '../seed/seedData.js';
 
+export async function getAdminDashboard(req, res, next) {
+  try {
+    const [
+      userCount,
+      batchCount,
+      listingCount,
+      processingCount,
+      recentUsers,
+      recentOrders
+    ] = await Promise.all([
+      User.countDocuments(),
+      WoolBatch.countDocuments(),
+      MarketplaceListing.countDocuments(),
+      ProcessingRequest.countDocuments(),
+      User.find().sort({ createdAt: -1 }).limit(5).select('name email role'),
+      Order.find().sort({ createdAt: -1 }).limit(5).select('woolType quantityKg status')
+    ]);
+
+    // Map woolType and quantityKg to frontend expected wool_type and quantity_kg if needed
+    const formattedOrders = recentOrders.map(o => ({
+      _id: o._id,
+      wool_type: o.woolType || 'Wool',
+      quantity_kg: o.quantityKg || 0,
+      status: o.status
+    }));
+
+    res.json({
+      success: true,
+      data: {
+        users: { total: userCount, recent: recentUsers },
+        batches: { total: batchCount },
+        marketplace: { total: listingCount },
+        processing: { total: processingCount },
+        orders: { recent: formattedOrders }
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
 export async function getAdminOverview(req, res, next) {
   try {
     const [
@@ -143,6 +184,32 @@ export async function getAllOrdersAdmin(req, res, next) {
       .sort({ createdAt: -1 });
 
     res.json({ success: true, count: orders.length, data: orders });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function getAllMarketplaceAdmin(req, res, next) {
+  try {
+    const listings = await MarketplaceListing.find()
+      .populate('seller_id', 'name email')
+      .sort({ createdAt: -1 });
+    res.json({ success: true, count: listings.length, data: listings });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function toggleMarketplaceStatus(req, res, next) {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+    const listing = await MarketplaceListing.findById(id);
+    if (!listing) return res.status(404).json({ success: false, message: 'Listing not found.' });
+
+    listing.status = status;
+    await listing.save();
+    res.json({ success: true, data: listing });
   } catch (error) {
     next(error);
   }
