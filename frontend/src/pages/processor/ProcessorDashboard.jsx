@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Layers, ArrowRight, Activity, Package, Inbox, CheckCircle, ChevronRight, Sparkles, MapPin } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { useLanguage } from '../../context/LanguageContext';
 import { getProcessorStats, getActiveProcessing } from '../../services/processor.service';
 
 export default function ProcessorDashboard() {
   const { profile } = useAuth();
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const [stats, setStats] = useState(null);
   const [active, setActive] = useState([]);
@@ -22,10 +24,10 @@ export default function ProcessorDashboard() {
   }, []);
 
   const quickActions = [
-    { label: 'Active Processing', desc: 'Manage current batches', icon: Activity, route: '/processor/active', tone: 'bg-primary text-white', accent: 'border-primary/30 hover:border-primary' },
-    { label: 'Processing Requests', desc: 'Review incoming requests', icon: Inbox, route: '/processor/requests', tone: 'bg-accent text-white', accent: 'border-accent/30 hover:border-accent' },
-    { label: 'Incoming Batches', desc: 'Receive wool shipments', icon: Package, route: '/processor/incoming', tone: 'bg-info text-white', accent: 'border-info/30 hover:border-info' },
-    { label: 'Processed Products', desc: 'View ready products', icon: CheckCircle, route: '/processor/products', tone: 'bg-emerald-600 text-white', accent: 'border-emerald-500/30 hover:border-emerald-600' },
+    { label: t('procActiveProcessing', 'Active Processing'), desc: t('procManageBatches', 'Manage current batches'), icon: Activity, route: '/processor/active', tone: 'bg-primary text-white', accent: 'border-primary/30 hover:border-primary' },
+    { label: t('procRequests', 'Processing Requests'), desc: t('procReviewRequests', 'Review incoming requests'), icon: Inbox, route: '/processor/requests', tone: 'bg-accent text-white', accent: 'border-accent/30 hover:border-accent' },
+    { label: t('procIncomingBatches', 'Incoming Batches'), desc: t('procReceiveShipments', 'Receive wool shipments'), icon: Package, route: '/processor/incoming', tone: 'bg-info text-white', accent: 'border-info/30 hover:border-info' },
+    { label: t('procProcessedProducts', 'Processed Products'), desc: t('procViewReadyProducts', 'View ready products'), icon: CheckCircle, route: '/processor/products', tone: 'bg-emerald-600 text-white', accent: 'border-emerald-500/30 hover:border-emerald-600' },
   ];
 
   return (
@@ -38,11 +40,11 @@ export default function ProcessorDashboard() {
           <div className="max-w-xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-emerald-200 border border-white/15 text-xs font-semibold backdrop-blur-md mb-3">
               <Sparkles size={13} className="text-amber-300" />
-              <span>Processor Portal</span>
+              <span>{t('procProcessorPortal', 'Processor Portal')}</span>
             </div>
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight leading-tight">
-              Welcome, {profile?.name?.split(' ')[0] || 'Processor'}. <br />
-              <span className="text-emerald-200 font-medium text-xl sm:text-2xl lg:text-3xl">Manage wool transformation.</span>
+              {t('procWelcome', 'Welcome, ')} {profile?.name?.split(' ')[0] || t('procProcessor', 'Processor')}. <br />
+              <span className="text-emerald-200 font-medium text-xl sm:text-2xl lg:text-3xl">{t('procManageTransformation', 'Manage wool transformation.')}</span>
             </h1>
             <p className="mt-2.5 flex items-center gap-1.5 text-xs sm:text-sm text-white/80">
               <MapPin size={14} className="text-emerald-300" />
@@ -57,7 +59,7 @@ export default function ProcessorDashboard() {
         <div className="glass-card p-5 sm:p-6 flex flex-col justify-between">
           <div className="flex items-center justify-between"><span className="grid h-11 w-11 place-items-center rounded-2xl bg-amber-50 text-amber-600"><Inbox size={22} /></span></div>
           <div className="mt-4">
-            <p className="text-xs font-bold uppercase tracking-wider text-textMuted">Pending Requests</p>
+            <p className="text-xs font-bold uppercase tracking-wider text-textMuted">{t('procPendingRequests', 'Pending Requests')}</p>
             <p className="text-3xl font-extrabold text-textPrimary mt-1 tracking-tight">{stats?.pendingRequests || 0}</p>
           </div>
         </div>
@@ -71,7 +73,7 @@ export default function ProcessorDashboard() {
         <div className="glass-card p-5 sm:p-6 flex flex-col justify-between">
           <div className="flex items-center justify-between"><span className="grid h-11 w-11 place-items-center rounded-2xl bg-emerald-50 text-emerald-600"><CheckCircle size={22} /></span></div>
           <div className="mt-4">
-            <p className="text-xs font-bold uppercase tracking-wider text-textMuted">Total Processed Vol</p>
+            <p className="text-xs font-bold uppercase tracking-wider text-textMuted">{t('procTotalProcessedVol', 'Total Processed Vol')}</p>
             <p className="text-3xl font-extrabold text-textPrimary mt-1 tracking-tight">{stats?.totalProcessedVolume || 0} <span className="text-base text-textSecondary font-semibold">kg</span></p>
           </div>
         </div>
@@ -80,7 +82,7 @@ export default function ProcessorDashboard() {
       {/* Quick Actions */}
       <section className="mt-10 animate-enter delay-2">
         <div className="section-heading mb-4">
-          <div><p className="eyebrow text-primary"><Sparkles size={13} /> Navigation</p><h2 className="text-xl font-bold text-textPrimary">Quick Actions</h2></div>
+          <div><p className="eyebrow text-primary"><Sparkles size={13} /> Navigation</p><h2 className="text-xl font-bold text-textPrimary">{t('procQuickActions', 'Quick Actions')}</h2></div>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
           {quickActions.map(action => {
