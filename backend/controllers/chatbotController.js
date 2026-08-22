@@ -101,10 +101,23 @@ export const handleChat = async (req, res) => {
     });
 
     // Formatting history into the format expected by the Gemini API
-    const formattedHistory = (history || []).map(msg => ({
+    let rawHistory = (history || []).map(msg => ({
       role: msg.role === 'assistant' ? 'model' : 'user',
       parts: [{ text: msg.content }]
     }));
+
+    // Ensure history starts with 'user' and alternates roles strictly
+    const formattedHistory = [];
+    for (const item of rawHistory) {
+      if (formattedHistory.length === 0) {
+        if (item.role === 'user') formattedHistory.push(item);
+      } else {
+        const lastRole = formattedHistory[formattedHistory.length - 1].role;
+        if (item.role !== lastRole) {
+          formattedHistory.push(item);
+        }
+      }
+    }
 
     // Optionally include context (like current page, user role)
     const userRoleContext = context?.role ? `[System Note: The current user is a ${context.role}. Context Page: ${context.page || 'Unknown'}] ` : '';
