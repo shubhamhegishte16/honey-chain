@@ -80,7 +80,7 @@ export default function BuyerOrders() {
           </p>
           {activeTab === 'all' ? (
             <button onClick={() => navigate('/buyer/marketplace')} className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-white font-bold text-xs shadow hover:bg-primaryDark transition-all">
-              <Search size={15} /> {t('findWool')}
+              <Search size={15} /> Browse Honey Mandi
             </button>
           ) : (
             <button onClick={() => setActiveTab('all')} className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-background border border-border text-textPrimary font-bold text-xs hover:bg-border/30 transition-all">
@@ -106,7 +106,7 @@ export default function BuyerOrders() {
                       {t('orderHash')}{order.orderId}
                     </p>
                     <p className="text-xs text-textSecondary">
-                      {order.woolType} • {order.quantityKg} kg • ₹{order.totalAmount?.toLocaleString()}
+                      {order.floralSource || order.woolType || 'Raw Blossom Honey'} • {order.quantityKg} kg • ₹{order.totalAmount?.toLocaleString()}
                     </p>
                   </div>
                 </div>

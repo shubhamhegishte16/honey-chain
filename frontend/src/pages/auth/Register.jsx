@@ -28,26 +28,26 @@ import { INDIAN_STATES, DISTRICTS_BY_STATE, ROLES } from '../../constants/states
 const ROLE_DETAILS = {
   farmer: {
     icon: Sprout,
-    title: 'Farmer / Producer',
-    desc: 'Pastoralist or wool grower recording batches & checking mandi prices.',
-    color: 'text-emerald-600',
+    title: 'Beekeeper / Apiary Master',
+    desc: 'Beekeeper recording honey harvest batches & checking mandi rates.',
+    color: 'text-amber-600',
   },
   buyer: {
     icon: Building2,
-    title: 'Buyer / Mill',
-    desc: 'Mill, exporter, or spinner sourcing verified lots with QR provenance.',
+    title: 'FMCG Buyer / Brand',
+    desc: 'FMCG brand, exporter, or retailer sourcing NMR-certified honey with QR provenance.',
     color: 'text-sky-600',
   },
   processor: {
     icon: Factory,
-    title: 'Processor / Scourer',
-    desc: 'Grading facility or warehouse logging processing milestones.',
+    title: 'Bottling Unit / Processor',
+    desc: 'Filtration facility, testing lab or warehouse logging processing milestones.',
     color: 'text-amber-700',
   },
   artisan: {
     icon: Palette,
-    title: 'Artisan / Weaver',
-    desc: 'Handloom weaver or designer using authentic desi wool.',
+    title: 'Cooperative / Value Adder',
+    desc: 'Honey SHG, cooperative, or artisan creating value-added honey products.',
     color: 'text-purple-600',
   },
 };
@@ -143,49 +143,51 @@ export default function Register() {
               className="inline-flex items-center gap-2 text-white/90 hover:text-white text-xs font-semibold uppercase tracking-wider mb-8 transition-colors group"
             >
               <ArrowLeft size={15} className="transition-transform group-hover:-translate-x-1" />
-              {t('backToWoolConnectHome', 'Back to WoolConnect Home')}
+              Back to HoneyChain Home
             </Link>
 
             <div className="flex items-center gap-3.5">
               <img
                 src="/logo.png"
-                alt="WoolConnect"
+                alt="HoneyChain"
                 className="h-16 w-16 object-contain rounded-2xl bg-white p-1 shadow-lg"
               />
               <div>
-                <span className="text-2xl font-black tracking-tight text-white block">WoolConnect</span>
-                <span className="text-xs font-semibold text-emerald-200">{t('nationalWoolEcosystem', 'National Wool Ecosystem Platform')}</span>
+                <span className="text-2xl font-black tracking-tight text-white block">
+                  Honey<span className="text-amber-300">Chain</span>
+                </span>
+                <span className="text-xs font-semibold text-amber-200">National Honey Ecosystem Platform</span>
               </div>
             </div>
           </div>
 
           <div className="relative z-10 my-auto py-6">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 text-emerald-200 text-xs font-semibold backdrop-blur-md mb-4 border border-white/15">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 text-amber-200 text-xs font-semibold backdrop-blur-md mb-4 border border-white/15">
               <Sparkles size={14} className="text-amber-300" />
-              {t('joinVerifiedPastoralists', 'Join 10,000+ Verified Pastoralists & Buyers')}
+              Join 10,000+ Verified Beekeepers & Buyers
             </div>
 
             <h2 className="text-3xl xl:text-4xl font-bold tracking-tight text-white leading-tight">
-              {t('onePlatformConnecting', 'One platform connecting')} <br />
-              <span className="text-emerald-200">{t('everyStepWoolChain', 'every step of the wool chain.')}</span>
+              One platform connecting <br />
+              <span className="text-amber-200">every step of the honey value chain.</span>
             </h2>
 
             <p className="mt-4 text-white/80 text-sm leading-relaxed max-w-md">
-              {t('whetherRecordingClip', 'Whether you are recording your seasonal clip in Bikaner or procuring fine merino in Bengaluru, WoolConnect delivers transparency and value.')}
+              Whether you are recording your seasonal honey extraction in Bharatpur or procuring fine acacia in Bengaluru, HoneyChain delivers transparency and value.
             </p>
 
             <div className="mt-6 space-y-2.5 max-w-md">
               <div className="flex items-center gap-3 p-3 rounded-xl bg-white/10 border border-white/10 text-xs text-white/90">
-                <CheckCircle2 size={16} className="text-emerald-300 shrink-0" />
-                <span>{t('instantQrPassportGen', 'Instant QR passport generation for every wool lot')}</span>
+                <CheckCircle2 size={16} className="text-amber-300 shrink-0" />
+                <span>Instant QR passport generation for every honey lot</span>
               </div>
               <div className="flex items-center gap-3 p-3 rounded-xl bg-white/10 border border-white/10 text-xs text-white/90">
                 <CheckCircle2 size={16} className="text-amber-300 shrink-0" />
-                <span>{t('directApmcMandiPricing', 'Direct APMC mandi pricing & trend intelligence')}</span>
+                <span>Direct APMC mandi pricing & trend intelligence</span>
               </div>
               <div className="flex items-center gap-3 p-3 rounded-xl bg-white/10 border border-white/10 text-xs text-white/90">
-                <CheckCircle2 size={16} className="text-sky-300 shrink-0" />
-                <span>{t('zeroIntermediaryCommission', 'Zero intermediary commission for pastoralist producers')}</span>
+                <CheckCircle2 size={16} className="text-amber-300 shrink-0" />
+                <span>Zero intermediary commission for beekeeper producers</span>
               </div>
             </div>
           </div>
@@ -208,10 +210,10 @@ export default function Register() {
             <Link to="/" className="flex items-center gap-2.5 font-black text-textPrimary text-lg">
               <img
                 src="/logo.png"
-                alt="WoolConnect"
+                alt="HoneyChain"
                 className="h-10 w-10 object-contain rounded-xl shadow-xs"
               />
-              <span>Wool<span className="text-primary">Connect</span></span>
+              <span>Honey<span className="text-primary">Chain</span></span>
             </Link>
             <Link
               to="/login"
@@ -226,7 +228,7 @@ export default function Register() {
             <div className="mb-6">
               <h1 className="text-2xl font-bold tracking-tight text-textPrimary">{t('createAccount', 'Create Account')}</h1>
               <p className="text-sm text-textSecondary mt-1">
-                {t('selectRoleDetails', 'Select your role and enter your details to join WoolConnect')}
+                {t('selectRoleDetails', 'Select your role and enter your details to join HoneyChain')}
               </p>
             </div>
 
@@ -397,7 +399,7 @@ export default function Register() {
                     className="mt-0.5 rounded border-border text-primary focus:ring-primary h-4 w-4 cursor-pointer accent-primary shrink-0"
                   />
                   <span>
-                    {t('agreeTerms', 'I agree to the WoolConnect Terms of Service and Data Privacy Policy.')}
+                    {t('agreeTerms', 'I agree to the HoneyChain Terms of Service and Data Privacy Policy.')}
                   </span>
                 </label>
                 {errors.terms && <p className="text-error text-xs mt-1 font-medium">{errors.terms}</p>}

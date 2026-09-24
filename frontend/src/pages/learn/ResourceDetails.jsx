@@ -25,7 +25,7 @@ export default function ResourceDetails() {
 
   useEffect(() => {
     try {
-      const stored = localStorage.getItem('woolconnect_completed_steps');
+      const stored = localStorage.getItem('honeychain_completed_steps') || localStorage.getItem('woolconnect_completed_steps');
       if (stored) setCompletedSteps(JSON.parse(stored));
     } catch (e) {}
   }, []);
@@ -34,7 +34,7 @@ export default function ResourceDetails() {
     setCompletedSteps(prev => {
       const updated = { ...prev, [stepKey]: !prev[stepKey] };
       try {
-        localStorage.setItem('woolconnect_completed_steps', JSON.stringify(updated));
+        localStorage.setItem('honeychain_completed_steps', JSON.stringify(updated));
       } catch (e) {}
       return updated;
     });
@@ -246,7 +246,7 @@ export default function ResourceDetails() {
                   });
                 };
 
-                const defaultIcons = ['💧', '📦', '⬆️', '☔', '🔍', '✂️', '🧶', '🎨', '💰', '🐑'];
+                const defaultIcons = ['💧', '📦', '⬆️', '☔', '🔍', '🐝', '🍯', '🌸', '💰', '🧪'];
 
                 return (
                   <div className="mb-8 p-6 sm:p-7 rounded-3xl bg-surface border-2 border-emerald-100 shadow-md">

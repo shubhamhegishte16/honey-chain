@@ -9,7 +9,7 @@ export default function ChatbotWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState('');
   const [history, setHistory] = useState([
-    { role: 'assistant', content: 'Hello! I am the WoolConnect AI Assistant. How can I help you today?' }
+    { role: 'assistant', content: 'Hello! I am the HoneyChain AI Assistant. How can I help you with beekeeping, harvest logging, or honey traceability today?' }
   ]);
   const [isLoading, setIsLoading] = useState(false);
   const { profile } = useAuth();
@@ -82,8 +82,8 @@ export default function ChatbotWidget() {
                 <Bot size={20} className="text-white" />
               </div>
               <div>
-                <h3 className="font-bold text-sm">WoolConnect Assistant</h3>
-                <p className="text-[10px] text-primaryLight opacity-90">Powered by Gemini AI</p>
+                <h3 className="font-bold text-sm">HoneyChain Assistant</h3>
+                <p className="text-[10px] text-primaryLight opacity-90">Powered by KVIC & Gemini AI</p>
               </div>
             </div>
             <button 

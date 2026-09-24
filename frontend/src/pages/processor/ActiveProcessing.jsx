@@ -43,7 +43,7 @@ export default function ActiveProcessing() {
                 <div>
                   <h2 className="text-xl font-bold text-textPrimary">Batch {batch.batchIdDisplay}</h2>
                   <p className="text-sm text-textSecondary mt-1">
-                    {batch.woolType} · {batch.quantity} kg · Farmer: {batch.farmerName}
+                    {batch.floralSource || batch.woolType || 'Raw Blossom Honey'} · {batch.quantity} kg · Beekeeper: {batch.farmerName}
                   </p>
                 </div>
                 <span className="px-3 py-1 bg-primaryLight text-primary text-xs font-bold uppercase rounded-md flex items-center gap-1">
@@ -85,7 +85,7 @@ export default function ActiveProcessing() {
                   <div className="flex-1">
                     <p className="text-xs text-textSecondary">
                       Request ID: <span className="font-semibold">{batch.requestId || batch.id}</span> ·
-                      Farmer: {batch.farmerName} ·
+                      Beekeeper: {batch.farmerName} ·
                       Qty: {batch.quantity} kg
                     </p>
                   </div>

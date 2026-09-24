@@ -32,9 +32,9 @@ export default function BatchManagement() {
               <div className="flex-1 min-w-0">
                 <p className="font-bold text-sm text-textPrimary flex items-center gap-2"><Tag size={14} className="text-primary"/> {batch.batchId}</p>
                 <p className="text-xs text-textSecondary mt-1">
-                  {batch.woolType} · Grade: {batch.grade} · {batch.qty} kg
+                  {batch.floralSource || batch.woolType || 'Raw Blossom Honey'} · Grade: {batch.grade} · {batch.qty} kg
                 </p>
-                <p className="text-[11px] text-textMuted mt-0.5">Farmer: {batch.owner}</p>
+                <p className="text-[11px] text-textMuted mt-0.5">Beekeeper: {batch.owner}</p>
                 <p className="text-[11px] text-textMuted mt-0.5 flex items-center gap-1">
                   <MapPin size={10}/> {batch.location}
                 </p>

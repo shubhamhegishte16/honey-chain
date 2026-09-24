@@ -7,52 +7,52 @@ import { TRAINING_TRANSLATIONS } from '../../services/trainingTranslations.servi
 const BASE_SEASONS = [
   {
     key: 'monsoon',
-    title: 'Monsoon',
+    title: 'Monsoon Care',
     monthsLabel: 'June – September',
     months: [5, 6, 7, 8], // 0-indexed: June-Sept
     icon: CloudRain,
     badgeColor: 'bg-sky-100 text-sky-800 border-sky-200',
     headerBg: 'from-sky-900 via-blue-900 to-indigo-950',
     recommendedActions: [
-      'Prevent moisture accumulation in stored wool bales',
-      'Ensure warehouse ventilation & elevated pallet stacking (15+ cm)',
-      'Inspect stored fleece fortnightly for mold and dampness',
-      'Keep raw wool away from damp earthen/concrete ground contact',
-      'Avoid shearing sheep during rain or on wet pastures'
+      'Prevent moisture contamination in stored raw honey barrels',
+      'Provide supplementary pollen substitute feed during heavy monsoon downpours',
+      'Inspect bee boxes weekly for fungal growth, wax moth, and dampness',
+      'Keep apiary boxes elevated 30+ cm above wet ground with ant barriers',
+      'Avoid harvesting uncapped honey frames during high relative humidity days'
     ],
     targetKeyword: 'Monsoon'
   },
   {
     key: 'shearing',
-    title: 'Shearing & Storage',
+    title: 'Extraction & Harvest',
     monthsLabel: 'October – January',
     months: [9, 10, 11, 0], // Oct-Jan
     icon: Scissors,
     badgeColor: 'bg-amber-100 text-amber-900 border-amber-200',
     headerBg: 'from-amber-900 via-yellow-900 to-orange-950',
     recommendedActions: [
-      'Execute clean shearing without second cuts to preserve staple length',
-      'Skirt main fleece immediately to isolate stained belly wool & tags',
-      'Package graded wool in breathable jute/gunny bags',
-      'Record shearing batch details & assign WoolConnect QR tokens',
-      'Vaccinate flock post-shearing against sheep pox and PPR'
+      'Harvest only fully capped comb frames (>80% sealed) for minimum moisture',
+      'Use food-grade SS304 centrifugal extractors without heating combs',
+      'Store raw honey in airtight food-grade barrels with moisture seals',
+      'Record harvest batch details and generate HoneyChain digital QR tokens',
+      'Monitor hive health post-extraction and leave adequate winter honey reserves'
     ],
-    targetKeyword: 'Shearing'
+    targetKeyword: 'Extraction'
   },
   {
     key: 'processing',
-    title: 'Processing & Selling',
+    title: 'Filtration & Direct Sale',
     monthsLabel: 'February – May',
     months: [1, 2, 3, 4], // Feb-May
     icon: TrendingUp,
     badgeColor: 'bg-emerald-100 text-emerald-900 border-emerald-200',
     headerBg: 'from-emerald-900 via-teal-900 to-green-950',
     recommendedActions: [
-      'Scour greasy wool in warm detergent baths to remove lanolin & dirt',
-      'Perform carding to align fibers and increase market value by >60%',
-      'List certified batches directly on WoolConnect marketplace',
-      'Compare local state mandi pricing trends before quoting buyers',
-      'Utilize natural botanical dyes for value-added artisan yarns'
+      'Perform micro-filtration (80-100 mesh) to remove wax and bee debris',
+      'Test moisture content with digital refractometer (<20% FSSAI compliance)',
+      'List certified batches directly on HoneyChain digital marketplace',
+      'Compare National Honey Mandi APMC rates before agreeing to buyer quotes',
+      'Bottle single-origin floral batches into tamper-evident glass jars'
     ],
     targetKeyword: 'Processing'
   }

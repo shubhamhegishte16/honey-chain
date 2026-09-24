@@ -97,7 +97,7 @@ export default function AdminDashboard() {
               <div key={o._id} className="flex justify-between items-center border-b border-border/60 pb-2.5 last:border-0 last:pb-0">
                 <div>
                   <p className="font-medium text-sm text-textPrimary">{t('order')} #{o._id.slice(-6).toUpperCase()}</p>
-                  <p className="text-xs text-textMuted">{o.wool_type} – {o.quantity_kg} kg</p>
+                  <p className="text-xs text-textMuted">{o.floralSource || o.wool_type || 'Raw Blossom'} Honey – {o.quantity_kg} kg</p>
                 </div>
                 <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold capitalize ${
                   o.status === 'completed' ? 'bg-primaryLight text-primary'

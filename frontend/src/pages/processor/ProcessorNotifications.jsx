@@ -3,9 +3,9 @@ import { Bell, CheckCheck, Inbox, Activity } from 'lucide-react';
 
 export default function ProcessorNotifications() {
   const [notifications, setNotifications] = useState([
-    { id: 1, type: 'request', title: 'New Processing Request', text: 'Farm Co. has requested processing for 150 kg Grade A wool.', time: '2 hours ago', read: false },
-    { id: 2, type: 'stage', title: 'Stage Completed', text: 'Washing stage for Batch WOL-MH-001 completed.', time: '5 hours ago', read: false },
-    { id: 3, type: 'system', title: 'Weekly Report', text: 'Your weekly processing report is ready.', time: '1 day ago', read: true }
+    { id: 1, type: 'request', title: 'New Processing Request', text: 'Apiary Valley has requested processing for 150 kg Grade A Mustard Honey.', time: '2 hours ago', read: false },
+    { id: 2, type: 'stage', title: 'Stage Completed', text: 'Micro-filtration stage for Batch HNY-MH-001 completed.', time: '5 hours ago', read: false },
+    { id: 3, type: 'system', title: 'Weekly Report', text: 'Your weekly honey processing & bottling report is ready.', time: '1 day ago', read: true }
   ]);
 
   const markRead = (id) => {

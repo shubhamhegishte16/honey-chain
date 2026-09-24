@@ -69,7 +69,7 @@ export default function BatchManagement() {
                   <td className="p-4 font-semibold text-textPrimary">{b.batch_id}</td>
                   <td className="p-4 text-textSecondary">{b.farmer_id?.name || t('unknown')}</td>
                   <td className="p-4 text-textPrimary">
-                    {b.wool_type} <span className="text-textMuted">•</span> {b.quantity_kg}kg
+                    {b.floralSource || b.wool_type || 'Raw Blossom'} Honey <span className="text-textMuted">•</span> {b.quantity_kg}kg
                   </td>
                   <td className="p-4">
                     <BatchStatusBadge status={b.status} />
@@ -95,7 +95,7 @@ export default function BatchManagement() {
             </div>
             <div className="text-xs text-textSecondary space-y-1">
               <p><span className="font-medium text-textMuted">{t('farmer')}:</span> {b.farmer_id?.name || t('unknown')}</p>
-              <p><span className="font-medium text-textMuted">{t('woolType')}:</span> {b.wool_type} • <span className="font-bold text-textPrimary">{b.quantity_kg} kg</span></p>
+              <p><span className="font-medium text-textMuted">Variety:</span> {b.floralSource || b.wool_type || 'Raw Blossom'} Honey • <span className="font-bold text-textPrimary">{b.quantity_kg} kg</span></p>
             </div>
             <div className="pt-2 border-t border-border/60 text-[11px] text-textMuted flex justify-between">
               <span>{new Date(b.created_at).toLocaleDateString()}</span>

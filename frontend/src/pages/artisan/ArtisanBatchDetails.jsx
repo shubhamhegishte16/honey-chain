@@ -124,7 +124,7 @@ export default function ArtisanBatchDetails() {
         </span>
       </div>
 
-      {/* A. Wool Information */}
+      {/* A. Honey Information */}
       <Card className="mb-4">
         <div className="flex items-center gap-3 mb-4">
           <span className="grid h-11 w-11 place-items-center rounded-2xl bg-primaryLight text-primary shrink-0">

@@ -34,8 +34,8 @@ export default function SavedWool() {
     <main className="page-shell">
       <div className="section-heading mb-6">
         <div>
-          <p className="eyebrow text-primary"><Bookmark size={13} /> {t('bookmarks')}</p>
-          <h1 className="text-2xl font-extrabold text-textPrimary">{t('savedWool')}</h1>
+          <p className="eyebrow text-primary"><Bookmark size={13} /> Saved Lots</p>
+          <h1 className="text-2xl font-extrabold text-textPrimary">Saved Honey Batches</h1>
         </div>
       </div>
 
@@ -53,7 +53,7 @@ export default function SavedWool() {
             {t('browseAndBookmark')}
           </p>
           <button onClick={() => navigate('/buyer/marketplace')} className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-white font-bold text-xs shadow hover:bg-primaryDark transition-all">
-            <Search size={15} /> {t('findWool')}
+            <Search size={15} /> Browse Honey Mandi
           </button>
         </div>
       ) : (
@@ -61,7 +61,7 @@ export default function SavedWool() {
           {listings.map(listing => (
             <div key={listing._id || listing.id} className="p-4 rounded-2xl bg-surface border border-border shadow-sm hover:border-primary/40 hover:shadow-md cursor-pointer transition-all group">
               <div onClick={() => navigate(`/buyer/marketplace/${listing._id || listing.id}`)}>
-                <p className="font-bold text-sm text-textPrimary group-hover:text-primary">{listing.woolType} Wool</p>
+                <p className="font-bold text-sm text-textPrimary group-hover:text-primary">{listing.floralSource || listing.woolType || 'Raw Blossom'} Honey</p>
                 <p className="text-xs text-textSecondary mt-0.5">{listing.seller?.name || listing.seller_name}</p>
                 <div className="mt-2 flex justify-between items-center">
                   <span className="font-bold text-sm text-emerald-700">₹{listing.pricePerKg}/kg</span>

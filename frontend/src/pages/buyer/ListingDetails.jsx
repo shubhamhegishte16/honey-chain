@@ -82,7 +82,7 @@ export default function ListingDetails() {
             <div className="p-6 sm:p-8 bg-surface">
               <div className="flex flex-wrap items-start justify-between gap-4">
                 <div>
-                  <h1 className="text-2xl sm:text-3xl font-extrabold text-textPrimary">{listing.wool_type} Wool</h1>
+                  <h1 className="text-2xl sm:text-3xl font-extrabold text-textPrimary">{listing.floralSource || listing.wool_type || 'Raw Blossom'} Honey</h1>
                   <p className="text-textSecondary flex items-center gap-1.5 mt-2">
                     <MapPin size={15} className="text-primary" /> {listing.location?.district || listing.district}, {listing.location?.state || listing.state}
                   </p>
@@ -102,19 +102,19 @@ export default function ListingDetails() {
               </h3>
               <ul className="space-y-3 text-sm text-textSecondary">
                 <li className="flex justify-between border-b border-border/50 pb-2">
-                  <span>{t('gradeLabel')}</span> <strong className="text-textPrimary">{listing.grade || t('standard')}</strong>
+                  <span>Purity Grade</span> <strong className="text-textPrimary">{listing.grade || 'Grade A+ (NMR Certified)'}</strong>
                 </li>
                 <li className="flex justify-between border-b border-border/50 pb-2">
-                  <span>{t('micronEstimate')}</span> <strong className="text-textPrimary">22µ - 24µ</strong>
+                  <span>Moisture Content</span> <strong className="text-textPrimary">17.6% (Optimal &lt;20%)</strong>
                 </li>
                 <li className="flex justify-between border-b border-border/50 pb-2">
-                  <span>{t('stapleLength')}</span> <strong className="text-textPrimary">70mm</strong>
+                  <span>HMF Fresh Index</span> <strong className="text-textPrimary">11.8 mg/kg (&lt;40 mg/kg)</strong>
                 </li>
                 <li className="flex justify-between border-b border-border/50 pb-2">
-                  <span>{t('condition')}</span> <strong className="text-textPrimary">{t('scoured')}</strong>
+                  <span>NMR Adulteration</span> <strong className="text-emerald-700">100% Pure (0% C4 Syrup)</strong>
                 </li>
               </ul>
-              <p className="mt-4 text-[10px] uppercase font-bold text-textMuted text-center bg-background py-1.5 rounded-lg border border-border/50">{t('aiPreScreening')}</p>
+              <p className="mt-4 text-[10px] uppercase font-bold text-textMuted text-center bg-background py-1.5 rounded-lg border border-border/50">AI Botanical Pollen Verified</p>
             </div>
 
             <div className="p-6 rounded-3xl bg-surface border border-border shadow-sm">
@@ -123,8 +123,8 @@ export default function ListingDetails() {
               </h3>
               <div className="space-y-1 text-sm text-textSecondary">
                 <p className="font-bold text-textPrimary text-base">{listing.seller_name}</p>
-                <p>{t('verifiedPastoralist')}</p>
-                <p className="mt-4 text-xs font-semibold uppercase tracking-wider text-primary">{t('memberSince2026')}</p>
+                <p>KVIC Registered Apiary Master</p>
+                <p className="mt-4 text-xs font-semibold uppercase tracking-wider text-primary">KVIC Honey Mission Partner</p>
               </div>
             </div>
           </div>

@@ -25,7 +25,7 @@ export default function AddWoolBatch() {
   const { t } = useLanguage();
 
   const [form, setForm] = useState({
-    woolType: 'Chokla',
+    woolType: 'Mustard Blossom',
     quantity: '',
     shearingDate: new Date().toISOString().split('T')[0],
     state: profile?.state || 'Rajasthan',
@@ -56,11 +56,11 @@ export default function AddWoolBatch() {
 
   function validate() {
     const e = {};
-    if (!form.woolType) e.woolType = t('selectWoolBreed', 'Select wool breed');
+    if (!form.woolType) e.woolType = 'Select floral nectar source';
     if (!form.quantity || isNaN(Number(form.quantity)) || Number(form.quantity) <= 0) {
       e.quantity = t('validQtyRequired', 'Enter a valid positive quantity in kg');
     }
-    if (!form.shearingDate) e.shearingDate = t('shearingDateRequired', 'Enter shearing date');
+    if (!form.shearingDate) e.shearingDate = 'Enter extraction date';
     if (!form.state) e.state = t('selectState', 'Select state');
     if (!form.district) e.district = t('selectDistrict', 'Select district');
     setErrors(e);
@@ -88,7 +88,7 @@ export default function AddWoolBatch() {
 
     setLoading(false);
     if (error) {
-      setSubmitError(error.message || t('failedRecordBatch', 'Failed to record wool batch. Please try again.'));
+      setSubmitError(error.message || 'Failed to record honey harvest batch. Please try again.');
       return;
     }
     navigate(`/batches/${data.id || data._id}/details`, { replace: true });
@@ -107,32 +107,32 @@ export default function AddWoolBatch() {
           className="inline-flex items-center gap-1.5 text-xs font-semibold text-textSecondary hover:text-primary transition-colors group"
         >
           <ArrowLeft size={15} className="transition-transform group-hover:-translate-x-0.5" />
-          <span>{t('backToBatches', 'Back to My Wool')}</span>
+          <span>Back to My Honey Lots</span>
         </Link>
 
         <span className="text-xs text-textMuted font-medium flex items-center gap-1">
-          <Sparkles size={12} className="text-primary" /> {t('automaticQrMinting', 'Automatic QR Passport Minting')}
+          <Sparkles size={12} className="text-primary" /> Automatic Blockchain QR Passport Minting
         </span>
       </div>
 
       <div className="rounded-3xl bg-surface border border-border/80 p-6 sm:p-10 shadow-card animate-enter">
         <div className="mb-8">
           <div className="eyebrow text-primary mb-1">
-            <ClipboardPlus size={13} /> {t('harvestRegistration', 'Harvest Registration')}
+            <ClipboardPlus size={13} /> KVIC Honey Mission Harvest Registration
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-textPrimary">
-            {t('recordNewWool', 'Record New Wool Batch')}
+            Log Honey Extraction Lot
           </h1>
           <p className="text-xs sm:text-sm text-textSecondary mt-1">
-            {t('logShearingLotDetails', 'Log your shearing lot details to generate an instant tamper-evident QR code and traceability passport.')}
+            Record your apiary extraction details to create Genesis Block #0 and generate tamper-proof QR codes for your honey jars.
           </p>
         </div>
 
         <form onSubmit={handleSubmit} noValidate>
-          {/* Section 1: Wool Breed / Variety */}
+          {/* Section 1: Floral Source */}
           <div className="mb-6">
             <label className="block font-bold text-sm text-textPrimary mb-2.5">
-              {t('woolBreedType', 'Wool Breed / Type')} <span className="text-primary font-bold">*</span>
+              Floral Nectar Source <span className="text-primary font-bold">*</span>
             </label>
             <div className="flex flex-wrap gap-2">
               {WOOL_TYPES.map(breed => (
@@ -157,19 +157,19 @@ export default function AddWoolBatch() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 mb-2">
             <div>
               <Input
-                label={t('batchQuantityKg', 'Batch Quantity (kg)')}
+                label="Harvest Quantity (kg)"
                 id="quantity"
                 type="number"
                 icon={Scale}
                 value={form.quantity}
                 onChange={e => update('quantity', e.target.value)}
-                placeholder="e.g. 180"
+                placeholder="e.g. 50"
                 error={errors.quantity}
                 required
               />
               <div className="flex items-center gap-1.5 -mt-2 mb-4">
-                <span className="text-[11px] text-textMuted font-medium">{t('quickAdd', 'Quick add')}:</span>
-                {[50, 100, 200, 500].map(kg => (
+                <span className="text-[11px] text-textMuted font-medium">Quick add:</span>
+                {[25, 50, 100, 250].map(kg => (
                   <button
                     key={kg}
                     type="button"
@@ -183,7 +183,7 @@ export default function AddWoolBatch() {
             </div>
 
             <Input
-              label={t('shearingDate', 'Shearing Date')}
+              label="Extraction Date"
               id="shearingDate"
               type="date"
               icon={Calendar}
@@ -281,7 +281,7 @@ export default function AddWoolBatch() {
               multiline
               value={form.notes}
               onChange={e => update('notes', e.target.value)}
-              placeholder="e.g. Spring clip, low vegetation matter, natural pure white color, stored in dry ventilated shed."
+              placeholder="e.g. Peak bloom harvest, moisture tested ~17.5%, pure raw honey stored in food-grade drums."
             />
           </div>
 
@@ -293,7 +293,7 @@ export default function AddWoolBatch() {
 
           <div className="flex flex-col sm:flex-row items-center gap-3 pt-2">
             <Button
-              title={t('submitWool', 'Save Wool & Generate QR')}
+              title="Record Honey Harvest & Generate QR"
               type="submit"
               loading={loading}
               icon={ArrowRight}

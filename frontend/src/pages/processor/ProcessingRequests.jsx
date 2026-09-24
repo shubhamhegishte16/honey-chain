@@ -53,10 +53,10 @@ export default function ProcessingRequests() {
               <div className="flex-1 min-w-0">
                 <p className="font-bold text-sm text-textPrimary">{req.requestId || req.id}</p>
                 <p className="text-xs text-textSecondary mt-1">
-                  Batch: <span className="font-semibold">{req.batchIdDisplay}</span> · {req.woolType} · {req.quantity} kg · Grade: {req.grade}
+                  Batch: <span className="font-semibold">{req.batchIdDisplay}</span> · {req.floralSource || req.woolType || 'Raw Blossom Honey'} · {req.quantity} kg · Grade: {req.grade}
                 </p>
                 <p className="text-[11px] text-textMuted mt-0.5">
-                  Farmer: {req.farmerName} · Service: {req.serviceType}
+                  Beekeeper: {req.farmerName} · Service: {req.serviceType}
                 </p>
                 <p className="text-[11px] text-textMuted mt-0.5 flex items-center gap-1">
                   Requested: {req.date} · <IndianRupee size={10} className="inline" />{req.estimatedCost?.toLocaleString('en-IN') || '—'}

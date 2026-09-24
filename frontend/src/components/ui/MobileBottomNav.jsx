@@ -30,8 +30,8 @@ export default function MobileBottomNav() {
 
   const farmerNav = [
     { to: '/', label: t('dashboard'), icon: Home, exact: true },
-    { to: '/farmer/tracking', label: t('myWool'), icon: Package },
-    { to: '/farmer/marketplace', label: t('sellWool'), icon: Store },
+    { to: '/farmer/tracking', label: 'My Lots', icon: Package },
+    { to: '/farmer/marketplace', label: 'Sell Honey', icon: Store },
     { to: '/farmer/market', label: t('mandiRatesLabel', 'Rates'), icon: TrendingUp },
     { to: '/learn', label: t('learn'), icon: BookOpen },
   ];
@@ -46,7 +46,7 @@ export default function MobileBottomNav() {
 
   const buyerNav = [
     { to: '/buyer/dashboard', label: t('dashboard'), icon: Home, exact: true },
-    { to: '/buyer/marketplace', label: t('findWool'), icon: Store },
+    { to: '/buyer/marketplace', label: 'Buy Honey', icon: Store },
     { to: '/buyer/orders', label: t('myOrders'), icon: ShoppingCart },
     { to: '/buyer/tracking', label: t('tracking'), icon: Truck },
     { to: '/buyer/saved', label: t('savedNav'), icon: Bookmark },

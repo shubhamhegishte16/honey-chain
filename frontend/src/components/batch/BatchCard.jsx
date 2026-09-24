@@ -23,7 +23,7 @@ export default function BatchCard({ batch }) {
               {batch.batch_id}
             </p>
             <p className="text-textSecondary text-xs font-medium mt-0.5">
-              {batch.wool_type} · <span className="font-bold text-textPrimary">{batch.quantity_kg} {t('kg', 'kg')}</span>
+              {batch.floralSource || batch.wool_type || 'Raw Blossom Honey'} · <span className="font-bold text-textPrimary">{batch.quantity_kg} {t('kg', 'kg')}</span>
             </p>
           </div>
         </div>

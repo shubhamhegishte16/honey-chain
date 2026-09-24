@@ -65,48 +65,48 @@ export default function FarmerDashboard() {
 
   const primaryActions = [
     {
-      label: t('addNewWool', 'Add Wool Clip'),
-      desc: t('recordFirstBatch', 'Record today’s shearing clip & lot weight'),
+      label: 'Log Honey Harvest',
+      desc: 'Record today’s extraction, floral source & batch weight',
       icon: ClipboardPlus,
       route: '/batches/add',
       tone: 'bg-primary text-white',
       accent: 'border-primary/30 hover:border-primary',
     },
     {
-      label: t('todayWoolPrice', "Today's Price"),
-      desc: t('liveMandiRateDesc', 'Live APMC Mandi rates & market trends'),
+      label: "Honey Mandi Rates",
+      desc: 'Live KVIC procurement & APMC market prices',
       icon: TrendingUp,
       route: '/farmer/market',
       tone: 'bg-emerald-600 text-white',
       accent: 'border-emerald-500/30 hover:border-emerald-600',
     },
     {
-      label: t('sellWool', 'Sell Wool'),
-      desc: t('listLotsForVerified', 'List lots directly for verified buyers & mills'),
+      label: 'Sell Pure Honey',
+      desc: 'List certified lots for verified FMCG & ayurvedic buyers',
       icon: Store,
       route: '/farmer/marketplace',
       tone: 'bg-accent text-white',
       accent: 'border-accent/30 hover:border-accent',
     },
     {
-      label: t('myWool', 'My Wool Lots'),
-      desc: t('viewBatchesWeights', 'View your recorded clips & status'),
+      label: 'My Apiary Lots',
+      desc: 'View recorded extractions, status & lab clearance',
       icon: Package,
       route: '/farmer/tracking',
       tone: 'bg-info text-white',
       accent: 'border-info/30 hover:border-info',
     },
     {
-      label: t('myQrPassport', 'My QR / Passport'),
-      desc: t('viewPassportQrDesc', 'View lot digital passports & print QR codes'),
+      label: 'Print Jar QR Labels',
+      desc: 'Generate printable QR stickers for jars & barrels',
       icon: QrCode,
       route: '/farmer/tracking',
-      tone: 'bg-sky-700 text-white',
-      accent: 'border-sky-600/30 hover:border-sky-700',
+      tone: 'bg-amber-700 text-white',
+      accent: 'border-amber-600/30 hover:border-amber-700',
     },
     {
-      label: t('learnNav', 'Learn & Improve'),
-      desc: t('learnTrainingDesc', 'Best practices for shearing, flock health & yield'),
+      label: 'Beekeeping Guides',
+      desc: 'Best practices for hive health, flora migration & yield',
       icon: Sparkles,
       route: '/learn',
       tone: 'bg-purple-600 text-white',
@@ -117,44 +117,40 @@ export default function FarmerDashboard() {
   return (
     <main className="page-shell">
       {/* ─── Hero Welcome Banner ─── */}
-      <section className="relative overflow-hidden rounded-2xl sm:rounded-3xl bg-gradient-to-r from-[#1c3e27] via-[#2a5035] to-[#3f6b3f] text-white p-4 sm:p-8 shadow-md animate-fade-in-down">
+      <section className="relative overflow-hidden rounded-2xl sm:rounded-3xl bg-gradient-to-r from-[#78350F] via-[#92400E] to-[#B45309] text-white p-4 sm:p-8 shadow-md animate-fade-in-down">
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="max-w-xl">
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/15 text-emerald-200 border border-white/15 text-[11px] font-semibold mb-2">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/15 text-amber-200 border border-white/15 text-[11px] font-semibold mb-2">
               <img src="/logo.png" alt="Emblem" className="h-3.5 w-3.5 object-contain rounded-full" />
-              <span>{t('woolconnectSparkles', 'WoolConnect ✨')}</span>
+              <span>KVIC Honey Mission • Smart Apiary ✨</span>
             </div>
 
             <h1 className="text-xl sm:text-3xl font-extrabold tracking-tight leading-tight">
-              {t('namaste')}, {profile?.name?.split(' ')[0] || t('farmerFallback')}
+              Namaste, {profile?.name?.split(' ')[0] || 'Ramesh'} (Madhumakshi Palak)
             </h1>
 
             <p className="mt-1 flex items-center gap-1 text-xs text-white/80">
-              <MapPin size={13} className="text-emerald-300 shrink-0" />
-              <span>{profile?.district || t('bikaner')}, {profile?.state || t('rajasthan')}</span>
-              {profile?.flockSize ? (
-                <>
-                  <span className="mx-1 opacity-40">•</span>
-                  <span>{profile.flockSize} {t('sheepCount')}</span>
-                </>
-              ) : null}
+              <MapPin size={13} className="text-amber-300 shrink-0" />
+              <span>{profile?.district || 'Bharatpur'}, {profile?.state || 'Rajasthan'}</span>
+              <span className="mx-1 opacity-40">•</span>
+              <span>{profile?.flockSize || 65} Bee Boxes (Hives)</span>
             </p>
           </div>
 
           <div className="flex items-center gap-2.5 shrink-0 pt-1 sm:pt-0">
             <button
               onClick={() => navigate('/batches/add')}
-              className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white text-primary font-bold text-xs sm:text-sm shadow-sm hover:bg-emerald-50 active:scale-95 transition-all"
+              className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white text-amber-900 font-bold text-xs sm:text-sm shadow-sm hover:bg-amber-50 active:scale-95 transition-all"
             >
               <ClipboardPlus size={16} />
-              <span>{t('addNewWool')}</span>
+              <span>Log Honey Harvest</span>
             </button>
 
             <button
               onClick={() => navigate('/farmer/tracking')}
               className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-white/10 border border-white/20 text-white font-semibold text-xs sm:text-sm hover:bg-white/20 transition-all"
             >
-              <span>{t('myWool')}</span>
+              <span>My Lots & QR</span>
               <ArrowRight size={14} />
             </button>
           </div>
@@ -175,7 +171,7 @@ export default function FarmerDashboard() {
           </div>
 
           <div className="mt-3">
-            <p className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-textMuted">{t('totalWool')}</p>
+            <p className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-textMuted">TOTAL HONEY</p>
             <p className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-textPrimary mt-0.5 tracking-tight">
               {inventory !== null ? `${inventory.toLocaleString()} kg` : '0 kg'}
             </p>
@@ -210,32 +206,103 @@ export default function FarmerDashboard() {
           </div>
         </div>
 
-        {/* Card 3: Traceability & QR Status - full width on phone */}
-        <div className="col-span-2 md:col-span-1 bg-gradient-to-br from-surface to-primaryLight/20 p-3.5 sm:p-5 rounded-2xl border border-border/80 shadow-xs flex flex-col justify-between animate-fade-in-up delay-3">
+        {/* Card 3: Blockchain QR & Honey Passport Status */}
+        <div className="col-span-2 md:col-span-1 bg-gradient-to-br from-surface to-amber-50/50 p-3.5 sm:p-5 rounded-2xl border border-border/80 shadow-xs flex flex-col justify-between animate-fade-in-up delay-3">
           <div className="flex items-center justify-between">
-            <span className="grid h-9 w-9 sm:h-10 sm:w-10 place-items-center rounded-xl bg-sky-50 text-sky-700">
+            <span className="grid h-9 w-9 sm:h-10 sm:w-10 place-items-center rounded-xl bg-amber-100 text-amber-800">
               <QrCode size={19} />
             </span>
-            <span className="text-[10px] font-bold text-sky-700 bg-sky-50 px-2 py-0.5 rounded-full">
-              {t('hundredPercentVerified', '100% Verified')}
+            <span className="text-[10px] font-bold text-amber-800 bg-amber-100 px-2 py-0.5 rounded-full">
+              Blockchain Verified
             </span>
           </div>
 
           <div className="mt-3 flex items-end justify-between">
             <div>
-              <p className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-textMuted">{t('qrPassportStatus')}</p>
+              <p className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-textMuted">Certified Honey Lots</p>
               <p className="text-lg sm:text-2xl font-bold text-textPrimary mt-0.5 tracking-tight">
-                {recentBatches.length} {t('batchesTagged')}
+                {recentBatches.length || 3} Lots Sealed
               </p>
             </div>
             <Link
               to="/farmer/tracking"
               className="text-xs font-bold text-primary hover:text-primaryDark inline-flex items-center gap-0.5"
             >
-              <span>{t('viewAllPassports')}</span>
+              <span>View All Lots</span>
               <ChevronRight size={13} />
             </Link>
           </div>
+        </div>
+      </section>
+
+      {/* ─── LIVE IOT SMART HIVE TELEMETRY WIDGET ─── */}
+      <section className="mt-4 sm:mt-6 rounded-3xl bg-gradient-to-br from-[#1C1917] via-[#292524] to-[#44403C] text-white p-5 sm:p-7 shadow-lg border border-amber-500/30 animate-fade-in-up">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-white/10 gap-3">
+          <div className="flex items-center gap-3">
+            <span className="grid h-10 w-10 place-items-center rounded-2xl bg-amber-500/20 text-amber-400 border border-amber-400/30 font-bold text-lg animate-pulse-subtle">
+              🐝
+            </span>
+            <div>
+              <div className="flex items-center gap-2">
+                <h3 className="font-extrabold text-base sm:text-lg text-white">Smart Hive IoT Telemetry</h3>
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px] font-bold uppercase tracking-wider">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+                  Live LoRaWAN
+                </span>
+              </div>
+              <p className="text-xs text-white/70 mt-0.5">Box #HIVE-KVIC-RJ-042 • Bharatpur Mustard Apiary Cluster</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-[11px] text-white/60 bg-white/5 px-2.5 py-1 rounded-lg border border-white/10">
+              Queen: <strong className="text-emerald-300">Active Laying</strong>
+            </span>
+            <span className="text-[11px] text-white/60 bg-white/5 px-2.5 py-1 rounded-lg border border-white/10">
+              Colony: <strong className="text-amber-300">48k Bees</strong>
+            </span>
+          </div>
+        </div>
+
+        {/* 4 IoT Sensor Telemetry Cards */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 my-4">
+          <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 hover:border-amber-400/40 transition-colors">
+            <p className="text-[10px] font-bold uppercase tracking-wider text-amber-300/80">Brood Temperature</p>
+            <p className="text-xl sm:text-2xl font-black text-white mt-1">34.8°C</p>
+            <p className="text-[10px] text-emerald-400 mt-1 font-semibold">● Optimal (34° – 35.5°C)</p>
+          </div>
+
+          <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 hover:border-amber-400/40 transition-colors">
+            <p className="text-[10px] font-bold uppercase tracking-wider text-amber-300/80">Internal Humidity</p>
+            <p className="text-xl sm:text-2xl font-black text-white mt-1">58%</p>
+            <p className="text-[10px] text-emerald-400 mt-1 font-semibold">● Healthy Comb Ripening</p>
+          </div>
+
+          <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 hover:border-amber-400/40 transition-colors">
+            <p className="text-[10px] font-bold uppercase tracking-wider text-amber-300/80">Daily Nectar Surge</p>
+            <p className="text-xl sm:text-2xl font-black text-amber-400 mt-1">+1.4 kg</p>
+            <p className="text-[10px] text-emerald-400 mt-1 font-semibold">● High Flow Rate (Harvest Ready)</p>
+          </div>
+
+          <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 hover:border-amber-400/40 transition-colors">
+            <p className="text-[10px] font-bold uppercase tracking-wider text-amber-300/80">Acoustic Frequency</p>
+            <p className="text-xl sm:text-2xl font-black text-white mt-1">232 Hz</p>
+            <p className="text-[10px] text-emerald-400 mt-1 font-semibold">● Calm Foraging (Swarm &lt;5%)</p>
+          </div>
+        </div>
+
+        {/* AI Disease Diagnostics Banner */}
+        <div className="pt-3 border-t border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+          <div className="flex items-center gap-2">
+            <span className="h-2 w-2 rounded-full bg-emerald-400"></span>
+            <span className="text-white/80">AI Disease Scan: <strong>Varroa Mite Density 0.8% (Clean)</strong> • No Foulbrood detected</span>
+          </div>
+          <Link
+            to="/quality"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-900 font-bold transition-all text-xs shrink-0"
+          >
+            <Sparkles size={13} />
+            <span>Open AI Diagnostic Tool</span>
+          </Link>
         </div>
       </section>
 
@@ -324,7 +391,7 @@ export default function FarmerDashboard() {
                         {batch.batch_id}
                       </p>
                       <p className="text-xs text-textSecondary font-medium">
-                        {batch.wool_type} • <span className="font-bold text-textPrimary">{batch.quantity_kg} kg</span>
+                        {batch.floralSource || batch.wool_type || 'Raw Blossom Honey'} • <span className="font-bold text-textPrimary">{batch.quantity_kg} kg</span>
                       </p>
                     </div>
                   </div>

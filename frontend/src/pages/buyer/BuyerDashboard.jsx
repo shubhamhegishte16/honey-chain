@@ -58,8 +58,8 @@ export default function BuyerDashboard() {
 
   const quickActions = [
     {
-      label: t('findWool', 'Find Wool'),
-      desc: t('browseMarketplaceListings', 'Browse marketplace listings'),
+      label: 'Procure Pure Honey',
+      desc: 'Browse NMR-certified apiary honey lots',
       icon: Search,
       route: '/buyer/marketplace',
       tone: 'bg-primary text-white',
@@ -82,8 +82,8 @@ export default function BuyerDashboard() {
       accent: 'border-info/30 hover:border-info',
     },
     {
-      label: t('savedWool', 'Saved Wool'),
-      desc: t('yourBookmarkedListings', 'Your bookmarked listings'),
+      label: 'Saved Honey Lots',
+      desc: 'Your bookmarked apiary batches',
       icon: Bookmark,
       route: '/buyer/saved',
       tone: 'bg-emerald-600 text-white',
@@ -117,15 +117,15 @@ export default function BuyerDashboard() {
             </div>
 
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight leading-tight">
-              {t('welcome', 'Welcome')}, {profile?.name?.split(' ')[0] || 'Buyer'}. <br />
-              <span className="text-emerald-200 font-medium text-xl sm:text-2xl lg:text-3xl">
-                {t('findVerifiedWoolHistory', 'Find verified wool with a complete digital history.')}
+              Welcome, {profile?.name?.split(' ')[0] || 'Procurement Buyer'}. <br />
+              <span className="text-amber-200 font-medium text-xl sm:text-2xl lg:text-3xl">
+                Source 100% NMR-certified honey with tamper-proof blockchain passport.
               </span>
             </h1>
 
             <p className="mt-2.5 flex items-center gap-1.5 text-xs sm:text-sm text-white/80">
-              <MapPin size={14} className="text-emerald-300" />
-              <span>{profile?.district || 'India'}, {profile?.state || 'India'}</span>
+              <MapPin size={14} className="text-amber-300" />
+              <span>{profile?.district || 'New Delhi'}, {profile?.state || 'India'}</span>
               {profile?.organization ? (
                 <>
                   <span className="mx-1 opacity-40">•</span>
@@ -138,10 +138,10 @@ export default function BuyerDashboard() {
           <div className="flex flex-wrap sm:flex-nowrap gap-3 shrink-0">
             <button
               onClick={() => navigate('/buyer/marketplace')}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 rounded-2xl bg-white text-primary font-bold text-sm shadow-md hover:bg-emerald-50 hover:shadow-lg transition-all duration-200 active:scale-[0.98]"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 rounded-2xl bg-white text-amber-900 font-bold text-sm shadow-md hover:bg-amber-50 hover:shadow-lg transition-all duration-200 active:scale-[0.98]"
             >
               <Search size={17} />
-              <span>{t('findWool', 'Find Wool')}</span>
+              <span>Browse Honey Mandi</span>
             </button>
           </div>
         </div>
@@ -237,7 +237,7 @@ export default function BuyerDashboard() {
         </div>
       </section>
 
-      {/* ─── Recent Orders & Available Wool ─── */}
+      {/* ─── Recent Orders & Available Honey ─── */}
       <div className="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-8 animate-enter delay-3">
         
         {/* Recent Orders */}
@@ -261,9 +261,9 @@ export default function BuyerDashboard() {
                 <ShoppingCart size={24} />
               </span>
               <h3 className="font-bold text-sm text-textPrimary">No orders yet</h3>
-              <p className="text-xs text-textSecondary mt-1 mb-4">Start exploring verified wool in the marketplace.</p>
+              <p className="text-xs text-textSecondary mt-1 mb-4">Start exploring verified pure honey in the marketplace.</p>
               <button onClick={() => navigate('/buyer/marketplace')} className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-primary text-white font-bold text-xs shadow hover:bg-primaryDark transition-all">
-                Find Wool
+                Find Honey
               </button>
             </div>
           ) : (
@@ -272,7 +272,7 @@ export default function BuyerDashboard() {
                 <div key={order.id || order._id} onClick={() => navigate(`/buyer/orders/${order.id || order._id}`)} className="p-4 rounded-2xl bg-surface border border-border shadow-sm hover:border-primary/40 hover:shadow-md cursor-pointer transition-all flex items-center justify-between group">
                   <div>
                     <p className="font-bold text-sm text-textPrimary group-hover:text-primary transition-colors">Order #{order.orderId}</p>
-                    <p className="text-xs text-textSecondary">{order.woolType} • {order.quantityKg} kg • ₹{order.totalAmount}</p>
+                    <p className="text-xs text-textSecondary">{order.floralSource || order.woolType || 'Raw Blossom Honey'} • {order.quantityKg} kg • ₹{order.totalAmount}</p>
                   </div>
                   <div className="flex flex-col items-end gap-1">
                     {getStatusBadge(order.status)}
@@ -284,12 +284,12 @@ export default function BuyerDashboard() {
           )}
         </section>
 
-        {/* Available Wool */}
+        {/* Available Honey */}
         <section>
           <div className="section-heading mb-4">
             <div>
               <p className="eyebrow text-primary"><Sparkles size={13} /> Marketplace</p>
-              <h2 className="text-xl font-bold text-textPrimary">Available Wool</h2>
+              <h2 className="text-xl font-bold text-textPrimary">Available Honey Lots</h2>
             </div>
             <Link to="/buyer/marketplace" className="text-link">
               <span>View Market</span>
@@ -301,7 +301,7 @@ export default function BuyerDashboard() {
              <div className="py-12 flex justify-center"><div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" /></div>
           ) : recommendations.length === 0 ? (
             <div className="p-8 text-center rounded-3xl bg-surface border border-border">
-              <p className="text-sm text-textSecondary">No active listings available right now.</p>
+              <p className="text-sm text-textSecondary">No active honey listings available right now.</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
@@ -309,7 +309,7 @@ export default function BuyerDashboard() {
                 <div key={listing.id} onClick={() => navigate(`/buyer/marketplace/${listing.id}`)} className="p-4 rounded-2xl bg-surface border border-border shadow-sm hover:border-primary/40 hover:shadow-md cursor-pointer transition-all flex flex-col justify-between group">
                   <div className="flex justify-between items-start">
                     <div>
-                      <p className="font-bold text-sm text-textPrimary group-hover:text-primary transition-colors">{listing.wool_type}</p>
+                      <p className="font-bold text-sm text-textPrimary group-hover:text-primary transition-colors">{listing.floralSource || listing.wool_type || 'Raw Blossom Honey'}</p>
                       <p className="text-[11px] text-textSecondary">Grade: <span className="font-semibold text-textPrimary">{listing.grade}</span></p>
                     </div>
                     <span className="font-bold text-sm text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md">₹{listing.price_per_kg}/kg</span>

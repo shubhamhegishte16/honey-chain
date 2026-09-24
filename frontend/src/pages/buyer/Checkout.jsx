@@ -133,7 +133,7 @@ export default function Checkout() {
                   className="w-20 h-20 rounded-xl object-cover"
                 />
                 <div className="flex-1">
-                  <p className="font-bold text-textPrimary">{listing.wool_type} Wool</p>
+                  <p className="font-bold text-textPrimary">{listing.floralSource || listing.wool_type || 'Raw Blossom'} Honey</p>
                   <p className="text-xs text-textSecondary">{listing.seller_name} • {listing.location?.district || listing.district}</p>
                   <p className="text-sm font-bold text-emerald-700 mt-1">₹{listing.price_per_kg}/kg</p>
                 </div>

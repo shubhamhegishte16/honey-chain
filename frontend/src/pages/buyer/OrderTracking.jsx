@@ -91,7 +91,7 @@ export default function OrderTracking() {
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
                     <div>
                       <p className="font-bold text-sm text-textPrimary group-hover:text-primary">{t('orderHash')}{o.orderId}</p>
-                      <p className="text-xs text-textSecondary">{o.woolType} • {o.quantityKg} kg</p>
+                      <p className="text-xs text-textSecondary">{o.floralSource || o.woolType || 'Raw Blossom Honey'} • {o.quantityKg} kg</p>
                     </div>
                     <span className="px-3 py-1 rounded-lg text-xs font-bold bg-amber-100 text-amber-800 capitalize">{STATUS_LABELS[o.status] || o.status}</span>
                   </div>
@@ -139,7 +139,7 @@ export default function OrderTracking() {
           <div>
             <p className="eyebrow text-primary"><Truck size={13} /> {t('tracking2')}</p>
             <h1 className="text-xl sm:text-2xl font-extrabold text-textPrimary">{t('orderHash')}{order.orderId}</h1>
-            <p className="text-sm text-textSecondary mt-1">{order.woolType} • {order.quantityKg} kg</p>
+            <p className="text-sm text-textSecondary mt-1">{order.floralSource || order.woolType || 'Raw Blossom Honey'} • {order.quantityKg} kg</p>
           </div>
           <span className={`px-4 py-2 rounded-xl text-sm font-bold uppercase ${
             isCancelled ? 'bg-rose-100 text-rose-800' :

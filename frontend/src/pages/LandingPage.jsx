@@ -32,68 +32,69 @@ import { useLanguage } from '../context/LanguageContext';
 import LanguageSelector from '../components/ui/LanguageSelector';
 import { getAllStatePrices } from '../services/market.service';
 
-const WOOL_BREEDS = [
+const HONEY_VARIETIES = [
   {
-    name: 'Chokla',
-    origin: 'Rajasthan (Bikaner, Nagaur)',
-    micron: '28 – 30 µm',
-    yieldPct: '65 – 70%',
-    uses: 'Fine carpets, blended apparel, blankets',
-    tag: 'Indian Merino',
-    tone: 'bg-emerald-50 text-emerald-800 border-emerald-200',
-    colorHex: '#3F6B3F',
-  },
-  {
-    name: 'Patanwadi',
-    origin: 'Gujarat (Kutch, Patan)',
-    micron: '30 – 34 µm',
-    yieldPct: '62 – 68%',
-    uses: 'Traditional shawls, hosiery, knitwear',
-    tag: 'Lustrous Fleece',
-    tone: 'bg-sky-50 text-sky-800 border-sky-200',
-    colorHex: '#3A6B8A',
-  },
-  {
-    name: 'Gaddi / Merino',
-    origin: 'Himachal & Jammu-Kashmir',
-    micron: '21 – 25 µm',
-    yieldPct: '72 – 78%',
-    uses: 'Luxury pashmina blends, tweed, suits',
-    tag: 'Mountain Soft',
-    tone: 'bg-purple-50 text-purple-800 border-purple-200',
-    colorHex: '#7C3AED',
-  },
-  {
-    name: 'Magra',
-    origin: 'Rajasthan (Bikaner, Churu)',
-    micron: '32 – 36 µm',
-    yieldPct: '60 – 65%',
-    uses: 'Export-grade carpet yarn, felt art',
-    tag: 'High Luster',
+    name: 'Mustard Blossom',
+    origin: 'Rajasthan (Bharatpur, Alwar) & Haryana',
+    micron: '17.8% Moisture',
+    yieldPct: 'Purity 99.4%',
+    uses: 'Immunity booster, traditional wellness, creamed honey',
+    tag: 'Quick Granulating Golden',
     tone: 'bg-amber-50 text-amber-900 border-amber-200',
-    colorHex: '#B9793E',
+    colorHex: '#D97706',
   },
   {
-    name: 'Deccani',
-    origin: 'Maharashtra, Karnataka, Telangana',
-    micron: '40 – 50 µm',
-    yieldPct: '55 – 62%',
-    uses: 'Traditional Gongadi & Kambal rugs, geotextiles',
-    tag: 'Heritage Black/Brown',
-    tone: 'bg-stone-100 text-stone-800 border-stone-300',
-    colorHex: '#4A4A45',
+    name: 'Kashmir White Sidr',
+    origin: 'Jammu & Kashmir (Pulwama, Tral Valley)',
+    micron: '16.9% Moisture',
+    yieldPct: 'Enzymes >32 DN',
+    uses: 'Luxury export honey, medicinal therapeutic use',
+    tag: 'Himalayan High Altitude',
+    tone: 'bg-emerald-50 text-emerald-900 border-emerald-200',
+    colorHex: '#059669',
   },
   {
-    name: 'Marwari',
-    origin: 'Rajasthan & North Gujarat',
-    micron: '34 – 38 µm',
-    yieldPct: '58 – 64%',
-    uses: 'Durable floor carpets, military blankets',
-    tag: 'Rugged Resilience',
-    tone: 'bg-orange-50 text-orange-800 border-orange-200',
-    colorHex: '#C25E2E',
+    name: 'Acacia / Kikar',
+    origin: 'Punjab, Himachal & Uttarakhand Foothills',
+    micron: '18.2% Moisture',
+    yieldPct: 'High Fructose',
+    uses: 'Natural sweetener, diabetic friendly, slow crystallization',
+    tag: 'Crystal Clear Amber',
+    tone: 'bg-yellow-50 text-yellow-900 border-yellow-200',
+    colorHex: '#CA8A04',
+  },
+  {
+    name: 'Muzaffarpur Shahi Lychee',
+    origin: 'Bihar (Muzaffarpur, Vaishali Orchards)',
+    micron: '18.5% Moisture',
+    yieldPct: 'Pollen 92%',
+    uses: 'Exotic fruit aroma, dessert drizzle, energy tonics',
+    tag: 'Delicate Floral Aroma',
+    tone: 'bg-rose-50 text-rose-900 border-rose-200',
+    colorHex: '#E11D48',
+  },
+  {
+    name: 'Wild Forest Multifloral',
+    origin: 'Madhya Pradesh & Maharashtra Satpura Range',
+    micron: '18.8% Moisture',
+    yieldPct: 'Antioxidant Rich',
+    uses: 'Ayurvedic formulations, cough & sore throat care',
+    tag: 'Deep Dark Forest Amber',
+    tone: 'bg-stone-100 text-stone-900 border-stone-300',
+    colorHex: '#78350F',
+  },
+  {
+    name: 'Jamun Blossom',
+    origin: 'Uttar Pradesh (Saharanpur, Bareilly) & Punjab',
+    micron: '17.6% Moisture',
+    yieldPct: 'Low Glycemic',
+    uses: 'Diabetic care, digestion booster, bitter-sweet tonic',
+    tag: 'Black Plum Blossom',
+    tone: 'bg-purple-50 text-purple-900 border-purple-200',
+    colorHex: '#7E22CE',
   },
 ];
+const WOOL_BREEDS = HONEY_VARIETIES;
 
 function getEcosystemRoles(t) {
   return [
@@ -147,13 +148,13 @@ export default function LandingPage() {
       } else {
         // Fallback default mandi prices for impressive landing presentation
         setPrices([
-          { state: 'Rajasthan', wool_type: 'Chokla Super White', price_per_kg: 285, change_percent: 3.4 },
-          { state: 'Gujarat', wool_type: 'Patanwadi Lustre', price_per_kg: 215, change_percent: 1.8 },
-          { state: 'Himachal Pradesh', wool_type: 'Gaddi Mountain Fleece', price_per_kg: 340, change_percent: 4.2 },
-          { state: 'Jammu & Kashmir', wool_type: 'Merino Fine Grade', price_per_kg: 425, change_percent: 2.1 },
-          { state: 'Maharashtra', wool_type: 'Deccani Coarse Black', price_per_kg: 145, change_percent: -0.8 },
-          { state: 'Rajasthan', wool_type: 'Magra Carpet Special', price_per_kg: 230, change_percent: 1.2 },
-          { state: 'Karnataka', wool_type: 'Bellary Natural Brown', price_per_kg: 160, change_percent: 0.9 },
+          { state: 'Rajasthan', wool_type: 'Mustard Blossom Raw', price_per_kg: 285, change_percent: 3.4 },
+          { state: 'Gujarat', wool_type: 'Kutch Wild Acacia Bloom', price_per_kg: 310, change_percent: 1.8 },
+          { state: 'Himachal Pradesh', wool_type: 'Himalayan Multifloral Forest', price_per_kg: 440, change_percent: 4.2 },
+          { state: 'Jammu & Kashmir', wool_type: 'Kashmir White Sidr', price_per_kg: 850, change_percent: 2.1 },
+          { state: 'Maharashtra', wool_type: 'Mahabaleshwar Jamun Honey', price_per_kg: 425, change_percent: -0.8 },
+          { state: 'Bihar', wool_type: 'Muzaffarpur Shahi Lychee', price_per_kg: 340, change_percent: 1.2 },
+          { state: 'Karnataka', wool_type: 'Coorg Stingless Dammer Bee', price_per_kg: 1200, change_percent: 0.9 },
         ]);
       }
     });
@@ -168,15 +169,15 @@ export default function LandingPage() {
           <Link to="/" className="flex items-center gap-3 font-bold text-primary text-xl tracking-tight shrink-0 group">
             <img
               src="/logo.png"
-              alt="WoolConnect"
+              alt="HoneyChain"
               className="h-12 w-12 sm:h-14 sm:w-14 object-contain rounded-2xl shadow-sm transition-transform group-hover:scale-105"
             />
             <div className="flex flex-col">
               <span className="text-xl sm:text-2xl font-black tracking-tight text-textPrimary leading-none">
-                Wool<span className="text-primary">Connect</span>
+                Honey<span className="text-primary">Chain</span>
               </span>
-              <span className="text-[11px] font-bold text-textMuted uppercase tracking-widest mt-1">
-                {t('footerFarmToFabric2')}
+              <span className="text-[11px] font-bold text-accent tracking-wider uppercase mt-1">
+                KVIC Honey Mission • MSME
               </span>
             </div>
           </Link>
@@ -184,19 +185,19 @@ export default function LandingPage() {
           {/* Desktop Nav Links */}
           <nav className="hidden lg:flex items-center gap-1 xl:gap-2">
             <a href="#features" className="px-3.5 py-2 rounded-xl text-sm font-medium text-textSecondary hover:text-primary hover:bg-primaryLight/40 transition-colors">
-              {t('navFeatures')}
+              Smart Hives
             </a>
             <a href="#mandi-rates" className="px-3.5 py-2 rounded-xl text-sm font-medium text-textSecondary hover:text-primary hover:bg-primaryLight/40 transition-colors">
-              {t('navMandiRates')}
+              Honey Mandi
             </a>
             <a href="#how-it-works" className="px-3.5 py-2 rounded-xl text-sm font-medium text-textSecondary hover:text-primary hover:bg-primaryLight/40 transition-colors">
-              {t('navHowItWorks')}
+              Blockchain Flow
             </a>
             <a href="#breeds" className="px-3.5 py-2 rounded-xl text-sm font-medium text-textSecondary hover:text-primary hover:bg-primaryLight/40 transition-colors">
-              {t('navBreeds')}
+              Floral Varieties
             </a>
             <a href="#traceability" className="px-3.5 py-2 rounded-xl text-sm font-medium text-textSecondary hover:text-primary hover:bg-primaryLight/40 transition-colors">
-              {t('navTraceability')}
+              Honey Passport
             </a>
           </nav>
 
@@ -321,29 +322,29 @@ export default function LandingPage() {
             {/* Left Hero Text */}
             <div className="lg:col-span-7 text-center lg:text-left">
               {/* Eyebrow Badge */}
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-primaryLight/80 text-primary border border-primary/20 text-xs font-bold uppercase tracking-wider mb-6 shadow-sm">
-                <Sparkles size={14} className="text-accent" />
-                <span>{t('nationalWoolPlatform')}</span>
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-100 text-amber-900 border border-amber-300 text-xs font-bold uppercase tracking-wider mb-6 shadow-sm">
+                <Sparkles size={14} className="text-amber-600" />
+                <span>Ministry of MSME • KVIC Honey Mission</span>
               </div>
 
               {/* Headline */}
               <h1 className="text-4xl sm:text-5xl xl:text-6xl font-extrabold tracking-tight text-textPrimary leading-[1.12]">
-                {t('heroHeadlinePre')} <br className="hidden sm:inline" />
-                {t('heroHeadlinePost')} <span className="text-primary">{t('heroHeadlineHighlight')}</span>
+                Hive to Home: <br className="hidden sm:inline" />
+                Pure Indian Honey <span className="text-primary">Verified on Blockchain</span>
               </h1>
 
               {/* Subtitle */}
               <p className="mt-5 text-base sm:text-lg text-textSecondary leading-relaxed max-w-2xl mx-auto lg:mx-0">
-                {t('heroSubtitle')}
+                Eliminating adulteration with end-to-end blockchain traceability, IoT smart hive health telemetry, and NMR lab certification empowering rural beekeepers across India.
               </p>
 
               {/* CTAs */}
               <div className="mt-8 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3.5">
                 <Link
-                  to="/register"
+                  to="/farmer/dashboard"
                   className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-2xl bg-primary text-white font-bold text-base shadow-lg shadow-primary/25 hover:bg-primaryDark hover:shadow-xl transition-all duration-200 active:scale-[0.98]"
                 >
-                  <span>{t('startFreeToday')}</span>
+                  <span>Beekeeper Smart Portal</span>
                   <ArrowRight size={18} />
                 </Link>
 
@@ -352,14 +353,15 @@ export default function LandingPage() {
                   className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl bg-surface border border-border text-textPrimary font-semibold text-base shadow-sm hover:border-primary/40 hover:bg-primaryLight/20 transition-all"
                 >
                   <TrendingUp size={18} className="text-primary" />
-                  <span>{t('exploreMandiRates')}</span>
+                  <span>Honey Mandi Rates</span>
                 </a>
 
                 <Link
-                  to="/login"
+                  to="/buyer/honey-passport/HC-RJ-2026-000108"
                   className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-4 py-3.5 text-sm font-semibold text-textSecondary hover:text-primary"
                 >
-                  <span>{t('demoSignIn')}</span>
+                  <QrCode size={16} className="text-primary" />
+                  <span>Sample Honey Passport</span>
                 </Link>
               </div>
 
@@ -367,15 +369,15 @@ export default function LandingPage() {
               <div className="mt-10 pt-8 border-t border-border/70 flex flex-wrap items-center justify-center lg:justify-start gap-6 text-xs font-semibold text-textSecondary">
                 <div className="flex items-center gap-2">
                   <CheckCircle2 size={16} className="text-primary shrink-0" />
-                  <span>{t('trustFreeForPastoralists')}</span>
+                  <span>KVIC Bee Box Scheme Aligned</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <QrCode size={16} className="text-accent shrink-0" />
-                  <span>{t('trustTamperProofQr')}</span>
+                  <span>Tamper-Proof Blockchain QR</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <ShieldCheck size={16} className="text-info shrink-0" />
-                  <span>{t('trustApmcAligned')}</span>
+                  <span>NMR & FSSAI Lab Certified</span>
                 </div>
               </div>
             </div>
@@ -388,8 +390,8 @@ export default function LandingPage() {
                   <TrendingUp size={16} />
                 </span>
                 <div>
-                  <p className="text-[11px] font-bold text-textMuted uppercase">{t('mandiBenchmark')}</p>
-                  <p className="text-xs font-bold text-primary">{t('seasonalGain')}</p>
+                  <p className="text-[11px] font-bold text-textMuted uppercase">Spring Nectar Flow</p>
+                  <p className="text-xs font-bold text-primary">+1.4 kg / Day Active</p>
                 </div>
               </div>
 
@@ -398,35 +400,35 @@ export default function LandingPage() {
                 {/* Card Top */}
                 <div className="flex items-center justify-between pb-4 border-b border-border/60">
                   <div className="flex items-center gap-3">
-                    <span className="grid h-10 w-10 place-items-center rounded-xl bg-emerald-50 text-emerald-700 font-bold">
+                    <span className="grid h-10 w-10 place-items-center rounded-xl bg-amber-50 text-amber-700 font-bold">
                       <Package size={20} />
                     </span>
                     <div>
-                      <p className="text-xs font-bold uppercase tracking-wider text-textMuted">{t('liveLotPassport')}</p>
-                      <h3 className="font-bold text-textPrimary text-base">Batch #WC-2026-CHOKLA</h3>
+                      <p className="text-xs font-bold uppercase tracking-wider text-textMuted">Certified Honey Lot</p>
+                      <h3 className="font-bold text-textPrimary text-base">Batch #HC-RJ-2026-000108</h3>
                     </div>
                   </div>
                   <span className="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 font-bold text-xs border border-emerald-300/60">
-                    {t('verifiedLot')}
+                    NMR 100% Pure
                   </span>
                 </div>
 
                 {/* Card Specs Grid */}
                 <div className="grid grid-cols-3 gap-3 my-5">
                   <div className="p-3 rounded-2xl bg-background border border-border/70 text-center">
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-textMuted">{t('weightLabel')}</p>
-                    <p className="text-lg font-bold text-textPrimary mt-0.5">850 kg</p>
-                    <span className="text-[10px] text-emerald-700 font-semibold">{t('springClip')}</span>
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-textMuted">Harvest</p>
+                    <p className="text-lg font-bold text-textPrimary mt-0.5">60 kg</p>
+                    <span className="text-[10px] text-amber-700 font-semibold">Mustard Bloom</span>
                   </div>
                   <div className="p-3 rounded-2xl bg-background border border-border/70 text-center">
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-textMuted">{t('micronLabel')}</p>
-                    <p className="text-lg font-bold text-primary mt-0.5">28.4 µm</p>
-                    <span className="text-[10px] text-textSecondary">{t('choklaPure')}</span>
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-textMuted">Moisture</p>
+                    <p className="text-lg font-bold text-primary mt-0.5">17.8%</p>
+                    <span className="text-[10px] text-textSecondary">Optimal &lt;20%</span>
                   </div>
                   <div className="p-3 rounded-2xl bg-background border border-border/70 text-center">
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-textMuted">{t('yieldLabel')}</p>
-                    <p className="text-lg font-bold text-accent mt-0.5">68.5%</p>
-                    <span className="text-[10px] text-textSecondary">{t('cleanFleece')}</span>
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-textMuted">HMF Level</p>
+                    <p className="text-lg font-bold text-accent mt-0.5">11.4 mg</p>
+                    <span className="text-[10px] text-textSecondary">Fresh Unheated</span>
                   </div>
                 </div>
 
@@ -434,15 +436,15 @@ export default function LandingPage() {
                 <div className="space-y-2 text-xs">
                   <div className="flex items-center justify-between p-2.5 rounded-xl bg-primaryLight/30 border border-primary/10">
                     <span className="text-textSecondary flex items-center gap-1.5">
-                      <MapPin size={14} className="text-primary" /> {t('originFlock')}
+                      <MapPin size={14} className="text-primary" /> Apiary Location
                     </span>
-                    <strong className="text-textPrimary">Bikaner Mandi, Rajasthan</strong>
+                    <strong className="text-textPrimary">Bharatpur Mustard Belt, RJ</strong>
                   </div>
                   <div className="flex items-center justify-between p-2.5 rounded-xl bg-background border border-border/70">
                     <span className="text-textSecondary flex items-center gap-1.5">
-                      <Clock size={14} className="text-textMuted" /> {t('shearedOn')}
+                      <Clock size={14} className="text-textMuted" /> Extracted On
                     </span>
-                    <strong className="text-textPrimary">14 Aug 2026</strong>
+                    <strong className="text-textPrimary">14 Feb 2026</strong>
                   </div>
                 </div>
 
@@ -450,18 +452,18 @@ export default function LandingPage() {
                 <div className="mt-5 pt-4 border-t border-border/60 flex items-center justify-between gap-4">
                   <div className="flex items-center gap-3">
                     <div className="p-2 rounded-xl bg-white border border-border shadow-sm">
-                      <QrCode size={36} className="text-textPrimary" />
+                      <QrCode size={36} className="text-amber-700" />
                     </div>
                     <div>
-                      <p className="text-xs font-bold text-textPrimary">{t('scanToVerify')}</p>
-                      <p className="text-[11px] text-textSecondary">{t('digitalProvenancePassport')}</p>
+                      <p className="text-xs font-bold text-textPrimary">Blockchain Sealed QR</p>
+                      <p className="text-[11px] text-textMuted">Instant consumer verification</p>
                     </div>
                   </div>
                   <Link
-                    to="/register"
-                    className="px-3.5 py-2 rounded-xl bg-primary text-white text-xs font-bold hover:bg-primaryDark transition-colors shadow-sm shrink-0"
+                    to="/buyer/honey-passport/HC-RJ-2026-000108"
+                    className="px-3 py-1.5 rounded-xl bg-primary text-white text-xs font-bold hover:bg-primaryDark transition-colors shrink-0"
                   >
-                    {t('viewPassportArrow')}
+                    View Passport
                   </Link>
                 </div>
               </div>
@@ -655,7 +657,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ─── Indigenous Indian Wool Breeds Catalog ─── */}
+      {/* ─── Indigenous Indian Honey Varieties Catalog ─── */}
       <section id="breeds" className="py-16 sm:py-24 bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
@@ -989,11 +991,11 @@ export default function LandingPage() {
               <Link to="/" className="flex items-center gap-2 font-bold text-textPrimary text-lg group">
                 <img
                   src="/logo.png"
-                  alt="WoolConnect"
+                  alt="HoneyChain"
                   className="h-8 w-8 object-contain rounded-xl shadow-xs"
                 />
-                <span className="leading-none">
-                  Wool<span className="text-primary">Connect</span>
+                <span className="leading-none font-black">
+                  Honey<span className="text-primary">Chain</span>
                 </span>
               </Link>
               <p className="text-textMuted text-xs leading-relaxed">

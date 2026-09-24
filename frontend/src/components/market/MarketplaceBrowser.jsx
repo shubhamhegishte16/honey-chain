@@ -57,7 +57,7 @@ export default function MarketplaceBrowser({ allowBuying = false }) {
       <input
         value={search}
         onChange={e => setSearch(e.target.value)}
-        placeholder={t('searchWoolTypeStateSeller', 'Search by wool type, state, or seller...')}
+        placeholder="Search by honey variety, state, or apiary..."
         className="w-full min-h-[48px] border border-border rounded-md px-4 text-[15px] bg-surface mb-3 focus:outline-none focus:ring-2 focus:ring-primary/30"
       />
       
@@ -80,7 +80,7 @@ export default function MarketplaceBrowser({ allowBuying = false }) {
           onChange={e => setWoolType(e.target.value)}
           className="border border-border rounded-md px-3 py-2 text-sm bg-surface shrink-0"
         >
-          <option value="">{t('allWoolTypes', 'All Wool Types')}</option>
+          <option value="">All Honey Varieties</option>
           {WOOL_TYPES.map(w => (
             <option key={w} value={w}>
               {w}
@@ -110,7 +110,7 @@ export default function MarketplaceBrowser({ allowBuying = false }) {
                 alt={l.wool_type}
                 className="w-full h-32 object-cover rounded-md mb-3 bg-primaryLight"
               />
-              <p className="font-semibold text-textPrimary">{l.wool_type}</p>
+              <p className="font-semibold text-textPrimary">{l.floralSource || l.wool_type || 'Raw'} Honey</p>
               <p className="text-textSecondary text-[13px] mt-0.5">
                 {l.district}, {l.state}
               </p>

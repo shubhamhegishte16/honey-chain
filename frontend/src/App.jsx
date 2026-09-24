@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Routes, Route, Navigate, Link, useNavigate, useLocation } from 'react-router-dom';
-import { Leaf, LogOut, MapPin, Menu, X, Bell } from 'lucide-react';
+import { Leaf, LogOut, MapPin, Menu, X, Bell, Sparkles } from 'lucide-react';
 import { useAuth } from './context/AuthContext';
 import { useLanguage } from './context/LanguageContext';
-import { signOut } from './services/auth.service';
+import { signOut, setDemoUser } from './services/auth.service';
+import { DEMO_PROFILES } from './services/mockData';
 import Footer from './components/ui/Footer';
 import LanguageGate from './components/ui/LanguageGate';
 import LanguageSelector from './components/ui/LanguageSelector';
@@ -79,6 +80,58 @@ function NavLink({ to, children, onClick }) {
   );
 }
 
+function HoneyChainFlowSwitcher() {
+  const { profile, setProfileAfterAuth } = useAuth();
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+
+  const switchRole = (roleKey, targetPath) => {
+    const user = setDemoUser(roleKey);
+    if (setProfileAfterAuth) setProfileAfterAuth(user);
+    if (targetPath) navigate(targetPath);
+  };
+
+  return (
+    <aside aria-label="HoneyChain Demo Navigation" className="bg-gradient-to-r from-amber-800 via-amber-700 to-amber-800 text-white text-xs px-3 py-1.5 flex items-center justify-between z-50 shadow-sm border-b border-amber-500/40">
+      <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
+        <span className="font-extrabold uppercase tracking-wider text-[10px] bg-black/30 px-2 py-0.5 rounded-full flex items-center gap-1 shrink-0 text-amber-200">
+          <span>🍯</span> HoneyChain Panels:
+        </span>
+        <button onClick={() => navigate('/')} className={`px-2.5 py-1 rounded-lg font-semibold transition-all shrink-0 ${pathname === '/' || pathname === '/landing' ? 'bg-white text-amber-900 shadow-sm font-bold' : 'hover:bg-white/20 text-white/90'}`}>
+          🌐 Public Landing
+        </button>
+        <button onClick={() => switchRole('farmer', '/farmer/dashboard')} className={`px-2.5 py-1 rounded-lg font-semibold transition-all shrink-0 ${pathname.startsWith('/farmer') ? 'bg-white text-amber-900 shadow-sm font-bold' : 'hover:bg-white/20 text-white/90'}`}>
+          🐝 Beekeeper Panel
+        </button>
+        <button onClick={() => switchRole('farmer', '/batches/add')} className={`px-2.5 py-1 rounded-lg font-semibold transition-all shrink-0 ${pathname === '/batches/add' ? 'bg-white text-amber-900 shadow-sm font-bold' : 'hover:bg-white/20 text-white/90'}`}>
+          ➕ Log Harvest
+        </button>
+        <button onClick={() => switchRole('farmer', '/farmer/tracking')} className={`px-2.5 py-1 rounded-lg font-semibold transition-all shrink-0 ${pathname === '/farmer/tracking' ? 'bg-white text-amber-900 shadow-sm font-bold' : 'hover:bg-white/20 text-white/90'}`}>
+          📦 Honey Lots
+        </button>
+        <button onClick={() => switchRole('quality', '/quality')} className={`px-2.5 py-1 rounded-lg font-semibold transition-all shrink-0 ${pathname === '/quality' ? 'bg-white text-amber-900 shadow-sm font-bold' : 'hover:bg-white/20 text-white/90'}`}>
+          🔬 KVIC Lab & AI Purity
+        </button>
+        <button onClick={() => switchRole('processor', '/processor/dashboard')} className={`px-2.5 py-1 rounded-lg font-semibold transition-all shrink-0 ${pathname.startsWith('/processor') ? 'bg-white text-amber-900 shadow-sm font-bold' : 'hover:bg-white/20 text-white/90'}`}>
+          🏭 Bottling Unit
+        </button>
+        <button onClick={() => switchRole('buyer', '/buyer/marketplace')} className={`px-2.5 py-1 rounded-lg font-semibold transition-all shrink-0 ${pathname.startsWith('/buyer') && !pathname.includes('passport') ? 'bg-white text-amber-900 shadow-sm font-bold' : 'hover:bg-white/20 text-white/90'}`}>
+          🛒 FMCG Buyer
+        </button>
+        <button onClick={() => switchRole('admin', '/admin')} className={`px-2.5 py-1 rounded-lg font-semibold transition-all shrink-0 ${pathname === '/admin' ? 'bg-white text-amber-900 shadow-sm font-bold' : 'hover:bg-white/20 text-white/90'}`}>
+          🏛️ KVIC Admin
+        </button>
+        <button onClick={() => navigate('/buyer/honey-passport/HC-RJ-2026-000108')} className={`px-2.5 py-1 rounded-lg font-semibold transition-all shrink-0 ${pathname.includes('passport') ? 'bg-white text-amber-900 shadow-sm font-bold' : 'hover:bg-white/20 text-white/90'}`}>
+          📱 Scan Honey Passport
+        </button>
+      </div>
+      <div className="hidden xl:flex items-center gap-2 pl-3 text-[11px] shrink-0 font-medium text-amber-100">
+        <span>Active: <b className="capitalize underline text-white font-bold">{profile?.role || 'Visitor'}</b> ({profile?.name || 'Guest'})</span>
+      </div>
+    </aside>
+  );
+}
+
 function Layout({ children }) {
   const { profile } = useAuth();
   const { t } = useLanguage();
@@ -88,47 +141,47 @@ function Layout({ children }) {
   const [showNotifications, setShowNotifications] = useState(false);
 
   const farmerLinks = [
-    { to: '/', label: t('dashboard') },
-    { to: '/farmer/market', label: t('market') },
-    { to: '/farmer/marketplace', label: t('marketplace') },
-    { to: '/farmer/tracking', label: t('tracking') },
-    { to: '/learn', label: t('learn') },
+    { to: '/', label: 'Dashboard' },
+    { to: '/farmer/market', label: 'Honey Mandi' },
+    { to: '/farmer/marketplace', label: 'Sell Honey' },
+    { to: '/farmer/tracking', label: 'My Apiaries' },
+    { to: '/learn', label: 'Beekeeping Guide' },
   ];
 
   const adminLinks = [
-    { to: '/admin', label: t('dashboard') },
-    { to: '/admin/users', label: t('users') },
-    { to: '/admin/batches', label: t('batches') },
-    { to: '/admin/marketplace', label: t('marketplace') },
-    { to: '/quality', label: t('qualityAssurance') },
+    { to: '/admin', label: 'National Dashboard' },
+    { to: '/admin/users', label: 'Clusters & Beekeepers' },
+    { to: '/admin/batches', label: 'Honey Lots' },
+    { to: '/admin/marketplace', label: 'Procurement Rates' },
+    { to: '/quality', label: 'KVIC Quality Lab' },
   ];
 
   const buyerLinks = [
-    { to: '/buyer/dashboard', label: t('dashboard') },
-    { to: '/buyer/marketplace', label: t('findWool') },
-    { to: '/buyer/orders', label: t('myOrders') },
-    { to: '/buyer/tracking', label: t('tracking') },
-    { to: '/buyer/analytics', label: t('analyticsNav') },
-    { to: '/buyer/saved', label: t('savedNav') },
+    { to: '/buyer/dashboard', label: 'Dashboard' },
+    { to: '/buyer/marketplace', label: 'Pure Honey Catalog' },
+    { to: '/buyer/orders', label: 'My Orders' },
+    { to: '/buyer/tracking', label: 'Consignment Tracking' },
+    { to: '/buyer/analytics', label: 'Procurement Stats' },
+    { to: '/buyer/saved', label: 'Saved Batches' },
   ];
 
   const artisanLinks = [
-    { to: '/artisan', label: t('dashboard') },
-    { to: '/artisan/batches', label: t('myWool') },
-    { to: '/artisan/processing', label: t('processing') },
-    { to: '/artisan/quality', label: t('quality') },
-    { to: '/artisan/completed', label: t('completed') },
-    { to: '/learn', label: t('helpNav') },
+    { to: '/artisan', label: 'Cluster Dashboard' },
+    { to: '/artisan/batches', label: 'Apiary Lots' },
+    { to: '/artisan/processing', label: 'Centrifugation' },
+    { to: '/artisan/quality', label: 'Purity Check' },
+    { to: '/artisan/completed', label: 'Packed Barrels' },
+    { to: '/learn', label: 'KVIC Manuals' },
   ];
 
   const processorLinks = [
     { to: '/processor/dashboard', label: 'Dashboard' },
-    { to: '/processor/requests', label: 'Requests' },
-    { to: '/processor/incoming', label: 'Incoming' },
-    { to: '/processor/active', label: 'Active Jobs' },
-    { to: '/processor/history', label: 'History' },
-    { to: '/processor/batches', label: 'Batches' },
-    { to: '/processor/products', label: 'Products' },
+    { to: '/processor/requests', label: 'Raw Honey Intake' },
+    { to: '/processor/incoming', label: 'Incoming Lots' },
+    { to: '/processor/active', label: 'Micro-Filtration' },
+    { to: '/processor/history', label: 'Batch Logs' },
+    { to: '/processor/batches', label: 'Bottling & QR' },
+    { to: '/processor/products', label: 'Jar Products' },
     { to: '/processor/passport', label: 'QR Scanner' },
   ];
 
@@ -154,15 +207,20 @@ function Layout({ children }) {
       <header className="sticky top-0 z-30 border-b border-border/70 bg-surface/95 backdrop-blur-md">
         <div className="max-w-[90rem] mx-auto px-3.5 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-2 sm:gap-4">
           {/* Logo with official emblem */}
-          <Link to="/" className="flex items-center gap-2 font-extrabold text-textPrimary text-lg sm:text-xl tracking-tight shrink-0 group">
+          <Link to="/" className="flex items-center gap-2.5 font-extrabold text-textPrimary text-lg sm:text-xl tracking-tight shrink-0 group">
             <img
               src="/logo.png"
-              alt="WoolConnect"
+              alt="HoneyChain"
               className="h-10 w-10 sm:h-12 sm:w-12 object-contain rounded-xl shadow-xs transition-transform group-hover:scale-105"
             />
-            <span className="leading-none text-lg sm:text-xl font-black">
-              Wool<span className="text-primary">Connect</span>
-            </span>
+            <div className="flex flex-col">
+              <span className="leading-none text-lg sm:text-xl font-black">
+                Honey<span className="text-primary">Chain</span>
+              </span>
+              <span className="text-[10px] font-bold text-accent tracking-wider uppercase mt-0.5">
+                KVIC Honey Mission
+              </span>
+            </div>
           </Link>
 
           {/* Desktop Nav */}
@@ -341,7 +399,8 @@ function Layout({ children }) {
 }
 
 function Protected({ children, allowedRoles }) {
-  const { profile, loading } = useAuth();
+  const { profile, loading, setProfileAfterAuth } = useAuth();
+  
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -349,13 +408,24 @@ function Protected({ children, allowedRoles }) {
       </div>
     );
   }
-  if (!profile) {
-    return <Navigate to="/login" replace />;
+
+  // Automatic demo profile assignment for direct localhost testing without backend
+  const activeProfile = profile || (() => {
+    const roleToUse = allowedRoles && allowedRoles.length > 0 ? allowedRoles[0] : 'farmer';
+    const demo = setDemoUser(roleToUse);
+    if (setProfileAfterAuth) setProfileAfterAuth(demo);
+    return demo;
+  })();
+
+  // If role mismatch when visiting a direct link, auto-switch to required role for smooth testing
+  if (allowedRoles && allowedRoles.length > 0 && !allowedRoles.includes(activeProfile.role)) {
+    const roleToUse = allowedRoles[0];
+    const demo = setDemoUser(roleToUse);
+    if (setProfileAfterAuth) setProfileAfterAuth(demo);
+    return <LanguageGate active><Layout>{children}</Layout></LanguageGate>;
   }
-  if (allowedRoles && allowedRoles.length > 0 && !allowedRoles.includes(profile.role)) {
-    return <Navigate to="/" replace />;
-  }
-  return <LanguageGate active={Boolean(profile)}><Layout>{children}</Layout></LanguageGate>;
+
+  return <LanguageGate active={Boolean(activeProfile)}><Layout>{children}</Layout></LanguageGate>;
 }
 
 function HomeRedirect() {
@@ -379,9 +449,9 @@ export default function App() {
   const [fadeSplash, setFadeSplash] = useState(false);
 
   useEffect(() => {
-    // Show splash screen for 2 seconds, then fade out over 500ms
-    const fadeTimer = setTimeout(() => setFadeSplash(true), 2000);
-    const removeTimer = setTimeout(() => setShowSplash(false), 2500);
+    // Show splash screen for 1.8 seconds, then fade out
+    const fadeTimer = setTimeout(() => setFadeSplash(true), 1800);
+    const removeTimer = setTimeout(() => setShowSplash(false), 2200);
     return () => { clearTimeout(fadeTimer); clearTimeout(removeTimer); };
   }, []);
 
@@ -390,16 +460,17 @@ export default function App() {
       {showSplash && (
         <div className={`fixed inset-0 z-[100] flex flex-col items-center justify-center bg-surface transition-opacity duration-500 ${fadeSplash ? 'opacity-0' : 'opacity-100'}`}>
           <div className="flex flex-col items-center animate-scale-in">
-            <img src="/logo.png" alt="WoolConnect" className="w-24 h-24 sm:w-32 sm:h-32 mb-4 drop-shadow-xl" />
+            <img src="/logo.png" alt="HoneyChain" className="w-24 h-24 sm:w-32 sm:h-32 mb-4 drop-shadow-xl" />
             <h1 className="text-3xl font-black tracking-tight text-textPrimary animate-fade-in-up">
-              Wool<span className="text-primary">Connect</span>
+              Honey<span className="text-primary">Chain</span>
             </h1>
-            <p className="text-primary mt-2 tracking-[0.2em] uppercase text-xs font-extrabold animate-fade-in-up delay-1">
-              Farm to Fabric
+            <p className="text-accent mt-2 tracking-[0.2em] uppercase text-xs font-extrabold animate-fade-in-up delay-1">
+              Hive to Home • KVIC Honey Mission
             </p>
           </div>
         </div>
       )}
+      <HoneyChainFlowSwitcher />
       <Routes>
         <Route path="/" element={<HomeRedirect />} />
         <Route path="/landing" element={<LandingPage />} />
@@ -407,7 +478,13 @@ export default function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        {/* Farmer Routes */}
+        {/* Public QR Consumer Passport Routes */}
+        <Route path="/buyer/honey-passport/:id" element={<WoolPassport />} />
+        <Route path="/buyer/wool-passport/:id" element={<WoolPassport />} />
+        <Route path="/honey-passport/:id" element={<WoolPassport />} />
+        <Route path="/passport/:id" element={<WoolPassport />} />
+
+        {/* Beekeeper / Farmer Routes */}
         <Route path="/farmer/dashboard" element={<Protected allowedRoles={['farmer']}><FarmerDashboard /></Protected>} />
         <Route path="/farmer/market" element={<Protected allowedRoles={['farmer']}><FarmerMarket /></Protected>} />
         <Route path="/farmer/marketplace" element={<Protected allowedRoles={['farmer']}><MarketplaceExperience allowBuying /></Protected>} />
@@ -418,7 +495,7 @@ export default function App() {
         <Route path="/batches/:id/traceability" element={<Protected allowedRoles={['farmer']}><BatchTraceability /></Protected>} />
         <Route path="/farmer/profile" element={<Protected allowedRoles={['farmer']}><FarmerProfile /></Protected>} />
 
-        {/* Artisan Routes */}
+        {/* Artisan / Cooperative Routes */}
         <Route path="/artisan" element={<Protected allowedRoles={['artisan']}><ArtisanDashboard /></Protected>} />
         <Route path="/artisan/batches" element={<Protected allowedRoles={['artisan']}><ArtisanBatches /></Protected>} />
         <Route path="/artisan/batches/:id" element={<Protected allowedRoles={['artisan']}><ArtisanBatchDetails /></Protected>} />
@@ -430,7 +507,6 @@ export default function App() {
         <Route path="/buyer/dashboard" element={<Protected allowedRoles={['buyer']}><BuyerDashboard /></Protected>} />
         <Route path="/buyer/marketplace" element={<Protected allowedRoles={['buyer']}><MarketplaceExperience allowBuying /></Protected>} />
         <Route path="/buyer/marketplace/:id" element={<Protected allowedRoles={['buyer']}><ListingDetails /></Protected>} />
-        <Route path="/buyer/wool-passport/:id" element={<Protected allowedRoles={['buyer']}><WoolPassport /></Protected>} />
         <Route path="/buyer/checkout/:id" element={<Protected allowedRoles={['buyer']}><Checkout /></Protected>} />
         <Route path="/buyer/orders" element={<Protected allowedRoles={['buyer']}><BuyerOrders /></Protected>} />
         <Route path="/buyer/orders/:id" element={<Protected allowedRoles={['buyer']}><OrderDetails /></Protected>} />
@@ -454,7 +530,7 @@ export default function App() {
         <Route path="/processor/notifications" element={<Protected allowedRoles={['processor']}><ProcessorNotifications /></Protected>} />
         <Route path="/processor/profile" element={<Protected allowedRoles={['processor']}><ProcessorProfile /></Protected>} />
 
-        {/* Admin Routes */}
+        {/* Admin & Lab Routes */}
         <Route path="/admin" element={<Protected allowedRoles={['admin']}><AdminLayout><AdminDashboard /></AdminLayout></Protected>} />
         <Route path="/admin/users" element={<Protected allowedRoles={['admin']}><AdminLayout><UserManagement /></AdminLayout></Protected>} />
         <Route path="/admin/batches" element={<Protected allowedRoles={['admin']}><AdminLayout><BatchManagement /></AdminLayout></Protected>} />

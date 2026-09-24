@@ -58,7 +58,7 @@ export default function ArtisanDashboard() {
           <div className="max-w-xl">
             <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/15 text-emerald-200 border border-white/15 text-[11px] font-semibold mb-2">
               <img src="/logo.png" alt="Emblem" className="h-3.5 w-3.5 object-contain rounded-full" />
-              <span>WOOLCONNECT</span>
+              <span>HONEYCHAIN</span>
             </div>
 
             <h1 className="text-xl sm:text-3xl font-extrabold tracking-tight leading-tight">
@@ -141,7 +141,7 @@ export default function ArtisanDashboard() {
         </div>
       </section>
 
-      {/* Recent assigned wool */}
+      {/* Recent assigned honey */}
       <section className="mt-12 animate-fade-in-up delay-5">
         <div className="section-heading mb-4">
           <div>

@@ -24,31 +24,31 @@ export default function ProcessorDashboard() {
   }, []);
 
   const quickActions = [
-    { label: t('procActiveProcessing', 'Active Processing'), desc: t('procManageBatches', 'Manage current batches'), icon: Activity, route: '/processor/active', tone: 'bg-primary text-white', accent: 'border-primary/30 hover:border-primary' },
-    { label: t('procRequests', 'Processing Requests'), desc: t('procReviewRequests', 'Review incoming requests'), icon: Inbox, route: '/processor/requests', tone: 'bg-accent text-white', accent: 'border-accent/30 hover:border-accent' },
-    { label: t('procIncomingBatches', 'Incoming Batches'), desc: t('procReceiveShipments', 'Receive wool shipments'), icon: Package, route: '/processor/incoming', tone: 'bg-info text-white', accent: 'border-info/30 hover:border-info' },
-    { label: t('procProcessedProducts', 'Processed Products'), desc: t('procViewReadyProducts', 'View ready products'), icon: CheckCircle, route: '/processor/products', tone: 'bg-emerald-600 text-white', accent: 'border-emerald-500/30 hover:border-emerald-600' },
+    { label: 'Micro-Filtration & Conditioning', desc: 'Warm cloth filtration at 40°C & moisture control', icon: Activity, route: '/processor/active', tone: 'bg-primary text-white', accent: 'border-primary/30 hover:border-primary' },
+    { label: 'Raw Honey Intake', desc: 'Review incoming apiary extraction requests', icon: Inbox, route: '/processor/requests', tone: 'bg-accent text-white', accent: 'border-accent/30 hover:border-accent' },
+    { label: 'Incoming Lots', desc: 'Receive 30kg raw honey barrels', icon: Package, route: '/processor/incoming', tone: 'bg-info text-white', accent: 'border-info/30 hover:border-info' },
+    { label: 'Bottling & QR Labeling', desc: 'Pack into 250g, 500g jars with QR stickers', icon: CheckCircle, route: '/processor/batches', tone: 'bg-emerald-600 text-white', accent: 'border-emerald-500/30 hover:border-emerald-600' },
   ];
 
   return (
     <main className="page-shell">
       {/* Hero */}
-      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#1c3e27] via-[#2a5035] to-[#3f6b3f] text-white p-6 sm:p-9 shadow-xl animate-enter">
+      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-amber-800 via-amber-700 to-amber-900 text-white p-6 sm:p-9 shadow-xl animate-enter">
         <div className="hero-orb orb-one opacity-20" />
         <div className="hero-orb orb-two opacity-15" />
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="max-w-xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-emerald-200 border border-white/15 text-xs font-semibold backdrop-blur-md mb-3">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-amber-200 border border-white/15 text-xs font-semibold backdrop-blur-md mb-3">
               <Sparkles size={13} className="text-amber-300" />
-              <span>{t('procProcessorPortal', 'Processor Portal')}</span>
+              <span>Honey Processing & Bottling Portal</span>
             </div>
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight leading-tight">
-              {t('procWelcome', 'Welcome, ')} {profile?.name?.split(' ')[0] || t('procProcessor', 'Processor')}. <br />
-              <span className="text-emerald-200 font-medium text-xl sm:text-2xl lg:text-3xl">{t('procManageTransformation', 'Manage wool transformation.')}</span>
+              Welcome, {profile?.name?.split(' ')[0] || 'Bottling Master'}. <br />
+              <span className="text-amber-200 font-medium text-xl sm:text-2xl lg:text-3xl">Manage honey intake, micro-filtration, and packaging.</span>
             </h1>
             <p className="mt-2.5 flex items-center gap-1.5 text-xs sm:text-sm text-white/80">
-              <MapPin size={14} className="text-emerald-300" />
-              <span>{profile?.district || 'India'}, {profile?.state || 'India'}</span>
+              <MapPin size={14} className="text-amber-300" />
+              <span>{profile?.district || 'Bharatpur'}, {profile?.state || 'Rajasthan'}</span>
             </p>
           </div>
         </div>

@@ -12,10 +12,10 @@ export default function LanguageGate({ children, active }) {
         <div className="text-center">
           <img
             src="/logo.png"
-            alt="WoolConnect Logo"
+            alt="HoneyChain Logo"
             className="mx-auto h-20 w-20 object-contain rounded-3xl shadow-md mb-3"
           />
-          <h1 className="mt-1 text-2xl sm:text-3xl font-black text-textPrimary tracking-tight">WOOLCONNECT</h1>
+          <h1 className="mt-1 text-2xl sm:text-3xl font-black text-textPrimary tracking-tight">HONEYCHAIN</h1>
           <div className="mt-3 space-y-1 text-base font-semibold text-textSecondary">
             <p>{t('chooseLanguage')}</p>
             <p>{t('chooseLanguageHi')}</p>

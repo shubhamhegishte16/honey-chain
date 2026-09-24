@@ -1,4 +1,4 @@
-// ttsVoice.util.js - Centralized TTS voice utility for WoolConnect Training Module
+// ttsVoice.util.js - Centralized TTS voice utility for HoneyChain Training Module
 // Used by: VoiceLearningPlayer (Read Guide) and ResourceDetails (Step-by-Step)
 // Includes Google Translate TTS audio fallback for languages without native browser voice
 

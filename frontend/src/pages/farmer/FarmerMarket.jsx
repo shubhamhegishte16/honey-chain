@@ -109,14 +109,14 @@ export default function FarmerMarket() {
       {/* ─── Header ─── */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
-          <div className="eyebrow text-primary mb-1">
-            <Sparkles size={13} /> {t('todayWoolPrice')}
+          <div className="eyebrow text-amber-600 mb-1 flex items-center gap-1 font-bold text-xs uppercase tracking-wider">
+            <Sparkles size={13} /> Honey Mandi APMC Benchmark Rates
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-textPrimary">
-            {t('todayWoolPrice')}
+          <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-textPrimary">
+            National Honey Mandi Rates
           </h1>
           <p className="text-xs sm:text-sm text-textSecondary mt-0.5">
-            {t('market')}
+            Real-time APMC wholesale prices for raw honey varieties across Indian beekeeping states.
           </p>
         </div>
 
@@ -126,7 +126,7 @@ export default function FarmerMarket() {
           className="self-start sm:self-auto inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-surface border border-border text-xs font-semibold text-textSecondary hover:text-primary hover:border-primary/40 transition-colors"
         >
           <RefreshCw size={14} className={loading ? 'animate-spin' : ''} />
-          <span>{t('refreshRates')}</span>
+          <span>Refresh Rates</span>
         </button>
       </div>
 
@@ -143,7 +143,7 @@ export default function FarmerMarket() {
                 <div>
                   <div className="flex items-center gap-2 mb-2">
                     <span className="px-3 py-1 rounded-full text-xs font-bold bg-primaryLight text-primary">
-                      {selected.wool_type}
+                      {selected.floralSource || selected.wool_type || 'Mustard Blossom Honey'}
                     </span>
                     <span className="text-xs font-semibold text-textMuted flex items-center gap-1">
                       <MapPin size={12} /> {t('region')}: {selected.state}
@@ -243,7 +243,7 @@ export default function FarmerMarket() {
                   <div className="flex items-start justify-between gap-2">
                     <div>
                       <p className="font-bold text-sm text-textPrimary">{p.state}</p>
-                      <p className="text-xs text-textSecondary mt-0.5">{p.wool_type}</p>
+                      <p className="text-xs text-textSecondary mt-0.5">{p.floralSource || p.wool_type || 'Raw Honey'}</p>
                     </div>
                     <span
                       className={`inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full ${

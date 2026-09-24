@@ -88,7 +88,7 @@ export default function BuyerAnalytics() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Wool Types Breakdown */}
+        {/* Honey Varieties Breakdown */}
         <Card className="p-6 shadow-sm border border-border">
           <h3 className="font-bold text-textPrimary mb-5">{t('volumeByWoolType')}</h3>
           {topWoolTypes.length === 0 ? (
@@ -126,7 +126,7 @@ export default function BuyerAnalytics() {
               {recentOrders.map(order => (
                 <div key={order.id || order._id} className="flex items-center justify-between pb-3 border-b border-border/50 last:border-0 last:pb-0">
                   <div>
-                    <p className="font-bold text-sm text-textPrimary">{order.woolType} <span className="font-normal text-textSecondary">({order.quantityKg} kg)</span></p>
+                    <p className="font-bold text-sm text-textPrimary">{order.floralSource || order.woolType || 'Raw Blossom Honey'} <span className="font-normal text-textSecondary">({order.quantityKg} kg)</span></p>
                     <p className="text-xs text-textMuted mt-0.5">{new Date(order.createdAt).toLocaleDateString('en-IN')}</p>
                   </div>
                   <div className="text-right">

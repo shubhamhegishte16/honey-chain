@@ -32,9 +32,9 @@ export default function ProcessingHistory() {
               <div className="flex-1 min-w-0">
                 <p className="font-bold text-sm text-textPrimary">{item.requestId || item.id}</p>
                 <p className="text-xs text-textSecondary mt-1">
-                  Batch: <span className="font-semibold">{item.batchIdDisplay}</span> · {item.woolType} · Service: {item.serviceType}
+                  Batch: <span className="font-semibold">{item.batchIdDisplay}</span> · {item.floralSource || item.woolType || 'Pure Honey'} · Service: {item.serviceType}
                 </p>
-                <p className="text-xs text-textSecondary mt-0.5">Farmer: {item.farmerName}</p>
+                <p className="text-xs text-textSecondary mt-0.5">Beekeeper: {item.farmerName}</p>
                 <p className="text-[11px] text-textMuted mt-0.5">
                   Requested: {item.date}{item.completedOn ? ` · Completed: ${item.completedOn}` : ''}
                 </p>

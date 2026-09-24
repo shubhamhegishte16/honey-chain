@@ -15,6 +15,7 @@ import {
   Clock,
   ArrowUpRight,
   Cog,
+  ShieldCheck,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
@@ -35,46 +36,46 @@ export default function FarmerTracking() {
   const [search, setSearch] = useState('');
   const [activeFilter, setActiveFilter] = useState('all');
   const statusFilters = [
-    { id: 'all', label: t('allBatches') },
-    { id: 'listed', label: t('listed') },
-    { id: 'produced', label: t('produced') },
-    { id: 'quality_checked', label: t('graded') },
-    { id: 'stored', label: t('stored') },
-    { id: 'processed', label: t('processed') },
+    { id: 'all', label: 'All Lots' },
+    { id: 'listed', label: 'On Mandi' },
+    { id: 'produced', label: 'Harvested' },
+    { id: 'quality_checked', label: 'Lab Graded' },
+    { id: 'stored', label: 'Stored' },
+    { id: 'processed', label: 'Bottled' },
   ];
 
   useEffect(() => {
-    if (!profile?.id) return;
     setLoading(true);
-    getBatchesByFarmer(profile.id).then(({ data, error: fetchError }) => {
-      if (fetchError) setError(t('somethingWrongWool'));
+    getBatchesByFarmer(profile?.id || 'demo-farmer-1').then(({ data, error: fetchError }) => {
+      if (fetchError) setError('Unable to load honey batches.');
       else setBatches(data || []);
       setLoading(false);
     });
   }, [profile?.id]);
 
   const filteredBatches = batches.filter(b => {
+    const floral = b.floralSource || b.wool_type || '';
     const matchSearch =
       b.batch_id?.toLowerCase().includes(search.toLowerCase()) ||
-      b.wool_type?.toLowerCase().includes(search.toLowerCase()) ||
+      floral.toLowerCase().includes(search.toLowerCase()) ||
       b.district?.toLowerCase().includes(search.toLowerCase());
     const matchStatus = activeFilter === 'all' || b.status === activeFilter;
     return matchSearch && matchStatus;
   });
 
   return (
-    <main className="page-shell">
+    <main className="page-shell py-6">
       {/* ─── Header ─── */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
-          <div className="eyebrow text-primary mb-1">
-            <Sparkles size={13} /> {t('myWool')}
+          <div className="eyebrow text-amber-600 mb-1 flex items-center gap-1 font-bold text-xs uppercase tracking-wider">
+            <Sparkles size={13} /> KVIC Honey Mission Apiary Lots
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-textPrimary">
-            {t('myWool')}
+          <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-textPrimary">
+            My Honey Harvest Batches
           </h1>
           <p className="text-xs sm:text-sm text-textSecondary mt-0.5">
-            {t('totalWool')}: {batches.reduce((sum, batch) => sum + Number(batch.quantity_kg || 0), 0).toLocaleString()} kg
+            Total Harvested: {batches.reduce((sum, batch) => sum + Number(batch.quantity_kg || batch.quantityKg || 0), 0).toLocaleString()} kg
           </p>
         </div>
 
@@ -83,7 +84,7 @@ export default function FarmerTracking() {
           className="self-start sm:self-auto inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-white font-bold text-sm shadow-sm hover:bg-primaryDark hover:shadow-md transition-all active:scale-[0.98]"
         >
           <ClipboardPlus size={16} />
-          <span>{t('addNewWool')}</span>
+          <span>Log Honey Harvest</span>
         </button>
       </div>
 
@@ -95,162 +96,113 @@ export default function FarmerTracking() {
             type="text"
             value={search}
             onChange={e => setSearch(e.target.value)}
-            placeholder={t('searchWool')}
+            placeholder="Search by lot ID, flora (Mustard, Acacia), or district..."
             className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-border bg-surface text-sm text-textPrimary placeholder:text-textMuted focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
           />
         </div>
 
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 max-w-full">
-          {statusFilters.map(f => (
+        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1">
+          {statusFilters.map(filter => (
             <button
-              key={f.id}
-              onClick={() => setActiveFilter(f.id)}
-              className={`px-3.5 py-1.5 rounded-full text-xs font-semibold shrink-0 transition-all ${
-                activeFilter === f.id
-                  ? 'bg-primary text-white shadow-sm'
-                  : 'bg-surface border border-border text-textSecondary hover:border-primary/40'
+              key={filter.id}
+              onClick={() => setActiveFilter(filter.id)}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0 ${
+                activeFilter === filter.id
+                  ? 'bg-primary text-white shadow-xs'
+                  : 'bg-surface border border-border/80 text-textSecondary hover:bg-background'
               }`}
             >
-              {f.label}
+              {filter.label}
             </button>
           ))}
         </div>
       </div>
 
-      {/* ─── Batches List / Grid ─── */}
+      {/* ─── Batch List ─── */}
       {loading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="p-5 rounded-3xl bg-surface border border-border/40 shadow-sm animate-skeleton-pulse">
-              <div className="flex items-start gap-3 mb-4">
-                <div className="h-11 w-11 rounded-2xl bg-border/50 shrink-0" />
-                <div className="flex-1 space-y-2 py-1">
-                  <div className="h-4 bg-border/50 rounded w-1/3" />
-                  <div className="h-3 bg-border/30 rounded w-1/4" />
-                </div>
-              </div>
-              <div className="h-16 bg-background rounded-2xl border border-border/30 mb-4" />
-              <div className="flex items-center justify-between pt-3 border-t border-border/30">
-                <div className="flex gap-2">
-                  <div className="h-6 w-14 bg-border/30 rounded-lg" />
-                  <div className="h-6 w-20 bg-border/30 rounded-lg" />
-                </div>
-                <div className="h-4 w-16 bg-border/30 rounded" />
-              </div>
-            </div>
-          ))}
-        </div>
-      ) : error ? (
-        <div className="p-6 text-center rounded-2xl bg-errorLight/50 border border-error/20 text-error text-sm animate-fade-in">
-          {error}
+        <div className="py-16 flex justify-center items-center gap-2">
+          <div className="h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+          <span className="text-sm text-textSecondary">Loading apiary records...</span>
         </div>
       ) : filteredBatches.length === 0 ? (
-        <div className="p-10 sm:p-16 text-center rounded-3xl bg-surface border border-border flex flex-col items-center animate-fade-in-up">
-          <span className="grid h-16 w-16 place-items-center rounded-3xl bg-primaryLight text-primary mb-4 shadow-sm">
-            <Package size={32} />
-          </span>
-          <h3 className="font-bold text-lg text-textPrimary">{t('noWoolFound')}</h3>
-          <p className="hidden sm:block text-xs sm:text-sm text-textSecondary max-w-sm mt-1 mb-6">
-            {search || activeFilter !== 'all'
-              ? t('noWoolSearch')
-              : t('noWoolHelp')}
-          </p>
+        <div className="text-center py-16 bg-surface border border-border/70 rounded-3xl p-8">
+          <span className="text-4xl">🐝</span>
+          <h3 className="text-base font-bold text-textPrimary mt-3">No Honey Batches Found</h3>
+          <p className="text-xs text-textSecondary mt-1">Start by recording your first raw honey harvest extraction.</p>
           <button
             onClick={() => navigate('/batches/add')}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-primary text-white font-bold text-sm shadow hover:bg-primaryDark transition-all active:scale-95"
+            className="mt-4 px-4 py-2 rounded-xl bg-primary text-white text-xs font-bold"
           >
-            <ClipboardPlus size={16} />
-            <span>{t('recordFirstBatch')}</span>
+            Log New Harvest
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {filteredBatches.map((batch, index) => (
-            <div
-              key={batch.id || batch._id}
-              className={`p-5 rounded-3xl bg-surface border border-border/80 shadow-sm hover:shadow-card-hover hover:border-primary/40 transition-all duration-200 flex flex-col justify-between animate-fade-in-up delay-${Math.min(index + 1, 6)}`}
-            >
-              <div>
-                <div className="flex items-start justify-between gap-3 mb-3">
-                  <div className="flex items-center gap-3">
-                    <span className="grid h-11 w-11 place-items-center rounded-2xl bg-primaryLight text-primary font-bold shrink-0">
-                      <Package size={20} />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {filteredBatches.map(batch => {
+            const batchId = batch.batch_id || batch.batchId || batch.id;
+            const floral = batch.floralSource || batch.wool_type || 'Mustard Blossom Raw Honey';
+            const weight = batch.quantity_kg || batch.quantityKg || 50;
+
+            return (
+              <div
+                key={batchId}
+                className="rounded-3xl bg-surface border border-border/80 p-5 hover:border-amber-400 hover:shadow-card transition-all flex flex-col justify-between"
+              >
+                <div>
+                  <div className="flex items-center justify-between gap-2 mb-3">
+                    <span className="text-xs font-extrabold font-mono text-primary bg-primaryLight px-2.5 py-0.5 rounded-full">
+                      {batchId}
                     </span>
+                    <BatchStatusBadge status={batch.status} />
+                  </div>
+
+                  <h3 className="font-extrabold text-base text-textPrimary">{floral}</h3>
+                  <p className="text-xs text-textSecondary mt-0.5 flex items-center gap-1">
+                    <MapPin size={12} className="text-primary" /> {batch.district || 'Bharatpur'}, {batch.state || 'Rajasthan'}
+                  </p>
+
+                  <div className="grid grid-cols-2 gap-2 mt-4 p-3 bg-amber-50/50 rounded-2xl border border-amber-200/50 text-xs">
                     <div>
-                      <h3 className="font-bold text-base text-textPrimary leading-tight">
-                        {batch.batch_id}
-                      </h3>
-                      <p className="text-xs text-textSecondary font-semibold mt-0.5">
-                        {batch.wool_type} • <span className="text-primary font-bold">{batch.quantity_kg} kg</span>
-                      </p>
+                      <span className="text-textMuted block text-[10px] uppercase font-bold">Quantity</span>
+                      <strong className="text-sm font-black text-amber-900 font-mono">{weight} kg</strong>
+                    </div>
+                    <div>
+                      <span className="text-textMuted block text-[10px] uppercase font-bold">Quality Grade</span>
+                      <strong className="text-xs font-bold text-emerald-700">{batch.qualityGrade || 'Grade A+'}</strong>
                     </div>
                   </div>
-                  <BatchStatusBadge status={batch.status} />
                 </div>
 
-                <div className="grid grid-cols-2 gap-2 my-3 p-3 rounded-2xl bg-background border border-border/60 text-xs">
-                  <div>
-                    <span className="text-[10px] uppercase font-bold text-textMuted block">{t('origin')}</span>
-                    <span className="font-semibold text-textPrimary flex items-center gap-1 mt-0.5 truncate">
-                      <MapPin size={11} className="text-primary shrink-0" />
-                      {batch.district || t('bikaner')}, {batch.state || t('rajasthan')}
-                    </span>
-                  </div>
-                  <div>
-                    <span className="text-[10px] uppercase font-bold text-textMuted block">{t('shearingDate')}</span>
-                    <span className="font-semibold text-textPrimary flex items-center gap-1 mt-0.5 truncate">
-                      <Calendar size={11} className="text-textMuted shrink-0" />
-                      {batch.shearing_date ? new Date(batch.shearing_date).toLocaleDateString() : t('recentClip')}
-                    </span>
+                <div className="mt-5 pt-3 border-t border-border/60 flex items-center justify-between gap-2">
+                  <Link
+                    to={`/batches/${batch._id || batch.id}/details`}
+                    className="text-xs font-bold text-primary hover:underline flex items-center gap-1"
+                  >
+                    View Details →
+                  </Link>
+
+                  <div className="flex items-center gap-1.5">
+                    <Link
+                      to={`/batches/${batch._id || batch.id}/qr`}
+                      title="QR Code"
+                      className="p-2 rounded-xl bg-background border border-border hover:border-primary/50 text-textSecondary hover:text-primary transition-colors"
+                    >
+                      <QrCode size={15} />
+                    </Link>
+                    <Link
+                      to={`/buyer/honey-passport/${batchId}`}
+                      title="Public Passport"
+                      className="p-2 rounded-xl bg-amber-100 border border-amber-300 hover:bg-amber-200 text-amber-900 transition-colors"
+                    >
+                      <ShieldCheck size={15} />
+                    </Link>
                   </div>
                 </div>
               </div>
-
-              {/* Action Shortcuts */}
-              <div className="mt-4 pt-3 border-t border-border/60 flex items-center justify-between gap-2 text-xs font-semibold">
-                <div className="flex items-center gap-1.5 flex-wrap">
-                  <button
-                    onClick={() => setSelectedBatchForProcessing(batch)}
-                    className="px-2.5 py-1.5 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-700 hover:bg-emerald-100 transition-colors flex items-center gap-1 font-bold"
-                  >
-                    <Cog size={13} /> {t('process', 'Process')}
-                  </button>
-                  <button
-                    onClick={() => navigate(`/batches/${batch.id || batch._id}/qr`)}
-                    className="px-2.5 py-1.5 rounded-lg bg-background border border-border text-textSecondary hover:border-primary hover:text-primary transition-colors flex items-center gap-1"
-                  >
-                    <QrCode size={13} /> {t('qr')}
-                  </button>
-                  <button
-                    onClick={() => navigate(`/batches/${batch.id || batch._id}/traceability`)}
-                    className="px-2.5 py-1.5 rounded-lg bg-background border border-border text-textSecondary hover:border-primary hover:text-primary transition-colors flex items-center gap-1"
-                  >
-                    <Layers size={13} /> {t('woolJourney')}
-                  </button>
-                </div>
-
-                <button
-                  onClick={() => navigate(`/batches/${batch.id || batch._id}/details`)}
-                  className="text-primary hover:text-primaryDark font-bold inline-flex items-center gap-1 group shrink-0"
-                >
-                  <span>{t('seeWool')}</span>
-                  <ArrowRight size={14} className="transition-transform group-hover:translate-x-0.5" />
-                </button>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
-
-      <RequestProcessingModal
-        batch={selectedBatchForProcessing}
-        isOpen={Boolean(selectedBatchForProcessing)}
-        onClose={() => setSelectedBatchForProcessing(null)}
-        onSuccess={(req) => {
-          setBatches(prev => prev.map(b => (b.id === req.batch_id || b._id === req.batch_id || b.batch_id === req.batch_id) ? { ...b, status: 'processing_requested' } : b));
-        }}
-      />
     </main>
   );
 }
-

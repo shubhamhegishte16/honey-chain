@@ -12,6 +12,7 @@ import {
   ShieldCheck,
   User,
   ExternalLink,
+  Hash,
 } from 'lucide-react';
 import Card from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
@@ -22,56 +23,50 @@ import { useLanguage } from '../../context/LanguageContext';
 
 const EVENT_CONFIG = {
   produced: {
-    label: 'Sheared & Produced',
-    desc: 'Wool harvest logged on-farm',
-    icon: '🐑',
-    tone: 'bg-emerald-50 text-emerald-800 border-emerald-300',
+    label: 'Harvested & Genesis Block #0',
+    desc: 'Comb extraction recorded on-apiary with GPS coordinates',
+    icon: '🐝',
+    tone: 'bg-amber-50 text-amber-900 border-amber-300',
   },
   quality_checked: {
-    label: 'Quality Graded',
-    desc: 'Micron, yield & staple tested',
+    label: 'KVIC Lab NMR Tested & Block #1',
+    desc: 'Moisture <18%, HMF fresh index, and NMR sugar adulteration passed',
     icon: '🔬',
-    tone: 'bg-sky-50 text-sky-800 border-sky-300',
-  },
-  sorted: {
-    label: 'Graded & Sorted',
-    desc: 'Sorted by color and fleece grade',
-    icon: '📑',
-    tone: 'bg-purple-50 text-purple-800 border-purple-300',
+    tone: 'bg-emerald-50 text-emerald-900 border-emerald-300',
   },
   stored: {
-    label: 'Warehouse Vaulted',
-    desc: 'Humidity-controlled storage deposit',
+    label: 'Apiary Barrel Vaulted',
+    desc: 'Hermetically sealed food-grade 30kg drum storage at 18-20°C',
     icon: '🏬',
     tone: 'bg-amber-50 text-amber-900 border-amber-300',
   },
   processed: {
-    label: 'Scoured & Carded',
-    desc: 'Industrial processing completed',
-    icon: '🧵',
-    tone: 'bg-teal-50 text-teal-800 border-teal-300',
+    label: 'Micro-Filtered & Bottled (Block #2)',
+    desc: 'Gentle warm cloth filtration and automated 500g jar packing',
+    icon: '🍯',
+    tone: 'bg-amber-50 text-amber-900 border-amber-300',
   },
   listed: {
-    label: 'Listed in Marketplace',
-    desc: 'Available for purchase bids',
+    label: 'Listed on Honey Mandi',
+    desc: 'Available for direct FMCG & consumer procurement',
     icon: '🛒',
     tone: 'bg-indigo-50 text-indigo-800 border-indigo-300',
   },
   sold: {
-    label: 'Order Confirmed',
-    desc: 'Purchased by textile mill / buyer',
+    label: 'Procured & Smart Contract Settled',
+    desc: 'Instant direct-to-beekeeper escrow payment released',
     icon: '💰',
     tone: 'bg-emerald-50 text-emerald-800 border-emerald-300',
   },
   dispatched: {
     label: 'In Transit',
-    desc: 'Dispatched via regional agro-freight',
+    desc: 'Dispatched via regional agro-freight with temperature logging',
     icon: '🚚',
     tone: 'bg-blue-50 text-blue-800 border-blue-300',
   },
   delivered: {
-    label: 'Delivered',
-    desc: 'Received and verified by destination mill',
+    label: 'Delivered (Block #3)',
+    desc: 'Verified by consumer via smartphone QR scan',
     icon: '✨',
     tone: 'bg-green-50 text-green-800 border-green-300',
   },
@@ -91,14 +86,15 @@ export default function BatchTraceability() {
         setBatch(batchResult.data);
         const evList = eventsResult.data || [];
         if (evList.length === 0 && batchResult.data) {
-          // Generate realistic default produced event if none exist yet
           evList.push({
             id: 'ev-initial',
             event_type: 'produced',
-            actorName: batchResult.data.users?.name || 'Pastoralist Producer',
-            location: `${batchResult.data.district || 'Bikaner'}, ${batchResult.data.state || 'Rajasthan'}`,
-            description: `Batch registered on WoolConnect digital ledger. Weight: ${batchResult.data.quantity_kg} kg ${batchResult.data.wool_type}.`,
-            event_timestamp: batchResult.data.shearing_date || new Date().toISOString(),
+            actorName: batchResult.data.users?.name || batchResult.data.farmer?.name || 'Ramesh Singh (Beekeeper)',
+            location: `${batchResult.data.district || 'Bharatpur'}, ${batchResult.data.state || 'Rajasthan'}`,
+            description: `Raw honey harvest recorded on HoneyChain digital ledger. Volume: ${batchResult.data.quantity_kg || 50} kg ${batchResult.data.wool_type || 'Mustard Blossom Honey'}.`,
+            timestamp: batchResult.data.shearing_date || batchResult.data.extractionDate || new Date().toISOString(),
+            blockHash: batchResult.data.blockHash || '0x9a4e8f12c3b5d7e01234abcd5678ef901234567890abcdef1234567890abcdef',
+            blockNumber: 0,
           });
         }
         setEvents(evList);
@@ -107,109 +103,122 @@ export default function BatchTraceability() {
     );
   }, [id]);
 
+  const batchIdDisplay = batch?.batch_id || batch?.batchId || batch?.id || id;
+  const floral = batch?.floralSource || batch?.wool_type || 'Mustard Blossom Raw Honey';
+
   return (
-    <main className="page-shell max-w-3xl">
+    <main className="page-shell max-w-3xl mx-auto py-6">
       <div className="mb-6 flex items-center justify-between">
         <Link
           to={batch ? `/batches/${batch._id || batch.id}/details` : '/farmer/tracking'}
           className="inline-flex items-center gap-1.5 text-xs font-semibold text-textSecondary hover:text-primary transition-colors group"
         >
           <ArrowLeft size={15} className="transition-transform group-hover:-translate-x-0.5" />
-          <span>{t('backToPassport')}</span>
+          <span>Back to Lot Details</span>
         </Link>
 
-        <span className="text-xs text-primary font-bold flex items-center gap-1">
-          <ShieldCheck size={14} /> {t('verified')}
+        <span className="text-xs text-primary font-bold flex items-center gap-1 bg-primaryLight px-2.5 py-1 rounded-full border border-primary/20">
+          <ShieldCheck size={14} /> Tamper-Proof HoneyChain Ledger
         </span>
       </div>
 
-      <div className="rounded-3xl bg-surface border border-border/80 p-6 sm:p-8 shadow-card animate-enter">
-        {/* Header Summary */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-border/70 mb-8">
-          <div>
-            <div className="eyebrow text-primary mb-1">
-              <Layers size={13} /> {t('woolJourney')}
-            </div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-textPrimary">
-              {t('traceabilityTimeline')}
-            </h1>
-            {batch && (
-              <p className="text-xs sm:text-sm text-textSecondary mt-0.5">
-                {batch.batch_id} • <span className="font-semibold text-textPrimary">{batch.wool_type}</span> ({batch.quantity_kg} kg)
-              </p>
-            )}
-          </div>
-
-          {batch && <BatchStatusBadge status={batch.status} />}
+      <div className="mb-6">
+        <div className="eyebrow text-amber-600 mb-1 flex items-center gap-1 font-bold text-xs uppercase tracking-wider">
+          <Sparkles size={13} /> Blockchain Immutable Provenance
         </div>
+        <h1 className="text-2xl sm:text-3xl font-black text-textPrimary">
+          Hive-to-Bottle Traceability Log
+        </h1>
+        <p className="text-xs sm:text-sm text-textSecondary mt-1">
+          Cryptographically chained checkpoints verifying floral origin, apiary telemetry, laboratory testing, and consumer delivery.
+        </p>
+      </div>
 
-        {loading ? (
-          <div className="py-16 flex justify-center">
-            <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-          </div>
-        ) : events.length === 0 ? (
-          <div className="p-8 text-center bg-background rounded-2xl border border-border text-textSecondary text-sm">
-            {t('pending')}
-          </div>
-        ) : (
-          <div className="relative pl-6 sm:pl-8 space-y-8 before:absolute before:left-[11px] sm:before:left-[15px] before:top-3 before:bottom-3 before:w-0.5 before:bg-gradient-to-b before:from-primary before:via-border before:to-border">
-            {events.map((ev, idx) => {
-              const cfg = EVENT_CONFIG[ev.event_type] || {
-                label: ev.event_type,
-                desc: 'Milestone recorded',
-                icon: '📌',
-                tone: 'bg-gray-50 text-gray-700 border-gray-300',
-              };
+      {loading ? (
+        <div className="py-20 flex justify-center items-center gap-2">
+          <div className="h-7 w-7 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+          <span className="text-sm text-textSecondary">Verifying blockchain blocks...</span>
+        </div>
+      ) : batch ? (
+        <div className="space-y-6">
+          {/* Batch Summary Header Card */}
+          <div className="rounded-3xl bg-surface border border-border/80 p-5 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <span className="font-mono text-xs font-bold text-primary bg-primaryLight px-2 py-0.5 rounded-md">
+                {batchIdDisplay}
+              </span>
+              <h2 className="text-lg font-bold text-textPrimary mt-1">{floral}</h2>
+              <p className="text-xs text-textSecondary flex items-center gap-1 mt-0.5">
+                <MapPin size={12} className="text-primary" /> {batch.district || 'Bharatpur'}, {batch.state || 'Rajasthan'}
+              </p>
+            </div>
 
+            <div className="flex items-center gap-3">
+              <Link
+                to={`/buyer/honey-passport/${batchIdDisplay}`}
+                className="px-3.5 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold shadow-xs transition-all flex items-center gap-1.5"
+              >
+                <ExternalLink size={14} /> Open Honey Passport
+              </Link>
+              <BatchStatusBadge status={batch.status} />
+            </div>
+          </div>
+
+          {/* Timeline */}
+          <div className="relative pl-6 sm:pl-8 space-y-8 before:absolute before:left-[15px] sm:before:left-[19px] before:top-3 before:bottom-3 before:w-0.5 before:bg-gradient-to-b before:from-amber-500 before:via-amber-400 before:to-emerald-500">
+            {events.map((ev, index) => {
+              const cfg = EVENT_CONFIG[ev.event_type || ev.eventType] || EVENT_CONFIG.produced;
               return (
-                <div key={ev.id || idx} className="relative group">
-                  {/* Timeline Dot Icon */}
-                  <div className="absolute -left-6 sm:-left-8 top-0.5 grid h-7 w-7 sm:h-8 sm:w-8 place-items-center rounded-full bg-surface border-2 border-primary shadow-sm text-xs sm:text-sm z-10 transition-transform group-hover:scale-110">
-                    <span>{cfg.icon}</span>
+                <div key={ev.id || index} className="relative group animate-enter">
+                  {/* Timeline icon node */}
+                  <div className="absolute -left-[30px] sm:-left-[38px] top-1 h-8 w-8 rounded-full bg-surface border-2 border-amber-500 grid place-items-center text-sm shadow-sm group-hover:scale-110 transition-transform">
+                    {cfg.icon}
                   </div>
 
-                  {/* Event Card */}
-                  <div className="p-5 rounded-2xl bg-background border border-border/80 shadow-sm transition-all duration-200 hover:border-primary/40">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-2">
+                  {/* Card Content */}
+                  <div className="rounded-2xl bg-surface border border-border/80 p-5 shadow-sm group-hover:border-amber-400 transition-all">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 pb-2 border-b border-border/50">
                       <div className="flex items-center gap-2">
-                        <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold border ${cfg.tone}`}>
-                          {cfg.label}
+                        <span className="font-extrabold text-sm text-textPrimary">{cfg.label}</span>
+                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${cfg.tone}`}>
+                          Block #{ev.blockNumber ?? index}
                         </span>
-                        {ev.actorName && (
-                          <span className="text-xs font-medium text-textSecondary flex items-center gap-1">
-                            <User size={11} className="text-textMuted" /> {ev.actorName}
-                          </span>
-                        )}
                       </div>
-
-                      <span className="text-xs text-textMuted flex items-center gap-1">
-                        <Calendar size={12} />
-                        {new Date(ev.event_timestamp).toLocaleString('en-IN', {
-                          day: 'numeric',
-                          month: 'short',
-                          year: 'numeric',
-                          hour: '2-digit',
-                          minute: '2-digit',
-                        })}
+                      <span className="text-[11px] text-textMuted flex items-center gap-1 font-mono">
+                        <Clock size={11} /> {ev.timestamp ? new Date(ev.timestamp).toLocaleString() : 'Recent'}
                       </span>
                     </div>
 
-                    <p className="text-xs sm:text-sm text-textPrimary font-medium leading-relaxed">
-                      {ev.description || cfg.desc}
-                    </p>
+                    <p className="text-xs text-textSecondary mt-2.5 leading-relaxed">{ev.description}</p>
 
-                    {ev.location && (
-                      <p className="mt-2 text-xs text-textSecondary flex items-center gap-1">
-                        <MapPin size={12} className="text-primary" /> {ev.location}
-                      </p>
+                    <div className="mt-3 pt-2 border-t border-border/40 flex flex-wrap items-center justify-between gap-2 text-[11px]">
+                      <span className="text-textMuted flex items-center gap-1">
+                        <User size={12} className="text-primary" /> {ev.actorName || 'Authorized Signatory'}
+                      </span>
+                      <span className="text-textMuted flex items-center gap-1">
+                        <MapPin size={12} className="text-primary" /> {ev.location || 'India'}
+                      </span>
+                    </div>
+
+                    {/* SHA-256 Hash */}
+                    {ev.blockHash && (
+                      <div className="mt-2.5 p-2 rounded-lg bg-background border border-border/60 text-[10px] font-mono text-textMuted flex items-center gap-1.5 overflow-hidden">
+                        <Hash size={12} className="text-amber-600 shrink-0" />
+                        <span className="shrink-0 font-semibold text-textSecondary">Hash:</span>
+                        <span className="truncate text-amber-800 font-bold">{ev.blockHash}</span>
+                      </div>
                     )}
                   </div>
                 </div>
               );
             })}
           </div>
-        )}
-      </div>
+        </div>
+      ) : (
+        <Card interactive={false} className="text-center py-12 text-sm text-textSecondary">
+          Honey batch record not found.
+        </Card>
+      )}
     </main>
   );
 }

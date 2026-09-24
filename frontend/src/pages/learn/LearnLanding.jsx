@@ -26,12 +26,12 @@ import { useLanguage } from '../../context/LanguageContext';
 import { TRAINING_TRANSLATIONS, getTranslatedResource } from '../../services/trainingTranslations.service';
 
 const CATEGORY_MAP_FOR_STATS = {
-  'sheep-care': { label: 'Sheep Care', dbCategories: ['Sheep Management'] },
-  'shearing': { label: 'Shearing', dbCategories: ['Wool Shearing'] },
-  'wool-quality': { label: 'Wool Quality', dbCategories: ['Wool Handling', 'Wool Grading'] },
-  'storage': { label: 'Storage', dbCategories: ['Wool Storage'] },
-  'processing': { label: 'Processing', dbCategories: ['Wool Processing', 'Dyeing', 'Product Development'] },
-  'selling': { label: 'Selling', dbCategories: ['Marketing', 'Digital Selling'] },
+  'sheep-care': { label: 'Bee Colony Care', dbCategories: ['Colony Health', 'Hive Inspection'] },
+  'shearing': { label: 'Honey Harvesting', dbCategories: ['Extraction Techniques', 'Comb Management'] },
+  'wool-quality': { label: 'Honey Purity Standards', dbCategories: ['Moisture Testing', 'NMR Quality'] },
+  'storage': { label: 'Storage & Conditioning', dbCategories: ['Honey Barrel Storage', 'Humidity Control'] },
+  'processing': { label: 'Filtration & Bottling', dbCategories: ['Micro-Filtration', 'Packaging'] },
+  'selling': { label: 'Honey Mandi & Direct Trade', dbCategories: ['Marketing', 'Digital Selling'] },
 };
 
 export default function LearnLanding() {
@@ -107,12 +107,12 @@ export default function LearnLanding() {
         
         data.forEach(item => {
           const cat = item.category;
-          if (cat === 'Sheep Management') categoryCounts['sheep-care']++;
-          else if (cat === 'Wool Shearing') categoryCounts['shearing']++;
-          else if (['Wool Handling', 'Wool Grading'].includes(cat)) categoryCounts['wool-quality']++;
-          else if (cat === 'Wool Storage') categoryCounts['storage']++;
-          else if (['Wool Processing', 'Dyeing', 'Product Development'].includes(cat)) categoryCounts['processing']++;
-          else if (['Marketing', 'Digital Selling'].includes(cat)) categoryCounts['selling']++;
+          if (cat === 'Sheep Management' || cat === 'Bee Colony Care' || cat === 'Colony Health') categoryCounts['sheep-care']++;
+          else if (cat === 'Wool Shearing' || cat === 'Honey Harvesting' || cat === 'Extraction Techniques') categoryCounts['shearing']++;
+          else if (['Wool Handling', 'Wool Grading', 'Honey Purity Standards', 'Moisture Testing'].includes(cat)) categoryCounts['wool-quality']++;
+          else if (['Wool Storage', 'Storage & Conditioning', 'Honey Barrel Storage'].includes(cat)) categoryCounts['storage']++;
+          else if (['Wool Processing', 'Dyeing', 'Product Development', 'Filtration & Bottling', 'Micro-Filtration'].includes(cat)) categoryCounts['processing']++;
+          else if (['Marketing', 'Digital Selling', 'Honey Mandi & Direct Trade'].includes(cat)) categoryCounts['selling']++;
         });
         
         setCounts(categoryCounts);
@@ -167,7 +167,7 @@ export default function LearnLanding() {
               {t('learnAndGrow')}
             </h1>
             <p className="mt-3 text-base text-white/80 leading-relaxed">
-              {t('boostFlockYield')}
+              Master modern smart beekeeping, seasonal flora management, and KVIC/FSSAI honey purity protocols.
             </p>
 
             {/* Search Form */}

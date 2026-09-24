@@ -4,12 +4,11 @@ import { getProcessors, requestProcessing } from '../../services/processing.serv
 import { useLanguage } from '../../context/LanguageContext';
 
 const SERVICE_TYPES = [
-  { id: 'Scouring & Carding', rate: 18, desc: 'Washing, cleaning, and untangling raw greasy wool fleece' },
-  { id: 'Sorting & Grading', rate: 12, desc: 'Classifying fleece by fiber fineness, staple length, and color' },
-  { id: 'Combing', rate: 22, desc: 'Aligning long fibers into tops and removing short noils' },
-  { id: 'Spinning', rate: 35, desc: 'Converting wool tops into continuous yarn threads' },
-  { id: 'Dyeing', rate: 28, desc: 'Coloring yarn or fleece using natural or certified dyes' },
-  { id: 'Full Processing', rate: 65, desc: 'End-to-end transformation from raw greasy wool to ready yarn' },
+  { id: 'Micro-Filtration & Moisture Conditioning', rate: 12, desc: 'Warm cloth filtration at 40°C and vacuum moisture reduction below 18%' },
+  { id: 'Moisture Dehumidification', rate: 10, desc: 'Controlled conditioning to stabilize fresh high-moisture honey' },
+  { id: 'Automated Jar Bottling (500g)', rate: 15, desc: 'Food-grade glass or PET bottling with tamper-evident induction seals' },
+  { id: 'Export Packaging (30kg Barrels)', rate: 8, desc: 'Aseptic sealing into epoxy-lined food-grade drums for bulk logistics' },
+  { id: 'Full Processing & QR Labeling', rate: 25, desc: 'End-to-end filtration, moisture reduction, jar packing, and blockchain QR application' },
 ];
 
 export default function RequestProcessingModal({ batch, isOpen, onClose, onSuccess }) {
@@ -17,7 +16,7 @@ export default function RequestProcessingModal({ batch, isOpen, onClose, onSucce
 
   const [processors, setProcessors] = useState([]);
   const [selectedProcessor, setSelectedProcessor] = useState('');
-  const [serviceType, setServiceType] = useState('Scouring & Carding');
+  const [serviceType, setServiceType] = useState('Micro-Filtration & Moisture Conditioning');
   const [quantityKg, setQuantityKg] = useState('');
   const [preferredDate, setPreferredDate] = useState(new Date().toISOString().split('T')[0]);
   const [notes, setNotes] = useState('');
@@ -28,7 +27,7 @@ export default function RequestProcessingModal({ batch, isOpen, onClose, onSucce
 
   const batchWeight = batch?.quantity_kg || batch?.quantityKg || batch?.quantity || 0;
   const batchCode = batch?.batch_id || batch?.batchId || '—';
-  const woolType = batch?.wool_type || batch?.woolType || 'Wool';
+  const woolType = batch?.floralSource || batch?.wool_type || 'Raw Honey';
 
   useEffect(() => {
     if (isOpen && batch) {
@@ -122,10 +121,10 @@ export default function RequestProcessingModal({ batch, isOpen, onClose, onSucce
             </span>
             <div>
               <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-primaryLight text-primary text-[11px] font-bold uppercase tracking-wider mb-0.5">
-                <Sparkles size={11} /> {t('woolProcessing', 'Wool Processing')}
+                <Sparkles size={11} /> {t('woolProcessing', 'Honey Processing & Bottling')}
               </span>
               <h2 className="text-xl font-extrabold text-textPrimary leading-tight">
-                {t('requestWoolProcessing', 'Request Wool Processing')}
+                {t('requestWoolProcessing', 'Request Honey Processing')}
               </h2>
             </div>
           </div>
@@ -176,18 +175,18 @@ export default function RequestProcessingModal({ batch, isOpen, onClose, onSucce
           <div className="space-y-1.5">
             <label className="block text-xs font-bold uppercase tracking-wider text-textMuted flex items-center gap-1.5">
               <Factory size={13} className="text-primary" />
-              {t('selectProcessor', 'Select Processing Mill / Artisan')}
+              Select Honey Processing & Bottling Facility
             </label>
 
             {loadingProcessors ? (
               <div className="p-3.5 rounded-xl bg-background border border-border/60 text-xs text-textMuted flex items-center gap-2">
                 <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-                <span>{t('loadingProcessors', 'Loading available processing mills...')}</span>
+                <span>Loading available honey processing facilities...</span>
               </div>
             ) : processors.length === 0 ? (
               <div className="p-3.5 rounded-xl bg-amber-50/80 border border-amber-200 text-amber-800 text-xs">
-                <p className="font-semibold">{t('noProcessorsFound', 'Central Processing Mill (Auto-Assigned)')}</p>
-                <p className="text-[11px] opacity-80 mt-0.5">{t('autoAssignedDesc', 'Your request will be submitted to the nearest regional cooperative processing center.')}</p>
+                <p className="font-semibold">Central Honey Processing Plant (KVIC Auto-Assigned)</p>
+                <p className="text-[11px] opacity-80 mt-0.5">Your request will be submitted to the nearest regional KVIC Honey Mission processing center.</p>
               </div>
             ) : (
               <select

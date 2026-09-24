@@ -17,7 +17,7 @@ a:hover { color: #3F6B3F; }
 
 @layer components {
   /* ─── Page Shell ─── */
-  .page-shell { @apply max-w-6xl mx-auto px-3.5 sm:px-6 lg:px-8 py-3.5 sm:py-7 pb-20 sm:pb-12 overflow-x-hidden; }
+  .page-shell { @apply max-w-[90rem] mx-auto px-3.5 sm:px-6 lg:px-8 py-3.5 sm:py-7 pb-20 sm:pb-12 overflow-x-hidden; }
 
   /* ─── Hero Panel (Farmer Dashboard) ─── */
   .hero-panel {

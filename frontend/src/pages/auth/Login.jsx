@@ -65,43 +65,45 @@ export default function Login() {
               className="inline-flex items-center gap-2 text-white/90 hover:text-white text-xs font-semibold uppercase tracking-wider mb-8 transition-colors group"
             >
               <ArrowLeft size={15} className="transition-transform group-hover:-translate-x-1" />
-              {t('backToWoolConnectHome', 'Back to WoolConnect Home')}
+              Back to HoneyChain Home
             </Link>
 
             <div className="flex items-center gap-3.5">
               <img
                 src="/logo.png"
-                alt="WoolConnect"
+                alt="HoneyChain"
                 className="h-16 w-16 object-contain rounded-2xl bg-white p-1 shadow-lg"
               />
               <div>
-                <span className="text-2xl font-black tracking-tight text-white block">WoolConnect</span>
-                <span className="text-xs font-semibold text-emerald-200">{t('indiasWoolTraceabilityNetwork', "India's Wool Traceability Network")}</span>
+                <span className="text-2xl font-black tracking-tight text-white block">
+                  Honey<span className="text-amber-300">Chain</span>
+                </span>
+                <span className="text-xs font-semibold text-amber-200">KVIC National Honey Mission</span>
               </div>
             </div>
           </div>
 
           <div className="relative z-10 my-auto py-8">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 text-emerald-200 text-xs font-semibold backdrop-blur-md mb-5 border border-white/15">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 text-amber-200 text-xs font-semibold backdrop-blur-md mb-5 border border-white/15">
               <Sparkles size={14} className="text-amber-300" />
-              {t('verifiedPastoralistMarketplace', 'Verified Pastoralist & Buyer Marketplace')}
+              Verified Beekeeper & Buyer Marketplace
             </div>
 
             <h2 className="text-3xl xl:text-4xl font-bold tracking-tight text-white leading-tight">
-              {t('fairValueEveryFleece', 'Fair value for every fleece,')} <br />
-              <span className="text-emerald-200">{t('fullProvenanceEveryThread', 'full provenance for every thread.')}</span>
+              Fair value for every harvest, <br />
+              <span className="text-amber-200">full provenance for every jar.</span>
             </h2>
 
             <p className="mt-4 text-white/80 text-sm xl:text-base leading-relaxed max-w-md">
-              {t('connectDirectlyPastoralists', 'Connect directly with verified pastoralists, track lots with QR-verified digital passports, and stay ahead with real-time APMC mandi intelligence.')}
+              Connect directly with verified beekeepers, track lots with QR-verified digital passports, and stay ahead with real-time APMC mandi intelligence.
             </p>
 
             <div className="mt-8 grid grid-cols-2 gap-3 max-w-md">
               <div className="p-3.5 rounded-2xl bg-white/10 border border-white/15 backdrop-blur-sm">
-                <div className="flex items-center gap-2 text-emerald-300 font-semibold text-xs mb-1">
-                  <QrCode size={16} /> {t('qrTraceability', 'QR Traceability')}
+                <div className="flex items-center gap-2 text-amber-300 font-semibold text-xs mb-1">
+                  <QrCode size={16} /> QR Traceability
                 </div>
-                <p className="text-xs text-white/75">{t('fromSheepShearing', 'From sheep shearing flock to finished textiles.')}</p>
+                <p className="text-xs text-white/75">From apiary bee boxes to finished retail jars.</p>
               </div>
               <div className="p-3.5 rounded-2xl bg-white/10 border border-white/15 backdrop-blur-sm">
                 <div className="flex items-center gap-2 text-amber-300 font-semibold text-xs mb-1">
@@ -131,10 +133,10 @@ export default function Login() {
             <Link to="/" className="flex items-center gap-2.5 font-black text-textPrimary text-lg">
               <img
                 src="/logo.png"
-                alt="WoolConnect"
+                alt="HoneyChain"
                 className="h-10 w-10 object-contain rounded-xl shadow-xs"
               />
-              <span>Wool<span className="text-primary">Connect</span></span>
+              <span>Honey<span className="text-primary">Chain</span></span>
             </Link>
             <Link
               to="/"
@@ -147,11 +149,11 @@ export default function Login() {
           <div className="w-full max-w-md">
             <div className="mb-6">
               <div className="inline-flex lg:hidden items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-primary bg-primaryLight px-2.5 py-1 rounded-full mb-3">
-                <Sparkles size={12} /> {t('indianWoolNetwork', 'Indian Wool Network')}
+                <Sparkles size={12} /> {t('indianWoolNetwork', 'National Honey Network')}
               </div>
               <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-textPrimary">{t('signIn', 'Sign In')}</h1>
               <p className="text-sm text-textSecondary mt-1">
-                {t('accessBatchesPrices', 'Access your batches, mandi prices, and wool orders')}
+                {t('accessBatchesPrices', 'Access your honey lots, mandi prices, and orders')}
               </p>
             </div>
 
@@ -242,7 +244,7 @@ export default function Login() {
 
               <div className="text-center mt-6 pt-5 border-t border-border/60">
                 <p className="text-sm text-textSecondary">
-                  {t('newToWoolConnect', 'New to WoolConnect?')}{' '}
+                  {t('newToWoolConnect', 'New to HoneyChain?')}{' '}
                   <Link
                     to="/register"
                     className="font-bold text-primary hover:text-primaryDark transition-colors inline-flex items-center gap-1 group"
@@ -256,7 +258,7 @@ export default function Login() {
           </div>
 
           <p className="mt-8 text-center text-xs text-textMuted max-w-sm px-2">
-            {t('secureEncryptedAuth', 'Secure, encrypted authentication aligned with Ministry of Textiles & APMC guidelines.')}
+            {t('secureEncryptedAuth', 'Secure, encrypted authentication aligned with KVIC Honey Mission & FSSAI guidelines.')}
           </p>
         </div>
       </div>

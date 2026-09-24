@@ -55,9 +55,9 @@ export default function IncomingBatches() {
                 <div className="flex-1 min-w-0">
                   <p className="font-bold text-sm text-textPrimary">{batch.batchId}</p>
                   <p className="text-xs text-textSecondary mt-1">
-                    {batch.woolType} · {batch.quantity} kg · Grade: {batch.grade}
+                    {batch.floralSource || batch.woolType || 'Raw Blossom Honey'} · {batch.quantity} kg · Grade: {batch.grade}
                   </p>
-                  <p className="text-[11px] text-textMuted mt-0.5">Farmer: {batch.farmerName}</p>
+                  <p className="text-[11px] text-textMuted mt-0.5">Beekeeper: {batch.farmerName}</p>
                   <p className="text-[11px] text-textMuted mt-0.5 flex items-center gap-1">
                     <MapPin size={10} /> {batch.location}
                   </p>

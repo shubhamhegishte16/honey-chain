@@ -122,7 +122,7 @@ export default function OrderDetails() {
         <div className="p-5 rounded-2xl bg-surface border border-border shadow-sm">
           <h3 className="font-bold text-textPrimary flex items-center gap-2 mb-3"><Package size={16} className="text-primary" /> {t('product')}</h3>
           <dl className="space-y-2 text-sm">
-            <div className="flex justify-between"><dt className="text-textSecondary">{t('woolTypeLabel')}</dt><dd className="font-semibold text-textPrimary">{order.woolType}</dd></div>
+            <div className="flex justify-between"><dt className="text-textSecondary">{t('woolTypeLabel')}</dt><dd className="font-semibold text-textPrimary">{order.floralSource || order.woolType || 'Pure Honey'}</dd></div>
             <div className="flex justify-between"><dt className="text-textSecondary">{t('quantityKg')}</dt><dd className="font-semibold text-textPrimary">{order.quantityKg} kg</dd></div>
             <div className="flex justify-between"><dt className="text-textSecondary">{t('priceKgLabel')}</dt><dd className="font-semibold text-textPrimary">₹{order.pricePerKg}</dd></div>
             <div className="flex justify-between border-t border-border pt-2"><dt className="font-bold text-textPrimary">{t('total')}</dt><dd className="font-black text-textPrimary text-lg">₹{order.totalAmount?.toLocaleString()}</dd></div>

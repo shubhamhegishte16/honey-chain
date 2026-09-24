@@ -1,9 +1,9 @@
-const INTERESTS_STORAGE_KEY = 'woolconnect_user_interests';
-const LAST_PROBLEM_STORAGE_KEY = 'woolconnect_last_selected_problem';
+const INTERESTS_STORAGE_KEY = 'honeychain_user_interests';
+const LAST_PROBLEM_STORAGE_KEY = 'honeychain_last_selected_problem';
 
 export function getUserInterests() {
   try {
-    const data = localStorage.getItem(INTERESTS_STORAGE_KEY);
+    const data = localStorage.getItem(INTERESTS_STORAGE_KEY) || localStorage.getItem('woolconnect_user_interests');
     return data ? JSON.parse(data) : [];
   } catch (err) {
     console.error('Error getting user interests:', err);
@@ -30,7 +30,7 @@ export function toggleUserInterest(interestKey) {
 
 export function getLastSelectedProblem() {
   try {
-    return localStorage.getItem(LAST_PROBLEM_STORAGE_KEY) || null;
+    return localStorage.getItem(LAST_PROBLEM_STORAGE_KEY) || localStorage.getItem('woolconnect_last_selected_problem') || null;
   } catch (err) {
     return null;
   }

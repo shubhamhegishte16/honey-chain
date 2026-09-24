@@ -17,7 +17,7 @@ export default function PriceCard({
       <div className="flex items-center justify-between">
         <div>
           <p className="text-textSecondary text-[13px]">
-            {woolType || 'Wool'} · {state || 'India'}
+            {woolType || 'Mustard Honey'} · {state || 'India'}
           </p>
 
           <p className="text-2xl font-bold text-textPrimary mt-1">

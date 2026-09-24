@@ -17,138 +17,138 @@ export const STATE_REGIONS = {
 };
 
 // ─── Demo producer/artisan dataset ─────────────────────────────────────────
-// NOTE: These are fictional sample profiles for the WoolConnect hackathon prototype.
+// NOTE: These are fictional sample profiles for the HoneyChain prototype.
 const PRODUCERS = [
   // Rajasthan
-  { id: 'p-001', name: 'Demo Wool Producer – Bikaner', type: 'Wool Producer', state: 'Rajasthan', region: 'Bikaner',
-    specialization: 'Wool Quality & Storage', skills: ['Wool Grading', 'Wool Handling', 'Storage'],
-    description: 'Demo profile for the WoolConnect prototype. Focuses on fine Chokla and Magra wool grading and safe monsoon storage.',
-    trainingCategories: ['wool-quality', 'storage'] },
-  { id: 'p-002', name: 'Demo Wool Artisan – Jaisalmer', type: 'Artisan', state: 'Rajasthan', region: 'Jaisalmer',
-    specialization: 'Wool Products & Natural Dyeing', skills: ['Dyeing', 'Processing', 'Product Design'],
-    description: 'Demo artisan profile. Creates hand-dyed woollen rugs using traditional desert botanical dyes.',
+  { id: 'p-001', name: 'Demo Honey Beekeeper – Bharatpur', type: 'Beekeeper', state: 'Rajasthan', region: 'Bikaner',
+    specialization: 'Honey Purity & Extraction', skills: ['Honey Grading', 'Centrifugal Extraction', 'Moisture Testing'],
+    description: 'Demo profile for the HoneyChain prototype. Focuses on pure Mustard Blossom honey extraction and low-moisture storage.',
+    trainingCategories: ['honey-quality', 'storage'] },
+  { id: 'p-002', name: 'Demo Honey Cooperative – Jaisalmer', type: 'Artisan', state: 'Rajasthan', region: 'Jaisalmer',
+    specialization: 'Desert Blossom & Wax Crafts', skills: ['Processing', 'Wax Crafts', 'Packaging'],
+    description: 'Demo cooperative profile. Harvests desert flora honey and crafts organic beeswax candles.',
     trainingCategories: ['processing', 'selling'] },
-  { id: 'p-003', name: 'Demo Wool Producer – Jodhpur', type: 'Wool Producer', state: 'Rajasthan', region: 'Jodhpur',
-    specialization: 'Sheep Care & Shearing', skills: ['Sheep Care', 'Shearing', 'Wool Grading'],
-    description: 'Demo profile focusing on humane shearing and pre-shearing sheep health management.',
-    trainingCategories: ['sheep-care', 'shearing'] },
-  { id: 'p-004', name: 'Demo Wool Seller – Nagaur', type: 'Wool Producer', state: 'Rajasthan', region: 'Nagaur',
-    specialization: 'Digital Marketplace & Selling', skills: ['Digital Selling', 'QR Traceability', 'Pricing'],
-    description: 'Demo profile. Sells raw Nali wool directly to mills via digital platforms.',
-    trainingCategories: ['selling', 'wool-quality'] },
-  { id: 'p-005', name: 'Demo Artisan – Pali', type: 'Artisan', state: 'Rajasthan', region: 'Pali',
-    specialization: 'Weaving & Processing', skills: ['Wool Processing', 'Carding', 'Weaving'],
-    description: 'Demo artisan profile. Specialises in hand-woven Pali wool blankets and scouring techniques.',
-    trainingCategories: ['processing', 'wool-quality'] },
+  { id: 'p-003', name: 'Demo Honey Beekeeper – Jodhpur', type: 'Beekeeper', state: 'Rajasthan', region: 'Jodhpur',
+    specialization: 'Apiary Care & Box Management', skills: ['Bee Care', 'Honey Harvesting', 'Honey Grading'],
+    description: 'Demo profile focusing on scientific hive inspection and seasonal bee colony migration.',
+    trainingCategories: ['bee-care', 'harvesting'] },
+  { id: 'p-004', name: 'Demo Honey Beekeeper – Nagaur', type: 'Beekeeper', state: 'Rajasthan', region: 'Nagaur',
+    specialization: 'Digital Marketplace & Traceability', skills: ['Digital Selling', 'QR Traceability', 'Pricing'],
+    description: 'Demo profile. Sells raw unprocessed honey directly to Ayurvedic processors via HoneyChain QR codes.',
+    trainingCategories: ['selling', 'honey-quality'] },
+  { id: 'p-005', name: 'Demo Honey Artisan – Pali', type: 'Artisan', state: 'Rajasthan', region: 'Pali',
+    specialization: 'Herbal Infused Honey & Value Addition', skills: ['Honey Processing', 'Infusions', 'Packaging'],
+    description: 'Demo artisan profile. Specialises in ginger, tulsi, and cinnamon infused forest honey.',
+    trainingCategories: ['processing', 'honey-quality'] },
 
   // Gujarat
-  { id: 'p-006', name: 'Demo Wool Producer – Kutch', type: 'Wool Producer', state: 'Gujarat', region: 'Kutch',
-    specialization: 'Shearing & Wool Handling', skills: ['Shearing', 'Wool Handling', 'Storage'],
-    description: 'Demo profile. Raises Patanwadi sheep in Kutch and practices clean shearing techniques.',
-    trainingCategories: ['shearing', 'storage'] },
-  { id: 'p-007', name: 'Demo Artisan – Banaskantha', type: 'Artisan', state: 'Gujarat', region: 'Banaskantha',
-    specialization: 'Embroidery & Wool Crafts', skills: ['Processing', 'Dyeing', 'Product Design'],
-    description: 'Demo artisan creating embroidered woollen products using Patanwadi fleece.',
+  { id: 'p-006', name: 'Demo Honey Beekeeper – Kutch', type: 'Beekeeper', state: 'Gujarat', region: 'Kutch',
+    specialization: 'Wild Mangrove Honey Harvesting', skills: ['Hive Care', 'Raw Filtration', 'Storage'],
+    description: 'Demo profile. Harvests coastal mangrove honey and practices sustainable apiary management.',
+    trainingCategories: ['harvesting', 'storage'] },
+  { id: 'p-007', name: 'Demo Honey Artisan – Banaskantha', type: 'Artisan', state: 'Gujarat', region: 'Banaskantha',
+    specialization: 'Beeswax Cosmetics & Pollen Products', skills: ['Processing', 'Wax Crafts', 'Product Design'],
+    description: 'Demo artisan SHG creating natural beeswax balms and collected bee pollen dietary supplements.',
     trainingCategories: ['processing', 'selling'] },
-  { id: 'p-008', name: 'Demo Wool Producer – Patan', type: 'Wool Producer', state: 'Gujarat', region: 'Patan',
-    specialization: 'Wool Grading & Storage', skills: ['Wool Grading', 'Storage', 'Wool Handling'],
-    description: 'Demo profile. Maintains grade-A certified fleece with proper moisture storage protocols.',
-    trainingCategories: ['wool-quality', 'storage'] },
-  { id: 'p-009', name: 'Demo Artisan – Surendranagar', type: 'Artisan', state: 'Gujarat', region: 'Surendranagar',
-    specialization: 'Natural Dyeing & Selling', skills: ['Dyeing', 'Digital Selling', 'Processing'],
-    description: 'Demo artisan producing natural-dyed yarn and marketing directly to buyers online.',
+  { id: 'p-008', name: 'Demo Honey Beekeeper – Patan', type: 'Beekeeper', state: 'Gujarat', region: 'Patan',
+    specialization: 'Honey Grading & Cold Filtration', skills: ['Honey Grading', 'Storage', 'Filtration'],
+    description: 'Demo profile. Maintains Grade-A Agmark certified honey with strict HMF and moisture controls.',
+    trainingCategories: ['honey-quality', 'storage'] },
+  { id: 'p-009', name: 'Demo Honey Artisan – Surendranagar', type: 'Artisan', state: 'Gujarat', region: 'Surendranagar',
+    specialization: 'Custom Honey Bottling & Direct Retail', skills: ['Bottling', 'Digital Selling', 'Processing'],
+    description: 'Demo artisan bottling raw single-origin honey and marketing directly to health consumers online.',
     trainingCategories: ['processing', 'selling'] },
 
   // Maharashtra
-  { id: 'p-010', name: 'Demo Wool Producer – Ahmednagar', type: 'Wool Producer', state: 'Maharashtra', region: 'Ahmednagar',
-    specialization: 'Sheep Care & Shearing', skills: ['Sheep Care', 'Shearing', 'Wool Grading'],
-    description: 'Demo profile. Deccani sheep farmer focusing on veterinary care and efficient shearing.',
-    trainingCategories: ['sheep-care', 'shearing'] },
-  { id: 'p-011', name: 'Demo Artisan – Sangli', type: 'Artisan', state: 'Maharashtra', region: 'Sangli',
-    specialization: 'Woollen Textiles & Selling', skills: ['Processing', 'Wool Handling', 'Digital Selling'],
-    description: 'Demo artisan profile. Processes raw Deccani fleece into handloom textiles sold online.',
+  { id: 'p-010', name: 'Demo Honey Beekeeper – Ahmednagar', type: 'Beekeeper', state: 'Maharashtra', region: 'Ahmednagar',
+    specialization: 'Sunflower & Jamun Honey Apiaries', skills: ['Bee Care', 'Honey Harvesting', 'Honey Grading'],
+    description: 'Demo profile. Migrates Apis mellifera bee boxes across sunflower and jamun orchards.',
+    trainingCategories: ['bee-care', 'harvesting'] },
+  { id: 'p-011', name: 'Demo Honey Artisan – Sangli', type: 'Artisan', state: 'Maharashtra', region: 'Sangli',
+    specialization: 'Raw Honey Processing & Lab Testing', skills: ['Processing', 'Filtration', 'Digital Selling'],
+    description: 'Demo cooperative profile. Operates hygienic honey settling tanks and moisture reduction units.',
     trainingCategories: ['processing', 'selling'] },
-  { id: 'p-012', name: 'Demo Wool Producer – Satara', type: 'Wool Producer', state: 'Maharashtra', region: 'Satara',
-    specialization: 'Storage & Quality', skills: ['Storage', 'Wool Grading', 'Wool Handling'],
-    description: 'Demo profile. Prioritises post-monsoon wool storage and grade certification.',
-    trainingCategories: ['storage', 'wool-quality'] },
+  { id: 'p-012', name: 'Demo Honey Beekeeper – Satara', type: 'Beekeeper', state: 'Maharashtra', region: 'Satara',
+    specialization: 'Mahabaleshwar Forest Honey & Storage', skills: ['Storage', 'Honey Grading', 'Purity Testing'],
+    description: 'Demo profile. Harvests GI-tagged Mahabaleshwar flora honey with digital batch passports.',
+    trainingCategories: ['storage', 'honey-quality'] },
 
   // Jammu & Kashmir
-  { id: 'p-013', name: 'Demo Wool Producer – Leh', type: 'Wool Producer', state: 'Jammu & Kashmir', region: 'Leh',
-    specialization: 'Pashmina & Wool Handling', skills: ['Wool Handling', 'Wool Grading', 'Shearing'],
-    description: 'Demo profile. Herds Changthangi goats for Pashmina; also handles coarse Changra wool.',
-    trainingCategories: ['wool-quality', 'shearing'] },
-  { id: 'p-014', name: 'Demo Artisan – Kargil', type: 'Artisan', state: 'Jammu & Kashmir', region: 'Kargil',
-    specialization: 'Ladakhi Wool Crafts', skills: ['Processing', 'Dyeing', 'Product Design'],
-    description: 'Demo artisan profile. Produces traditional Ladakhi woollen products using local fleece.',
+  { id: 'p-013', name: 'Demo Honey Beekeeper – Leh', type: 'Beekeeper', state: 'Jammu & Kashmir', region: 'Leh',
+    specialization: 'High Altitude Flora Honey', skills: ['Hive Care', 'Honey Grading', 'Cold Extraction'],
+    description: 'Demo profile. Manages cold-hardy bee colonies for rare Himalayan high-altitude blossom honey.',
+    trainingCategories: ['honey-quality', 'harvesting'] },
+  { id: 'p-014', name: 'Demo Honey Artisan – Kargil', type: 'Artisan', state: 'Jammu & Kashmir', region: 'Kargil',
+    specialization: 'Wild Mountain Honey Crafts', skills: ['Processing', 'Wax Crafts', 'Product Design'],
+    description: 'Demo artisan cooperative crafting pure mountain wildflower honey glass jar collections.',
     trainingCategories: ['processing', 'selling'] },
-  { id: 'p-015', name: 'Demo Wool Producer – Srinagar', type: 'Wool Producer', state: 'Jammu & Kashmir', region: 'Srinagar',
-    specialization: 'Sheep Care & Selling', skills: ['Sheep Care', 'Digital Selling', 'Wool Grading'],
-    description: 'Demo profile. Sells Kashmir wool directly to buyers using QR-based traceability.',
-    trainingCategories: ['sheep-care', 'selling'] },
-  { id: 'p-016', name: 'Demo Artisan – Anantnag', type: 'Artisan', state: 'Jammu & Kashmir', region: 'Anantnag',
-    specialization: 'Kani Shawl Crafting', skills: ['Processing', 'Dyeing', 'Weaving'],
-    description: 'Demo artisan creating Kani shawls with naturally dyed Kashmiri wool.',
-    trainingCategories: ['processing', 'wool-quality'] },
+  { id: 'p-015', name: 'Demo Honey Beekeeper – Srinagar', type: 'Beekeeper', state: 'Jammu & Kashmir', region: 'Srinagar',
+    specialization: 'Kashmir White Honey & Sidr', skills: ['Bee Care', 'Digital Selling', 'Honey Grading'],
+    description: 'Demo profile. Harvests prized Kashmir White Honey with blockchain-verified NMR purity certificates.',
+    trainingCategories: ['bee-care', 'selling'] },
+  { id: 'p-016', name: 'Demo Honey Artisan – Anantnag', type: 'Artisan', state: 'Jammu & Kashmir', region: 'Anantnag',
+    specialization: 'Acacia Blossom Honey Bottling', skills: ['Processing', 'Bottling', 'Filtration'],
+    description: 'Demo artisan team packing premium clear Acacia blossom honey with tamper-evident NFC tags.',
+    trainingCategories: ['processing', 'honey-quality'] },
 
   // Himachal Pradesh
-  { id: 'p-017', name: 'Demo Wool Producer – Kinnaur', type: 'Wool Producer', state: 'Himachal Pradesh', region: 'Kinnaur',
-    specialization: 'High-Altitude Sheep Care', skills: ['Sheep Care', 'Shearing', 'Storage'],
-    description: 'Demo profile. Manages Rampur Bushair sheep at high altitude with seasonal shearing.',
-    trainingCategories: ['sheep-care', 'shearing'] },
-  { id: 'p-018', name: 'Demo Artisan – Lahaul & Spiti', type: 'Artisan', state: 'Himachal Pradesh', region: 'Lahaul & Spiti',
-    specialization: 'Tribal Wool Textiles', skills: ['Processing', 'Dyeing', 'Product Design'],
-    description: 'Demo artisan producing traditional Lahauli woollen garments.',
+  { id: 'p-017', name: 'Demo Honey Beekeeper – Kinnaur', type: 'Beekeeper', state: 'Himachal Pradesh', region: 'Kinnaur',
+    specialization: 'Apple Orchard Pollination & Honey', skills: ['Bee Care', 'Pollination Services', 'Storage'],
+    description: 'Demo profile. Provides managed pollination services to apple orchards and harvests pure blossom honey.',
+    trainingCategories: ['bee-care', 'harvesting'] },
+  { id: 'p-018', name: 'Demo Honey Artisan – Lahaul & Spiti', type: 'Artisan', state: 'Himachal Pradesh', region: 'Lahaul & Spiti',
+    specialization: 'Alpine Honey Gift Packaging', skills: ['Processing', 'Packaging', 'Product Design'],
+    description: 'Demo artisan producing artisanal glass-packaged alpine honey gifts.',
     trainingCategories: ['processing', 'selling'] },
-  { id: 'p-019', name: 'Demo Artisan – Kullu', type: 'Artisan', state: 'Himachal Pradesh', region: 'Kullu',
-    specialization: 'Kullu Shawls & Natural Dyeing', skills: ['Dyeing', 'Processing', 'Selling'],
-    description: 'Demo artisan profile. Hand-spins and naturally dyes Kullu shawls from organic Himachali wool.',
+  { id: 'p-019', name: 'Demo Honey Artisan – Kullu', type: 'Artisan', state: 'Himachal Pradesh', region: 'Kullu',
+    specialization: 'Forest Wild Honey & Propolis Tinctures', skills: ['Propolis Extraction', 'Processing', 'Selling'],
+    description: 'Demo artisan profile. Formulates immunity propolis tinctures and wild forest raw honey jars.',
     trainingCategories: ['processing', 'selling'] },
-  { id: 'p-020', name: 'Demo Wool Producer – Shimla', type: 'Wool Producer', state: 'Himachal Pradesh', region: 'Shimla',
-    specialization: 'Wool Quality & Grading', skills: ['Wool Grading', 'Shearing', 'Storage'],
-    description: 'Demo profile. Sources and grades Angora and Gaddi wool near Shimla districts.',
-    trainingCategories: ['wool-quality', 'storage'] },
+  { id: 'p-020', name: 'Demo Honey Beekeeper – Shimla', type: 'Beekeeper', state: 'Himachal Pradesh', region: 'Shimla',
+    specialization: 'Honey Quality & Purity Testing', skills: ['Honey Grading', 'Extraction', 'Storage'],
+    description: 'Demo profile. Sources and grades raw Himalayan forest honey near Shimla districts.',
+    trainingCategories: ['honey-quality', 'storage'] },
 
   // Uttarakhand
-  { id: 'p-021', name: 'Demo Wool Producer – Chamoli', type: 'Wool Producer', state: 'Uttarakhand', region: 'Chamoli',
-    specialization: 'Sheep Care & Shearing', skills: ['Sheep Care', 'Shearing', 'Wool Handling'],
-    description: 'Demo profile. Manages flocks in the Nanda Devi region with seasonal alpine grazing.',
-    trainingCategories: ['sheep-care', 'shearing'] },
-  { id: 'p-022', name: 'Demo Artisan – Pithoragarh', type: 'Artisan', state: 'Uttarakhand', region: 'Pithoragarh',
-    specialization: 'Woollen Textiles & Dyeing', skills: ['Dyeing', 'Processing', 'Product Design'],
-    description: 'Demo artisan creating Kumaoni woollen shawls and rugs from locally sourced fleece.',
+  { id: 'p-021', name: 'Demo Honey Beekeeper – Chamoli', type: 'Beekeeper', state: 'Uttarakhand', region: 'Chamoli',
+    specialization: 'Apis Cerana Native Bee Care', skills: ['Bee Care', 'Honey Harvesting', 'Hive Maintenance'],
+    description: 'Demo profile. Conserves indigenous Apis cerana indica wall hives in Himalayan villages.',
+    trainingCategories: ['bee-care', 'harvesting'] },
+  { id: 'p-022', name: 'Demo Honey Artisan – Pithoragarh', type: 'Artisan', state: 'Uttarakhand', region: 'Pithoragarh',
+    specialization: 'Raw Unheated Honey & Honeycomb Cut', skills: ['Comb Cut', 'Processing', 'Product Design'],
+    description: 'Demo artisan packaging raw honeycomb cut sections directly inside food-grade clear boxes.',
     trainingCategories: ['processing', 'selling'] },
-  { id: 'p-023', name: 'Demo Wool Producer – Uttarkashi', type: 'Wool Producer', state: 'Uttarakhand', region: 'Uttarkashi',
-    specialization: 'Storage & Selling', skills: ['Storage', 'Digital Selling', 'Wool Grading'],
-    description: 'Demo profile. Stores and grades alpine wool before digital market listing.',
+  { id: 'p-023', name: 'Demo Honey Beekeeper – Uttarkashi', type: 'Beekeeper', state: 'Uttarakhand', region: 'Uttarkashi',
+    specialization: 'Cold Storage & Bulk Honey Supply', skills: ['Storage', 'Digital Selling', 'Honey Grading'],
+    description: 'Demo profile. Supplies bulk food-grade stainless drums of verified organic forest honey.',
     trainingCategories: ['storage', 'selling'] },
 
   // Karnataka
-  { id: 'p-024', name: 'Demo Wool Producer – Bellary', type: 'Wool Producer', state: 'Karnataka', region: 'Bellary',
-    specialization: 'Sheep Breeding & Shearing', skills: ['Sheep Care', 'Shearing', 'Wool Handling'],
-    description: 'Demo profile. Breeds Bellary and Deccani cross sheep; focuses on clean shearing.',
-    trainingCategories: ['sheep-care', 'shearing'] },
-  { id: 'p-025', name: 'Demo Artisan – Bijapur', type: 'Artisan', state: 'Karnataka', region: 'Bijapur',
-    specialization: 'Kasuti Embroidery & Wool', skills: ['Processing', 'Product Design', 'Selling'],
-    description: 'Demo artisan weaving Kasuti-style embroidery into woollen textiles for premium markets.',
+  { id: 'p-024', name: 'Demo Honey Beekeeper – Bellary', type: 'Beekeeper', state: 'Karnataka', region: 'Bellary',
+    specialization: 'Stingless Dammer Bee Honey', skills: ['Bee Care', 'Stingless Bee Extraction', 'Purity Testing'],
+    description: 'Demo profile. Cultivates medicinal stingless bee honey (Tetragonula iridipennis) in Coorg and Western Ghats.',
+    trainingCategories: ['bee-care', 'harvesting'] },
+  { id: 'p-025', name: 'Demo Honey Artisan – Bijapur', type: 'Artisan', state: 'Karnataka', region: 'Bijapur',
+    specialization: 'Ayurvedic Honey & Royal Jelly', skills: ['Processing', 'Product Design', 'Selling'],
+    description: 'Demo cooperative producing royal jelly supplements and medicated honey formulations.',
     trainingCategories: ['processing', 'selling'] },
-  { id: 'p-026', name: 'Demo Wool Producer – Gadag', type: 'Wool Producer', state: 'Karnataka', region: 'Gadag',
-    specialization: 'Wool Quality & Storage', skills: ['Wool Grading', 'Storage', 'Wool Handling'],
-    description: 'Demo profile. Maintains Grade-A Deccani wool batches with proper baling and humidity control.',
-    trainingCategories: ['wool-quality', 'storage'] },
+  { id: 'p-026', name: 'Demo Honey Beekeeper – Gadag', type: 'Beekeeper', state: 'Karnataka', region: 'Gadag',
+    specialization: 'Honey Moisture Control & Storage', skills: ['Honey Grading', 'Storage', 'Filtration'],
+    description: 'Demo profile. Utilizes low-temperature vacuum moisture reducers to protect enzyme diastase levels.',
+    trainingCategories: ['honey-quality', 'storage'] },
 
   // Telangana
-  { id: 'p-027', name: 'Demo Wool Producer – Mahbubnagar', type: 'Wool Producer', state: 'Telangana', region: 'Mahbubnagar',
-    specialization: 'Sheep Care & Selling', skills: ['Sheep Care', 'Digital Selling', 'Wool Grading'],
-    description: 'Demo profile. Nellore sheep farmer exploring digital wool selling platforms.',
-    trainingCategories: ['sheep-care', 'selling'] },
-  { id: 'p-028', name: 'Demo Artisan – Nalgonda', type: 'Artisan', state: 'Telangana', region: 'Nalgonda',
-    specialization: 'Pochampally Wool Weaving', skills: ['Processing', 'Dyeing', 'Product Design'],
-    description: 'Demo artisan weaving Pochampally-inspired ikat patterns using naturally dyed wool yarn.',
-    trainingCategories: ['processing', 'wool-quality'] },
-  { id: 'p-029', name: 'Demo Wool Producer – Warangal', type: 'Wool Producer', state: 'Telangana', region: 'Warangal',
-    specialization: 'Storage & Processing', skills: ['Storage', 'Wool Processing', 'Shearing'],
-    description: 'Demo profile. Stores and processes Telangana wool in a small family cooperative.',
+  { id: 'p-027', name: 'Demo Honey Beekeeper – Mahbubnagar', type: 'Beekeeper', state: 'Telangana', region: 'Mahbubnagar',
+    specialization: 'Commercial Apiary & Direct Selling', skills: ['Bee Care', 'Digital Selling', 'Honey Grading'],
+    description: 'Demo profile. Manages 200+ migratory bee boxes supplying fresh eucalyptus and neem blossom honey.',
+    trainingCategories: ['bee-care', 'selling'] },
+  { id: 'p-028', name: 'Demo Honey Artisan – Nalgonda', type: 'Artisan', state: 'Telangana', region: 'Nalgonda',
+    specialization: 'Cooperative Honey Bottling & Branding', skills: ['Processing', 'Bottling', 'Product Design'],
+    description: 'Demo SHG cooperative running hygienic honey bottling lines for local farmer producer organizations.',
+    trainingCategories: ['processing', 'honey-quality'] },
+  { id: 'p-029', name: 'Demo Honey Beekeeper – Warangal', type: 'Beekeeper', state: 'Telangana', region: 'Warangal',
+    specialization: 'Storage & Stainless Steel Handling', skills: ['Storage', 'Honey Processing', 'Centrifugal Extraction'],
+    description: 'Demo profile. Operates community food-grade SS304 extraction hubs for local beekeeper groups.',
     trainingCategories: ['storage', 'processing'] },
 ];
 
@@ -243,89 +243,121 @@ const REGION_TRANSLATIONS = {
 
 const SKILL_TRANSLATIONS = {
   hi: {
-    'Wool Grading': 'ऊन की ग्रेडिंग',
-    'Wool Handling': 'ऊन संभालना',
+    'Honey Grading': 'शहद ग्रेडिंग',
+    'Centrifugal Extraction': 'मशीन निष्कर्षण',
+    'Moisture Testing': 'नमी परीक्षण',
+    'Bee Care': 'मधुमक्खी देखभाल',
+    'Honey Harvesting': 'शहद संकलन',
+    'Wax Crafts': 'मोम शिल्प',
+    'Infusions': 'औषधी मिश्रण',
+    'Raw Filtration': 'प्राकृतिक छनन',
+    'Bottling': 'बोतलबंदी',
+    'Propolis Extraction': 'प्रोपोलिस संकलन',
+    'Comb Cut': 'मधुकोश कट',
+    'Stingless Bee Extraction': 'डंकहीन मधुमक्खी निष्कर्षण',
     'Storage': 'भंडारण',
     'Dyeing': 'रंगाई',
     'Processing': 'प्रसंस्करण',
     'Product Design': 'उत्पाद डिज़ाइन',
-    'Sheep Care': 'भेड़ की देखभाल',
-    'Shearing': 'कतराई',
+    'Sheep Care': 'मधुमक्खी देखभाल',
+    'Shearing': 'शहद निष्कर्षण',
     'Digital Selling': 'डिजिटल बिक्री',
     'QR Traceability': 'क्यूआर ट्रेसिबिलिटी',
     'Pricing': 'मूल्य निर्धारण',
-    'Wool Processing': 'ऊन प्रसंस्करण',
-    'Carding': 'धुनाई (कार्डिंग)',
-    'Weaving': 'बुनाई'
+    'Wool Processing': 'शहद प्रसंस्करण',
+    'Carding': 'छनन',
+    'Weaving': 'पैकेजिंग'
   },
   mr: {
-    'Wool Grading': 'लोकर प्रतवारी',
-    'Wool Handling': 'लोकर हाताळणी',
+    'Honey Grading': 'मध प्रतवारी',
+    'Centrifugal Extraction': 'यंत्र निष्कर्षण',
+    'Moisture Testing': 'आर्द्रता चाचणी',
+    'Bee Care': 'मधमाशी काळजी',
+    'Honey Harvesting': 'मध संकलन',
+    'Wax Crafts': 'मेण हस्तकला',
+    'Infusions': 'औषधी मिश्रण',
+    'Raw Filtration': 'गाळणी',
+    'Bottling': 'बाटलीबंद',
+    'Propolis Extraction': 'प्रोपोलिस संकलन',
+    'Comb Cut': 'पोळे कापणे',
+    'Stingless Bee Extraction': 'डंख नसलेली मधमाशी मध',
     'Storage': 'साठवण',
     'Dyeing': 'रंगकाम',
     'Processing': 'प्रक्रिया',
     'Product Design': 'उत्पादन डिझाईन',
-    'Sheep Care': 'मेंढ्यांची काळजी',
-    'Shearing': 'कातरणी',
+    'Sheep Care': 'मधमाशी काळजी',
+    'Shearing': 'मध निष्कर्षण',
     'Digital Selling': 'डिजिटल विक्री',
     'QR Traceability': 'क्यूआर ट्रेसिबिलिटी',
     'Pricing': 'दर निश्चिती',
-    'Wool Processing': 'लोकर प्रक्रिया',
-    'Carding': 'कार्डिंग',
-    'Weaving': 'विणकाम'
+    'Wool Processing': 'मध प्रक्रिया',
+    'Carding': 'गाळणी',
+    'Weaving': 'पॅकेजिंग'
   }
 };
 
 const SPEC_TRANSLATIONS = {
   hi: {
-    'Wool Quality & Storage': 'ऊन की गुणवत्ता और भंडारण',
-    'Wool Products & Natural Dyeing': 'ऊन उत्पाद और प्राकृतिक रंगाई',
-    'Sheep Care & Shearing': 'भेड़ की देखभाल और कतराई',
-    'Digital Marketplace & Selling': 'डिजिटल मार्केटप्लेस और बिक्री',
-    'Weaving & Processing': 'बुनाई और प्रसंस्करण',
-    'Shearing & Wool Handling': 'कतराई और ऊन संभालना',
-    'Embroidery & Wool Crafts': 'कढ़ाई और ऊन शिल्प',
-    'Woollen Textiles & Selling': 'ऊनी वस्त्र और बिक्री',
-    'Storage & Quality': 'भंडारण और गुणवत्ता',
-    'Pashmina & Wool Handling': 'पश्मीना और ऊन संभालना',
-    'Ladakhi Wool Crafts': 'लद्दाखी ऊन शिल्प',
-    'Sheep Care & Selling': 'भेड़ की देखभाल और बिक्री',
-    'Kani Shawl Crafting': 'कनी शॉल निर्माण',
-    'High-Altitude Sheep Care': 'उच्च-ऊंचाई पर भेड़ की देखभाल',
-    'Tribal Wool Textiles': 'आदिवासी ऊन वस्त्र',
-    'Kullu Shawls & Natural Dyeing': 'कुल्लू शॉल और प्राकृतिक रंगाई',
-    'Wool Quality & Grading': 'ऊन की गुणवत्ता और ग्रेडिंग',
-    'Woollen Textiles & Dyeing': 'ऊनी वस्त्र और रंगाई',
-    'Storage & Selling': 'भंडारण और बिक्री',
-    'Sheep Breeding & Shearing': 'भेड़ प्रजनन और कतराई',
-    'Kasuti Embroidery & Wool': 'कसूती कढ़ाई और ऊन',
-    'Storage & Processing': 'भंडारण और प्रसंस्करण',
-    'Pochampally Wool Weaving': 'पोचमपल्ली ऊन बुनाई'
+    'Honey Purity & Extraction': 'शहद की शुद्धता और निष्कर्षण',
+    'Desert Blossom & Wax Crafts': 'रेगिस्तानी फूल और मोम शिल्प',
+    'Apiary Care & Box Management': 'मधुमक्खी पालन और बॉक्स प्रबंधन',
+    'Digital Marketplace & Traceability': 'डिजिटल मार्केटप्लेस और ट्रेसिबिलिटी',
+    'Herbal Infused Honey & Value Addition': 'हर्बल शहद और मूल्य संवर्धन',
+    'Wild Mangrove Honey Harvesting': 'कच्छ मैंग्रोव शहद संकलन',
+    'Beeswax Cosmetics & Pollen Products': 'मोम प्रसाधन और पराग उत्पाद',
+    'Honey Grading & Cold Filtration': 'शहद ग्रेडिंग और कोल्ड फिल्ट्रेशन',
+    'Custom Honey Bottling & Direct Retail': 'कस्टम बोतलबंदी और सीधी खुदरा बिक्री',
+    'Sunflower & Jamun Honey Apiaries': 'सूरजमुखी और जामुन शहद वाटिका',
+    'Raw Honey Processing & Lab Testing': 'कच्चा शहद प्रसंस्करण और प्रयोगशाला परीक्षण',
+    'Mahabaleshwar Forest Honey & Storage': 'महाबलेश्वर वन शहद और भंडारण',
+    'High Altitude Flora Honey': 'उच्च हिमालयी वनस्पति शहद',
+    'Wild Mountain Honey Crafts': 'जंगली पहाड़ी शहद शिल्प',
+    'Kashmir White Honey & Sidr': 'कश्मीर सफेद शहद और सिद्र',
+    'Acacia Blossom Honey Bottling': 'बबूल फूल शहद बोतलबंदी',
+    'Apple Orchard Pollination & Honey': 'सेब परागण सेवाएं और शहद',
+    'Alpine Honey Gift Packaging': 'अल्पाइन शहद उपहार पैकेजिंग',
+    'Forest Wild Honey & Propolis Tinctures': 'जंगली शहद और प्रोपोलिस अर्क',
+    'Honey Quality & Purity Testing': 'शहद गुणवत्ता और शुद्धता परीक्षण',
+    'Apis Cerana Native Bee Care': 'देशी भारतीय मधुमक्खी देखभाल',
+    'Raw Unheated Honey & Honeycomb Cut': 'कच्चा गर्म न किया हुआ शहद और मधुकोश',
+    'Cold Storage & Bulk Honey Supply': 'शीत भंडारण और थोक शहद आपूर्ति',
+    'Stingless Dammer Bee Honey': 'डंकहीन डामर मधुमक्खी शहद',
+    'Ayurvedic Honey & Royal Jelly': 'आयुर्वेदिक शहद और रॉयल जेली',
+    'Honey Moisture Control & Storage': 'शहद नमी नियंत्रण और भंडारण',
+    'Commercial Apiary & Direct Selling': 'व्यावसायिक मधुमक्खी पालन और सीधी बिक्री',
+    'Cooperative Honey Bottling & Branding': 'सहकारी शहद बोतलबंदी और ब्रांडिंग',
+    'Storage & Stainless Steel Handling': 'भंडारण और स्टेनलेस स्टील हैंडलिंग'
   },
   mr: {
-    'Wool Quality & Storage': 'लोकर गुणवत्ता आणि साठवण',
-    'Wool Products & Natural Dyeing': 'लोकरीची उत्पादने आणि नैसर्गिक रंगकाम',
-    'Sheep Care & Shearing': 'मेंढ्यांची काळजी आणि कातरणी',
-    'Digital Marketplace & Selling': 'डिजिटल मार्केटप्लेस आणि विक्री',
-    'Weaving & Processing': 'विणकाम आणि प्रक्रिया',
-    'Shearing & Wool Handling': 'कातरणी आणि लोकर हाताळणी',
-    'Embroidery & Wool Crafts': 'भरतकाम आणि लोकर हस्तकला',
-    'Woollen Textiles & Selling': 'लोकरीचे कापड आणि विक्री',
-    'Storage & Quality': 'साठवणूक आणि गुणवत्ता',
-    'Pashmina & Wool Handling': 'पश्मिना आणि लोकर हाताळणी',
-    'Ladakhi Wool Crafts': 'लडाखी लोकर हस्तकला',
-    'Sheep Care & Selling': 'मेंढ्यांची काळजी आणि विक्री',
-    'Kani Shawl Crafting': 'कणी शाल निर्मिती',
-    'High-Altitude Sheep Care': 'उंच भागातील मेंढ्यांची काळजी',
-    'Tribal Wool Textiles': 'आदिवासी लोकर कापड',
-    'Kullu Shawls & Natural Dyeing': 'कुल्लू शाल आणि नैसर्गिक रंगकाम',
-    'Wool Quality & Grading': 'लोकर गुणवत्ता आणि प्रतवारी',
-    'Woollen Textiles & Dyeing': 'लोकरीचे कापड आणि रंगकाम',
-    'Storage & Selling': 'साठवणूक आणि विक्री',
-    'Sheep Breeding & Shearing': 'मेंढी प्रजनन आणि कातरणी',
-    'Kasuti Embroidery & Wool': 'कसुती भरतकाम आणि लोकर',
-    'Storage & Processing': 'साठवणूक आणि प्रक्रिया',
-    'Pochampally Wool Weaving': 'पोचमपल्ली लोकर विणकाम'
+    'Honey Purity & Extraction': 'मधाची शुद्धता आणि निष्कर्षण',
+    'Desert Blossom & Wax Crafts': 'वाळवंटी फुले आणि मेण हस्तकला',
+    'Apiary Care & Box Management': 'मधमाशी पेटी व्यवस्थापन',
+    'Digital Marketplace & Traceability': 'डिजिटल मार्केटप्लेस आणि ट्रेसिबिलिटी',
+    'Herbal Infused Honey & Value Addition': 'औषधी मध आणि मूल्यवर्धन',
+    'Wild Mangrove Honey Harvesting': 'कांदळवन मध संकलन',
+    'Beeswax Cosmetics & Pollen Products': 'मेण सौंदर्यप्रसाधने आणि पराग उत्पादने',
+    'Honey Grading & Cold Filtration': 'मध प्रतवारी आणि कोल्ड फिल्टरेशन',
+    'Custom Honey Bottling & Direct Retail': 'बाटलीबंद मध आणि थेट विक्री',
+    'Sunflower & Jamun Honey Apiaries': 'सूर्यफूल आणि जांभूळ मध पेट्या',
+    'Raw Honey Processing & Lab Testing': 'कच्चा मध प्रक्रिया आणि प्रयोगशाळा चाचणी',
+    'Mahabaleshwar Forest Honey & Storage': 'महाबळेश्वर वन मध आणि साठवण',
+    'High Altitude Flora Honey': 'हिमालयीन वनस्पती मध',
+    'Wild Mountain Honey Crafts': 'रानटी डोंगरी मध उत्पादने',
+    'Kashmir White Honey & Sidr': 'काश्मीर पांढरा मध आणि सिद्र',
+    'Acacia Blossom Honey Bottling': 'बाभूळ मध बाटलीबंद',
+    'Apple Orchard Pollination & Honey': 'सफरचंद परागीभवन सेवा आणि मध',
+    'Alpine Honey Gift Packaging': 'अल्पाइन मध गिफ्ट पॅकेजिंग',
+    'Forest Wild Honey & Propolis Tinctures': 'जंगली मध आणि प्रोपोलिस अर्क',
+    'Honey Quality & Purity Testing': 'मध गुणवत्ता आणि शुद्धता चाचणी',
+    'Apis Cerana Native Bee Care': 'स्थानिक भारतीय मधमाशी काळजी',
+    'Raw Unheated Honey & Honeycomb Cut': 'कच्चा मध आणि पोळे तुकडे',
+    'Cold Storage & Bulk Honey Supply': 'शीत साठवण आणि घाऊक मध पुरवठा',
+    'Stingless Dammer Bee Honey': 'डंख नसलेली मधमाशी मध',
+    'Ayurvedic Honey & Royal Jelly': 'आयुर्वेदिक मध आणि रॉयल जेली',
+    'Honey Moisture Control & Storage': 'मध आर्द्रता नियंत्रण आणि साठवण',
+    'Commercial Apiary & Direct Selling': 'व्यावसायिक मधमाशी पालन आणि थेट विक्री',
+    'Cooperative Honey Bottling & Branding': 'सहकारी मध बाटलीबंद आणि ब्रँडिंग',
+    'Storage & Stainless Steel Handling': 'साठवणूक आणि स्टेनलेस स्टील हाताळणी'
   }
 };
 
@@ -333,15 +365,21 @@ const translateName = (name, lang) => {
   if (lang === 'en') return name;
   let translated = name;
   if (lang === 'hi') {
-    translated = translated.replace('Demo Wool Producer', 'डेमो ऊन उत्पादक');
-    translated = translated.replace('Demo Wool Artisan', 'डेमो ऊन कारीगर');
+    translated = translated.replace('Demo Honey Beekeeper', 'डेमो मधुमक्खी पालक');
+    translated = translated.replace('Demo Honey Cooperative', 'डेमो शहद सहकारी समिति');
+    translated = translated.replace('Demo Honey Artisan', 'डेमो शहद कारीगर');
+    translated = translated.replace('Demo Wool Producer', 'डेमो मधुमक्खी पालक');
+    translated = translated.replace('Demo Wool Artisan', 'डेमो शहद कारीगर');
     translated = translated.replace('Demo Artisan', 'डेमो कारीगर');
-    translated = translated.replace('Demo Wool Seller', 'डेमो ऊन विक्रेता');
+    translated = translated.replace('Demo Wool Seller', 'डेमो शहद विक्रेता');
   } else if (lang === 'mr') {
-    translated = translated.replace('Demo Wool Producer', 'डेमो लोकर उत्पादक');
-    translated = translated.replace('Demo Wool Artisan', 'डेमो लोकर कारागीर');
+    translated = translated.replace('Demo Honey Beekeeper', 'डेमो मधमाशी पालक');
+    translated = translated.replace('Demo Honey Cooperative', 'डेमो मध सहकारी संस्था');
+    translated = translated.replace('Demo Honey Artisan', 'डेमो मध कारागीर');
+    translated = translated.replace('Demo Wool Producer', 'डेमो मधमाशी पालक');
+    translated = translated.replace('Demo Wool Artisan', 'डेमो मध कारागीर');
     translated = translated.replace('Demo Artisan', 'डेमो कारागीर');
-    translated = translated.replace('Demo Wool Seller', 'डेमो लोकर विक्रेता');
+    translated = translated.replace('Demo Wool Seller', 'डेमो मध विक्रेता');
   }
   
   // Replace region dash character variations
@@ -539,12 +577,15 @@ const translateDescription = (desc, lang) => {
 
 // ─── Training category display info generator ──────────────────────────────
 const CATEGORY_INFO = (t) => ({
-  'sheep-care':  { label: t('catSheepCare'),   color: 'bg-rose-50 text-rose-700 border-rose-200' },
-  'shearing':    { label: t('catShearing'),     color: 'bg-amber-50 text-amber-800 border-amber-200' },
-  'wool-quality':{ label: t('catWoolQuality'), color: 'bg-sky-50 text-sky-700 border-sky-200' },
-  'storage':     { label: t('catStorage'),      color: 'bg-indigo-50 text-indigo-700 border-indigo-200' },
-  'processing':  { label: t('catProcessing'),   color: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
-  'selling':     { label: t('catSelling'),      color: 'bg-purple-50 text-purple-700 border-purple-200' },
+  'sheep-care':   { label: t('catSheepCare'),   color: 'bg-rose-50 text-rose-700 border-rose-200' },
+  'bee-care':     { label: t('catSheepCare'),   color: 'bg-rose-50 text-rose-700 border-rose-200' },
+  'shearing':     { label: t('catShearing'),     color: 'bg-amber-50 text-amber-800 border-amber-200' },
+  'harvesting':   { label: t('catShearing'),     color: 'bg-amber-50 text-amber-800 border-amber-200' },
+  'wool-quality': { label: t('catWoolQuality'), color: 'bg-sky-50 text-sky-700 border-sky-200' },
+  'honey-quality':{ label: t('catWoolQuality'), color: 'bg-sky-50 text-sky-700 border-sky-200' },
+  'storage':      { label: t('catStorage'),      color: 'bg-indigo-50 text-indigo-700 border-indigo-200' },
+  'processing':   { label: t('catProcessing'),   color: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
+  'selling':      { label: t('catSelling'),      color: 'bg-purple-50 text-purple-700 border-purple-200' },
 });
 
 // ─── Profile Detail Panel ──────────────────────────────────────────────────
@@ -653,9 +694,9 @@ function ProfilePanel({ producer, onClose, navigate }) {
           </div>
 
           <p className="text-[10px] text-textMuted/60 mt-5 italic">
-            {language === 'hi' ? '* यह वूलकनेक्ट प्रोटोटाइप के लिए बनाई गई एक डेमो प्रोफाइल है। कोई वास्तविक व्यक्ति नहीं।' :
-             language === 'mr' ? '* वूलकनेक्ट प्रोटोटाइपसाठी तयार केलेले हे एक नमुना प्रोफाईल आहे. वास्तविक व्यक्ती नाही.' :
-             '* This is a sample/demo profile created for the WoolConnect hackathon prototype. Not a real person.'}
+            {language === 'hi' ? '* यह हनीचेन प्रोटोटाइप के लिए बनाई गई एक डेमो प्रोफाइल है। कोई वास्तविक व्यक्ति नहीं।' :
+             language === 'mr' ? '* हनीचेन प्रोटोटाइपसाठी तयार केलेले हे एक नमुना प्रोफाईल आहे. वास्तविक व्यक्ती नाही.' :
+             '* This is a sample/demo profile created for the HoneyChain prototype — KVIC Honey Mission. Not a real person.'}
           </p>
         </div>
       </div>
@@ -750,9 +791,9 @@ export default function ProducerDirectory() {
       if (selectedRegion && p.region !== selectedRegion) return false;
       
       let dbType = selectedType;
-      if (selectedType === t('producerType')) dbType = 'Wool Producer';
+      if (selectedType === t('producerType') || selectedType === 'Wool Producer') dbType = 'Beekeeper';
       if (selectedType === t('artisanType')) dbType = 'Artisan';
-      if (selectedType && p.type !== dbType) return false;
+      if (selectedType && p.type !== dbType && !(dbType === 'Beekeeper' && (p.type === 'Beekeeper' || p.type === 'Wool Producer'))) return false;
 
       if (searchQuery.trim()) {
         const q = searchQuery.toLowerCase();
@@ -807,9 +848,9 @@ export default function ProducerDirectory() {
               {t('exploreProducersDesc')}
             </p>
             <p className="mt-3 inline-flex items-center gap-1.5 text-[11px] bg-white/10 px-3 py-1.5 rounded-full text-blue-200 border border-white/10">
-              {language === 'hi' ? '⚠️ वूलकनेक्ट प्रोटोटाइप के लिए नमूना प्रोफाइल - वास्तविक व्यक्ति नहीं' :
-               language === 'mr' ? '⚠️ वूलकनेक्ट प्रोटोटाइपसाठी नमुना प्रोफाइल - वास्तविक व्यक्ती नाही' :
-               '⚠️ Sample profiles for WoolConnect prototype — not real individuals'}
+              {language === 'hi' ? '⚠️ हनीचेन प्रोटोटाइप के लिए नमूना प्रोफाइल - वास्तविक व्यक्ति नहीं' :
+               language === 'mr' ? '⚠️ हनीचेन प्रोटोटाइपसाठी नमुना प्रोफाइल - वास्तविक व्यक्ती नाही' :
+               '⚠️ Sample profiles for HoneyChain prototype — KVIC Honey Mission'}
             </p>
           </div>
         </section>
@@ -872,7 +913,7 @@ export default function ProducerDirectory() {
                 className="w-full appearance-none px-4 py-3 rounded-xl bg-background text-textPrimary text-sm font-medium focus:outline-none focus:ring-1 focus:ring-primary border border-border/60 transition-all cursor-pointer pr-8"
               >
                 <option value="">{t('allTypes')}</option>
-                <option value="Wool Producer">{t('producerType')}</option>
+                <option value="Beekeeper">{t('producerType')}</option>
                 <option value="Artisan">{t('artisanType')}</option>
               </select>
               <ChevronDown size={15} className="absolute right-3 top-3.5 text-textMuted pointer-events-none" />
@@ -897,7 +938,7 @@ export default function ProducerDirectory() {
               )}
               {selectedType && (
                 <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold">
-                  {selectedType === 'Wool Producer' ? t('producerType') : selectedType === 'Artisan' ? t('artisanType') : selectedType}
+                  {selectedType === 'Beekeeper' || selectedType === 'Wool Producer' ? t('producerType') : selectedType === 'Artisan' ? t('artisanType') : selectedType}
                   <button onClick={() => setSelectedType('')} aria-label="Remove type filter"><X size={11} /></button>
                 </span>
               )}

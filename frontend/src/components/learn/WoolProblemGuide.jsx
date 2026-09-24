@@ -23,120 +23,120 @@ import { TRAINING_TRANSLATIONS } from '../../services/trainingTranslations.servi
 const BASE_PROBLEMS = [
   {
     id: 'damp-wool',
-    title: 'Damp / Wet Wool',
+    title: 'High Moisture (>20%)',
     icon: Droplets,
     color: 'bg-blue-50 text-blue-700 border-blue-100 hover:border-blue-300',
     activeBg: 'bg-blue-600 text-white',
-    possibleCause: 'Shearing in high humidity or storing fleece directly exposed to damp ground/monsoon air.',
+    possibleCause: 'Harvesting unripened/uncapped honey combs or extracting during high monsoon humidity.',
     recommendedAction: [
-      'Immediately move wool bags into a well-ventilated dry shed on elevated pallets.',
-      'Never seal damp fleece in airtight plastic bags; use breathable gunny sacks.',
-      'Check regularly for heat generation and mildew development.'
+      'Only harvest combs where at least 75% of cells are capped with wax by bees.',
+      'Pass raw honey through a low-temperature vacuum dehumidifier to bring moisture below 18%.',
+      'Store in hermetically sealed food-grade containers away from open air.'
     ],
-    keyword: 'Monsoon',
+    keyword: 'Moisture',
     categoryKey: 'storage'
   },
   {
     id: 'mold-smell',
-    title: 'Mold / Bad Smell',
+    title: 'Fermentation Risk',
     icon: Wind,
     color: 'bg-emerald-50 text-emerald-800 border-emerald-100 hover:border-emerald-300',
     activeBg: 'bg-emerald-700 text-white',
-    possibleCause: 'High moisture retention (>14% RH) causing bacterial growth and fiber rot.',
+    possibleCause: 'High moisture and wild osmophilic yeasts causing bubbling, foam, and sour odor.',
     recommendedAction: [
-      'Separate affected bags immediately to prevent contamination of healthy stock.',
-      'Spread fleece in indirect shaded sunlight to dry and air out.',
-      'Maintain warehouse relative humidity strictly below 65%.'
+      'Separate affected batches immediately to prevent cross-contamination.',
+      'Gentle warming to 40°C in a water bath can stabilize unfermented honey without destroying enzymes.',
+      'Maintain honey storage temperature strictly between 18°C and 22°C.'
     ],
     keyword: 'Storage',
     categoryKey: 'storage'
   },
   {
     id: 'dirty-wool',
-    title: 'Dirty Wool',
+    title: 'Comb Wax & Debris',
     icon: Sparkles,
     color: 'bg-amber-50 text-amber-900 border-amber-100 hover:border-amber-300',
     activeBg: 'bg-amber-700 text-white',
-    possibleCause: 'Excessive mud, manure, or sand contamination during grazing/shearing.',
+    possibleCause: 'Coarse extraction without nylon food-grade strainers, leaving wax cappings and propolis bits.',
     recommendedAction: [
-      'Skirt belly and leg wool immediately post-shearing.',
-      'Perform preliminary dry dusting before washing/scouring.',
-      'Use warm non-ionic detergent scour at 50-55°C.'
+      'Use double-stage stainless steel mesh filters (400 micron and 200 micron).',
+      'Allow honey to settle in settling tanks for 48 hours for wax to float to surface before skimming.',
+      'Avoid high-pressure pumping which pulverizes wax into micro-particles.'
     ],
-    keyword: 'Scouring',
+    keyword: 'Filtration',
     categoryKey: 'processing'
   },
   {
     id: 'discolored-wool',
-    title: 'Discolored Wool',
+    title: 'HMF / Heat Darkening',
     icon: Palette,
     color: 'bg-rose-50 text-rose-800 border-rose-100 hover:border-rose-300',
     activeBg: 'bg-rose-600 text-white',
-    possibleCause: 'Canary stain from bacterial sweat during hot humid months or severe dung staining.',
+    possibleCause: 'Direct sunlight exposure or excessive heating (>45°C) converting fructose into HMF.',
     recommendedAction: [
-      'Sort discolored fleece into separate Grade C bales so main main fleece stays Grade A.',
-      'Avoid high-temperature alkaline washing which sets yellow stains.',
-      'Ensure proper flock shade during peak summer months.'
+      'Never heat honey above 40°C during liquefaction or bottling.',
+      'Store honey drums in cool, shaded, ventilated godowns.',
+      'Submit sample to KVIC lab for HMF spectroscopic validation.'
     ],
     keyword: 'Grading',
     categoryKey: 'wool-quality'
   },
   {
     id: 'poor-quality',
-    title: 'Poor Wool Quality',
+    title: 'Varroa Mite in Hive',
     icon: Layers,
     color: 'bg-purple-50 text-purple-800 border-purple-100 hover:border-purple-300',
     activeBg: 'bg-purple-700 text-white',
-    possibleCause: 'Nutritional deficit, parasite infestation, or irregular micron variance across fleece.',
+    possibleCause: 'External parasitic mite (Varroa destructor) attacking bee brood and adult bees.',
     recommendedAction: [
-      'Provide mineral blocks and legume supplements to encourage staple crimp.',
-      'Implement bi-annual deworming pre- and post-monsoon.',
-      'Grade wool according to Central Wool Board micron parameters.'
+      'Apply KVIC-approved organic formic acid or oxalic acid vapor treatments.',
+      'Install screened bottom boards with sticky trays for natural mite drop monitoring.',
+      'Maintain strong hygienic Italian bee colonies that exhibit grooming behavior.'
     ],
     keyword: 'Disease',
     categoryKey: 'sheep-care'
   },
   {
     id: 'matted-wool',
-    title: 'Matted / Felted Wool',
+    title: 'Rapid Crystallization',
     icon: Layers,
     color: 'bg-indigo-50 text-indigo-800 border-indigo-100 hover:border-indigo-300',
     activeBg: 'bg-indigo-700 text-white',
-    possibleCause: 'Excessive friction and moisture during storage or burr entanglement.',
+    possibleCause: 'High glucose content in Mustard or Brassica nectar naturally precipitating glucose hydrate crystals.',
     recommendedAction: [
-      'Pass fleece through carding rollers to untangle fibers into uniform slivers.',
-      'Remove vegetable matter (burrs/seeds) before mechanical processing.',
-      'Avoid rough agitation during washing.'
+      'Educate consumers that crystallization is natural proof of pure raw unheated honey.',
+      'For liquid preference, warm gently in indirect water bath at 38-40°C.',
+      'Blend with Acacia or Eucalyptus honey to balance F/G ratio above 1.15.'
     ],
     keyword: 'Carding',
     categoryKey: 'processing'
   },
   {
     id: 'shearing-problem',
-    title: 'Shearing Problem',
+    title: 'Centrifuge Comb Damage',
     icon: Scissors,
     color: 'bg-sky-50 text-sky-800 border-sky-100 hover:border-sky-300',
     activeBg: 'bg-sky-700 text-white',
-    possibleCause: 'Frequent second-cuts, skin cuts, or irregular stroke angle by clipper.',
+    possibleCause: 'Spinning manual or electric honey extractors at excessive speed before combs balance.',
     recommendedAction: [
-      'Maintain continuous flat blade contact with sheep skin.',
-      'Keep clippers sharp and oiled during shearing sessions.',
-      'Withhold feed 12 hours before shearing to keep animals calm.'
+      'Start centrifugal extraction at low RPM, extract 50% from side A, flip to side B, then finish side A.',
+      'Use comb frames reinforced with stainless steel wire.',
+      'Ensure ambient extraction temperature is ~25-30°C for optimal honey flow without comb breakage.'
     ],
-    keyword: 'Shearing',
+    keyword: 'Extraction',
     categoryKey: 'shearing'
   },
   {
     id: 'dyeing-problem',
-    title: 'Dyeing Problem',
+    title: 'Nectar Dearth / Brood Weakness',
     icon: Paintbrush,
     color: 'bg-teal-50 text-teal-800 border-teal-100 hover:border-teal-300',
     activeBg: 'bg-teal-700 text-white',
-    possibleCause: 'Uneven dye uptake caused by residual grease or lack of mordanting agent.',
+    possibleCause: 'Monsoon dearth period with no flowering flora leading to bee starvation.',
     recommendedAction: [
-      'Ensure complete scouring to remove all residual lanolin before dyeing.',
-      'Use potassium alum (10% weight of fleece) as a mordant.',
-      'Stir gently and maintain consistent dye bath temperatures.'
+      'Provide artificial sugar syrup (1:1 ratio) or pollen patties strictly outside honey flow season.',
+      'Migrate bee boxes to seasonal floral belts (Mustard in RJ, Acacia in JK, Lychee in Bihar).',
+      'Never harvest emergency honey reserves left for colony survival.'
     ],
     keyword: 'Dyeing',
     categoryKey: 'processing'
@@ -149,7 +149,7 @@ const BASE_PROBLEMS = [
     activeBg: 'bg-orange-600 text-white',
     possibleCause: 'Low local trader bids due to lack of quality certification or middleman control.',
     recommendedAction: [
-      'Create direct marketplace listings on WoolConnect to bypass local traders.',
+      'Create direct marketplace listings on HoneyChain to bypass local middlemen.',
       'Attach digital QR batch tags proving verified origin and lab grade.',
       'Check live Mandi price intelligence for fair pricing benchmarks.'
     ],
@@ -198,11 +198,11 @@ export default function WoolProblemGuide({ resources = [] }) {
       <div className="mb-6 pb-4 border-b border-border/60">
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 text-amber-800 text-xs font-semibold border border-amber-200 mb-2">
           <Search size={13} />
-          <span>{t('diagnosticHelper')}</span>
+          <span>Diagnostic Helper</span>
         </div>
-        <h2 className="text-2xl font-bold text-textPrimary">{t('identifyWoolProblem')}</h2>
+        <h2 className="text-2xl font-bold text-textPrimary">Identify Honey & Apiary Health Problems</h2>
         <p className="text-sm text-textSecondary mt-1">
-          {t('selectIssueDesc')}
+          Select an issue affecting your hives or extracted honey lot to view KVIC-certified corrective measures.
         </p>
       </div>
 

@@ -44,10 +44,10 @@ export default function MarketplaceExperience({ allowBuying = false }) {
               <span>{t('directFromVerified', 'Direct from verified producers')}</span>
             </div>
             <h1 className="text-xl sm:text-3xl font-extrabold tracking-tight leading-tight">
-              {t('findWoolProvenStory', 'Find wool with a proven story.')}
+              Find pure raw honey with verifiable blockchain origin.
             </h1>
             <p className="hidden sm:block mt-1 text-xs sm:text-sm text-white/80 max-w-lg">
-              {t('discoverTraceableLots', 'Discover traceable lots from growers and cooperatives across India.')}
+              Discover certified single-origin lots directly from beekeepers and KVIC clusters across India.
             </p>
           </div>
         </div>
@@ -59,7 +59,7 @@ export default function MarketplaceExperience({ allowBuying = false }) {
           <input
             value={search}
             onChange={event => setSearch(event.target.value)}
-            placeholder={t('searchWoolStateProducer', 'Search wool, state or producer')}
+            placeholder="Search honey variety, state, or apiary..."
             className="flex-1 bg-transparent border-none outline-none text-xs sm:text-sm text-textPrimary placeholder:text-textMuted"
           />
         </div>
@@ -77,7 +77,7 @@ export default function MarketplaceExperience({ allowBuying = false }) {
             onChange={event => setWoolType(event.target.value)}
             className="min-h-[44px] px-3 py-2 rounded-xl border border-border bg-surface text-xs font-semibold text-textPrimary focus:outline-none focus:border-primary shadow-xs cursor-pointer truncate"
           >
-            <option value="">{t('allWoolTypes', 'All wool types')}</option>
+            <option value="">All honey varieties</option>
             {WOOL_TYPES.map(item => <option key={item} value={item}>{item}</option>)}
           </select>
         </div>
@@ -86,8 +86,8 @@ export default function MarketplaceExperience({ allowBuying = false }) {
       <section className="mt-7 animate-fade-in-up delay-2">
         <div className="section-heading">
           <div>
-            <p className="eyebrow text-primary"><ShoppingBag size={14} /> {t('availableToday', 'Available today')}</p>
-            <h2>{loading ? t('findingBestLots', 'Finding the best lots…') : `${listings.length} ${t('lotsAvailable', 'wool lots available')}`}</h2>
+            <p className="eyebrow text-primary"><ShoppingBag size={14} /> Available Today</p>
+            <h2>{loading ? 'Finding certified honey lots…' : `${listings.length} pure honey lots available`}</h2>
           </div>
         </div>
 
@@ -145,7 +145,7 @@ export default function MarketplaceExperience({ allowBuying = false }) {
                 <div className="pt-4">
                   <div className="flex items-start justify-between gap-3">
                     <div>
-                      <h3>{listing.wool_type} {t('wool', 'wool')}</h3>
+                      <h3 className="font-extrabold text-base text-textPrimary">{listing.floralSource || listing.wool_type || 'Raw Blossom'} Honey</h3>
                       <p className="listing-location"><MapPin size={13} />{listing.district}, {listing.state}</p>
                     </div>
                     <strong>₹{listing.price_per_kg}<small>/{t('kg', 'kg')}</small></strong>
