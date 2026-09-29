@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import {
-  Leaf,
   Mail,
   Lock,
   Eye,
@@ -14,8 +13,6 @@ import {
   Award,
   ArrowLeft,
 } from 'lucide-react';
-import Input from '../../components/ui/Input';
-import Button from '../../components/ui/Button';
 import { signIn } from '../../services/auth.service';
 import { useAuth } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
@@ -51,215 +48,142 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen w-full bg-background flex items-stretch justify-center">
-      <div className="w-full max-w-6xl flex flex-col lg:flex-row lg:shadow-2xl lg:my-auto lg:rounded-3xl lg:overflow-hidden lg:min-h-[640px]">
-        {/* Left Showcase Panel — hidden on mobile, visible from lg up */}
-        <div className="auth-showcase-panel hidden lg:flex lg:w-[46%] lg:shrink-0 flex-col relative overflow-hidden p-10">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.12)_0%,transparent_60%)] pointer-events-none" />
-          <div className="hero-orb orb-one opacity-30" />
-          <div className="hero-orb orb-two opacity-20" />
+    <div className="min-h-screen w-full bg-warmIvory flex items-center justify-center p-4 sm:p-6 lg:p-10 font-sans">
+      <div className="w-full max-w-5xl bento-card overflow-hidden grid grid-cols-1 lg:grid-cols-12 shadow-xl border border-border">
+        {/* Left Showcase Panel */}
+        <div className="lg:col-span-5 bg-gradient-to-br from-burgundy via-[#681414] to-deepBrown p-8 lg:p-10 text-warmIvory flex flex-col justify-between relative overflow-hidden">
+          <div className="absolute -right-16 -top-16 w-48 h-48 rounded-full bg-honeyGold/20 blur-2xl pointer-events-none" />
+          <div className="absolute -left-16 -bottom-16 w-48 h-48 rounded-full bg-burntOrange/20 blur-2xl pointer-events-none" />
 
-          <div className="relative z-10">
+          <div className="relative z-10 space-y-6">
             <Link
               to="/"
-              className="inline-flex items-center gap-2 text-white/90 hover:text-white text-xs font-semibold uppercase tracking-wider mb-8 transition-colors group"
+              className="inline-flex items-center gap-2 text-warmIvory/80 hover:text-honeyGold text-xs font-bold uppercase tracking-wider transition-colors group"
             >
-              <ArrowLeft size={15} className="transition-transform group-hover:-translate-x-1" />
-              Back to HoneyChain Home
+              <ArrowLeft size={14} className="transition-transform group-hover:-translate-x-1" />
+              Back to Honey Chain
             </Link>
 
-            <div className="flex items-center gap-3.5">
-              <img
-                src="/logo.png"
-                alt="HoneyChain"
-                className="h-16 w-16 object-contain rounded-2xl bg-white p-1 shadow-lg"
-              />
+            <div className="flex items-center gap-3">
+              <div className="h-12 w-12 rounded-2xl bg-honeyGold text-deepBrown grid place-items-center shadow-md">
+                <span className="font-serif font-black text-xl">HC</span>
+              </div>
               <div>
-                <span className="text-2xl font-black tracking-tight text-white block">
-                  Honey<span className="text-amber-300">Chain</span>
+                <span className="text-xl font-serif font-bold text-warmIvory block">
+                  Honey<span className="text-honeyGold">Chain</span>
                 </span>
-                <span className="text-xs font-semibold text-amber-200">KVIC National Honey Mission</span>
+                <span className="text-[11px] font-mono text-honeyGold/90 uppercase tracking-wider">SIH26021 • KVIC Portal</span>
               </div>
             </div>
           </div>
 
-          <div className="relative z-10 my-auto py-8">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 text-amber-200 text-xs font-semibold backdrop-blur-md mb-5 border border-white/15">
-              <Sparkles size={14} className="text-amber-300" />
-              Verified Beekeeper & Buyer Marketplace
-            </div>
+          <div className="relative z-10 py-8 space-y-4">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-honeyGold/20 text-honeyGold text-xs font-bold border border-honeyGold/30">
+              <Sparkles size={13} />
+              National Blockchain Registry
+            </span>
 
-            <h2 className="text-3xl xl:text-4xl font-bold tracking-tight text-white leading-tight">
-              Fair value for every harvest, <br />
-              <span className="text-amber-200">full provenance for every jar.</span>
+            <h2 className="text-2xl xl:text-3xl font-serif font-bold text-warmIvory leading-tight">
+              Pure by Nature, <br />
+              <span className="text-honeyGold">Verified by Technology.</span>
             </h2>
 
-            <p className="mt-4 text-white/80 text-sm xl:text-base leading-relaxed max-w-md">
-              Connect directly with verified beekeepers, track lots with QR-verified digital passports, and stay ahead with real-time APMC mandi intelligence.
+            <p className="text-xs text-warmIvory/80 leading-relaxed max-w-sm">
+              Single-sign-on access for Apiary Beekeepers, Refiners, NABL Testing Labs, FMCG Buyers, and KVIC Auditors.
             </p>
-
-            <div className="mt-8 grid grid-cols-2 gap-3 max-w-md">
-              <div className="p-3.5 rounded-2xl bg-white/10 border border-white/15 backdrop-blur-sm">
-                <div className="flex items-center gap-2 text-amber-300 font-semibold text-xs mb-1">
-                  <QrCode size={16} /> QR Traceability
-                </div>
-                <p className="text-xs text-white/75">From apiary bee boxes to finished retail jars.</p>
-              </div>
-              <div className="p-3.5 rounded-2xl bg-white/10 border border-white/15 backdrop-blur-sm">
-                <div className="flex items-center gap-2 text-amber-300 font-semibold text-xs mb-1">
-                  <TrendingUp size={16} /> {t('mandiRates', 'Mandi Rates')}
-                </div>
-                <p className="text-xs text-white/75">{t('liveMarketPrices', 'Live market prices across 8 major Indian states.')}</p>
-              </div>
-            </div>
           </div>
 
-          <div className="relative z-10 pt-6 border-t border-white/15 flex items-center justify-between text-xs text-white/75">
-            <div className="flex items-center gap-2">
-              <ShieldCheck size={16} className="text-emerald-300 shrink-0" />
-              <span>{t('govApmcAligned', 'Government & APMC standard aligned')}</span>
-            </div>
-            <div className="flex items-center gap-1 font-semibold text-white">
-              <Award size={15} className="text-amber-300" />
-              <span>{t('isoCertified', 'ISO 9001 Compliant')}</span>
-            </div>
+          <div className="relative z-10 pt-4 border-t border-warmIvory/20 flex items-center gap-2 text-[11px] text-warmIvory/70">
+            <ShieldCheck size={14} className="text-honeyGold" />
+            <span>256-bit Encrypted Session Security</span>
           </div>
         </div>
 
-        {/* Right Form Container */}
-        <div className="flex-1 flex flex-col items-center justify-center bg-surface lg:bg-white px-4 py-8 sm:px-8 lg:px-12">
-          {/* Mobile Top Navigation */}
-          <div className="w-full max-w-md flex items-center justify-between lg:hidden mb-6">
-            <Link to="/" className="flex items-center gap-2.5 font-black text-textPrimary text-lg">
-              <img
-                src="/logo.png"
-                alt="HoneyChain"
-                className="h-10 w-10 object-contain rounded-xl shadow-xs"
-              />
-              <span>Honey<span className="text-primary">Chain</span></span>
-            </Link>
-            <Link
-              to="/"
-              className="text-xs font-semibold text-textSecondary hover:text-primary flex items-center gap-1"
-            >
-              <ArrowLeft size={14} /> {t('backHome', 'Back Home')}
-            </Link>
-          </div>
-
-          <div className="w-full max-w-md">
-            <div className="mb-6">
-              <div className="inline-flex lg:hidden items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-primary bg-primaryLight px-2.5 py-1 rounded-full mb-3">
-                <Sparkles size={12} /> {t('indianWoolNetwork', 'National Honey Network')}
-              </div>
-              <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-textPrimary">{t('signIn', 'Sign In')}</h1>
-              <p className="text-sm text-textSecondary mt-1">
-                {t('accessBatchesPrices', 'Access your honey lots, mandi prices, and orders')}
-              </p>
+        {/* Right Form Panel */}
+        <div className="lg:col-span-7 p-8 lg:p-12 flex flex-col justify-center bg-warmIvory/70">
+          <div className="max-w-md w-full mx-auto space-y-6">
+            <div>
+              <h1 className="text-2xl font-serif font-bold text-deepBrown">Welcome Back</h1>
+              <p className="text-xs text-deepBrown/70 mt-1">Sign in to your Honey Chain account</p>
             </div>
 
-            <form onSubmit={handleLogin} noValidate>
-              <Input
-                label={t('emailAddress', 'Email Address')}
-                type="email"
-                id="email"
-                name="email"
-                icon={Mail}
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                placeholder="name@company.com"
-                autoComplete="email"
-                required
-              />
+            {error && (
+              <div className="p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs font-bold animate-enter">
+                {error}
+              </div>
+            )}
 
-              <Input
-                label={t('password', 'Password')}
-                type={showPassword ? 'text' : 'password'}
-                id="password"
-                name="password"
-                icon={Lock}
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                placeholder={t('enterPassword', 'Enter your password')}
-                autoComplete="current-password"
-                required
-                rightElement={
+            <form onSubmit={handleLogin} className="space-y-4">
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold text-deepBrown uppercase tracking-wider">Email Address</label>
+                <div className="relative">
+                  <Mail size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-deepBrown/40" />
+                  <input
+                    type="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="beekeeper@apiary.in"
+                    className="w-full pl-11 pr-4 py-3 bg-warmIvory border border-border rounded-2xl text-xs text-deepBrown font-medium focus:outline-none focus:border-burgundy focus:ring-2 focus:ring-burgundy/15 transition-all"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1.5">
+                <div className="flex justify-between items-center">
+                  <label className="text-xs font-bold text-deepBrown uppercase tracking-wider">Password</label>
+                  <Link to="/forgot-password" className="text-[11px] font-bold text-burgundy hover:underline">
+                    Forgot Password?
+                  </Link>
+                </div>
+                <div className="relative">
+                  <Lock size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-deepBrown/40" />
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="••••••••••••"
+                    className="w-full pl-11 pr-11 py-3 bg-warmIvory border border-border rounded-2xl text-xs text-deepBrown font-medium focus:outline-none focus:border-burgundy focus:ring-2 focus:ring-burgundy/15 transition-all"
+                  />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="text-textMuted hover:text-textPrimary p-1 transition-colors focus:outline-none"
-                    aria-label={showPassword ? t('hidePassword', 'Hide password') : t('showPassword', 'Show password')}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-deepBrown/40 hover:text-deepBrown"
                   >
-                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                    {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                   </button>
-                }
-              />
+                </div>
+              </div>
 
-              {/* Remember Me & Forgot Password */}
-              <div className="flex items-center justify-between text-xs mb-5 pt-1 gap-3">
-                <label className="flex items-center gap-2 cursor-pointer select-none text-textSecondary font-medium">
+              <div className="flex items-center justify-between pt-1 text-xs">
+                <label className="flex items-center gap-2 cursor-pointer select-none text-deepBrown/80">
                   <input
                     type="checkbox"
                     checked={rememberMe}
-                    onChange={e => setRememberMe(e.target.checked)}
-                    className="rounded border-border text-primary focus:ring-primary h-4 w-4 rounded-md cursor-pointer accent-primary"
+                    onChange={(e) => setRememberMe(e.target.checked)}
+                    className="rounded text-burgundy focus:ring-burgundy"
                   />
-                  {t('rememberMe', 'Remember me')}
+                  <span>Remember my session</span>
                 </label>
-                <Link
-                  to="/forgot-password"
-                  className="text-primary hover:text-primaryDark font-semibold transition-colors whitespace-nowrap"
-                >
-                  {t('forgotPassword', 'Forgot password?')}
-                </Link>
               </div>
 
-              {/* Error Message */}
-              {error && (
-                <div className="flex items-start gap-2.5 p-3.5 mb-5 rounded-xl bg-errorLight/70 border border-error/20 animate-fade-in">
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    className="text-error shrink-0 mt-0.5"
-                  >
-                    <circle cx="12" cy="12" r="10" />
-                    <line x1="12" y1="8" x2="12" y2="12" />
-                    <line x1="12" y1="16" x2="12.01" y2="16" />
-                  </svg>
-                  <p className="text-error text-xs font-medium leading-relaxed">{error}</p>
-                </div>
-              )}
-
-              <Button
-                title={t('signInToDashboard', 'Sign In to Dashboard')}
+              <button
                 type="submit"
-                loading={loading}
-                icon={ArrowRight}
-                size="lg"
-                className="mt-1 shadow-md hover:shadow-lg transition-all w-full"
-              />
-
-              <div className="text-center mt-6 pt-5 border-t border-border/60">
-                <p className="text-sm text-textSecondary">
-                  {t('newToWoolConnect', 'New to HoneyChain?')}{' '}
-                  <Link
-                    to="/register"
-                    className="font-bold text-primary hover:text-primaryDark transition-colors inline-flex items-center gap-1 group"
-                  >
-                    {t('createAccount', 'Create an account')}
-                    <ArrowRight size={14} className="transition-transform group-hover:translate-x-0.5" />
-                  </Link>
-                </p>
-              </div>
+                disabled={loading}
+                className="w-full py-3.5 bg-burgundy text-warmIvory font-bold text-xs rounded-2xl hover:bg-burgundy/90 transition-all shadow-md shadow-burgundy/15 disabled:opacity-60 flex items-center justify-center gap-2"
+              >
+                {loading ? 'Authenticating…' : 'Sign In to Portal →'}
+              </button>
             </form>
-          </div>
 
-          <p className="mt-8 text-center text-xs text-textMuted max-w-sm px-2">
-            {t('secureEncryptedAuth', 'Secure, encrypted authentication aligned with KVIC Honey Mission & FSSAI guidelines.')}
-          </p>
+            <div className="pt-4 border-t border-border/80 text-center text-xs text-deepBrown/70">
+              <span>Don't have an account yet? </span>
+              <Link to="/register" className="font-bold text-burgundy hover:underline">
+                Create Account
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
     </div>

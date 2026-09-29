@@ -46,9 +46,13 @@ const orderSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  floralSource: {
+    type: String,
+    default: 'Mustard Blossom',
+  },
   woolType: {
     type: String,
-    required: true,
+    default: function() { return this.floralSource || 'Mustard Blossom'; },
   },
   quantityKg: {
     type: Number,
@@ -90,6 +94,8 @@ const orderSchema = new mongoose.Schema({
   toJSON: {
     transform(doc, ret) {
       ret.id = ret._id;
+      if (!ret.floralSource && ret.woolType) ret.floralSource = ret.woolType;
+      if (!ret.woolType && ret.floralSource) ret.woolType = ret.floralSource;
       delete ret.__v;
       return ret;
     }

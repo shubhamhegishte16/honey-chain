@@ -62,6 +62,7 @@ const warehouseSchema = new mongoose.Schema({
     batchId: { type: String },
     farmer: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     farmerName: { type: String },
+    floralSource: { type: String },
     woolType: { type: String },
     quantityKg: { type: Number },
     durationMonths: { type: Number, default: 1 },

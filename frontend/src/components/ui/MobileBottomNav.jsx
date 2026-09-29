@@ -29,7 +29,7 @@ export default function MobileBottomNav() {
   if (!profile) return null;
 
   const farmerNav = [
-    { to: '/', label: t('dashboard'), icon: Home, exact: true },
+    { to: '/farmer/dashboard', label: t('dashboard'), icon: Home, exact: true },
     { to: '/farmer/tracking', label: 'My Lots', icon: Package },
     { to: '/farmer/marketplace', label: 'Sell Honey', icon: Store },
     { to: '/farmer/market', label: t('mandiRatesLabel', 'Rates'), icon: TrendingUp },
@@ -79,7 +79,7 @@ export default function MobileBottomNav() {
   return (
     <nav
       aria-label="Mobile navigation"
-      className="sm:hidden fixed bottom-0 left-0 right-0 z-40 bg-surface/95 backdrop-blur-xl border-t border-border/80 shadow-[0_-4px_20px_rgba(0,0,0,0.06)] px-1 py-1.5 flex items-center justify-around select-none safe-area-bottom"
+      className="sm:hidden fixed bottom-0 left-0 right-0 z-40 bg-warmIvory/95 backdrop-blur-xl border-t border-border/80 shadow-[0_-4px_20px_rgba(40,29,28,0.08)] px-2 py-1.5 flex items-center justify-around select-none safe-area-bottom font-sans"
     >
       {items.map(item => {
         const Icon = item.icon;
@@ -91,16 +91,14 @@ export default function MobileBottomNav() {
           <Link
             key={item.to}
             to={item.to}
-            className={`flex flex-col items-center justify-center min-w-[58px] min-h-[50px] px-1 py-1 rounded-2xl transition-all duration-200 active:scale-95 ${
+            className={`flex flex-col items-center justify-center min-w-[56px] min-h-[48px] px-1 py-1 rounded-2xl transition-all duration-200 active:scale-95 ${
               isActive
-                ? 'bg-primaryLight/80 text-primary font-bold shadow-sm'
-                : 'text-textSecondary hover:text-textPrimary hover:bg-background'
+                ? 'bg-burgundy text-warmIvory font-bold shadow-sm shadow-burgundy/20'
+                : 'text-deepBrown/65 hover:text-burgundy'
             }`}
           >
-            <Icon size={19} className={isActive ? 'text-primary stroke-[2.4]' : 'text-textSecondary stroke-[1.8]'} />
-            <span className="text-[10px] mt-1 tracking-tight truncate max-w-[62px] text-center leading-none">
-              {item.label}
-            </span>
+            <Icon size={18} className={isActive ? 'text-honeyGold stroke-[2.4]' : 'text-deepBrown/70 stroke-[1.8]'} />
+            <span className="text-[10px] tracking-tight mt-0.5 font-medium leading-none">{item.label}</span>
           </Link>
         );
       })}

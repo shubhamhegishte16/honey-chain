@@ -22,14 +22,19 @@ const marketplaceListingSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  floralSource: {
+    type: String,
+    default: 'Mustard Blossom',
+    index: true,
+  },
   woolType: {
     type: String,
-    required: true,
+    default: function() { return this.floralSource || 'Mustard Blossom'; },
     index: true,
   },
   grade: {
     type: String,
-    default: 'Grade A',
+    default: 'Grade A+ (NMR Certified 100% Pure)',
   },
   initialQuantityKg: {
     type: Number,
@@ -57,8 +62,7 @@ const marketplaceListingSchema = new mongoose.Schema({
   },
   processingStatus: {
     type: String,
-    enum: ['Raw Greasy', 'Scoured', 'Carded', 'Graded & Sorted', 'Semi-Processed'],
-    default: 'Raw Greasy',
+    default: 'Raw Organic Unprocessed',
   },
   imageUrl: {
     type: String,
@@ -83,6 +87,8 @@ const marketplaceListingSchema = new mongoose.Schema({
   toJSON: {
     transform(doc, ret) {
       ret.id = ret._id;
+      if (!ret.floralSource && ret.woolType) ret.floralSource = ret.woolType;
+      if (!ret.woolType && ret.floralSource) ret.woolType = ret.floralSource;
       delete ret.__v;
       return ret;
     }

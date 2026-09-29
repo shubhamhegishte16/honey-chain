@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Package, MapPin, User, Calendar, Sparkles, Truck, AlertCircle } from 'lucide-react';
+import { ArrowLeft, Package, MapPin, User, Calendar, Sparkles, Truck, AlertCircle, ShieldCheck } from 'lucide-react';
 import { getOrderById } from '../../services/order.service';
 import { useLanguage } from '../../context/LanguageContext';
 
@@ -40,18 +40,22 @@ export default function OrderDetails() {
 
   if (loading) {
     return (
-      <main className="page-shell"><div className="py-20 flex justify-center"><div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" /></div></main>
+      <main className="max-w-4xl mx-auto px-4 py-20 flex justify-center">
+        <div className="h-10 w-10 animate-spin rounded-full border-3 border-burgundy border-t-transparent" />
+      </main>
     );
   }
 
   if (error || !order) {
     return (
-      <main className="page-shell">
-        <div className="p-8 text-center rounded-3xl bg-rose-50 text-rose-800 border border-rose-200 mt-10">
-          <AlertCircle size={32} className="mx-auto mb-3" />
-          <h3 className="font-bold text-lg">{t('orderNotFound')}</h3>
-          <p className="mt-1 text-sm">{error || t('orderCouldNotBeFound')}</p>
-          <button onClick={() => navigate('/buyer/orders')} className="mt-4 px-4 py-2 bg-rose-100 rounded-lg text-sm font-semibold hover:bg-rose-200">{t('viewAllOrders')}</button>
+      <main className="max-w-4xl mx-auto px-4 py-12">
+        <div className="p-8 text-center bento-card text-rose-800">
+          <AlertCircle size={36} className="mx-auto mb-3 text-rose-700" />
+          <h3 className="font-serif font-bold text-lg">{t('orderNotFound')}</h3>
+          <p className="mt-1 text-xs text-deepBrown/70">{error || t('orderCouldNotBeFound')}</p>
+          <button onClick={() => navigate('/buyer/orders')} className="mt-5 btn-burgundy text-xs">
+            {t('viewAllOrders')}
+          </button>
         </div>
       </main>
     );
@@ -62,25 +66,28 @@ export default function OrderDetails() {
   const isCancelled = order.status === 'cancelled';
 
   return (
-    <main className="page-shell max-w-4xl mx-auto">
-      <button onClick={() => navigate('/buyer/orders')} className="mb-6 flex items-center gap-1.5 text-sm font-medium text-textSecondary hover:text-textPrimary transition-colors">
+    <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8 font-sans">
+      <button onClick={() => navigate('/buyer/orders')} className="mb-6 flex items-center gap-2 text-xs font-bold text-deepBrown/70 hover:text-burgundy transition-colors">
         <ArrowLeft size={16} /> {t('backToMyOrders')}
       </button>
 
       {/* Order Header */}
-      <div className="p-6 sm:p-8 rounded-3xl bg-surface border border-border shadow-card animate-enter mb-6">
+      <div className="bento-card p-6 md:p-8 mb-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <p className="eyebrow text-primary"><Package size={13} /> {t('orderDetailsLabel')}</p>
-            <h1 className="text-2xl font-extrabold text-textPrimary">{t('orderHash')}{order.orderId}</h1>
-            <p className="text-sm text-textSecondary mt-1 flex items-center gap-1.5">
-              <Calendar size={14} /> {new Date(order.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-honeyGold/20 text-burgundy text-xs font-bold mb-2">
+              <Package size={13} className="text-honeyGold" />
+              <span>{t('orderDetailsLabel')}</span>
+            </div>
+            <h1 className="text-2xl font-serif font-bold text-deepBrown">{t('orderHash')}{order.orderId || (order._id || order.id).slice(-8).toUpperCase()}</h1>
+            <p className="text-xs text-deepBrown/70 mt-1 flex items-center gap-1.5 font-mono">
+              <Calendar size={14} className="text-burntOrange" /> {new Date(order.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}
             </p>
           </div>
-          <span className={`px-4 py-2 rounded-xl text-sm font-bold uppercase ${
+          <span className={`px-4 py-2 rounded-2xl text-xs font-bold uppercase tracking-wider ${
             isCancelled ? 'bg-rose-100 text-rose-800' :
             order.status === 'delivered' ? 'bg-emerald-100 text-emerald-800' :
-            'bg-amber-100 text-amber-800'
+            'bg-honeyGold/20 text-burgundy'
           }`}>
             {STATUS_LABELS[order.status] || order.status}
           </span>
@@ -89,107 +96,70 @@ export default function OrderDetails() {
 
       {/* Status Progress */}
       {!isCancelled && (
-        <div className="p-5 rounded-2xl bg-surface border border-border shadow-sm mb-6 animate-enter delay-1">
-          <h3 className="font-bold text-textPrimary mb-4">{t('orderProgress')}</h3>
-          <div className="flex items-center gap-0 overflow-x-auto pb-2">
+        <div className="bento-card p-6 mb-6">
+          <h3 className="font-serif font-bold text-deepBrown mb-5">{t('orderProgress')}</h3>
+          <div className="flex items-center justify-between overflow-x-auto pb-3 gap-2">
             {STATUS_STEPS.map((step, idx) => {
               const isCompleted = idx <= currentStepIdx;
               const isCurrent = idx === currentStepIdx;
               return (
-                <React.Fragment key={step}>
-                  <div className="flex flex-col items-center min-w-[70px]">
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold border-2 transition-colors ${
-                      isCompleted ? 'bg-primary text-white border-primary' : 'bg-background text-textMuted border-border'
-                    } ${isCurrent ? 'ring-2 ring-primary/30' : ''}`}>
-                      {idx + 1}
-                    </div>
-                    <span className={`text-[10px] font-semibold mt-1.5 text-center ${isCompleted ? 'text-primary' : 'text-textMuted'}`}>
-                      {STATUS_LABELS[step]}
-                    </span>
+                <div key={step} className="flex-1 flex flex-col items-center min-w-[80px]">
+                  <div className={`grid h-10 w-10 place-items-center rounded-2xl font-bold text-xs transition-all ${
+                    isCompleted 
+                      ? 'bg-burgundy text-warmIvory shadow-sm' 
+                      : 'bg-warmIvory border border-border text-deepBrown/40'
+                  }`}>
+                    {idx + 1}
                   </div>
-                  {idx < STATUS_STEPS.length - 1 && (
-                    <div className={`flex-1 h-0.5 min-w-[20px] ${idx < currentStepIdx ? 'bg-primary' : 'bg-border'}`} />
-                  )}
-                </React.Fragment>
+                  <p className={`mt-2 text-[11px] font-bold text-center capitalize ${
+                    isCompleted ? 'text-burgundy' : 'text-deepBrown/50'
+                  }`}>
+                    {STATUS_LABELS[step] || step}
+                  </p>
+                </div>
               );
             })}
           </div>
         </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-enter delay-2">
-        {/* Product */}
-        <div className="p-5 rounded-2xl bg-surface border border-border shadow-sm">
-          <h3 className="font-bold text-textPrimary flex items-center gap-2 mb-3"><Package size={16} className="text-primary" /> {t('product')}</h3>
-          <dl className="space-y-2 text-sm">
-            <div className="flex justify-between"><dt className="text-textSecondary">{t('woolTypeLabel')}</dt><dd className="font-semibold text-textPrimary">{order.floralSource || order.woolType || 'Pure Honey'}</dd></div>
-            <div className="flex justify-between"><dt className="text-textSecondary">{t('quantityKg')}</dt><dd className="font-semibold text-textPrimary">{order.quantityKg} kg</dd></div>
-            <div className="flex justify-between"><dt className="text-textSecondary">{t('priceKgLabel')}</dt><dd className="font-semibold text-textPrimary">₹{order.pricePerKg}</dd></div>
-            <div className="flex justify-between border-t border-border pt-2"><dt className="font-bold text-textPrimary">{t('total')}</dt><dd className="font-black text-textPrimary text-lg">₹{order.totalAmount?.toLocaleString()}</dd></div>
-            <div className="flex justify-between"><dt className="text-textSecondary">{t('batchIdLabel')}</dt><dd className="font-semibold text-textPrimary">{order.batchId}</dd></div>
-          </dl>
-        </div>
-
-        {/* Seller */}
-        <div className="p-5 rounded-2xl bg-surface border border-border shadow-sm">
-          <h3 className="font-bold text-textPrimary flex items-center gap-2 mb-3"><User size={16} className="text-primary" /> {t('seller')}</h3>
-          <p className="font-bold text-textPrimary">{order.sellerName}</p>
-          <p className="text-xs text-textSecondary mt-1">{t('verifiedWoolConnectProducer')}</p>
-        </div>
-
-        {/* Delivery */}
-        <div className="p-5 rounded-2xl bg-surface border border-border shadow-sm">
-          <h3 className="font-bold text-textPrimary flex items-center gap-2 mb-3"><MapPin size={16} className="text-primary" /> {t('deliveryAddress')}</h3>
-          {order.deliveryAddress ? (
-            <div className="text-sm text-textSecondary space-y-1">
-              {order.deliveryAddress.street && <p>{order.deliveryAddress.street}</p>}
-              <p>{order.deliveryAddress.district}, {order.deliveryAddress.state}</p>
-              {order.deliveryAddress.pinCode && <p>{t('pinLabel')}: {order.deliveryAddress.pinCode}</p>}
-              <p>{t('phoneLabel')}: {order.deliveryAddress.contactPhone}</p>
+      {/* Order Summary */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="bento-card p-6 space-y-4">
+          <h3 className="font-serif font-bold text-deepBrown flex items-center gap-2">
+            <Package size={17} className="text-burgundy" /> Lot Particulars
+          </h3>
+          <div className="space-y-2.5 text-xs">
+            <div className="flex justify-between py-1.5 border-b border-border/60">
+              <span className="text-deepBrown/60">Honey Variety</span>
+              <span className="font-bold text-deepBrown">{order.floralSource || order.wool_type || 'Raw Blossom Honey'}</span>
             </div>
-          ) : (
-            <p className="text-sm text-textSecondary">{t('noDeliveryAddress')}</p>
-          )}
-        </div>
-
-        {/* Timeline */}
-        <div className="p-5 rounded-2xl bg-surface border border-border shadow-sm">
-          <h3 className="font-bold text-textPrimary flex items-center gap-2 mb-3"><Calendar size={16} className="text-primary" /> {t('statusHistory')}</h3>
-          {order.statusHistory && order.statusHistory.length > 0 ? (
-            <div className="space-y-3">
-              {order.statusHistory.map((sh, i) => (
-                <div key={i} className="flex items-start gap-3">
-                  <div className="w-2 h-2 rounded-full bg-primary mt-1.5 shrink-0" />
-                  <div>
-                    <p className="text-sm font-semibold text-textPrimary capitalize">{STATUS_LABELS[sh.status] || sh.status}</p>
-                    <p className="text-[10px] text-textMuted">{new Date(sh.timestamp).toLocaleString('en-IN')}</p>
-                    {sh.note && <p className="text-xs text-textSecondary mt-0.5">{sh.note}</p>}
-                  </div>
-                </div>
-              ))}
+            <div className="flex justify-between py-1.5 border-b border-border/60">
+              <span className="text-deepBrown/60">Procured Quantity</span>
+              <span className="font-mono font-bold text-burgundy">{order.quantityKg || order.quantity_kg} kg</span>
             </div>
-          ) : (
-            <p className="text-sm text-textSecondary">{t('noHistoryEvents')}</p>
-          )}
+            <div className="flex justify-between py-1.5 border-b border-border/60">
+              <span className="text-deepBrown/60">Price per kg</span>
+              <span className="font-mono font-semibold text-deepBrown">₹{order.pricePerKg || order.price_per_kg}</span>
+            </div>
+            <div className="flex justify-between py-2 text-sm">
+              <span className="font-bold text-deepBrown">Total Escrow Amount</span>
+              <span className="font-mono font-bold text-burgundy">₹{(order.totalPrice || order.total_amount)?.toLocaleString('en-IN')}</span>
+            </div>
+          </div>
         </div>
-      </div>
 
-      {/* Actions */}
-      <div className="mt-8 flex flex-wrap gap-3 animate-enter delay-3">
-        <button
-          onClick={() => navigate(`/buyer/tracking/${order.id || order._id}`)}
-          className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-primary text-white font-bold text-sm shadow hover:bg-primaryDark transition-all"
-        >
-          <Truck size={16} /> {t('trackOrder')}
-        </button>
-        {order.batch && (
-          <button
-            onClick={() => navigate(`/buyer/wool-passport/${typeof order.batch === 'object' ? order.batch._id || order.batch.id : order.batch}`)}
-            className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-primaryLight/50 text-primary font-bold text-sm border border-primary/10 hover:bg-primaryLight transition-all"
-          >
-            <Sparkles size={16} /> {t('viewWoolPassport')}
-          </button>
-        )}
+        <div className="bento-card p-6 space-y-4">
+          <h3 className="font-serif font-bold text-deepBrown flex items-center gap-2">
+            <MapPin size={17} className="text-burgundy" /> Delivery Destination
+          </h3>
+          <div className="text-xs text-deepBrown/80 space-y-1.5">
+            <p className="font-bold text-deepBrown">{order.deliveryAddress?.street || 'Consignment Depot'}</p>
+            <p>{order.deliveryAddress?.district || 'Kangra'}, {order.deliveryAddress?.state || 'Himachal Pradesh'}</p>
+            <p className="font-mono">PIN: {order.deliveryAddress?.pinCode || '176001'}</p>
+            <p className="pt-2 text-deepBrown/60">Contact: <span className="font-mono font-semibold text-deepBrown">{order.deliveryAddress?.contactPhone || '+91 98160 44219'}</span></p>
+          </div>
+        </div>
       </div>
     </main>
   );

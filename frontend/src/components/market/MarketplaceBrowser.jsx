@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Search, MapPin, Scale, Store, Sparkles, CheckCircle2 } from 'lucide-react';
 import Card from '../ui/Card';
 import Button from '../ui/Button';
 import { getListings, placeOrder } from '../../services/marketplace.service';
@@ -40,7 +41,7 @@ export default function MarketplaceBrowser({ allowBuying = false }) {
   async function handleBuy(listingId) {
     setBuyingId(listingId);
     setMessage('');
-    const { error } = await placeOrder({ listingId, buyerId: profile.id });
+    const { error } = await placeOrder({ listingId, buyerId: profile?.id });
     setBuyingId(null);
     if (error) {
       setMessage(error.message);
@@ -51,87 +52,115 @@ export default function MarketplaceBrowser({ allowBuying = false }) {
   }
 
   return (
-    <div className="max-w-3xl mx-auto px-4 md:px-8 pt-8 md:pt-10 pb-8">
-      <h1 className="text-2xl font-bold text-textPrimary mb-4">{t('marketplace', 'Marketplace')}</h1>
+    <div className="max-w-4xl mx-auto px-4 md:px-8 py-8">
       
-      <input
-        value={search}
-        onChange={e => setSearch(e.target.value)}
-        placeholder="Search by honey variety, state, or apiary..."
-        className="w-full min-h-[48px] border border-border rounded-md px-4 text-[15px] bg-surface mb-3 focus:outline-none focus:ring-2 focus:ring-primary/30"
-      />
+      <div className="mb-6">
+        <span className="eyebrow"><Store size={13} /> Honey Mandi Catalog</span>
+        <h1 className="text-2xl sm:text-3xl font-bold font-serif text-[#281D1C] mt-1">
+          Pure Honey Listings
+        </h1>
+        <p className="text-xs text-[#5E524D] mt-1">Procure authenticated honey lots directly from certified beekeepers.</p>
+      </div>
       
-      <div className="flex gap-2 mb-4 overflow-x-auto pb-1">
-        <select
-          value={state}
-          onChange={e => setState(e.target.value)}
-          className="border border-border rounded-md px-3 py-2 text-sm bg-surface shrink-0"
-        >
-          <option value="">{t('allStates', 'All States')}</option>
-          {INDIAN_STATES.map(s => (
-            <option key={s.code} value={s.name}>
-              {s.name}
-            </option>
-          ))}
-        </select>
-        
-        <select
-          value={woolType}
-          onChange={e => setWoolType(e.target.value)}
-          className="border border-border rounded-md px-3 py-2 text-sm bg-surface shrink-0"
-        >
-          <option value="">All Honey Varieties</option>
-          {WOOL_TYPES.map(w => (
-            <option key={w} value={w}>
-              {w}
-            </option>
-          ))}
-        </select>
+      {/* Filters */}
+      <div className="flex flex-col sm:flex-row gap-3 mb-6">
+        <div className="relative flex-1">
+          <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9B918B]" />
+          <input
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            placeholder="Search by honey variety, state, or apiary..."
+            className="w-full pl-11 pr-4 py-2.5 rounded-full border border-[#E8E3CF] bg-white text-xs sm:text-sm text-[#281D1C] placeholder:text-[#9B918B] focus:outline-none focus:ring-2 focus:ring-[#F4B345]/30 focus:border-[#F4B345] shadow-soft"
+          />
+        </div>
+
+        <div className="flex gap-2.5 overflow-x-auto pb-1">
+          <select
+            value={state}
+            onChange={e => setState(e.target.value)}
+            className="px-4 py-2 rounded-full border border-[#E8E3CF] bg-white text-xs font-bold text-[#281D1C] focus:outline-none focus:border-[#F4B345] shadow-soft cursor-pointer truncate"
+          >
+            <option value="">All States</option>
+            {INDIAN_STATES.map(s => (
+              <option key={s.code} value={s.name}>
+                {s.name}
+              </option>
+            ))}
+          </select>
+          
+          <select
+            value={woolType}
+            onChange={e => setWoolType(e.target.value)}
+            className="px-4 py-2 rounded-full border border-[#E8E3CF] bg-white text-xs font-bold text-[#281D1C] focus:outline-none focus:border-[#F4B345] shadow-soft cursor-pointer truncate"
+          >
+            <option value="">All Honey Varieties</option>
+            {WOOL_TYPES.map(w => (
+              <option key={w} value={w}>
+                {w}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
       {message ? (
-        <p className="text-primary text-sm mb-4 font-medium">{message}</p>
+        <div className="p-3.5 mb-5 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold flex items-center gap-2">
+          <CheckCircle2 size={16} />
+          <span>{message}</span>
+        </div>
       ) : null}
 
       {loading ? (
-        <div className="flex justify-center pt-10">
-          <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+        <div className="py-16 flex flex-col items-center justify-center gap-2">
+          <div className="h-8 w-8 animate-spin rounded-full border-3 border-[#861C1C] border-t-transparent" />
+          <span className="text-xs font-bold text-[#5E524D]">Loading honey catalog...</span>
         </div>
       ) : listings.length === 0 ? (
-        <Card>
-          <p className="text-textSecondary text-sm">{t('noListingsMatchFilters', 'No listings match your filters.')}</p>
-        </Card>
+        <div className="p-8 text-center rounded-3xl bg-white border border-[#E8E3CF] shadow-card">
+          <p className="text-xs text-[#5E524D]">No honey lots match your active filters.</p>
+        </div>
       ) : (
-        <div className="grid sm:grid-cols-2 gap-3">
+        <div className="grid sm:grid-cols-2 gap-4">
           {listings.map(l => (
-            <Card key={l.id} className="flex flex-col">
-              <img
-                src={(l.imageUrl || l.image_url)?.includes('unsplash') ? '/wool-placeholder.jpg' : (l.imageUrl || l.image_url || '/wool-placeholder.jpg')}
-                alt={l.wool_type}
-                className="w-full h-32 object-cover rounded-md mb-3 bg-primaryLight"
-              />
-              <p className="font-semibold text-textPrimary">{l.floralSource || l.wool_type || 'Raw'} Honey</p>
-              <p className="text-textSecondary text-[13px] mt-0.5">
-                {l.district}, {l.state}
-              </p>
-              <p className="text-textMuted text-xs mt-0.5">
-                {t('seller', 'Seller')}: {l.seller_name}
-              </p>
-              
-              <div className="flex items-baseline justify-between mt-3">
-                <span className="font-bold text-lg text-textPrimary">₹{l.price_per_kg}/{t('kg', 'kg')}</span>
-                <span className="text-textSecondary text-[13px]">{l.quantity_kg} kg {t('avail', 'avail.')}</span>
+            <div key={l.id} className="p-5 rounded-3xl bg-white border border-[#E8E3CF] shadow-card hover:shadow-card-hover hover:border-[#D6CEB5] transition-all flex flex-col justify-between">
+              <div>
+                <div className="relative aspect-[16/9] rounded-2xl overflow-hidden bg-[#FEF6E4] mb-3">
+                  <img
+                    src={l.image_url || l.imageUrl || '/honey-hero.jpg'}
+                    alt={l.floralSource || l.wool_type || 'Pure Honey'}
+                    className="w-full h-full object-cover"
+                  />
+                  <span className="absolute bottom-2 left-2 px-2.5 py-0.5 rounded-full bg-[#281D1C]/80 text-[#F4B345] text-[10px] font-bold">
+                    {l.quantity_kg} kg Lot
+                  </span>
+                </div>
+
+                <h3 className="font-bold font-serif text-base text-[#281D1C]">{l.floralSource || l.wool_type || 'Raw'} Honey</h3>
+                <p className="text-xs text-[#5E524D] mt-0.5 flex items-center gap-1">
+                  <MapPin size={12} className="text-[#C06E30]" /> {l.district}, {l.state}
+                </p>
+                <p className="text-[11px] text-[#9B918B] mt-1">
+                  Seller: <strong className="text-[#281D1C]">{l.seller_name || 'KVIC Beekeeper'}</strong>
+                </p>
               </div>
-              
-              {allowBuying && (
-                <Button
-                  title={t('placeOrder', 'Place Order')}
-                  onClick={() => handleBuy(l.id)}
-                  loading={buyingId === l.id}
-                  className="mt-3"
-                />
-              )}
-            </Card>
+
+              <div className="mt-4 pt-3 border-t border-[#E8E3CF]">
+                <div className="flex items-baseline justify-between mb-3">
+                  <span className="font-bold font-serif text-lg text-[#281D1C]">₹{l.price_per_kg}<small className="text-xs font-normal text-[#5E524D]"> /kg</small></span>
+                  <span className="text-xs text-emerald-800 font-bold bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">NMR Certified</span>
+                </div>
+                
+                {allowBuying && (
+                  <button
+                    onClick={() => handleBuy(l.id)}
+                    disabled={buyingId === l.id}
+                    className="w-full py-2.5 rounded-full bg-[#861C1C] text-white text-xs font-bold shadow-burgundy hover:bg-[#6A1515] transition-all hover:scale-[1.01] active:scale-95 disabled:opacity-50"
+                  >
+                    {buyingId === l.id ? 'Placing Order...' : 'Place Procurement Order'}
+                  </button>
+                )}
+              </div>
+            </div>
           ))}
         </div>
       )}

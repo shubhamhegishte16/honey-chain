@@ -1,240 +1,257 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,400;1,9..144,600;1,9..144,700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,400;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-body {
-  min-width: 320px;
-  background: linear-gradient(180deg, #f7f6f0 0%, #fbfaf7 40%, #f4f7f1 100%);
-  font-family: 'Inter', system-ui, sans-serif;
-  color: #232420;
+@layer base {
+  body {
+    min-width: 320px;
+    background-color: #FAF7EE;
+    background-image: 
+      radial-gradient(circle at 10% 15%, rgba(244, 179, 69, 0.08) 0%, transparent 40%),
+      radial-gradient(circle at 90% 85%, rgba(134, 28, 28, 0.05) 0%, transparent 45%),
+      radial-gradient(circle at 50% 50%, rgba(200, 203, 184, 0.12) 0%, transparent 50%);
+    background-attachment: fixed;
+    font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+    color: #281D1C;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3, .font-editorial, .font-serif {
+    font-family: 'Fraunces', 'Playfair Display', Georgia, serif;
+  }
 }
 
 * { box-sizing: border-box; }
-a { transition: color .2s ease; }
-a:hover { color: #3F6B3F; }
-::selection { background: #dcebd6; color: #232420; }
+a { transition: all .2s ease; }
+::selection { background: #F4B345; color: #281D1C; }
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+::-webkit-scrollbar-track {
+  background: #FAF7EE;
+}
+::-webkit-scrollbar-thumb {
+  background: #D8CFBC;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #C06E30;
+}
 
 @layer components {
   /* ─── Page Shell ─── */
-  .page-shell { @apply max-w-[90rem] mx-auto px-3.5 sm:px-6 lg:px-8 py-3.5 sm:py-7 pb-20 sm:pb-12 overflow-x-hidden; }
-
-  /* ─── Hero Panel (Farmer Dashboard) ─── */
-  .hero-panel {
-    @apply relative overflow-hidden rounded-2xl sm:rounded-[2rem] px-4 py-5 sm:px-9 sm:py-10 text-white;
-    background: linear-gradient(135deg, #1c3e27 0%, #2a5035 50%, #3f6b3f 100%);
-    box-shadow: 0 10px 30px -5px rgba(28, 62, 39, 0.15);
-  }
-  .hero-panel h1 { @apply mt-2 sm:mt-4 text-xl sm:text-3xl lg:text-4xl font-extrabold leading-snug sm:leading-tight tracking-tight; }
-  .hero-panel h1 span { color: #e6efd9; }
-  .eyebrow { @apply inline-flex items-center gap-1.5 text-[10px] sm:text-[11px] font-bold uppercase tracking-[.12em]; }
-  .hero-panel .eyebrow { color: #d8ebca; }
-  .hero-copy { @apply mt-2 sm:mt-4 flex items-center gap-1.5 text-xs sm:text-sm text-white/80; }
-  .hero-cta { @apply inline-flex items-center justify-center gap-2 rounded-xl bg-white px-4 py-2.5 text-xs sm:text-sm font-bold text-primary shadow transition hover:bg-emerald-50 active:scale-95; }
-  .hero-ghost { @apply rounded-xl border border-white/30 bg-white/10 px-3.5 py-2.5 text-xs sm:text-sm font-semibold text-white backdrop-blur transition hover:bg-white/20; }
-  .hero-orb { @apply hidden sm:block absolute rounded-full bg-white/10 blur-2xl pointer-events-none; }
-  .orb-one { width: 230px; height: 230px; right: -60px; top: -95px; }
-  .orb-two { width: 130px; height: 130px; right: 25%; bottom: -88px; }
-  .hero-mark { @apply absolute -right-8 bottom-[-58px] h-56 w-56 text-white/10 rotate-[-24deg] pointer-events-none; }
-
-  /* ─── Dashboard Grid & Metrics ─── */
-  .dashboard-grid { @apply grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5 sm:gap-4 mt-4; }
-  .metric-card { @apply relative min-h-[120px] sm:min-h-[148px] overflow-hidden bg-surface p-4 sm:p-5 rounded-2xl border border-border shadow-sm; }
-
-  .metric-card p { @apply mt-2 sm:mt-3 text-[11px] font-bold uppercase tracking-wider text-textSecondary; }
-  .metric-card strong { @apply mt-0.5 block text-2xl sm:text-3xl font-extrabold tracking-tight text-textPrimary; }
-  .metric-card strong small { @apply ml-1 text-sm font-medium text-textSecondary; }
-  .metric-card span { @apply mt-1 block text-xs text-textMuted; }
-  .metric-icon { @apply grid h-9 w-9 sm:h-10 sm:w-10 place-items-center rounded-xl; }
-  .market-highlight { @apply min-h-[120px] sm:min-h-[148px]; background: linear-gradient(135deg, #e9f2f5, #ffffff 65%); }
-
-  /* ─── Trend Chips ─── */
-  .trend-chip { @apply inline-flex items-center gap-1 rounded-full px-2 py-1 text-[11px] font-bold; }
-  .trend-up { @apply bg-primaryLight text-primary; }
-  .trend-down { @apply bg-errorLight text-error; }
-
-  /* ─── Section Headings ─── */
-  .section-heading { @apply mb-3 sm:mb-4 flex items-end justify-between gap-3; }
-  .section-heading h2 { @apply mt-0.5 text-lg sm:text-xl font-bold tracking-tight text-textPrimary; }
-  .text-link { @apply inline-flex items-center gap-1 text-xs sm:text-sm font-bold text-primary transition hover:gap-1.5; }
-
-  /* ─── Action Grid (Quick Actions) ─── */
-  .action-grid { @apply grid gap-3 md:grid-cols-3; }
-  .action-card { @apply flex items-center gap-3 rounded-2xl border border-border bg-surface p-4 text-left shadow-sm transition duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-lg; }
-  .action-card b { @apply block text-sm text-textPrimary; }
-  .action-card small { @apply mt-0.5 block text-xs text-textSecondary; }
-  .action-icon { @apply grid h-11 w-11 shrink-0 place-items-center rounded-xl; }
-  .action-arrow { @apply ml-auto text-textMuted transition group-hover:translate-x-1 group-hover:text-primary; }
-
-  /* ─── Batch Cards ─── */
-  .batch-card { @apply flex items-center gap-3 border-border/80 p-4 transition duration-300 hover:-translate-y-0.5 hover:border-primary/40; }
-  .batch-icon { @apply grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-primaryLight text-primary; }
-  .batch-arrow { @apply shrink-0 text-textMuted transition group-hover:text-primary; }
-  .status-badge { @apply inline-flex rounded-full bg-primaryLight px-2.5 py-1 text-[11px] font-bold text-primary; }
-
-  /* ─── Empty State ─── */
-  .empty-state { @apply flex min-h-[210px] flex-col items-center justify-center text-center; }
-  .empty-state svg { @apply text-primary; }
-  .empty-state h3 { @apply mt-3 font-bold text-textPrimary; }
-  .empty-state p { @apply mt-1 max-w-sm text-sm text-textSecondary; }
-  .empty-state .text-link { @apply mt-4; }
-
-  /* ─── Entrance Animations ─── */
-  .animate-enter { animation: enter .6s cubic-bezier(.2, .8, .2, 1) both; }
-  .delay-1 { animation-delay: .05s; }
-  .delay-2 { animation-delay: .10s; }
-  .delay-3 { animation-delay: .15s; }
-  .delay-4 { animation-delay: .20s; }
-  .delay-5 { animation-delay: .25s; }
-  .delay-6 { animation-delay: .30s; }
-
-  /* ─── Marketplace Hero ─── */
-  .market-hero {
-    @apply relative overflow-hidden rounded-[2rem] px-6 py-9 sm:px-10 sm:py-12 text-white flex items-center justify-between gap-6;
-    background: linear-gradient(135deg, #2c4a3e 0%, #3f6b3f 45%, #7a9e5e 100%);
-    box-shadow: 0 22px 45px rgba(41, 79, 47, .18);
-  }
-  .market-hero .eyebrow { color: #d8ebca; }
-  .market-hero h1 {
-    @apply mt-3 text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight tracking-tight;
-  }
-  .market-hero h1 em {
-    font-style: normal;
-    color: #e6efd9;
-  }
-  .market-hero > div:first-child p:last-of-type {
-    @apply mt-3 text-sm text-white/70 max-w-md;
-  }
-  .market-hero-icon {
-    @apply hidden sm:block text-white/10 shrink-0;
+  .page-shell { 
+    @apply max-w-[92rem] mx-auto px-3.5 sm:px-6 lg:px-8 py-4 sm:py-8 pb-24 sm:pb-16 overflow-x-hidden; 
   }
 
-  /* ─── Marketplace Controls ─── */
-  .market-controls {
-    @apply mt-6 flex flex-col sm:flex-row items-stretch sm:items-center gap-3;
+  /* ─── Bento UI Containers ─── */
+  .bento-card {
+    @apply relative overflow-hidden rounded-3xl bg-white border border-[#E8E3CF] shadow-card transition-all duration-300;
   }
-  .search-field {
-    @apply flex items-center gap-2.5 flex-1 min-h-[48px] px-4 rounded-xl border border-border bg-surface text-textSecondary transition-colors focus-within:border-primary/50 focus-within:ring-2 focus-within:ring-primary/10;
-  }
-  .search-field input {
-    @apply flex-1 bg-transparent border-none outline-none text-[15px] text-textPrimary placeholder:text-textMuted;
-  }
-  .filter-row {
-    @apply flex items-center gap-2.5 flex-wrap;
-  }
-  .filter-row > span {
-    @apply hidden sm:inline-flex items-center gap-1 text-xs font-semibold text-textSecondary uppercase tracking-wider;
-  }
-  .filter-row select {
-    @apply min-h-[44px] px-3 py-2 rounded-xl border border-border bg-surface text-sm text-textPrimary transition-colors focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 cursor-pointer;
+  .bento-card-hover {
+    @apply hover:shadow-card-hover hover:border-[#D6CEB5] hover:-translate-y-0.5;
   }
 
-  /* ─── Marketplace Message ─── */
-  .market-message {
-    @apply mt-4 px-4 py-3 rounded-xl bg-primaryLight text-primary text-sm font-medium border border-primary/20;
+  .bento-card-warm {
+    @apply relative overflow-hidden rounded-3xl bg-[#FAF7EE] border border-[#E8E3CF] shadow-card transition-all duration-300;
   }
 
-  /* ─── Marketplace Listing Grid ─── */
-  .listing-grid {
-    @apply grid gap-4 sm:grid-cols-2 lg:grid-cols-3;
-  }
-  .listing-card {
-    @apply flex flex-col overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-card-hover cursor-default;
-  }
-  .listing-card h3 {
-    @apply font-bold text-[15px] text-textPrimary;
-  }
-  .listing-card strong {
-    @apply text-lg font-bold text-textPrimary whitespace-nowrap;
-  }
-  .listing-card strong small {
-    @apply text-xs font-medium text-textSecondary;
+  .bento-card-burgundy {
+    @apply relative overflow-hidden rounded-3xl bg-[#861C1C] text-white shadow-burgundy border border-white/10;
   }
 
-  /* ─── Listing Image ─── */
-  .listing-image {
-    @apply relative overflow-hidden rounded-xl -mx-4 -mt-4 mb-0;
-  }
-  .listing-image img {
-    @apply w-full h-44 object-cover transition-transform duration-500 group-hover:scale-105;
-  }
-  .listing-image span {
-    @apply absolute bottom-2 right-2 px-2.5 py-1 rounded-full bg-black/60 text-white text-[11px] font-bold backdrop-blur-sm;
+  .bento-card-dark {
+    @apply relative overflow-hidden rounded-3xl bg-[#281D1C] text-white shadow-soft-lg border border-white/10;
   }
 
-  .listing-location {
-    @apply flex items-center gap-1 mt-1 text-xs text-textSecondary;
+  .bento-card-gold {
+    @apply relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#F4B345] to-[#E59F24] text-[#281D1C] shadow-gold border border-white/30;
   }
 
-  /* ─── Loader Stage ─── */
-  .loader-stage {
-    @apply flex items-center justify-center py-16;
+  /* ─── Neomorphic Soft UI ─── */
+  .neomorph-pill {
+    @apply rounded-full bg-[#FAF7EE] border border-[#E8E3CF] shadow-neomorph transition-all duration-200;
+  }
+  .neomorph-pill:hover {
+    @apply bg-white shadow-soft-md;
+  }
+  .neomorph-card {
+    @apply rounded-3xl bg-[#FAF7EE] border border-[#E8E3CF] shadow-neomorph;
+  }
+  .neomorph-inset {
+    @apply bg-[#F2EDE1] rounded-2xl shadow-neomorph-inset border border-[#E8E3CF]/50;
   }
 
-  /* ─── Nav link styles ─── */
+  /* ─── Glassmorphism ─── */
+  .glass-panel {
+    @apply bg-white/80 backdrop-blur-md border border-white/70 shadow-glass rounded-3xl;
+  }
+  .glass-panel-dark {
+    @apply bg-[#281D1C]/85 backdrop-blur-md border border-white/15 shadow-glass rounded-3xl text-white;
+  }
+  .glass-panel-warm {
+    @apply bg-[#FAF7EE]/90 backdrop-blur-md border border-[#E8E3CF] shadow-soft-md rounded-3xl;
+  }
+
+  /* ─── Navigation Pills ─── */
   .nav-link {
-    @apply relative px-2.5 sm:px-3 py-1.5 rounded-lg text-xs lg:text-sm font-semibold text-textSecondary whitespace-nowrap shrink-0 transition-colors duration-200 hover:text-primary hover:bg-primaryLight/50;
+    @apply px-3.5 sm:px-4 py-2 rounded-full text-xs font-semibold text-[#5E524D] transition-all duration-200 hover:text-[#281D1C] hover:bg-black/5 whitespace-nowrap;
   }
   .nav-link-active {
-    @apply text-primary bg-primaryLight/70 font-bold shadow-sm;
+    @apply bg-[#861C1C] text-white font-bold shadow-sm hover:text-white hover:bg-[#6A1515] !important;
   }
 
-
-
-  /* ─── Admin sidebar ─── */
-  .admin-sidebar {
-    @apply w-56 shrink-0 border-r border-border/60 bg-surface/50 hidden md:block;
+  /* ─── Hero Panel ─── */
+  .hero-panel {
+    @apply relative overflow-hidden rounded-3xl sm:rounded-[2.5rem] px-5 py-6 sm:px-10 sm:py-12 text-white;
+    background: linear-gradient(135deg, #281D1C 0%, #3D2928 45%, #861C1C 100%);
+    box-shadow: 0 20px 40px -10px rgba(40, 29, 28, 0.25);
   }
-  .admin-sidebar-link {
-    @apply flex items-center gap-2.5 px-4 py-2.5 text-sm font-medium text-textSecondary rounded-lg transition-all duration-200 hover:bg-primaryLight/50 hover:text-primary mx-2;
+  .hero-panel h1 { 
+    @apply mt-2 sm:mt-4 text-2xl sm:text-4xl lg:text-5xl font-extrabold leading-snug sm:leading-tight tracking-tight font-serif; 
   }
-  .admin-sidebar-link-active {
-    @apply bg-primaryLight text-primary font-semibold;
+  .hero-panel h1 span { color: #F4B345; }
+  .eyebrow { 
+    @apply inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[.15em] text-[#F4B345]; 
   }
-
-  /* ─── Auth pages (Responsive Split Layout & Cards) ─── */
-  .auth-page-split {
-    @apply min-h-screen flex flex-col lg:flex-row items-stretch bg-background;
+  .hero-copy { 
+    @apply mt-2 sm:mt-4 flex items-center gap-1.5 text-xs sm:text-sm text-white/85 max-w-2xl leading-relaxed; 
   }
-  .auth-showcase-panel {
-    @apply relative hidden lg:flex lg:w-5/12 xl:w-1/2 flex-col justify-between p-12 text-white overflow-hidden;
-    background: linear-gradient(145deg, #1b3d26 0%, #2f5632 45%, #3f6b3f 80%, #688a55 100%);
+  .hero-cta { 
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-[#F4B345] px-5 py-2.5 text-xs sm:text-sm font-bold text-[#281D1C] shadow-gold transition-all duration-200 hover:bg-[#F6C063] hover:scale-[1.02] active:scale-95; 
   }
-  .auth-form-container {
-    @apply flex-1 flex flex-col justify-center items-center px-4 sm:px-8 md:px-12 py-10 sm:py-14;
-    background:
-      radial-gradient(ellipse at 20% 50%, rgba(63,107,63,0.04) 0%, transparent 50%),
-      radial-gradient(ellipse at 80% 20%, rgba(185,121,62,0.04) 0%, transparent 50%),
-      linear-gradient(180deg, #FAF9F6 0%, #F5F4EE 100%);
-  }
-  .auth-card-modern {
-    @apply w-full max-w-xl bg-surface rounded-3xl border border-border/80 p-6 sm:p-10 transition-all duration-300;
-    box-shadow: 0 20px 45px -12px rgba(45, 60, 45, 0.08), 0 4px 16px -2px rgba(0,0,0,0.03);
+  .hero-ghost { 
+    @apply rounded-full border border-white/25 bg-white/10 px-4 py-2.5 text-xs sm:text-sm font-semibold text-white backdrop-blur transition hover:bg-white/20; 
   }
 
-  /* ─── Landing Page Styles ─── */
-  .landing-hero {
-    @apply relative overflow-hidden pt-12 pb-20 md:pt-20 md:pb-28 text-center sm:text-left;
+  /* ─── Dashboard Grid & Metrics ─── */
+  .dashboard-grid { @apply grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-5 mt-5; }
+  .metric-card { 
+    @apply relative min-h-[125px] sm:min-h-[145px] overflow-hidden bg-white p-5 rounded-3xl border border-[#E8E3CF] shadow-card transition-all duration-300 hover:shadow-card-hover hover:border-[#D6CEB5]; 
   }
-  .glass-pill {
-    @apply inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold backdrop-blur-md border border-white/25 shadow-sm;
+  .metric-card p { 
+    @apply mt-2 text-[11px] font-bold uppercase tracking-wider text-[#5E524D]; 
   }
-  .glass-card {
-    @apply bg-surface/90 backdrop-blur-md rounded-2xl border border-border/80 shadow-card transition-all duration-300 hover:shadow-card-hover hover:border-primary/30;
+  .metric-card strong { 
+    @apply mt-1 block text-2xl sm:text-3xl font-extrabold tracking-tight text-[#281D1C]; 
   }
-  .gradient-border-card {
-    @apply relative rounded-3xl p-px overflow-hidden bg-gradient-to-b from-primary/30 via-border to-border/40;
+  .metric-card strong small { 
+    @apply ml-1 text-sm font-medium text-[#5E524D]; 
   }
-  .gradient-border-inner {
-    @apply rounded-[23px] bg-surface p-6 sm:p-8 h-full;
+  .metric-card span { 
+    @apply mt-1 block text-xs text-[#9B918B]; 
   }
-  .stat-badge {
-    @apply flex flex-col items-center sm:items-start p-5 rounded-2xl bg-surface border border-border/80 shadow-sm;
+  .metric-icon { 
+    @apply grid h-10 w-10 place-items-center rounded-2xl bg-[#FEF6E4] text-[#C06E30]; 
   }
+
+  /* ─── Trend Chips ─── */
+  .trend-chip { 
+    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold; 
+  }
+  .trend-up { 
+    @apply bg-emerald-50 text-emerald-800 border border-emerald-200; 
+  }
+  .trend-down { 
+    @apply bg-rose-50 text-rose-800 border border-rose-200; 
+  }
+
+  /* ─── Section Headings ─── */
+  .section-heading { 
+    @apply mb-4 sm:mb-6 flex items-end justify-between gap-3; 
+  }
+  .section-heading h2 { 
+    @apply text-xl sm:text-2xl font-bold tracking-tight text-[#281D1C] font-serif; 
+  }
+  .text-link { 
+    @apply inline-flex items-center gap-1 text-xs sm:text-sm font-bold text-[#861C1C] transition hover:text-[#6A1515] hover:gap-1.5; 
+  }
+
+  /* ─── Honey Chain Action Cards ─── */
+  .action-grid { @apply grid gap-4 md:grid-cols-3; }
+  .action-card { 
+    @apply flex items-center gap-3.5 rounded-3xl border border-[#E8E3CF] bg-white p-5 text-left shadow-card transition-all duration-300 hover:-translate-y-1 hover:border-[#F4B345] hover:shadow-card-hover group; 
+  }
+  .action-card b { @apply block text-sm font-bold text-[#281D1C]; }
+  .action-card small { @apply mt-0.5 block text-xs text-[#5E524D]; }
+  .action-icon { @apply grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-[#FEF6E4] text-[#C06E30] transition group-hover:scale-105; }
+  .action-arrow { @apply ml-auto text-[#9B918B] transition group-hover:translate-x-1 group-hover:text-[#861C1C]; }
+
+  /* ─── Honey Chain Buttons ─── */
+  .btn-burgundy {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-[#861C1C] px-5 py-2.5 text-xs sm:text-sm font-bold text-white shadow-burgundy transition-all duration-200 hover:bg-[#6A1515] hover:scale-[1.02] active:scale-95 disabled:opacity-50 disabled:pointer-events-none;
+  }
+  .btn-gold {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-[#F4B345] px-5 py-2.5 text-xs sm:text-sm font-bold text-[#281D1C] shadow-gold transition-all duration-200 hover:bg-[#F6C063] hover:scale-[1.02] active:scale-95 disabled:opacity-50 disabled:pointer-events-none;
+  }
+  .btn-burnt {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-[#C06E30] px-5 py-2.5 text-xs sm:text-sm font-bold text-white shadow-sm transition-all duration-200 hover:bg-[#A95D26] hover:scale-[1.02] active:scale-95 disabled:opacity-50 disabled:pointer-events-none;
+  }
+  .btn-soft {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-white border border-[#E8E3CF] px-4 py-2 text-xs sm:text-sm font-bold text-[#281D1C] shadow-soft transition-all duration-200 hover:bg-[#FAF7EE] hover:border-[#D6CEB5] active:scale-95;
+  }
+
+  /* ─── Batch Cards ─── */
+  .batch-card { 
+    @apply flex items-center gap-3.5 rounded-2xl bg-white border border-[#E8E3CF] p-4 transition-all duration-300 hover:-translate-y-0.5 hover:border-[#F4B345] hover:shadow-card-hover; 
+  }
+  .batch-icon { 
+    @apply grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-[#FEF6E4] text-[#C06E30]; 
+  }
+  .batch-arrow { 
+    @apply shrink-0 text-[#9B918B] transition group-hover:text-[#861C1C]; 
+  }
+  .status-badge { 
+    @apply inline-flex items-center gap-1 rounded-full bg-[#FEF6E4] px-3 py-1 text-[11px] font-bold text-[#C06E30] border border-[#F4B345]/30; 
+  }
+
+  /* ─── Empty State ─── */
+  .empty-state { @apply flex min-h-[210px] flex-col items-center justify-center text-center p-6 rounded-3xl bg-white/60 border border-[#E8E3CF] border-dashed; }
+  .empty-state svg { @apply text-[#C06E30]; }
+  .empty-state h3 { @apply mt-3 font-bold text-[#281D1C] font-serif text-lg; }
+  .empty-state p { @apply mt-1 max-w-sm text-sm text-[#5E524D]; }
+  .empty-state .text-link { @apply mt-4; }
+
+  /* ─── Marketplace Controls ─── */
+  .search-field {
+    @apply flex items-center gap-2.5 min-h-[48px] px-4 rounded-full border border-[#E8E3CF] bg-white text-[#5E524D] transition-colors focus-within:border-[#F4B345] focus-within:ring-2 focus-within:ring-[#F4B345]/20 shadow-soft;
+  }
+  .search-field input {
+    @apply flex-1 bg-transparent border-none outline-none text-[15px] text-[#281D1C] placeholder:text-[#9B918B];
+  }
+  .filter-row select {
+    @apply min-h-[44px] px-4 py-2 rounded-full border border-[#E8E3CF] bg-white text-sm text-[#281D1C] transition-colors focus:outline-none focus:ring-2 focus:ring-[#F4B345]/20 focus:border-[#F4B345] cursor-pointer shadow-soft;
+  }
+
+  /* ─── Listing Grid ─── */
+  .listing-grid {
+    @apply grid gap-5 sm:grid-cols-2 lg:grid-cols-3;
+  }
+  .listing-card {
+    @apply flex flex-col overflow-hidden rounded-3xl border border-[#E8E3CF] bg-white shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-card-hover hover:border-[#D6CEB5] cursor-pointer;
+  }
+  .listing-image {
+    @apply relative overflow-hidden aspect-[4/3] bg-[#FEF6E4];
+  }
+  .listing-image img {
+    @apply w-full h-full object-cover transition-transform duration-500 hover:scale-105;
+  }
+
+  /* ─── Role Badges ─── */
+  .role-badge { @apply inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold capitalize border; }
+  .role-farmer { @apply bg-[#FEF6E4] text-[#C06E30] border-[#F4B345]/40; }
+  .role-buyer { @apply bg-sky-50 text-sky-800 border-sky-200; }
+  .role-processor { @apply bg-amber-50 text-amber-800 border-amber-200; }
+  .role-artisan { @apply bg-purple-50 text-purple-800 border-purple-200; }
+  .role-admin { @apply bg-rose-50 text-[#861C1C] border-[#861C1C]/30; }
 
   /* ─── Ticker / Marquee ─── */
   .ticker-wrap {
-    @apply overflow-hidden whitespace-nowrap py-3 relative border-y border-border/60 bg-surface/60 backdrop-blur-sm select-none;
+    @apply overflow-hidden whitespace-nowrap py-3.5 relative border-y border-[#E8E3CF] bg-[#FAF7EE] select-none;
   }
   .ticker-move {
     @apply inline-flex gap-8 items-center animate-marquee;
@@ -243,28 +260,25 @@ a:hover { color: #3F6B3F; }
     animation-play-state: paused;
   }
 
-  /* ─── Role badge colors for admin & display ─── */
-  .role-badge { @apply inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold capitalize; }
-  .role-farmer { @apply bg-primaryLight text-primary; }
-  .role-buyer { @apply bg-infoLight text-info; }
-  .role-processor { @apply bg-accentLight text-accent; }
-  .role-warehouse { @apply bg-warningLight text-warning; }
-  .role-artisan { @apply bg-purple-100 text-purple-700; }
-  .role-admin { @apply bg-errorLight text-error; }
+  /* ─── Honeycomb pattern background ─── */
+  .honeycomb-pattern {
+    background-image: radial-gradient(#F4B345 1.2px, transparent 1.2px);
+    background-size: 20px 20px;
+  }
 }
 
-/* ─── Keyframes ─── */
+/* ─── Keyframe Animations ─── */
 @keyframes enter {
-  from { opacity: 0; transform: translateY(16px); }
+  from { opacity: 0; transform: translateY(14px); }
   to { opacity: 1; transform: translateY(0); }
 }
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(15px); }
+
+@keyframes floatSlow {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
 }
-@keyframes shrink-bar {
-  from { width: 100%; }
-  to { width: 0%; }
+.animate-float-slow {
+  animation: floatSlow 6s ease-in-out infinite;
 }
 
 /* ─── Reduced Motion ─── */
@@ -277,6 +291,5 @@ a:hover { color: #3F6B3F; }
   }
 }
 
-/* ─── Form resets ─── */
 button, input, textarea, select { font-family: inherit; }
-button:disabled { opacity: .65; cursor: not-allowed; }
+button:disabled { opacity: .6; cursor: not-allowed; }

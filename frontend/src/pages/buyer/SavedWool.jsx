@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Bookmark, Search, Trash2 } from 'lucide-react';
+import { Bookmark, Search, Trash2, Sparkles, MapPin } from 'lucide-react';
 import { getSavedListings, removeSavedListing } from '../../services/auth.service';
 import { useAuth } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
@@ -14,8 +14,6 @@ export default function SavedWool() {
 
   useEffect(() => {
     async function load() {
-      // In test mode, we might not have a real profile ID for backend auth, 
-      // but if the backend accepts it or we mock it, we load.
       setLoading(true);
       const res = await getSavedListings();
       if (!res.error) setListings(res.data || []);
@@ -25,54 +23,66 @@ export default function SavedWool() {
   }, []);
 
   const handleRemove = async (id) => {
-    // Optimistic update
     setListings(prev => prev.filter(l => l._id !== id && l.id !== id));
     await removeSavedListing(id);
   };
 
   return (
-    <main className="page-shell">
-      <div className="section-heading mb-6">
-        <div>
-          <p className="eyebrow text-primary"><Bookmark size={13} /> Saved Lots</p>
-          <h1 className="text-2xl font-extrabold text-textPrimary">Saved Honey Batches</h1>
+    <main className="max-w-[92rem] mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8 font-sans">
+      <div className="bento-card p-6 md:p-8 mb-8 relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="space-y-1">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-honeyGold/20 text-burgundy text-xs font-bold">
+            <Sparkles size={13} className="text-honeyGold" />
+            <span>Shortlisted Batches</span>
+          </div>
+          <h1 className="text-2xl md:text-3xl font-serif font-bold text-deepBrown">
+            Saved Honey Lots
+          </h1>
+          <p className="text-sm text-deepBrown/70 max-w-xl">
+            Bookmarked lots ready for quality audit or bulk procurement contracts.
+          </p>
         </div>
       </div>
 
       {loading ? (
-        <div className="py-20 flex justify-center">
-          <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+        <div className="py-16 flex justify-center">
+          <div className="h-10 w-10 animate-spin rounded-full border-3 border-burgundy border-t-transparent" />
         </div>
       ) : listings.length === 0 ? (
-        <div className="p-8 sm:p-12 text-center rounded-3xl bg-surface border border-border flex flex-col items-center">
-          <span className="grid h-14 w-14 place-items-center rounded-3xl bg-primaryLight text-primary mb-3">
-            <Bookmark size={28} />
-          </span>
-          <h3 className="font-bold text-base text-textPrimary">{t('noSavedListings')}</h3>
-          <p className="text-xs sm:text-sm text-textSecondary max-w-sm mt-1 mb-5">
+        <div className="p-12 text-center bento-card flex flex-col items-center">
+          <div className="grid h-16 w-16 place-items-center rounded-3xl bg-honeyGold/20 text-burgundy mb-4 shadow-md shadow-honeyGold/10">
+            <Bookmark size={30} />
+          </div>
+          <h3 className="font-serif font-bold text-lg text-deepBrown">{t('noSavedListings')}</h3>
+          <p className="text-xs text-deepBrown/70 max-w-sm mt-1 mb-6">
             {t('browseAndBookmark')}
           </p>
-          <button onClick={() => navigate('/buyer/marketplace')} className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-white font-bold text-xs shadow hover:bg-primaryDark transition-all">
+          <button onClick={() => navigate('/buyer/marketplace')} className="btn-burgundy">
             <Search size={15} /> Browse Honey Mandi
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {listings.map(listing => (
-            <div key={listing._id || listing.id} className="p-4 rounded-2xl bg-surface border border-border shadow-sm hover:border-primary/40 hover:shadow-md cursor-pointer transition-all group">
-              <div onClick={() => navigate(`/buyer/marketplace/${listing._id || listing.id}`)}>
-                <p className="font-bold text-sm text-textPrimary group-hover:text-primary">{listing.floralSource || listing.woolType || 'Raw Blossom'} Honey</p>
-                <p className="text-xs text-textSecondary mt-0.5">{listing.seller?.name || listing.seller_name}</p>
-                <div className="mt-2 flex justify-between items-center">
-                  <span className="font-bold text-sm text-emerald-700">₹{listing.pricePerKg}/kg</span>
-                  <span className="text-[11px] text-textMuted">{listing.quantityKg} kg</span>
+            <div key={listing._id || listing.id} className="bento-card bento-card-hover p-6 flex flex-col justify-between space-y-4 group">
+              <div onClick={() => navigate(`/buyer/marketplace/${listing._id || listing.id}`)} className="cursor-pointer space-y-2">
+                <span className="px-2.5 py-0.5 rounded-full bg-honeyGold/20 text-burgundy font-bold text-[10px] uppercase">
+                  Verified Lot
+                </span>
+                <h3 className="font-serif font-bold text-base text-deepBrown group-hover:text-burgundy transition-colors">
+                  {listing.floralSource || listing.woolType || 'Raw Blossom'} Honey
+                </h3>
+                <p className="text-xs text-deepBrown/60">Seller: <span className="font-semibold text-deepBrown">{listing.seller?.name || listing.seller_name || 'Apiary'}</span></p>
+                <div className="pt-2 flex justify-between items-center border-t border-border/60">
+                  <span className="font-mono font-bold text-base text-burgundy">₹{listing.pricePerKg || listing.price_per_kg}/kg</span>
+                  <span className="text-xs font-mono text-deepBrown/70">{listing.quantityKg || listing.quantity_kg} kg</span>
                 </div>
               </div>
               <button
                 onClick={(e) => { e.stopPropagation(); handleRemove(listing._id || listing.id); }}
-                className="mt-3 pt-3 border-t border-border/50 w-full flex items-center justify-center gap-1.5 text-xs font-semibold text-rose-600 hover:text-rose-700 transition-colors"
+                className="pt-3 border-t border-border/60 w-full flex items-center justify-center gap-1.5 text-xs font-bold text-rose-700 hover:text-rose-800 transition-colors"
               >
-                <Trash2 size={13} /> {t('remove')}
+                <Trash2 size={14} /> Remove from Saved
               </button>
             </div>
           ))}

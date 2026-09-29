@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Search } from 'lucide-react';
+import { Search, Users, Shield, UserCheck } from 'lucide-react';
 import { apiRequest } from '../../services/api';
 import { SkeletonTable } from '../../components/ui/Skeleton';
 import { useLanguage } from '../../context/LanguageContext';
@@ -43,54 +43,59 @@ export default function UserManagement() {
   );
 
   return (
-    <div className="space-y-5 animate-enter">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <h1 className="text-2xl font-bold text-textPrimary">{t('userManagement')}</h1>
-        <div className="flex items-center gap-2 min-h-[40px] px-3 rounded-xl border border-border bg-surface text-textSecondary transition-colors focus-within:border-primary/50 focus-within:ring-2 focus-within:ring-primary/10 w-full sm:w-64">
-          <Search size={16} />
+    <div className="space-y-6 animate-enter">
+      <div className="bento-card p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-serif font-bold text-deepBrown">{t('userManagement')}</h1>
+          <p className="text-xs text-deepBrown/70 mt-0.5">Manage beekeepers, laboratories, bottling processors, and FMCG buyers.</p>
+        </div>
+        <div className="flex items-center gap-2 px-3.5 py-2.5 rounded-2xl border border-border bg-warmIvory text-deepBrown/70 focus-within:border-burgundy/50 focus-within:ring-2 focus-within:ring-burgundy/10 w-full sm:w-72 transition-all shadow-xs">
+          <Search size={16} className="text-deepBrown/50" />
           <input
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder={t('searchUsers')}
-            className="flex-1 bg-transparent border-none outline-none text-sm text-textPrimary placeholder:text-textMuted"
+            className="flex-1 bg-transparent border-none outline-none text-xs text-deepBrown placeholder:text-deepBrown/40 font-medium"
           />
         </div>
       </div>
 
       {/* Desktop Table View */}
-      <div className="hidden sm:block bg-surface rounded-2xl border border-border overflow-hidden shadow-card">
+      <div className="hidden sm:block bento-card overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
-            <thead className="bg-background border-b border-border">
+            <thead className="bg-burntOrange/5 border-b border-border/80">
               <tr>
-                <th className="p-4 font-semibold text-textSecondary text-xs uppercase tracking-wider">{t('name')}</th>
-                <th className="p-4 font-semibold text-textSecondary text-xs uppercase tracking-wider">{t('email')}</th>
-                <th className="p-4 font-semibold text-textSecondary text-xs uppercase tracking-wider">{t('role')}</th>
-                <th className="p-4 font-semibold text-textSecondary text-xs uppercase tracking-wider">{t('location')}</th>
-                <th className="p-4 font-semibold text-textSecondary text-xs uppercase tracking-wider">{t('actions')}</th>
+                <th className="p-4 font-bold text-deepBrown text-xs uppercase tracking-wider">{t('name')}</th>
+                <th className="p-4 font-bold text-deepBrown text-xs uppercase tracking-wider">{t('email')}</th>
+                <th className="p-4 font-bold text-deepBrown text-xs uppercase tracking-wider">{t('role')}</th>
+                <th className="p-4 font-bold text-deepBrown text-xs uppercase tracking-wider">{t('location')}</th>
+                <th className="p-4 font-bold text-deepBrown text-xs uppercase tracking-wider">{t('actions')}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border/60">
               {filtered.map(u => (
-                <tr key={u._id} className="hover:bg-background/60 transition-colors">
+                <tr key={u._id} className="hover:bg-warmIvory/60 transition-colors">
                   <td className="p-4">
-                    <div className="flex items-center gap-2.5">
-                      <span className="grid h-8 w-8 place-items-center rounded-full bg-primaryLight text-primary text-xs font-bold shrink-0">
+                    <div className="flex items-center gap-3">
+                      <span className="grid h-9 w-9 place-items-center rounded-2xl bg-burgundy/10 text-burgundy text-xs font-bold shrink-0">
                         {u.name?.charAt(0)?.toUpperCase() || '?'}
                       </span>
-                      <span className="font-medium text-textPrimary">{u.name}</span>
+                      <span className="font-bold text-deepBrown">{u.name}</span>
                     </div>
                   </td>
-                  <td className="p-4 text-textSecondary">{u.email}</td>
+                  <td className="p-4 text-xs text-deepBrown/75 font-mono">{u.email}</td>
                   <td className="p-4">
-                    <span className={`role-badge role-${u.role}`}>{u.role}</span>
+                    <span className="px-2.5 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider bg-honeyGold/20 text-deepBrown">
+                      {u.role}
+                    </span>
                   </td>
-                  <td className="p-4 text-textSecondary">{u.state || '–'}</td>
+                  <td className="p-4 text-xs text-deepBrown/70">{u.state || '–'}</td>
                   <td className="p-4">
                     <select
                       value={u.role}
                       onChange={(e) => updateRole(u._id, e.target.value)}
-                      className="text-xs border border-border rounded-lg px-2 py-1.5 bg-surface text-textPrimary focus:outline-none focus:ring-2 focus:ring-primary/20 cursor-pointer"
+                      className="text-xs border border-border rounded-xl px-3 py-1.5 bg-warmIvory text-deepBrown focus:outline-none focus:ring-2 focus:ring-burgundy/20 font-medium cursor-pointer shadow-xs"
                     >
                       <option value="farmer">{t('roleFarmer')}</option>
                       <option value="buyer">{t('roleBuyer')}</option>
@@ -103,7 +108,7 @@ export default function UserManagement() {
                 </tr>
               ))}
               {filtered.length === 0 && (
-                <tr><td colSpan="5" className="p-8 text-center text-textSecondary">{t('noUsersFound')}</td></tr>
+                <tr><td colSpan="5" className="p-8 text-center text-deepBrown/60">{t('noUsersFound')}</td></tr>
               )}
             </tbody>
           </table>
@@ -113,28 +118,30 @@ export default function UserManagement() {
       {/* Mobile Card View */}
       <div className="sm:hidden space-y-3">
         {filtered.map(u => (
-          <div key={u._id} className="p-4 rounded-2xl bg-surface border border-border shadow-sm space-y-3">
+          <div key={u._id} className="bento-card p-4 space-y-3">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2.5">
-                <span className="grid h-9 w-9 place-items-center rounded-full bg-primaryLight text-primary text-xs font-bold shrink-0">
+              <div className="flex items-center gap-3">
+                <span className="grid h-9 w-9 place-items-center rounded-2xl bg-burgundy/10 text-burgundy text-xs font-bold shrink-0">
                   {u.name?.charAt(0)?.toUpperCase() || '?'}
                 </span>
                 <div>
-                  <p className="font-bold text-sm text-textPrimary">{u.name}</p>
-                  <p className="text-xs text-textSecondary">{u.email}</p>
+                  <p className="font-bold text-sm text-deepBrown">{u.name}</p>
+                  <p className="text-xs text-deepBrown/60">{u.email}</p>
                 </div>
               </div>
-              <span className={`role-badge role-${u.role}`}>{u.role}</span>
+              <span className="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase bg-honeyGold/20 text-deepBrown">
+                {u.role}
+              </span>
             </div>
 
             <div className="flex items-center justify-between pt-2 border-t border-border/60 text-xs">
-              <span className="text-textSecondary">{u.state || 'India'}</span>
-              <div className="flex items-center gap-1.5">
-                <span className="text-textMuted font-medium">{t('role')}:</span>
+              <span className="text-deepBrown/70">{u.state || 'India'}</span>
+              <div className="flex items-center gap-2">
+                <span className="text-deepBrown/50 font-medium">{t('role')}:</span>
                 <select
                   value={u.role}
                   onChange={(e) => updateRole(u._id, e.target.value)}
-                  className="text-xs border border-border rounded-lg px-2 py-1 bg-background text-textPrimary focus:outline-none focus:ring-1 focus:ring-primary font-medium"
+                  className="text-xs border border-border rounded-xl px-2.5 py-1 bg-warmIvory text-deepBrown font-medium focus:outline-none"
                 >
                   <option value="farmer">{t('roleFarmer')}</option>
                   <option value="buyer">{t('roleBuyer')}</option>
@@ -148,7 +155,7 @@ export default function UserManagement() {
           </div>
         ))}
         {filtered.length === 0 && (
-          <div className="p-8 text-center bg-surface rounded-2xl border border-border text-sm text-textSecondary">
+          <div className="p-8 text-center bento-card text-sm text-deepBrown/60">
             {t('noUsersFound')}
           </div>
         )}

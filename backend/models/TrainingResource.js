@@ -9,6 +9,17 @@ const trainingResourceSchema = new mongoose.Schema({
     type: String,
     required: true,
     enum: [
+      'Apiary Management',
+      'Hive Health & Queen Rearing',
+      'Comb Extraction & Centrifugation',
+      'Honey Quality & NMR Standards',
+      'Moisture Control & Dehumidification',
+      'Micro-Filtration & Bottling',
+      'Organic Certification',
+      'Flora & Seasonal Migration',
+      'Mandi Trading & Fair Pricing',
+      'Direct Buyer Selling',
+      // Legacy compatibility
       'Sheep Management',
       'Wool Shearing',
       'Wool Handling',
@@ -29,7 +40,7 @@ const trainingResourceSchema = new mongoose.Schema({
   },
   duration: {
     type: String,
-    default: '15 min read',
+    default: '12 min read',
   },
   summary: {
     type: String,
@@ -44,7 +55,7 @@ const trainingResourceSchema = new mongoose.Schema({
   }],
   author: {
     type: String,
-    default: 'Central Wool Development Board / WoolConnect Advisory',
+    default: 'KVIC Honey Mission / National Bee Board Advisory',
   },
   tags: [{
     type: String,

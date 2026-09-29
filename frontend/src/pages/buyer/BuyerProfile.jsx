@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { User, MapPin, Mail, Phone, Building, Save, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { User, MapPin, Mail, Phone, Building, Save, AlertCircle, CheckCircle2, Sparkles } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { apiRequest } from '../../services/api';
 import { useLanguage } from '../../context/LanguageContext';
@@ -27,7 +27,6 @@ export default function BuyerProfile() {
     e.preventDefault();
     setSaving(true);
     setMessage({ type: '', text: '' });
-    // ponytail: PUT to /auth/profile — if it exists. Otherwise PATCH user.
     const res = await apiRequest('/auth/profile', {
       method: 'PUT',
       body: JSON.stringify(form),
@@ -41,82 +40,93 @@ export default function BuyerProfile() {
   };
 
   return (
-    <main className="page-shell max-w-2xl mx-auto">
-      <div className="section-heading mb-6">
-        <div>
-          <p className="eyebrow text-primary"><User size={13} /> {t('account')}</p>
-          <h1 className="text-2xl font-extrabold text-textPrimary">{t('myProfile')}</h1>
+    <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8 font-sans">
+      <div className="bento-card p-6 md:p-8 mb-8 relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="space-y-1">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-honeyGold/20 text-burgundy text-xs font-bold">
+            <Sparkles size={13} className="text-honeyGold" />
+            <span>FMCG Commercial Buyer Account</span>
+          </div>
+          <h1 className="text-2xl md:text-3xl font-serif font-bold text-deepBrown">
+            {t('myProfile')}
+          </h1>
+          <p className="text-sm text-deepBrown/70 max-w-xl">
+            Update institutional billing details, delivery depots, and authorized procurement contacts.
+          </p>
         </div>
       </div>
 
-      {/* Avatar */}
-      <div className="flex items-center gap-4 mb-8 animate-enter">
-        <span className="grid h-16 w-16 place-items-center rounded-2xl bg-primaryLight text-primary text-2xl font-bold">
+      {/* Avatar Card */}
+      <div className="bento-card p-6 mb-6 flex items-center gap-4">
+        <span className="grid h-16 w-16 place-items-center rounded-2xl bg-burgundy text-honeyGold font-serif text-2xl font-bold shadow-md shadow-burgundy/15">
           {profile?.name?.charAt(0)?.toUpperCase() || '?'}
         </span>
         <div>
-          <p className="text-lg font-bold text-textPrimary">{profile?.name}</p>
-          <p className="text-sm text-textSecondary capitalize">{profile?.role} • {profile?.state || 'India'}</p>
+          <p className="text-lg font-serif font-bold text-deepBrown">{profile?.name || 'Buyer Account'}</p>
+          <span className="px-3 py-0.5 rounded-full bg-honeyGold/20 text-burgundy text-xs font-bold uppercase tracking-wider">
+            {profile?.role || 'Buyer'} • {profile?.state || 'India'}
+          </span>
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6 animate-enter delay-1">
-        <div className="p-6 rounded-2xl bg-surface border border-border shadow-sm">
-          <h3 className="font-bold text-textPrimary mb-4">{t('personalInformation')}</h3>
+      {message.text && (
+        <div className={`p-4 rounded-2xl mb-6 text-xs font-bold flex items-center gap-2 ${
+          message.type === 'error' ? 'bg-rose-50 text-rose-800 border border-rose-200' : 'bg-emerald-50 text-emerald-800 border border-emerald-200'
+        }`}>
+          {message.type === 'error' ? <AlertCircle size={16} /> : <CheckCircle2 size={16} />}
+          {message.text}
+        </div>
+      )}
+
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="bento-card p-6 md:p-8 space-y-4">
+          <h3 className="font-serif font-bold text-lg text-deepBrown">{t('personalInformation')}</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-textSecondary mb-1">{t('fullNameLabel')}</label>
-              <input name="name" value={form.name} onChange={handleChange} className="w-full px-3 py-2.5 rounded-xl border border-border bg-background text-sm focus:outline-none focus:border-primary" />
+              <label className="block text-xs font-bold text-deepBrown uppercase tracking-wider mb-1.5">{t('fullNameLabel')}</label>
+              <input name="name" value={form.name} onChange={handleChange} className="w-full px-4 py-3 bg-warmIvory border border-border rounded-2xl text-xs text-deepBrown focus:outline-none focus:border-burgundy font-medium" />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-textSecondary mb-1">{t('emailLabel')}</label>
-              <input name="email" type="email" value={form.email} onChange={handleChange} className="w-full px-3 py-2.5 rounded-xl border border-border bg-background text-sm focus:outline-none focus:border-primary" />
+              <label className="block text-xs font-bold text-deepBrown uppercase tracking-wider mb-1.5">{t('emailLabel')}</label>
+              <input name="email" type="email" value={form.email} onChange={handleChange} className="w-full px-4 py-3 bg-warmIvory border border-border rounded-2xl text-xs text-deepBrown focus:outline-none focus:border-burgundy font-medium" />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-textSecondary mb-1">{t('mobileLabel')}</label>
-              <input name="mobile" type="tel" value={form.mobile} onChange={handleChange} className="w-full px-3 py-2.5 rounded-xl border border-border bg-background text-sm focus:outline-none focus:border-primary" />
+              <label className="block text-xs font-bold text-deepBrown uppercase tracking-wider mb-1.5">{t('mobileLabel')}</label>
+              <input name="mobile" type="tel" value={form.mobile} onChange={handleChange} className="w-full px-4 py-3 bg-warmIvory border border-border rounded-2xl text-xs text-deepBrown focus:outline-none focus:border-burgundy font-medium" />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-textSecondary mb-1">{t('organizationLabel')}</label>
-              <input name="organization" value={form.organization} onChange={handleChange} className="w-full px-3 py-2.5 rounded-xl border border-border bg-background text-sm focus:outline-none focus:border-primary" />
+              <label className="block text-xs font-bold text-deepBrown uppercase tracking-wider mb-1.5">{t('organizationLabel')}</label>
+              <input name="organization" value={form.organization} onChange={handleChange} className="w-full px-4 py-3 bg-warmIvory border border-border rounded-2xl text-xs text-deepBrown focus:outline-none focus:border-burgundy font-medium" />
             </div>
           </div>
         </div>
 
-        <div className="p-6 rounded-2xl bg-surface border border-border shadow-sm">
-          <h3 className="font-bold text-textPrimary flex items-center gap-2 mb-4"><MapPin size={16} className="text-primary" /> {t('locationLabel')}</h3>
+        <div className="bento-card p-6 md:p-8 space-y-4">
+          <h3 className="font-serif font-bold text-lg text-deepBrown flex items-center gap-2">
+            <MapPin size={18} className="text-burgundy" /> {t('locationLabel')}
+          </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-textSecondary mb-1">{t('stateLabel')}</label>
-              <input name="state" value={form.state} onChange={handleChange} className="w-full px-3 py-2.5 rounded-xl border border-border bg-background text-sm focus:outline-none focus:border-primary" />
+              <label className="block text-xs font-bold text-deepBrown uppercase tracking-wider mb-1.5">{t('stateLabel')}</label>
+              <input name="state" value={form.state} onChange={handleChange} className="w-full px-4 py-3 bg-warmIvory border border-border rounded-2xl text-xs text-deepBrown focus:outline-none focus:border-burgundy font-medium" />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-textSecondary mb-1">{t('districtLabel')}</label>
-              <input name="district" value={form.district} onChange={handleChange} className="w-full px-3 py-2.5 rounded-xl border border-border bg-background text-sm focus:outline-none focus:border-primary" />
+              <label className="block text-xs font-bold text-deepBrown uppercase tracking-wider mb-1.5">{t('districtLabel')}</label>
+              <input name="district" value={form.district} onChange={handleChange} className="w-full px-4 py-3 bg-warmIvory border border-border rounded-2xl text-xs text-deepBrown focus:outline-none focus:border-burgundy font-medium" />
             </div>
             <div className="sm:col-span-2">
-              <label className="block text-xs font-semibold text-textSecondary mb-1">{t('addressLabel')}</label>
-              <textarea name="address" value={form.address} onChange={handleChange} rows="2" className="w-full px-3 py-2.5 rounded-xl border border-border bg-background text-sm focus:outline-none focus:border-primary resize-none" />
+              <label className="block text-xs font-bold text-deepBrown uppercase tracking-wider mb-1.5">{t('addressLabel')}</label>
+              <textarea name="address" value={form.address} onChange={handleChange} rows="2" className="w-full px-4 py-3 bg-warmIvory border border-border rounded-2xl text-xs text-deepBrown focus:outline-none focus:border-burgundy font-medium resize-none" />
             </div>
           </div>
         </div>
-
-        {message.text && (
-          <div className={`p-3 rounded-xl flex items-center gap-2 text-sm font-medium ${
-            message.type === 'error' ? 'bg-rose-50 text-rose-700 border border-rose-200' : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-          }`}>
-            {message.type === 'error' ? <AlertCircle size={16} /> : <CheckCircle2 size={16} />}
-            {message.text}
-          </div>
-        )}
 
         <button
           type="submit"
           disabled={saving}
-          className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-primary text-white font-bold text-sm shadow hover:bg-primaryDark transition-all disabled:opacity-60"
+          className="w-full py-3.5 bg-burgundy text-warmIvory font-bold text-xs rounded-2xl hover:bg-burgundy/90 transition-all shadow-md shadow-burgundy/15 disabled:opacity-60 flex items-center justify-center gap-2"
         >
-          {saving ? <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" /> : <Save size={16} />}
-          {t('saveChanges')}
+          <Save size={16} /> {saving ? 'Updating Profile…' : 'Save Profile Changes'}
         </button>
       </form>
     </main>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Search } from 'lucide-react';
+import { Search, Package, ShieldCheck } from 'lucide-react';
 import { apiRequest } from '../../services/api';
 import BatchStatusBadge from '../../components/batch/BatchStatusBadge';
 import { SkeletonTable } from '../../components/ui/Skeleton';
@@ -36,49 +36,52 @@ export default function BatchManagement() {
   );
 
   return (
-    <div className="space-y-5 animate-enter">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <h1 className="text-2xl font-bold text-textPrimary">{t('batchManagement')}</h1>
-        <div className="flex items-center gap-2 min-h-[40px] px-3 rounded-xl border border-border bg-surface text-textSecondary transition-colors focus-within:border-primary/50 focus-within:ring-2 focus-within:ring-primary/10 w-full sm:w-64">
-          <Search size={16} />
+    <div className="space-y-6 animate-enter">
+      <div className="bento-card p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-serif font-bold text-deepBrown">{t('batchManagement')}</h1>
+          <p className="text-xs text-deepBrown/70 mt-0.5">National ledger of blockchain registered honey harvests.</p>
+        </div>
+        <div className="flex items-center gap-2 px-3.5 py-2.5 rounded-2xl border border-border bg-warmIvory text-deepBrown/70 focus-within:border-burgundy/50 focus-within:ring-2 focus-within:ring-burgundy/10 w-full sm:w-72 transition-all shadow-xs">
+          <Search size={16} className="text-deepBrown/50" />
           <input
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder={t('searchBatches')}
-            className="flex-1 bg-transparent border-none outline-none text-sm text-textPrimary placeholder:text-textMuted"
+            className="flex-1 bg-transparent border-none outline-none text-xs text-deepBrown placeholder:text-deepBrown/40 font-medium"
           />
         </div>
       </div>
 
       {/* Desktop Table View */}
-      <div className="hidden sm:block bg-surface rounded-2xl border border-border overflow-hidden shadow-card">
+      <div className="hidden sm:block bento-card overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
-            <thead className="bg-background border-b border-border">
+            <thead className="bg-burntOrange/5 border-b border-border/80">
               <tr>
-                <th className="p-4 font-semibold text-textSecondary text-xs uppercase tracking-wider">{t('batchId')}</th>
-                <th className="p-4 font-semibold text-textSecondary text-xs uppercase tracking-wider">{t('farmer')}</th>
-                <th className="p-4 font-semibold text-textSecondary text-xs uppercase tracking-wider">{t('typeAndQty')}</th>
-                <th className="p-4 font-semibold text-textSecondary text-xs uppercase tracking-wider">{t('status')}</th>
-                <th className="p-4 font-semibold text-textSecondary text-xs uppercase tracking-wider">{t('date')}</th>
+                <th className="p-4 font-bold text-deepBrown text-xs uppercase tracking-wider">{t('batchId')}</th>
+                <th className="p-4 font-bold text-deepBrown text-xs uppercase tracking-wider">{t('farmer')}</th>
+                <th className="p-4 font-bold text-deepBrown text-xs uppercase tracking-wider">{t('typeAndQty')}</th>
+                <th className="p-4 font-bold text-deepBrown text-xs uppercase tracking-wider">{t('status')}</th>
+                <th className="p-4 font-bold text-deepBrown text-xs uppercase tracking-wider">{t('date')}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border/60">
               {filtered.map(b => (
-                <tr key={b._id} className="hover:bg-background/60 transition-colors">
-                  <td className="p-4 font-semibold text-textPrimary">{b.batch_id}</td>
-                  <td className="p-4 text-textSecondary">{b.farmer_id?.name || t('unknown')}</td>
-                  <td className="p-4 text-textPrimary">
-                    {b.floralSource || b.wool_type || 'Raw Blossom'} Honey <span className="text-textMuted">•</span> {b.quantity_kg}kg
+                <tr key={b._id} className="hover:bg-warmIvory/60 transition-colors">
+                  <td className="p-4 font-mono font-bold text-burgundy text-xs">{b.batch_id}</td>
+                  <td className="p-4 text-xs font-semibold text-deepBrown">{b.farmer_id?.name || t('unknown')}</td>
+                  <td className="p-4 text-xs text-deepBrown">
+                    <span className="font-bold">{b.floralSource || b.wool_type || 'Raw Blossom'} Honey</span> <span className="text-deepBrown/40">•</span> <span className="font-mono font-bold text-burgundy">{b.quantity_kg}kg</span>
                   </td>
                   <td className="p-4">
                     <BatchStatusBadge status={b.status} />
                   </td>
-                  <td className="p-4 text-textSecondary">{new Date(b.created_at).toLocaleDateString()}</td>
+                  <td className="p-4 text-xs text-deepBrown/60">{new Date(b.created_at).toLocaleDateString()}</td>
                 </tr>
               ))}
               {filtered.length === 0 && (
-                <tr><td colSpan="5" className="p-8 text-center text-textSecondary">{t('noBatchesFound')}</td></tr>
+                <tr><td colSpan="5" className="p-8 text-center text-deepBrown/60">{t('noBatchesFound')}</td></tr>
               )}
             </tbody>
           </table>
@@ -88,22 +91,22 @@ export default function BatchManagement() {
       {/* Mobile Card View */}
       <div className="sm:hidden space-y-3">
         {filtered.map(b => (
-          <div key={b._id} className="p-4 rounded-2xl bg-surface border border-border shadow-sm space-y-2.5">
+          <div key={b._id} className="bento-card p-4 space-y-2.5">
             <div className="flex items-center justify-between">
-              <span className="font-bold text-sm text-textPrimary">{b.batch_id}</span>
+              <span className="font-mono font-bold text-xs text-burgundy">{b.batch_id}</span>
               <BatchStatusBadge status={b.status} />
             </div>
-            <div className="text-xs text-textSecondary space-y-1">
-              <p><span className="font-medium text-textMuted">{t('farmer')}:</span> {b.farmer_id?.name || t('unknown')}</p>
-              <p><span className="font-medium text-textMuted">Variety:</span> {b.floralSource || b.wool_type || 'Raw Blossom'} Honey • <span className="font-bold text-textPrimary">{b.quantity_kg} kg</span></p>
+            <div className="text-xs text-deepBrown/80 space-y-1">
+              <p><span className="font-medium text-deepBrown/50">{t('farmer')}:</span> {b.farmer_id?.name || t('unknown')}</p>
+              <p><span className="font-medium text-deepBrown/50">Variety:</span> {b.floralSource || b.wool_type || 'Raw Blossom'} Honey • <span className="font-bold text-deepBrown">{b.quantity_kg} kg</span></p>
             </div>
-            <div className="pt-2 border-t border-border/60 text-[11px] text-textMuted flex justify-between">
+            <div className="pt-2 border-t border-border/60 text-[11px] text-deepBrown/50 flex justify-between">
               <span>{new Date(b.created_at).toLocaleDateString()}</span>
             </div>
           </div>
         ))}
         {filtered.length === 0 && (
-          <div className="p-8 text-center bg-surface rounded-2xl border border-border text-sm text-textSecondary">
+          <div className="p-8 text-center bento-card text-sm text-deepBrown/60">
             {t('noBatchesFound')}
           </div>
         )}

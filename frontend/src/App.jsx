@@ -92,41 +92,41 @@ function HoneyChainFlowSwitcher() {
   };
 
   return (
-    <aside aria-label="HoneyChain Demo Navigation" className="bg-gradient-to-r from-amber-800 via-amber-700 to-amber-800 text-white text-xs px-3 py-1.5 flex items-center justify-between z-50 shadow-sm border-b border-amber-500/40">
-      <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
-        <span className="font-extrabold uppercase tracking-wider text-[10px] bg-black/30 px-2 py-0.5 rounded-full flex items-center gap-1 shrink-0 text-amber-200">
-          <span>🍯</span> HoneyChain Panels:
+    <aside aria-label="HoneyChain Demo Navigation" className="bg-[#281D1C] text-white text-xs px-3.5 py-2 flex items-center justify-between z-50 shadow-md border-b border-[#F4B345]/20">
+      <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-0.5 max-w-[92rem] mx-auto w-full">
+        <span className="font-bold uppercase tracking-wider text-[10px] bg-[#861C1C] text-[#F4B345] px-2.5 py-1 rounded-full flex items-center gap-1.5 shrink-0 border border-[#F4B345]/30">
+          <span className="text-xs">🍯</span> Honey Chain:
         </span>
-        <button onClick={() => navigate('/')} className={`px-2.5 py-1 rounded-lg font-semibold transition-all shrink-0 ${pathname === '/' || pathname === '/landing' ? 'bg-white text-amber-900 shadow-sm font-bold' : 'hover:bg-white/20 text-white/90'}`}>
+        <button onClick={() => navigate('/')} className={`px-3 py-1 rounded-full text-xs font-semibold transition-all shrink-0 ${pathname === '/' || pathname === '/landing' ? 'bg-[#F4B345] text-[#281D1C] font-bold shadow-sm' : 'hover:bg-white/10 text-white/80'}`}>
           🌐 Public Landing
         </button>
-        <button onClick={() => switchRole('farmer', '/farmer/dashboard')} className={`px-2.5 py-1 rounded-lg font-semibold transition-all shrink-0 ${pathname.startsWith('/farmer') ? 'bg-white text-amber-900 shadow-sm font-bold' : 'hover:bg-white/20 text-white/90'}`}>
+        <button onClick={() => switchRole('farmer', '/farmer/dashboard')} className={`px-3 py-1 rounded-full text-xs font-semibold transition-all shrink-0 ${pathname.startsWith('/farmer') ? 'bg-[#F4B345] text-[#281D1C] font-bold shadow-sm' : 'hover:bg-white/10 text-white/80'}`}>
           🐝 Beekeeper Panel
         </button>
-        <button onClick={() => switchRole('farmer', '/batches/add')} className={`px-2.5 py-1 rounded-lg font-semibold transition-all shrink-0 ${pathname === '/batches/add' ? 'bg-white text-amber-900 shadow-sm font-bold' : 'hover:bg-white/20 text-white/90'}`}>
+        <button onClick={() => switchRole('farmer', '/batches/add')} className={`px-3 py-1 rounded-full text-xs font-semibold transition-all shrink-0 ${pathname === '/batches/add' ? 'bg-[#F4B345] text-[#281D1C] font-bold shadow-sm' : 'hover:bg-white/10 text-white/80'}`}>
           ➕ Log Harvest
         </button>
-        <button onClick={() => switchRole('farmer', '/farmer/tracking')} className={`px-2.5 py-1 rounded-lg font-semibold transition-all shrink-0 ${pathname === '/farmer/tracking' ? 'bg-white text-amber-900 shadow-sm font-bold' : 'hover:bg-white/20 text-white/90'}`}>
+        <button onClick={() => switchRole('farmer', '/farmer/tracking')} className={`px-3 py-1 rounded-full text-xs font-semibold transition-all shrink-0 ${pathname === '/farmer/tracking' ? 'bg-[#F4B345] text-[#281D1C] font-bold shadow-sm' : 'hover:bg-white/10 text-white/80'}`}>
           📦 Honey Lots
         </button>
-        <button onClick={() => switchRole('quality', '/quality')} className={`px-2.5 py-1 rounded-lg font-semibold transition-all shrink-0 ${pathname === '/quality' ? 'bg-white text-amber-900 shadow-sm font-bold' : 'hover:bg-white/20 text-white/90'}`}>
+        <button onClick={() => switchRole('quality', '/quality')} className={`px-3 py-1 rounded-full text-xs font-semibold transition-all shrink-0 ${pathname === '/quality' ? 'bg-[#F4B345] text-[#281D1C] font-bold shadow-sm' : 'hover:bg-white/10 text-white/80'}`}>
           🔬 KVIC Lab & AI Purity
         </button>
-        <button onClick={() => switchRole('processor', '/processor/dashboard')} className={`px-2.5 py-1 rounded-lg font-semibold transition-all shrink-0 ${pathname.startsWith('/processor') ? 'bg-white text-amber-900 shadow-sm font-bold' : 'hover:bg-white/20 text-white/90'}`}>
+        <button onClick={() => switchRole('processor', '/processor/dashboard')} className={`px-3 py-1 rounded-full text-xs font-semibold transition-all shrink-0 ${pathname.startsWith('/processor') ? 'bg-[#F4B345] text-[#281D1C] font-bold shadow-sm' : 'hover:bg-white/10 text-white/80'}`}>
           🏭 Bottling Unit
         </button>
-        <button onClick={() => switchRole('buyer', '/buyer/marketplace')} className={`px-2.5 py-1 rounded-lg font-semibold transition-all shrink-0 ${pathname.startsWith('/buyer') && !pathname.includes('passport') ? 'bg-white text-amber-900 shadow-sm font-bold' : 'hover:bg-white/20 text-white/90'}`}>
-          🛒 FMCG Buyer
+        <button onClick={() => switchRole('buyer', '/buyer/marketplace')} className={`px-3 py-1 rounded-full text-xs font-semibold transition-all shrink-0 ${pathname.startsWith('/buyer') && !pathname.includes('passport') ? 'bg-[#F4B345] text-[#281D1C] font-bold shadow-sm' : 'hover:bg-white/10 text-white/80'}`}>
+          🛒 Buyer Marketplace
         </button>
-        <button onClick={() => switchRole('admin', '/admin')} className={`px-2.5 py-1 rounded-lg font-semibold transition-all shrink-0 ${pathname === '/admin' ? 'bg-white text-amber-900 shadow-sm font-bold' : 'hover:bg-white/20 text-white/90'}`}>
-          🏛️ KVIC Admin
+        <button onClick={() => switchRole('admin', '/admin')} className={`px-3 py-1 rounded-full text-xs font-semibold transition-all shrink-0 ${pathname === '/admin' ? 'bg-[#F4B345] text-[#281D1C] font-bold shadow-sm' : 'hover:bg-white/10 text-white/80'}`}>
+          🏛️ KVIC Mission
         </button>
-        <button onClick={() => navigate('/buyer/honey-passport/HC-RJ-2026-000108')} className={`px-2.5 py-1 rounded-lg font-semibold transition-all shrink-0 ${pathname.includes('passport') ? 'bg-white text-amber-900 shadow-sm font-bold' : 'hover:bg-white/20 text-white/90'}`}>
-          📱 Scan Honey Passport
+        <button onClick={() => navigate('/buyer/honey-passport/HC-RJ-2026-000108')} className={`px-3 py-1 rounded-full text-xs font-semibold transition-all shrink-0 ${pathname.includes('passport') ? 'bg-[#F4B345] text-[#281D1C] font-bold shadow-sm' : 'hover:bg-white/10 text-white/80'}`}>
+          📱 QR Passport Demo
         </button>
       </div>
-      <div className="hidden xl:flex items-center gap-2 pl-3 text-[11px] shrink-0 font-medium text-amber-100">
-        <span>Active: <b className="capitalize underline text-white font-bold">{profile?.role || 'Visitor'}</b> ({profile?.name || 'Guest'})</span>
+      <div className="hidden xl:flex items-center gap-2 pl-3 text-[11px] shrink-0 font-medium text-[#FAF7EE]/80">
+        <span>Active: <b className="capitalize underline text-[#F4B345] font-bold">{profile?.role || 'Visitor'}</b> ({profile?.name || 'Guest'})</span>
       </div>
     </aside>
   );
@@ -141,7 +141,7 @@ function Layout({ children }) {
   const [showNotifications, setShowNotifications] = useState(false);
 
   const farmerLinks = [
-    { to: '/', label: 'Dashboard' },
+    { to: '/farmer/dashboard', label: 'Dashboard' },
     { to: '/farmer/market', label: 'Honey Mandi' },
     { to: '/farmer/marketplace', label: 'Sell Honey' },
     { to: '/farmer/tracking', label: 'My Apiaries' },
@@ -203,101 +203,124 @@ function Layout({ children }) {
   };
 
   return (
-    <div className="min-h-screen flex flex-col overflow-x-hidden">
-      <header className="sticky top-0 z-30 border-b border-border/70 bg-surface/95 backdrop-blur-md">
-        <div className="max-w-[90rem] mx-auto px-3.5 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-2 sm:gap-4">
-          {/* Logo with official emblem */}
-          <Link to="/" className="flex items-center gap-2.5 font-extrabold text-textPrimary text-lg sm:text-xl tracking-tight shrink-0 group">
-            <img
-              src="/logo.png"
-              alt="HoneyChain"
-              className="h-10 w-10 sm:h-12 sm:w-12 object-contain rounded-xl shadow-xs transition-transform group-hover:scale-105"
-            />
+    <div className="min-h-screen flex flex-col overflow-x-hidden bg-[#FAF7EE] text-[#281D1C]">
+      {/* Floating Header */}
+      <header className="sticky top-0 z-30 pt-2 sm:pt-3 px-3 sm:px-6">
+        <div className="max-w-[92rem] mx-auto bg-white/85 backdrop-blur-md rounded-full border border-[#E8E3CF] shadow-card px-4 sm:px-6 h-16 sm:h-18 flex items-center justify-between gap-3">
+          {/* Logo */}
+          <Link to="/" className="flex items-center gap-3 font-extrabold text-[#281D1C] text-lg sm:text-xl tracking-tight shrink-0 group">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-[#F4B345] to-[#C06E30] flex items-center justify-center text-white shadow-sm transition-transform group-hover:scale-105">
+              <span className="text-xl">🐝</span>
+            </div>
             <div className="flex flex-col">
-              <span className="leading-none text-lg sm:text-xl font-black">
-                Honey<span className="text-primary">Chain</span>
+              <span className="leading-none text-lg sm:text-xl font-black font-serif text-[#281D1C]">
+                Honey<span className="text-[#861C1C]"> Chain</span>
               </span>
-              <span className="text-[10px] font-bold text-accent tracking-wider uppercase mt-0.5">
-                KVIC Honey Mission
+              <span className="text-[10px] font-semibold text-[#C06E30] tracking-wider uppercase mt-0.5">
+                Pure · Natural · Trusted
               </span>
             </div>
           </Link>
 
           {/* Desktop Nav */}
-          <nav className="hidden sm:flex items-center gap-1 sm:gap-1.5 overflow-x-auto max-w-full no-scrollbar py-1">
+          <nav className="hidden md:flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1">
+            <Link
+              to="/"
+              className="px-3.5 py-1.5 rounded-full text-xs font-semibold text-[#5E524D] hover:text-[#861C1C] hover:bg-[#861C1C]/10 transition-colors flex items-center gap-1"
+            >
+              <span>🏠 Main Page</span>
+            </Link>
             {links.map(l => (
               <NavLink key={l.to} to={l.to}>{l.label}</NavLink>
             ))}
           </nav>
 
-
           {/* Right side */}
           {profile ? (
             <div className="flex items-center gap-2 sm:gap-3">
+              {/* Main Page Button for Quick Access */}
+              <Link
+                to="/"
+                className="inline-flex items-center gap-1.5 rounded-full bg-[#FAF7EE] border border-[#E8E3CF] px-3.5 py-2 text-xs font-bold text-[#281D1C] hover:bg-white hover:border-[#D6CEB5] transition-all shadow-xs"
+              >
+                <span>🏠</span>
+                <span className="hidden sm:inline">Main Page</span>
+              </Link>
+
+              {/* Trace Your Honey Pill CTA */}
+              <Link 
+                to="/buyer/honey-passport/HC-RJ-2026-000108"
+                className="hidden lg:inline-flex items-center gap-2 rounded-full bg-[#F4B345] px-4 py-2 text-xs font-bold text-[#281D1C] shadow-gold hover:bg-[#F6C063] transition-all hover:scale-105"
+              >
+                <span>Trace Your Honey</span>
+                <span>→</span>
+              </Link>
+
               {/* Language Selector */}
               <div className="hidden sm:block">
                 <LanguageSelector compact />
               </div>
 
-              {/* User info - desktop */}
+              {/* User info */}
               <div className="hidden md:flex items-center gap-2">
-                <Link to={getProfileLink(profile?.role)} className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-                  <span className="grid h-8 w-8 place-items-center rounded-full bg-primaryLight text-primary text-xs font-bold">
+                <Link to={getProfileLink(profile?.role)} className="flex items-center gap-2 hover:opacity-85 transition-opacity">
+                  <span className="grid h-8 w-8 place-items-center rounded-full bg-[#861C1C] text-white text-xs font-bold shadow-xs">
                     {profile.name?.charAt(0)?.toUpperCase() || '?'}
                   </span>
-                  <div className="hidden lg:block">
-                    <p className="text-xs font-bold text-textPrimary leading-tight">{profile.name}</p>
-                    <p className="text-[10px] text-textMuted flex items-center gap-0.5"><MapPin size={9} />{profile.district || profile.state || 'India'}</p>
+                  <div className="hidden xl:block">
+                    <p className="text-xs font-bold text-[#281D1C] leading-tight">{profile.name}</p>
+                    <p className="text-[10px] text-[#9B918B] flex items-center gap-0.5"><MapPin size={9} />{profile.district || profile.state || 'India'}</p>
                   </div>
                 </Link>
               </div>
 
-              <div className="hidden sm:block h-5 w-px bg-border" />
+              <div className="hidden sm:block h-5 w-px bg-[#E8E3CF]" />
 
-              {/* Notification Dropdown (Shared for Mobile & Desktop) */}
+              {/* Notification Dropdown */}
               <div className="relative">
                 <button 
                   onClick={() => setShowNotifications(prev => !prev)}
-                  className="relative grid h-8 w-8 place-items-center rounded-full hover:bg-background transition-colors text-textSecondary"
+                  className="relative grid h-9 w-9 place-items-center rounded-full hover:bg-black/5 transition-colors text-[#5E524D]"
+                  aria-label="Notifications"
                 >
                   <Bell size={17} />
-                  <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-red-500 border-2 border-surface animate-pulse"></span>
+                  <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-[#861C1C] border-2 border-white animate-pulse"></span>
                 </button>
                 {showNotifications && (
-                  <div className="absolute right-0 mt-2 w-72 rounded-2xl border border-border bg-surface shadow-card-lg overflow-hidden z-50 animate-fade-in-down">
-                    <div className="p-3 border-b border-border/60 flex justify-between items-center bg-background">
-                      <span className="font-bold text-sm text-textPrimary">{t('notifications', 'Notifications')}</span>
-                      <span className="text-[10px] uppercase font-bold text-primary cursor-pointer hover:underline" onClick={() => setShowNotifications(false)}>{t('markAllRead', 'Mark all read')}</span>
+                  <div className="absolute right-0 mt-3 w-80 rounded-3xl border border-[#E8E3CF] bg-white shadow-soft-lg overflow-hidden z-50 animate-fade-in-down p-2">
+                    <div className="p-3 border-b border-[#E8E3CF]/60 flex justify-between items-center bg-[#FAF7EE] rounded-2xl">
+                      <span className="font-bold text-sm text-[#281D1C] font-serif">{t('notifications', 'Notifications')}</span>
+                      <span className="text-[10px] uppercase font-bold text-[#861C1C] cursor-pointer hover:underline" onClick={() => setShowNotifications(false)}>{t('markAllRead', 'Mark all read')}</span>
                     </div>
-                    <div className="max-h-64 overflow-y-auto p-2">
-                      <div className="p-2 hover:bg-background rounded-xl cursor-pointer mb-1 transition-colors">
-                        <p className="text-xs font-semibold text-textPrimary">System Update</p>
-                        <p className="text-[10px] text-textSecondary line-clamp-2 mt-0.5">Welcome to WoolConnect! Your profile is ready.</p>
-                        <p className="text-[9px] text-textMuted mt-1">Just now</p>
+                    <div className="max-h-64 overflow-y-auto p-1.5 space-y-1">
+                      <div className="p-3 hover:bg-[#FAF7EE] rounded-2xl cursor-pointer transition-colors">
+                        <p className="text-xs font-semibold text-[#281D1C]">Honey Chain Verification</p>
+                        <p className="text-[11px] text-[#5E524D] line-clamp-2 mt-0.5">Welcome to Honey Chain. KVIC Apiary lot registry is active.</p>
+                        <p className="text-[9px] text-[#9B918B] mt-1">Just now</p>
                       </div>
-                      <div className="p-2 hover:bg-background rounded-xl cursor-pointer transition-colors">
-                        <p className="text-xs font-semibold text-textPrimary">Market Alert</p>
-                        <p className="text-[10px] text-textSecondary line-clamp-2 mt-0.5">New APMC Mandi rates have been updated for your state.</p>
-                        <p className="text-[9px] text-textMuted mt-1">2 hours ago</p>
+                      <div className="p-3 hover:bg-[#FAF7EE] rounded-2xl cursor-pointer transition-colors">
+                        <p className="text-xs font-semibold text-[#281D1C]">Mandi Price Update</p>
+                        <p className="text-[11px] text-[#5E524D] line-clamp-2 mt-0.5">Mustard Blossom honey APMC benchmark rose to ₹285/kg.</p>
+                        <p className="text-[9px] text-[#9B918B] mt-1">1 hour ago</p>
                       </div>
                     </div>
                   </div>
                 )}
               </div>
 
-              {/* Logout button - desktop */}
+              {/* Logout button */}
               <button
                 aria-label="Log out"
-                className="hidden sm:inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-bold text-red-600 hover:bg-red-50 transition-colors"
+                className="hidden sm:inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-bold text-[#861C1C] hover:bg-[#861C1C]/10 transition-colors"
                 onClick={async () => { await signOut(); nav('/login'); }}
               >
                 <LogOut size={14} />
-                <span className="hidden lg:inline">{t('logout')}</span>
+                <span className="hidden xl:inline">{t('logout')}</span>
               </button>
 
-              {/* Mobile hamburger for drawer */}
+              {/* Mobile hamburger */}
               <button
-                className="sm:hidden grid h-8 w-8 place-items-center rounded-xl bg-background border border-border/80 text-textPrimary"
+                className="md:hidden grid h-9 w-9 place-items-center rounded-full bg-[#FAF7EE] border border-[#E8E3CF] text-[#281D1C]"
                 onClick={() => setMobileOpen(true)}
                 aria-label="Open menu"
               >
@@ -307,7 +330,7 @@ function Layout({ children }) {
           ) : (
             <div className="flex items-center gap-2">
               <LanguageSelector compact />
-              <Link to="/login" className="px-3 py-1.5 rounded-xl text-xs font-bold bg-primary text-white hover:bg-primaryDark">
+              <Link to="/login" className="px-4 py-2 rounded-full text-xs font-bold bg-[#861C1C] text-white hover:bg-[#6A1515] transition-all shadow-sm">
                 {t('footerSignIn', 'Sign In')}
               </Link>
             </div>
@@ -429,19 +452,8 @@ function Protected({ children, allowedRoles }) {
 }
 
 function HomeRedirect() {
-  const { profile, loading } = useAuth();
-  if (loading) return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-    </div>
-  );
-  if (!profile) return <LandingPage />;
-  if (profile.role === 'admin') return <LanguageGate active><Navigate to="/admin" replace /></LanguageGate>;
-  if (profile.role === 'farmer') return <LanguageGate active><Layout><FarmerDashboard /></Layout></LanguageGate>;
-  if (profile.role === 'buyer') return <LanguageGate active><Navigate to="/buyer/dashboard" replace /></LanguageGate>;
-  if (profile.role === 'artisan') return <LanguageGate active><Navigate to="/artisan" replace /></LanguageGate>;
-  if (profile.role === 'processor') return <LanguageGate active><Navigate to="/processor/dashboard" replace /></LanguageGate>;
-  return <LanguageGate active><Layout><MarketplaceExperience allowBuying={profile.role === 'buyer'} /></Layout></LanguageGate>;
+  // Always open the approved Landing Page first on root '/'
+  return <LandingPage />;
 }
 
 export default function App() {
@@ -449,22 +461,24 @@ export default function App() {
   const [fadeSplash, setFadeSplash] = useState(false);
 
   useEffect(() => {
-    // Show splash screen for 1.8 seconds, then fade out
-    const fadeTimer = setTimeout(() => setFadeSplash(true), 1800);
-    const removeTimer = setTimeout(() => setShowSplash(false), 2200);
+    // Show splash screen briefly, then fade out
+    const fadeTimer = setTimeout(() => setFadeSplash(true), 1200);
+    const removeTimer = setTimeout(() => setShowSplash(false), 1600);
     return () => { clearTimeout(fadeTimer); clearTimeout(removeTimer); };
   }, []);
 
   return (
     <>
       {showSplash && (
-        <div className={`fixed inset-0 z-[100] flex flex-col items-center justify-center bg-surface transition-opacity duration-500 ${fadeSplash ? 'opacity-0' : 'opacity-100'}`}>
+        <div className={`fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#FAF7EE] transition-opacity duration-500 ${fadeSplash ? 'opacity-0' : 'opacity-100'}`}>
           <div className="flex flex-col items-center animate-scale-in">
-            <img src="/logo.png" alt="HoneyChain" className="w-24 h-24 sm:w-32 sm:h-32 mb-4 drop-shadow-xl" />
-            <h1 className="text-3xl font-black tracking-tight text-textPrimary animate-fade-in-up">
-              Honey<span className="text-primary">Chain</span>
+            <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-3xl bg-gradient-to-br from-[#F4B345] to-[#C06E30] flex items-center justify-center text-white shadow-lg mb-4 text-4xl">
+              🐝
+            </div>
+            <h1 className="text-3xl font-black font-serif tracking-tight text-[#281D1C]">
+              Honey<span className="text-[#861C1C]">Chain</span>
             </h1>
-            <p className="text-accent mt-2 tracking-[0.2em] uppercase text-xs font-extrabold animate-fade-in-up delay-1">
+            <p className="text-[#C06E30] mt-2 tracking-[0.2em] uppercase text-xs font-bold">
               Hive to Home • KVIC Honey Mission
             </p>
           </div>
@@ -472,9 +486,10 @@ export default function App() {
       )}
       <HoneyChainFlowSwitcher />
       <Routes>
-        <Route path="/" element={<HomeRedirect />} />
+        <Route path="/" element={<LandingPage />} />
         <Route path="/landing" element={<LandingPage />} />
         <Route path="/about" element={<LandingPage />} />
+        <Route path="/dashboard" element={<Protected allowedRoles={['farmer', 'buyer', 'processor', 'artisan', 'admin']}><FarmerDashboard /></Protected>} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 

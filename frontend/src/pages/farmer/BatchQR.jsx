@@ -13,8 +13,6 @@ import {
   ExternalLink,
   Layers,
 } from 'lucide-react';
-import Card from '../../components/ui/Card';
-import Button from '../../components/ui/Button';
 import { getBatchById } from '../../services/batches.service';
 import { useLanguage } from '../../context/LanguageContext';
 
@@ -57,101 +55,107 @@ export default function BatchQR() {
   }
 
   return (
-    <main className="page-shell max-w-xl mx-auto py-6">
+    <main className="page-shell max-w-xl mx-auto">
+      
+      {/* Top Header */}
       <div className="mb-6 flex items-center justify-between">
         <Link
           to={batch ? `/batches/${batch._id || batch.id}/details` : '/farmer/tracking'}
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-textSecondary hover:text-primary transition-colors group"
+          className="inline-flex items-center gap-1.5 text-xs font-bold text-[#5E524D] hover:text-[#281D1C] transition-colors group"
         >
-          <ArrowLeft size={15} className="transition-transform group-hover:-translate-x-0.5" />
+          <ArrowLeft size={16} className="transition-transform group-hover:-translate-x-1" />
           <span>Back to Lot Details</span>
         </Link>
 
-        <span className="text-xs text-primary font-bold flex items-center gap-1 bg-primaryLight px-2.5 py-1 rounded-full border border-primary/20">
-          <ShieldCheck size={14} /> KVIC Honey Passport QR
+        <span className="text-xs text-[#861C1C] font-bold flex items-center gap-1 bg-[#FBEBEB] px-3 py-1 rounded-full border border-[#861C1C]/20">
+          <ShieldCheck size={14} /> Cryptographic Passport QR
         </span>
       </div>
 
-      <div className="rounded-3xl bg-surface border border-border/80 p-6 sm:p-10 shadow-card text-center animate-enter">
+      <div className="rounded-3xl bg-white border border-[#E8E3CF] p-6 sm:p-10 shadow-card text-center animate-enter">
+        
         <div className="mb-6">
-          <span className="grid h-12 w-12 place-items-center rounded-2xl bg-amber-100 text-amber-800 mx-auto mb-3 shadow-xs">
-            <QrCode size={24} />
+          <span className="grid h-12 w-12 place-items-center rounded-2xl bg-[#FEF6E4] text-[#C06E30] mx-auto mb-3 text-xl shadow-xs">
+            🍯
           </span>
-          <h1 className="text-2xl font-black text-textPrimary">Consumer Honey Passport QR</h1>
-          <p className="text-xs sm:text-sm text-textSecondary mt-1">
-            Print this cryptographic label for honey jars (250g, 500g, 1kg) or bulk apiary barrels.
-            Consumers scan to inspect verified flora, apiary GPS, and lab purity tests.
+          <h1 className="text-2xl font-bold font-serif text-[#281D1C]">Consumer Honey Passport QR</h1>
+          <p className="text-xs sm:text-sm text-[#5E524D] mt-1 leading-relaxed max-w-md mx-auto">
+            Print this high-resolution QR label for glass honey jars (250g, 500g, 1kg) or bulk storage barrels.
+            Consumers scan to inspect verified flora, apiary GPS, and NMR lab certificates.
           </p>
         </div>
 
         {loading ? (
           <div className="py-16 flex justify-center">
-            <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+            <div className="h-8 w-8 animate-spin rounded-full border-3 border-[#861C1C] border-t-transparent" />
           </div>
         ) : batch ? (
           <div className="space-y-6">
-            {/* QR Frame Container */}
-            <div className="p-6 rounded-3xl bg-amber-50/60 border border-amber-200 inline-block shadow-inner mx-auto">
+            
+            {/* QR Container */}
+            <div className="p-6 sm:p-8 rounded-3xl bg-[#FAF7EE] border border-[#E8E3CF] inline-block shadow-neomorph mx-auto">
               <QRCodeCanvas
                 value={qrValue}
                 size={220}
-                fgColor="#78350F"
-                bgColor="#FFFBEB"
+                fgColor="#281D1C"
+                bgColor="#FAF7EE"
                 level="H"
                 includeMargin={false}
               />
-              <p className="font-mono font-black text-sm text-textPrimary mt-4">
+              <p className="font-mono font-bold text-sm text-[#281D1C] mt-4">
                 {batch.batch_id || batch.batchId || batch.id}
               </p>
-              <p className="text-xs text-amber-800 font-semibold mt-0.5">
-                {batch.floralSource || batch.wool_type || 'Mustard Blossom Raw Honey'} • {batch.quantity_kg || batch.quantityKg || 50} kg
+              <p className="text-xs text-[#C06E30] font-bold mt-0.5">
+                {batch.floralSource || batch.wool_type || 'Mustard Blossom Raw Honey'} • {batch.quantity_kg || batch.quantityKg || 60} kg
               </p>
-              <p className="text-[10px] text-textMuted mt-1">
+              <p className="text-[10px] text-[#9B918B] mt-1 font-semibold uppercase tracking-wider">
                 KVIC Blockchain Genesis Block #0
               </p>
             </div>
 
-            {/* Direct Passport Launch for Localhost Testing */}
-            <div className="pt-2">
+            {/* Direct Passport Launch */}
+            <div>
               <button
                 onClick={() => navigate(`/buyer/honey-passport/${batchIdentifier}`)}
-                className="w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded-2xl bg-gradient-to-r from-amber-600 to-amber-700 text-white font-bold text-sm shadow-md hover:from-amber-700 hover:to-amber-800 transition-all active:scale-[0.99]"
+                className="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-[#861C1C] text-white font-bold text-xs sm:text-sm shadow-burgundy hover:bg-[#6A1515] transition-all hover:scale-105 active:scale-95"
               >
-                <ExternalLink size={16} />
+                <ExternalLink size={15} />
                 <span>Open Digital Honey Passport (Live Demo)</span>
               </button>
             </div>
 
-            {/* Quick action buttons */}
-            <div className="flex flex-wrap items-center justify-center gap-2.5 pt-2">
+            {/* Action Buttons */}
+            <div className="flex flex-wrap items-center justify-center gap-2.5 pt-1">
               <button
                 onClick={handleDownload}
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-surface border border-border text-xs font-bold text-textPrimary hover:border-primary/50 hover:bg-background transition-all shadow-sm"
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white border border-[#E8E3CF] text-xs font-bold text-[#281D1C] hover:bg-[#FAF7EE] transition-all shadow-soft"
               >
-                <Download size={14} className="text-primary" />
+                <Download size={14} className="text-[#C06E30]" />
                 <span>Download PNG Label</span>
               </button>
 
               <button
                 onClick={handleCopyLink}
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-surface border border-border text-xs font-bold text-textPrimary hover:border-primary/50 hover:bg-background transition-all shadow-sm"
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white border border-[#E8E3CF] text-xs font-bold text-[#281D1C] hover:bg-[#FAF7EE] transition-all shadow-soft"
               >
-                {copied ? <CheckCircle2 size={14} className="text-emerald-700" /> : <Copy size={14} className="text-primary" />}
+                {copied ? <CheckCircle2 size={14} className="text-emerald-700" /> : <Copy size={14} className="text-[#861C1C]" />}
                 <span>{copied ? 'Link Copied!' : 'Copy Passport URL'}</span>
               </button>
 
               <button
                 onClick={() => window.print()}
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-surface border border-border text-xs font-bold text-textPrimary hover:border-primary/50 hover:bg-background transition-all shadow-sm"
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white border border-[#E8E3CF] text-xs font-bold text-[#281D1C] hover:bg-[#FAF7EE] transition-all shadow-soft"
               >
-                <Printer size={14} className="text-primary" />
+                <Printer size={14} className="text-[#C06E30]" />
                 <span>Print QR Barcode</span>
               </button>
             </div>
+
           </div>
         ) : (
-          <p className="text-sm text-error">Honey batch data not available.</p>
+          <p className="text-sm text-[#861C1C]">Honey batch data not available.</p>
         )}
+
       </div>
     </main>
   );

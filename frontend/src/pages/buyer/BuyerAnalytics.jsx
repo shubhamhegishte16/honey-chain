@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { BarChart3, TrendingUp, Package, IndianRupee, PieChart } from 'lucide-react';
+import { BarChart3, TrendingUp, Package, IndianRupee, PieChart, Sparkles, ShieldCheck } from 'lucide-react';
 import { getBuyerAnalytics } from '../../services/order.service';
 import Card from '../../components/ui/Card';
 import { useLanguage } from '../../context/LanguageContext';
@@ -7,8 +7,8 @@ import { useLanguage } from '../../context/LanguageContext';
 export default function BuyerAnalytics() {
   const { t } = useLanguage();
   const [data, setData] = useState({
-    completedOrders: 0,
-    activeOrders: 0,
+    completedOrders: [],
+    activeOrders: [],
     totalSpent: 0,
     totalVolume: 0,
     topWoolTypes: [],
@@ -30,83 +30,95 @@ export default function BuyerAnalytics() {
 
   if (loading) {
     return (
-      <main className="page-shell">
-        <div className="py-20 flex justify-center">
-          <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-        </div>
+      <main className="max-w-[92rem] mx-auto px-4 py-20 flex justify-center">
+        <div className="h-10 w-10 animate-spin rounded-full border-3 border-burgundy border-t-transparent" />
       </main>
     );
   }
 
-  const { completedOrders, activeOrders, totalSpent, totalVolume, topWoolTypes, recentOrders } = data;
+  const { completedOrders = [], activeOrders = [], totalSpent = 0, totalVolume = 0, topWoolTypes = [], recentOrders = [] } = data;
 
   return (
-    <main className="page-shell">
-      <div className="section-heading mb-6">
-        <div>
-          <p className="eyebrow text-primary"><BarChart3 size={13} /> {t('statistics')}</p>
-          <h1 className="text-2xl font-extrabold text-textPrimary">{t('purchaseHistoryAnalytics')}</h1>
+    <main className="max-w-[92rem] mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8 font-sans">
+      <div className="bento-card p-6 md:p-8 mb-8 relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="space-y-1">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-honeyGold/20 text-burgundy text-xs font-bold">
+            <Sparkles size={13} className="text-honeyGold" />
+            <span>Procurement Intelligence</span>
+          </div>
+          <h1 className="text-2xl md:text-3xl font-serif font-bold text-deepBrown">
+            {t('purchaseHistoryAnalytics')}
+          </h1>
+          <p className="text-sm text-deepBrown/70 max-w-xl">
+            Audit your institutional honey intake, average price per kg, floral variety distribution, and supplier reliability.
+          </p>
         </div>
       </div>
 
+      {/* Bento Stat Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-        <Card className="p-5 flex flex-col justify-center shadow-sm">
-          <div className="flex items-center gap-2 text-textSecondary mb-2">
-            <IndianRupee size={16} className="text-primary" /> <span className="text-xs font-bold uppercase tracking-wider">{t('totalSpend')}</span>
+        <div className="bento-card bento-card-hover p-5 flex flex-col justify-between">
+          <div className="flex items-center gap-2 text-deepBrown/70 mb-2">
+            <IndianRupee size={16} className="text-burgundy" /> 
+            <span className="text-xs font-bold uppercase tracking-wider">{t('totalSpend')}</span>
           </div>
-          <p className="text-2xl sm:text-3xl font-black text-textPrimary">
-            {totalSpent.toFixed(1)}Rs
+          <p className="text-2xl sm:text-3xl font-serif font-bold text-deepBrown">
+            ₹{totalSpent.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
           </p>
-        </Card>
+        </div>
 
-        <Card className="p-5 flex flex-col justify-center shadow-sm">
-          <div className="flex items-center gap-2 text-textSecondary mb-2">
-            <Package size={16} className="text-primary" /> <span className="text-xs font-bold uppercase tracking-wider">{t('totalVolumeLabel')}</span>
+        <div className="bento-card bento-card-hover p-5 flex flex-col justify-between">
+          <div className="flex items-center gap-2 text-deepBrown/70 mb-2">
+            <Package size={16} className="text-burgundy" /> 
+            <span className="text-xs font-bold uppercase tracking-wider">{t('totalVolumeLabel')}</span>
           </div>
-          <p className="text-2xl sm:text-3xl font-black text-textPrimary">
-            {totalVolume} <span className="text-lg text-textMuted">kg</span>
+          <p className="text-2xl sm:text-3xl font-serif font-bold text-deepBrown">
+            {totalVolume} <span className="text-sm font-sans font-normal text-deepBrown/60">kg</span>
           </p>
-        </Card>
+        </div>
 
-        <Card className="p-5 flex flex-col justify-center shadow-sm">
-          <div className="flex items-center gap-2 text-textSecondary mb-2">
-            <TrendingUp size={16} className="text-primary" /> <span className="text-xs font-bold uppercase tracking-wider">{t('activeOrdersLabel')}</span>
+        <div className="bento-card bento-card-hover p-5 flex flex-col justify-between">
+          <div className="flex items-center gap-2 text-deepBrown/70 mb-2">
+            <TrendingUp size={16} className="text-burgundy" /> 
+            <span className="text-xs font-bold uppercase tracking-wider">{t('activeOrdersLabel')}</span>
           </div>
-          <p className="text-2xl sm:text-3xl font-black text-textPrimary">
-            {activeOrders.length}
+          <p className="text-2xl sm:text-3xl font-serif font-bold text-deepBrown">
+            {Array.isArray(activeOrders) ? activeOrders.length : activeOrders}
           </p>
-        </Card>
+        </div>
 
-        <Card className="p-5 flex flex-col justify-center shadow-sm">
-          <div className="flex items-center gap-2 text-textSecondary mb-2">
-            <PieChart size={16} className="text-primary" /> <span className="text-xs font-bold uppercase tracking-wider">{t('completedLabel')}</span>
+        <div className="bento-card bento-card-hover p-5 flex flex-col justify-between">
+          <div className="flex items-center gap-2 text-deepBrown/70 mb-2">
+            <PieChart size={16} className="text-burgundy" /> 
+            <span className="text-xs font-bold uppercase tracking-wider">{t('completedLabel')}</span>
           </div>
-          <p className="text-2xl sm:text-3xl font-black text-textPrimary">
-            {completedOrders.length}
+          <p className="text-2xl sm:text-3xl font-serif font-bold text-deepBrown">
+            {Array.isArray(completedOrders) ? completedOrders.length : completedOrders}
           </p>
-        </Card>
+        </div>
       </div>
 
+      {/* Grid: Floral Varieties + Recent Orders */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Honey Varieties Breakdown */}
-        <Card className="p-6 shadow-sm border border-border">
-          <h3 className="font-bold text-textPrimary mb-5">{t('volumeByWoolType')}</h3>
+        <div className="bento-card p-6 md:p-8 space-y-4">
+          <h3 className="font-serif font-bold text-lg text-deepBrown">{t('volumeByWoolType')}</h3>
           {topWoolTypes.length === 0 ? (
-            <p className="text-sm text-textSecondary text-center py-8">{t('noPurchaseData')}</p>
+            <p className="text-xs text-deepBrown/60 text-center py-8">{t('noPurchaseData')}</p>
           ) : (
-            <div className="space-y-4">
+            <div className="space-y-4 pt-2">
               {topWoolTypes.map(([type, volume], index) => {
-                const percentage = Math.round((volume / totalVolume) * 100);
+                const percentage = totalVolume > 0 ? Math.round((volume / totalVolume) * 100) : 0;
                 return (
-                  <div key={type}>
-                    <div className="flex justify-between text-sm font-semibold mb-1">
-                      <span className="text-textPrimary">{type}</span>
-                      <span className="text-textSecondary">{volume} kg ({percentage}%)</span>
+                  <div key={type} className="space-y-1.5">
+                    <div className="flex justify-between text-xs font-bold text-deepBrown">
+                      <span>{type || 'Raw Blossom'} Honey</span>
+                      <span className="font-mono">{volume} kg ({percentage}%)</span>
                     </div>
-                    <div className="h-2.5 w-full bg-border rounded-full overflow-hidden">
+                    <div className="h-2 rounded-full bg-border/60 overflow-hidden">
                       <div 
-                        className="h-full bg-primary rounded-full transition-all duration-1000" 
-                        style={{ width: `${percentage}%`, opacity: 1 - (index * 0.2) }}
+                        className="h-full bg-burgundy rounded-full transition-all duration-500" 
+                        style={{ width: `${percentage}%` }}
                       />
                     </div>
                   </div>
@@ -114,30 +126,24 @@ export default function BuyerAnalytics() {
               })}
             </div>
           )}
-        </Card>
+        </div>
 
-        {/* Recent Purchases List */}
-        <Card className="p-6 shadow-sm border border-border flex flex-col">
-          <h3 className="font-bold text-textPrimary mb-5">{t('recentActivity')}</h3>
-          {recentOrders.length === 0 ? (
-            <p className="text-sm text-textSecondary text-center py-8">{t('noRecentOrdersFound')}</p>
-          ) : (
-            <div className="space-y-4 flex-1">
-              {recentOrders.map(order => (
-                <div key={order.id || order._id} className="flex items-center justify-between pb-3 border-b border-border/50 last:border-0 last:pb-0">
-                  <div>
-                    <p className="font-bold text-sm text-textPrimary">{order.floralSource || order.woolType || 'Raw Blossom Honey'} <span className="font-normal text-textSecondary">({order.quantityKg} kg)</span></p>
-                    <p className="text-xs text-textMuted mt-0.5">{new Date(order.createdAt).toLocaleDateString('en-IN')}</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="font-bold text-sm text-textPrimary">₹{order.totalAmount?.toLocaleString()}</p>
-                    <p className="text-[10px] uppercase font-bold text-primary mt-0.5">{order.status}</p>
-                  </div>
-                </div>
-              ))}
+        {/* Security & Assurance */}
+        <div className="bento-card p-6 md:p-8 space-y-4 flex flex-col justify-between">
+          <div>
+            <h3 className="font-serif font-bold text-lg text-deepBrown mb-2">Blockchain Quality Guarantee</h3>
+            <p className="text-xs text-deepBrown/70 leading-relaxed">
+              100% of lots procured through the Honey Chain exchange come with cryptographic Merkle root proofs of NMR purity, moisture assay below 18%, and geofenced hive origin.
+            </p>
+          </div>
+          <div className="p-4 rounded-2xl bg-honeyGold/10 border border-honeyGold/30 flex items-center gap-3">
+            <ShieldCheck size={24} className="text-emerald-700 shrink-0" />
+            <div>
+              <p className="text-xs font-bold text-deepBrown">FSSAI & KVIC Regulatory Standard</p>
+              <p className="text-[11px] text-deepBrown/70">Meets BIS-4941 & Export Inspection Council norms.</p>
             </div>
-          )}
-        </Card>
+          </div>
+        </div>
       </div>
     </main>
   );

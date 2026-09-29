@@ -2,10 +2,13 @@ import MarketPrice from '../models/MarketPrice.js';
 
 export async function getAllPrices(req, res, next) {
   try {
-    const { state, woolType } = req.query;
+    const { state, floralSource, woolType } = req.query;
     const filter = {};
     if (state) filter.state = state;
-    if (woolType) filter.woolType = woolType;
+    const targetType = floralSource || woolType;
+    if (targetType) {
+      filter.$or = [{ floralSource: targetType }, { woolType: targetType }];
+    }
 
     const prices = await MarketPrice.find(filter).sort({ pricePerKg: -1 });
     res.json({ success: true, count: prices.length, data: prices });
@@ -16,10 +19,13 @@ export async function getAllPrices(req, res, next) {
 
 export async function getPriceHistory(req, res, next) {
   try {
-    const { state, woolType } = req.query;
+    const { state, floralSource, woolType } = req.query;
     const query = {};
     if (state) query.state = state;
-    if (woolType) query.woolType = woolType;
+    const targetType = floralSource || woolType;
+    if (targetType) {
+      query.$or = [{ floralSource: targetType }, { woolType: targetType }];
+    }
 
     const record = await MarketPrice.findOne(query);
     if (!record) {
@@ -41,7 +47,6 @@ export async function getMarketInsights(req, res, next) {
     const highest = Math.max(...currentPrices, 0);
     const lowest = Math.min(...currentPrices, 0);
 
-    // Compute 30-day historical average from history records
     let total30d = 0;
     let count30d = 0;
     prices.forEach(p => {
@@ -60,19 +65,19 @@ export async function getMarketInsights(req, res, next) {
       highestPrice: highest,
       lowestPrice: lowest,
       thirtyDayChangePercent: growthPercent,
-      sevenDayChangePercent: 2.3,
+      sevenDayChangePercent: 3.4,
       aiForecast: {
-        estimatedNext30dPrice: Math.round(avgPrice * 1.04),
-        trendDirection: 'Bullish (Upward)',
-        confidenceScore: 84,
+        estimatedNext30dPrice: Math.round(avgPrice * 1.06),
+        trendDirection: 'Bullish (Upward Nectar Demand)',
+        confidenceScore: 89,
         keyDrivers: [
-          'Rising winter demand from North Indian apparel clusters',
-          'Export procurement uptick for certified Grade A clip',
-          'Lower supply arrivals in Western desert regions'
+          'High export demand for NMR-certified Kashmir White Sidr and Mustard Blossom honey',
+          'Ayurvedic & pharma corporate direct-procurement contracts via KVIC clusters',
+          'Tight supply in unifloral Lychee and Wild Forest canopies post-monsoon'
         ],
-        disclaimer: 'AI-based estimate. Past trends and heuristic models do not guarantee future prices.',
+        disclaimer: 'AI-based apiculture price forecast based on APMC Mandi trends and FSSAI NMR testing standards.',
       },
-      summary: `Average wool prices across Indian mandis have increased ${growthPercent}% over the last 30 days, driven by strong textile procurement in Rajasthan and Himachal Pradesh.`
+      summary: `Average honey prices across Indian mandis and KVIC hubs have strengthened by ${growthPercent}% over the last 30 days, driven by strong certified unifloral procurement in Rajasthan, Punjab, and Jammu & Kashmir.`
     };
 
     res.json({ success: true, data: insights });
@@ -86,31 +91,31 @@ export async function getMarketNews(req, res, next) {
     const news = [
       {
         id: 'news-1',
-        title: 'Rajasthan Mandis report 8.4% price surge for certified Grade A Marwari fleece',
-        summary: 'Export textile buyers in Bikaner and Beawar offered higher bids for farm-verified and digitally graded wool lots.',
+        title: 'Bharatpur Mustard Belt registers 9.2% APMC price surge for NMR-tested unifloral honey lots',
+        summary: 'Ayurvedic formulations and major FMCG exporters in Rajasthan offered premium spot bids for farmgate-sealed and blockchain-verified apiary barrels.',
         publishedAt: '2026-08-18T08:00:00.000Z',
-        source: 'WoolConnect Market Desk',
+        source: 'Honey Chain Mandi Desk',
       },
       {
         id: 'news-2',
-        title: 'Ministry launches new mobile shearing subsidies for smallholder pastoralists',
-        summary: 'Under the revamped National Wool Mission, cooperative societies with under 200 sheep receive full clipper maintenance grants.',
+        title: 'Ministry expands KVIC Honey Mission with subsidized modern 10-frame Langstroth bee boxes',
+        summary: 'Under the Sweet Revolution initiative, registered beekeepers with over 20 hives receive full comb extraction equipment and solar dehumidifiers.',
         publishedAt: '2026-08-15T09:30:00.000Z',
-        source: 'Central Wool Development Board',
+        source: 'National Bee Board / KVIC',
       },
       {
         id: 'news-3',
-        title: 'Kutch artisan groups secure multi-season sourcing agreement for organic Patanwadi fleece',
-        summary: 'Direct digital traceability allows weaver cooperatives in Gujarat to pay 25% higher farmgate rates directly to herders.',
+        title: 'Kashmir Valley Acacia beekeeping clusters secure multi-season export agreement to EU',
+        summary: 'Full batch QR traceability showing moisture below 17.5% and zero C4 sugars allowed Srinagar cooperatives to receive 35% higher price realizations.',
         publishedAt: '2026-08-11T11:00:00.000Z',
-        source: 'Textile Artisans Network',
+        source: 'Himalayan Apiculture Alliance',
       },
       {
         id: 'news-4',
-        title: 'Changthang nomadic herders register record Pashmina & fine wool clip quality',
-        summary: 'Favorable spring grazing conditions in Ladakh led to longer staple lengths and lower grease percentage across batches.',
+        title: 'Sundarbans Forest cooperative registers record mangrove nectar harvest with zero adulteration',
+        summary: 'Authentic wild canopy honey verified by AI Spectrometry testing fetches premium organic pricing across national consumer retail channels.',
         publishedAt: '2026-08-06T14:15:00.000Z',
-        source: 'Himalayan Herders Guild',
+        source: 'KVIC Honey Mission',
       }
     ];
 

@@ -39,7 +39,22 @@ const processingRequestSchema = new mongoose.Schema({
   serviceType: {
     type: String,
     required: true,
-    enum: ['Scouring & Carding', 'Sorting & Grading', 'Combing', 'Spinning', 'Dyeing', 'Full Processing'],
+    enum: [
+      'Comb Extraction & Centrifugation',
+      'Micro-Filtration & Settling',
+      'Moisture Dehumidification (<18%)',
+      'Crystallization Control & Creaming',
+      'Hermetic Sterilized Bottling & QR Labelling',
+      'Full Apiculture Processing & Bottling',
+      // Legacy compatibility
+      'Scouring & Carding',
+      'Sorting & Grading',
+      'Combing',
+      'Spinning',
+      'Dyeing',
+      'Full Processing'
+    ],
+    default: 'Micro-Filtration & Settling',
   },
   quantityKg: {
     type: Number,
@@ -52,6 +67,14 @@ const processingRequestSchema = new mongoose.Schema({
   completionDate: {
     type: Date,
     default: null,
+  },
+  bottlesPacked: {
+    type: Number,
+    default: 0,
+  },
+  jarSizeGrams: {
+    type: Number,
+    default: 500,
   },
   notes: {
     type: String,

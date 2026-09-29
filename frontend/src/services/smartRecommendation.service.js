@@ -52,7 +52,7 @@ export function setLastSelectedProblem(problemId) {
 export function getCurrentSeasonKey() {
   const currentMonth = new Date().getMonth();
   if ([5, 6, 7, 8].includes(currentMonth)) return 'monsoon';
-  if ([9, 10, 11, 0].includes(currentMonth)) return 'shearing';
+  if ([9, 10, 11, 0, 1].includes(currentMonth)) return 'nectar-flow';
   return 'processing';
 }
 
@@ -93,17 +93,24 @@ export function getSmartRecommendations(resources = [], userProgress = {}) {
     if (userInterests.length > 0) {
       const matchesExplicitInterest = res.interests && Array.isArray(res.interests) && res.interests.some(i => userInterests.includes(i));
       
-      // Also map category to interest keys
       const categoryToInterest = {
-        'Sheep Management': 'sheep-care',
-        'Wool Shearing': 'shearing',
-        'Wool Handling': 'wool-quality',
-        'Wool Grading': 'wool-quality',
+        'Apiary Management': 'apiary-care',
+        'Hive Health & Queen Rearing': 'apiary-care',
+        'Comb Extraction & Centrifugation': 'extraction',
+        'Honey Quality & NMR Standards': 'honey-quality',
+        'Moisture Control & Dehumidification': 'storage',
+        'Micro-Filtration & Bottling': 'processing',
+        'Organic Certification': 'honey-quality',
+        'Flora & Seasonal Migration': 'apiary-care',
+        'Mandi Trading & Fair Pricing': 'selling',
+        'Direct Buyer Selling': 'selling',
+        // Legacy fallback
+        'Sheep Management': 'apiary-care',
+        'Wool Shearing': 'extraction',
+        'Wool Handling': 'honey-quality',
+        'Wool Grading': 'honey-quality',
         'Wool Storage': 'storage',
         'Wool Processing': 'processing',
-        'Dyeing': 'processing',
-        'Product Development': 'processing',
-        'Marketing': 'selling',
         'Digital Selling': 'selling'
       };
       
@@ -127,17 +134,14 @@ export function getSmartRecommendations(resources = [], userProgress = {}) {
     };
   });
 
-  // Sort descending by score, prioritizing incomplete items if scores tie
   scored.sort((a, b) => {
     if (b.score !== a.score) return b.score - a.score;
     if (a.isCompleted !== b.isCompleted) return a.isCompleted ? 1 : -1;
     return (b.resource.views || 0) - (a.resource.views || 0);
   });
 
-  // Pick top 3-5 recommendations
   let recommendations = scored.filter(item => !item.isCompleted).map(item => item.resource);
 
-  // Fallback: if not enough incomplete recommendations, fill up with overall top scoring items
   if (recommendations.length < 3) {
     recommendations = scored.slice(0, 4).map(item => item.resource);
   }

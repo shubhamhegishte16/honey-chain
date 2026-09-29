@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { ArrowLeft, MapPin, ShoppingBag, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { ArrowLeft, MapPin, ShoppingBag, AlertCircle, CheckCircle2, ShieldCheck, Sparkles } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
 import { getListingById, placeOrder } from '../../services/marketplace.service';
@@ -75,22 +75,20 @@ export default function Checkout() {
 
   if (loading) {
     return (
-      <main className="page-shell">
-        <div className="py-20 flex justify-center">
-          <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-        </div>
+      <main className="max-w-4xl mx-auto px-4 py-20 flex justify-center">
+        <div className="h-10 w-10 animate-spin rounded-full border-3 border-burgundy border-t-transparent" />
       </main>
     );
   }
 
   if (!listing) {
     return (
-      <main className="page-shell">
-        <div className="p-8 text-center rounded-3xl bg-rose-50 text-rose-800 border border-rose-200 mt-10">
-          <AlertCircle size={32} className="mx-auto mb-3" />
-          <h3 className="font-bold text-lg">{t('listingUnavailable')}</h3>
-          <p className="mt-1 text-sm">{error || t('couldNotLoadListing')}</p>
-          <button onClick={() => navigate(-1)} className="mt-4 px-4 py-2 bg-rose-100 rounded-lg text-sm font-semibold hover:bg-rose-200">{t('goBack')}</button>
+      <main className="max-w-4xl mx-auto px-4 py-12">
+        <div className="p-8 text-center bento-card text-rose-800">
+          <AlertCircle size={36} className="mx-auto mb-3 text-rose-700" />
+          <h3 className="font-serif font-bold text-lg">{t('listingUnavailable')}</h3>
+          <p className="mt-1 text-xs text-deepBrown/70">{error || t('couldNotLoadListing')}</p>
+          <button onClick={() => navigate(-1)} className="mt-5 btn-burgundy text-xs">{t('goBack')}</button>
         </div>
       </main>
     );
@@ -98,138 +96,167 @@ export default function Checkout() {
 
   if (success) {
     return (
-      <main className="page-shell">
-        <div className="p-12 text-center rounded-3xl bg-emerald-50 border border-emerald-200 mt-10 animate-enter">
-          <CheckCircle2 size={48} className="mx-auto mb-4 text-emerald-600" />
-          <h2 className="text-2xl font-extrabold text-emerald-800">{t('orderPlaced')}</h2>
-          <p className="mt-2 text-sm text-emerald-700">{t('orderPlacedRedirect')}</p>
+      <main className="max-w-2xl mx-auto px-4 py-16 text-center">
+        <div className="bento-card p-8 md:p-10 space-y-4">
+          <div className="grid h-16 w-16 place-items-center rounded-3xl bg-emerald-100 text-emerald-800 mx-auto">
+            <CheckCircle2 size={36} />
+          </div>
+          <h2 className="text-2xl font-serif font-bold text-deepBrown">Smart Contract Escrow Locked!</h2>
+          <p className="text-xs text-deepBrown/70 max-w-md mx-auto">
+            Your purchase order has been logged on Honey Chain ledger. Redirecting to your consignment tracker...
+          </p>
         </div>
       </main>
     );
   }
 
-  const total = listing.price_per_kg * quantity;
+  const totalPrice = (listing.price_per_kg || 0) * quantity;
 
   return (
-    <main className="page-shell max-w-4xl mx-auto">
-      <button onClick={() => navigate(-1)} className="mb-6 flex items-center gap-1.5 text-sm font-medium text-textSecondary hover:text-textPrimary transition-colors">
-        <ArrowLeft size={16} /> {t('backToListing')}
+    <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8 font-sans">
+      <button onClick={() => navigate(-1)} className="mb-6 flex items-center gap-2 text-xs font-bold text-deepBrown/70 hover:text-burgundy transition-colors">
+        <ArrowLeft size={16} /> Back to Listing
       </button>
 
-      <h1 className="text-2xl sm:text-3xl font-extrabold text-textPrimary mb-8">{t('checkout')}</h1>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {/* Form */}
+        <div className="md:col-span-2 space-y-6">
+          <div className="bento-card p-6 md:p-8 space-y-6">
+            <div className="space-y-1 border-b border-border/80 pb-4">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-honeyGold/20 text-burgundy text-xs font-bold">
+                <Sparkles size={13} className="text-honeyGold" />
+                <span>KVIC Mandi Settlement</span>
+              </div>
+              <h1 className="text-2xl font-serif font-bold text-deepBrown">Checkout & Dispatch Order</h1>
+            </div>
 
-      <form onSubmit={handleSubmit}>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {error && (
+              <div className="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs font-medium flex items-center gap-2">
+                <AlertCircle size={16} /> {error}
+              </div>
+            )}
 
-          {/* Left: Delivery Form */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* Order Summary */}
-            <div className="p-5 rounded-2xl bg-surface border border-border shadow-sm">
-              <h3 className="font-bold text-textPrimary mb-4">{t('orderSummary')}</h3>
-              <div className="flex items-center gap-4">
-                <img
-                  src={(listing.imageUrl || listing.image_url)?.includes('unsplash') ? '/wool-placeholder.jpg' : (listing.imageUrl || listing.image_url || '/wool-placeholder.jpg')}
-                  alt={listing.wool_type}
-                  className="w-20 h-20 rounded-xl object-cover"
+            <form onSubmit={handleSubmit} className="space-y-5">
+              {/* Quantity */}
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-deepBrown uppercase tracking-wider">
+                  Procurement Volume (kg) <span className="text-deepBrown/50 font-normal">Available: {listing.quantity_kg} kg</span>
+                </label>
+                <input
+                  type="number"
+                  min="1"
+                  max={listing.quantity_kg}
+                  value={quantity}
+                  onChange={(e) => setQuantity(Math.max(1, Math.min(listing.quantity_kg, parseInt(e.target.value) || 1)))}
+                  className="w-full px-4 py-3 bg-warmIvory border border-border rounded-2xl text-xs font-mono font-bold text-deepBrown focus:outline-none focus:border-burgundy focus:ring-2 focus:ring-burgundy/15"
                 />
-                <div className="flex-1">
-                  <p className="font-bold text-textPrimary">{listing.floralSource || listing.wool_type || 'Raw Blossom'} Honey</p>
-                  <p className="text-xs text-textSecondary">{listing.seller_name} • {listing.location?.district || listing.district}</p>
-                  <p className="text-sm font-bold text-emerald-700 mt-1">₹{listing.price_per_kg}/kg</p>
-                </div>
               </div>
 
-              <div className="mt-4 pt-4 border-t border-border/60">
-                <label className="block text-sm font-semibold text-textPrimary mb-2">{t('quantityKg')}</label>
-                <div className="flex items-center rounded-xl border border-border overflow-hidden w-40">
-                  <button type="button" onClick={() => quantity > 1 && setQuantity(quantity - 1)} className="px-3 py-2 bg-background hover:bg-border/50 font-bold">-</button>
+              {/* Delivery Details */}
+              <div className="space-y-4 pt-2">
+                <h3 className="text-sm font-bold text-deepBrown uppercase tracking-wider flex items-center gap-2">
+                  <MapPin size={15} className="text-burgundy" /> Delivery Destination
+                </h3>
+                
+                <div>
                   <input
-                    type="number"
-                    value={quantity}
-                    onChange={(e) => {
-                      const v = parseInt(e.target.value) || 1;
-                      if (v > 0 && v <= listing.quantity_kg) setQuantity(v);
-                    }}
-                    className="w-full text-center font-bold focus:outline-none"
-                    min="1" max={listing.quantity_kg}
+                    type="text"
+                    placeholder="Warehouse / Street Address"
+                    value={address.street}
+                    onChange={(e) => setAddress({ ...address, street: e.target.value })}
+                    className="w-full px-4 py-3 bg-warmIvory border border-border rounded-2xl text-xs text-deepBrown focus:outline-none focus:border-burgundy"
                   />
-                  <button type="button" onClick={() => quantity < listing.quantity_kg && setQuantity(quantity + 1)} className="px-3 py-2 bg-background hover:bg-border/50 font-bold">+</button>
                 </div>
-                <p className="text-[11px] text-textMuted mt-1">{t('maxAvailable')}: {listing.quantity_kg} kg</p>
-              </div>
-            </div>
 
-            {/* Delivery Address */}
-            <div className="p-5 rounded-2xl bg-surface border border-border shadow-sm">
-              <h3 className="font-bold text-textPrimary flex items-center gap-2 mb-4">
-                <MapPin size={16} className="text-primary" /> {t('deliveryInformation')}
-              </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="sm:col-span-2">
-                  <label className="block text-xs font-semibold text-textSecondary mb-1">{t('streetAddress')}</label>
-                  <input type="text" value={address.street} onChange={(e) => setAddress({ ...address, street: e.target.value })} placeholder={t('streetAddressPlaceholder')} className="w-full px-3 py-2.5 rounded-xl border border-border bg-background text-sm focus:outline-none focus:border-primary" />
+                <div className="grid grid-cols-2 gap-3">
+                  <input
+                    type="text"
+                    placeholder="District / City *"
+                    required
+                    value={address.district}
+                    onChange={(e) => setAddress({ ...address, district: e.target.value })}
+                    className="w-full px-4 py-3 bg-warmIvory border border-border rounded-2xl text-xs text-deepBrown focus:outline-none focus:border-burgundy"
+                  />
+                  <input
+                    type="text"
+                    placeholder="State *"
+                    required
+                    value={address.state}
+                    onChange={(e) => setAddress({ ...address, state: e.target.value })}
+                    className="w-full px-4 py-3 bg-warmIvory border border-border rounded-2xl text-xs text-deepBrown focus:outline-none focus:border-burgundy"
+                  />
                 </div>
-                <div>
-                  <label className="block text-xs font-semibold text-textSecondary mb-1">{t('stateRequired')}</label>
-                  <input type="text" value={address.state} onChange={(e) => setAddress({ ...address, state: e.target.value })} required className="w-full px-3 py-2.5 rounded-xl border border-border bg-background text-sm focus:outline-none focus:border-primary" />
-                </div>
-                <div>
-                  <label className="block text-xs font-semibold text-textSecondary mb-1">{t('districtRequired')}</label>
-                  <input type="text" value={address.district} onChange={(e) => setAddress({ ...address, district: e.target.value })} required className="w-full px-3 py-2.5 rounded-xl border border-border bg-background text-sm focus:outline-none focus:border-primary" />
-                </div>
-                <div>
-                  <label className="block text-xs font-semibold text-textSecondary mb-1">{t('pinCode')}</label>
-                  <input type="text" value={address.pinCode} onChange={(e) => setAddress({ ...address, pinCode: e.target.value })} placeholder={t('pinCodePlaceholder')} className="w-full px-3 py-2.5 rounded-xl border border-border bg-background text-sm focus:outline-none focus:border-primary" />
-                </div>
-                <div>
-                  <label className="block text-xs font-semibold text-textSecondary mb-1">{t('contactPhoneRequired')}</label>
-                  <input type="tel" value={address.contactPhone} onChange={(e) => setAddress({ ...address, contactPhone: e.target.value })} required placeholder={t('contactPhonePlaceholder')} className="w-full px-3 py-2.5 rounded-xl border border-border bg-background text-sm focus:outline-none focus:border-primary" />
-                </div>
-              </div>
-              <div className="mt-4">
-                <label className="block text-xs font-semibold text-textSecondary mb-1">{t('deliveryNotesOptional')}</label>
-                <textarea value={notes} onChange={(e) => setNotes(e.target.value)} rows="2" placeholder={t('deliveryNotesPlaceholder')} className="w-full px-3 py-2.5 rounded-xl border border-border bg-background text-sm focus:outline-none focus:border-primary resize-none" />
-              </div>
-            </div>
-          </div>
 
-          {/* Right: Price Summary */}
-          <div>
-            <div className="p-6 rounded-2xl bg-surface border border-primary/20 shadow-card-lg sticky top-24">
-              <h3 className="font-bold text-textPrimary mb-4">{t('priceSummary')}</h3>
-              <div className="space-y-3 text-sm">
-                <div className="flex justify-between"><span className="text-textSecondary">{t('pricePerKgLabel')}</span><span className="font-semibold text-textPrimary">₹{listing.price_per_kg}</span></div>
-                <div className="flex justify-between"><span className="text-textSecondary">{t('quantityKg')}</span><span className="font-semibold text-textPrimary">{quantity} kg</span></div>
-                <div className="border-t border-border pt-3 flex justify-between">
-                  <span className="font-bold text-textPrimary">{t('total')}</span>
-                  <span className="text-2xl font-black text-textPrimary">₹{total.toLocaleString()}</span>
+                <div className="grid grid-cols-2 gap-3">
+                  <input
+                    type="text"
+                    placeholder="PIN Code"
+                    value={address.pinCode}
+                    onChange={(e) => setAddress({ ...address, pinCode: e.target.value })}
+                    className="w-full px-4 py-3 bg-warmIvory border border-border rounded-2xl text-xs text-deepBrown focus:outline-none focus:border-burgundy"
+                  />
+                  <input
+                    type="tel"
+                    placeholder="Contact Phone *"
+                    required
+                    value={address.contactPhone}
+                    onChange={(e) => setAddress({ ...address, contactPhone: e.target.value })}
+                    className="w-full px-4 py-3 bg-warmIvory border border-border rounded-2xl text-xs text-deepBrown focus:outline-none focus:border-burgundy"
+                  />
+                </div>
+
+                <div>
+                  <textarea
+                    rows="2"
+                    placeholder="Consignment delivery instructions (optional)..."
+                    value={notes}
+                    onChange={(e) => setNotes(e.target.value)}
+                    className="w-full px-4 py-3 bg-warmIvory border border-border rounded-2xl text-xs text-deepBrown focus:outline-none focus:border-burgundy resize-none"
+                  />
                 </div>
               </div>
-
-              {error && (
-                <div className="mt-4 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-medium flex items-start gap-2">
-                  <AlertCircle size={14} className="shrink-0 mt-0.5" /> {error}
-                </div>
-              )}
 
               <button
                 type="submit"
                 disabled={submitting}
-                className="mt-6 w-full flex items-center justify-center gap-2 px-6 py-4 bg-primary text-white rounded-xl font-bold hover:bg-primaryDark transition-all shadow-md active:scale-95 disabled:opacity-60"
+                className="w-full py-3.5 bg-burgundy text-warmIvory font-bold text-xs rounded-2xl hover:bg-burgundy/90 transition-all shadow-md shadow-burgundy/15 disabled:opacity-60"
               >
-                {submitting ? (
-                  <div className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" />
-                ) : (
-                  <>
-                    <ShoppingBag size={18} />
-                    {t('confirmOrder')}
-                  </>
-                )}
+                {submitting ? 'Locking Escrow Contract…' : `Confirm & Place Order (₹${totalPrice.toLocaleString('en-IN')})`}
               </button>
+            </form>
+          </div>
+        </div>
+
+        {/* Right Summary */}
+        <div className="space-y-6">
+          <div className="bento-card p-6 space-y-4">
+            <h3 className="font-serif font-bold text-deepBrown">Order Summary</h3>
+            <div className="space-y-2.5 text-xs">
+              <div className="flex justify-between py-1.5 border-b border-border/60">
+                <span className="text-deepBrown/60">Product</span>
+                <span className="font-bold text-deepBrown">{listing.floralSource || listing.wool_type || 'Raw Blossom'} Honey</span>
+              </div>
+              <div className="flex justify-between py-1.5 border-b border-border/60">
+                <span className="text-deepBrown/60">Unit Price</span>
+                <span className="font-mono font-bold text-deepBrown">₹{listing.price_per_kg} / kg</span>
+              </div>
+              <div className="flex justify-between py-1.5 border-b border-border/60">
+                <span className="text-deepBrown/60">Selected Volume</span>
+                <span className="font-mono font-bold text-burgundy">{quantity} kg</span>
+              </div>
+              <div className="flex justify-between py-2 text-sm">
+                <span className="font-bold text-deepBrown">Total Payable</span>
+                <span className="font-mono font-bold text-burgundy">₹{totalPrice.toLocaleString('en-IN')}</span>
+              </div>
+            </div>
+
+            <div className="p-3.5 rounded-2xl bg-honeyGold/10 border border-honeyGold/30 text-[11px] text-deepBrown/80 flex items-start gap-2">
+              <ShieldCheck size={16} className="text-emerald-700 shrink-0 mt-0.5" />
+              <span>Funds locked in APMC escrow and released upon NMR lab verification.</span>
             </div>
           </div>
         </div>
-      </form>
+      </div>
     </main>
   );
 }

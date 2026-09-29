@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   BookOpen, 
-  Scissors, 
   Award, 
   Warehouse, 
   Hammer, 
@@ -14,7 +13,8 @@ import {
   Trophy,
   BarChart2,
   CheckCircle2,
-  Users
+  Users,
+  Feather
 } from 'lucide-react';
 import { getTrainingResources } from '../../services/training.service';
 import SeasonalAdvisory from '../../components/learn/SeasonalAdvisory';
@@ -47,45 +47,39 @@ export default function LearnLanding() {
   const categories = [
     {
       key: 'sheep-care',
-      title: t('catSheepCare'),
-      desc: t('descSheepCare'),
+      title: 'Apiary & Hive Management',
+      desc: 'Colony nutrition, seasonal queen rearing, and mite prevention.',
       icon: Heart,
-      color: 'bg-rose-50 text-rose-700 border-rose-100 hover:border-rose-300',
     },
     {
       key: 'shearing',
-      title: t('catShearing'),
-      desc: t('descShearing'),
-      icon: Scissors,
-      color: 'bg-amber-50 text-amber-800 border-amber-100 hover:border-amber-300',
+      title: 'Honey Harvesting Methods',
+      desc: 'Comb uncapping, centrifugal spin, and sustainable harvest cycles.',
+      icon: Feather,
     },
     {
       key: 'wool-quality',
-      title: t('catWoolQuality'),
-      desc: t('descWoolQuality'),
+      title: 'Purity & NMR Standards',
+      desc: 'FSSAI moisture thresholds, HMF parameters, and pollen analysis.',
       icon: Award,
-      color: 'bg-sky-50 text-sky-700 border-sky-100 hover:border-sky-300',
     },
     {
       key: 'storage',
-      title: t('catStorage'),
-      desc: t('descStorage'),
+      title: 'Barrel Conditioning',
+      desc: 'Food-grade stainless steel storage and ambient temperature controls.',
       icon: Warehouse,
-      color: 'bg-indigo-50 text-indigo-700 border-indigo-100 hover:border-indigo-300',
     },
     {
       key: 'processing',
-      title: t('catProcessing'),
-      desc: t('descProcessing'),
+      title: 'Filtration & Bottling',
+      desc: 'Micro-filtration protocols, glass sterilization, and tamper-proof seals.',
       icon: Hammer,
-      color: 'bg-emerald-50 text-emerald-700 border-emerald-100 hover:border-emerald-300',
     },
     {
       key: 'selling',
-      title: t('catSelling'),
-      desc: t('descSelling'),
+      title: 'Mandi Trading & Escrow',
+      desc: 'Direct-to-brand contract negotiation and APMC market intelligence.',
       icon: TrendingUp,
-      color: 'bg-purple-50 text-purple-700 border-purple-100 hover:border-purple-300',
     }
   ];
 
@@ -95,34 +89,31 @@ export default function LearnLanding() {
       if (!error && data) {
         setRawResources(data);
 
-        // Count resources per category
         const categoryCounts = {
           'sheep-care': 0,
           'shearing': 0,
           'wool-quality': 0,
           'storage': 0,
           'processing': 0,
-          'selling': 0
+          'selling': 0,
         };
-        
-        data.forEach(item => {
-          const cat = item.category;
-          if (cat === 'Sheep Management' || cat === 'Bee Colony Care' || cat === 'Colony Health') categoryCounts['sheep-care']++;
-          else if (cat === 'Wool Shearing' || cat === 'Honey Harvesting' || cat === 'Extraction Techniques') categoryCounts['shearing']++;
-          else if (['Wool Handling', 'Wool Grading', 'Honey Purity Standards', 'Moisture Testing'].includes(cat)) categoryCounts['wool-quality']++;
-          else if (['Wool Storage', 'Storage & Conditioning', 'Honey Barrel Storage'].includes(cat)) categoryCounts['storage']++;
-          else if (['Wool Processing', 'Dyeing', 'Product Development', 'Filtration & Bottling', 'Micro-Filtration'].includes(cat)) categoryCounts['processing']++;
-          else if (['Marketing', 'Digital Selling', 'Honey Mandi & Direct Trade'].includes(cat)) categoryCounts['selling']++;
-        });
-        
-        setCounts(categoryCounts);
 
-        // Calculate progress stats
+        data.forEach(item => {
+          const cat = item.category?.toLowerCase() || '';
+          if (cat.includes('care') || cat.includes('health') || cat.includes('feed')) categoryCounts['sheep-care']++;
+          else if (cat.includes('shear') || cat.includes('harvest')) categoryCounts['shearing']++;
+          else if (cat.includes('qual') || cat.includes('grad') || cat.includes('purity')) categoryCounts['wool-quality']++;
+          else if (cat.includes('stor') || cat.includes('ware')) categoryCounts['storage']++;
+          else if (cat.includes('proc') || cat.includes('spin') || cat.includes('filter')) categoryCounts['processing']++;
+          else if (cat.includes('sell') || cat.includes('mark') || cat.includes('trade')) categoryCounts['selling']++;
+        });
+
+        setCounts(categoryCounts);
         const stats = calculateProgressStats(data, CATEGORY_MAP_FOR_STATS);
         setProgressStats(stats);
       }
-    } catch (err) {
-      console.error('Error loading training resources:', err);
+    } catch (e) {
+      console.error(e);
     } finally {
       setLoading(false);
     }
@@ -130,17 +121,7 @@ export default function LearnLanding() {
 
   useEffect(() => {
     loadResourcesAndStats();
-
-    const handleProgressUpdate = () => {
-      loadResourcesAndStats();
-    };
-
-    window.addEventListener('learning_progress_updated', handleProgressUpdate);
-    return () => window.removeEventListener('learning_progress_updated', handleProgressUpdate);
-  }, []);
-
-  // Translated resources array
-  const resources = rawResources.map(r => getTranslatedResource(r, language));
+  }, [language]);
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
@@ -150,172 +131,112 @@ export default function LearnLanding() {
   };
 
   return (
-    <main className="page-shell space-y-12">
-      {/* Hero Banner */}
-      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#1c3e27] via-[#2a5035] to-[#3f6b3f] text-white p-8 sm:p-12 shadow-xl animate-enter">
-        <div className="hero-orb orb-one opacity-20" />
-        <div className="hero-orb orb-two opacity-15" />
-
-        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-8">
-          <div className="max-w-xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-emerald-200 border border-white/15 text-xs font-semibold backdrop-blur-md mb-4">
-              <BookOpen size={13} />
-              <span>{t('knowledgeTrainingCenter')}</span>
-            </div>
-
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight">
-              {t('learnAndGrow')}
-            </h1>
-            <p className="mt-3 text-base text-white/80 leading-relaxed">
-              Master modern smart beekeeping, seasonal flora management, and KVIC/FSSAI honey purity protocols.
-            </p>
-
-            {/* Search Form */}
-            <form onSubmit={handleSearchSubmit} className="mt-6 flex items-center bg-white rounded-full shadow-md p-1.5 max-w-md focus-within:ring-2 focus-within:ring-emerald-400 transition-all">
-              <Search className="ml-3 mr-2 text-textMuted shrink-0" size={17} />
-              <input
-                type="text"
-                placeholder={t('searchGuidesStandards')}
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="flex-1 min-w-0 bg-transparent text-textPrimary placeholder:text-textMuted text-sm font-medium focus:outline-none py-2"
-              />
-              <button
-                type="submit"
-                className="px-5 py-2.5 rounded-full bg-primary text-white font-bold text-sm hover:bg-primaryDark transition-colors shadow-sm shrink-0"
-              >
-                {t('search')}
-              </button>
-            </form>
+    <main className="max-w-[92rem] mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8 font-sans space-y-8">
+      {/* Editorial Hero Banner */}
+      <section className="bento-card p-6 md:p-10 relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div className="space-y-3 max-w-2xl relative z-10">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-honeyGold/20 text-burgundy text-xs font-bold">
+            <Sparkles size={13} className="text-honeyGold" />
+            <span>KVIC Honey Mission Academy</span>
           </div>
 
-          {/* Quick Learning Progress Card in Hero */}
-          <div className="bg-white/10 backdrop-blur-md border border-white/20 p-5 rounded-2xl md:w-72 shrink-0 shadow-lg flex flex-col justify-between">
-            <div>
-              <div className="flex items-center justify-between gap-2 mb-2">
-                <span className="text-xs font-bold text-emerald-200 flex items-center gap-1.5">
-                  <Trophy size={14} /> {t('myLearningProgress')}
-                </span>
-                <span className="text-xs font-extrabold text-white">
-                  {progressStats.overallPercentage}%
-                </span>
-              </div>
+          <h1 className="text-3xl md:text-4xl font-serif font-bold text-deepBrown leading-tight">
+            Scientific Beekeeping & <br />
+            <span className="text-burgundy">Honey Traceability Academy</span>
+          </h1>
 
-              <div className="w-full bg-black/30 rounded-full h-2.5 overflow-hidden mb-3">
-                <div
-                  className="bg-emerald-400 h-full rounded-full transition-all duration-500"
-                  style={{ width: `${progressStats.overallPercentage}%` }}
-                />
-              </div>
+          <p className="text-xs sm:text-sm text-deepBrown/75 leading-relaxed">
+            Curated field manuals, seasonal apiary advisories, and BIS testing guides designed for beekeeping self-help groups and commercial refiners.
+          </p>
 
-              <p className="text-xs text-white/80">
-                {t('completed')} <strong className="text-white font-bold">{progressStats.completedCount}</strong> / {progressStats.totalCount} {t('completedResources')}
-              </p>
+          <form onSubmit={handleSearchSubmit} className="pt-2 flex items-center gap-2 max-w-md">
+            <div className="relative flex-1">
+              <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-deepBrown/40" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search guides (e.g., moisture testing, comb extraction)..."
+                className="w-full pl-10 pr-4 py-2.5 bg-warmIvory border border-border rounded-2xl text-xs text-deepBrown focus:outline-none focus:border-burgundy font-medium shadow-xs"
+              />
             </div>
+            <button type="submit" className="btn-burgundy text-xs py-2.5 px-4 shrink-0">
+              Search
+            </button>
+          </form>
+        </div>
 
+        <div className="flex flex-col gap-3 shrink-0 relative z-10">
+          <div className="p-4 rounded-3xl bg-honeyGold/10 border border-honeyGold/30 text-center space-y-2">
+            <Trophy size={28} className="mx-auto text-burgundy" />
+            <p className="text-xs font-bold text-deepBrown">Learning Progress</p>
+            <p className="text-2xl font-serif font-bold text-burgundy">{progressStats.overallPercentage}%</p>
             <button
               onClick={() => setIsProgressOpen(true)}
-              className="mt-4 w-full py-2 rounded-xl bg-white text-primary font-extrabold text-xs hover:bg-emerald-50 transition-colors shadow-sm flex items-center justify-center gap-1.5"
+              className="text-[11px] font-bold text-burgundy hover:underline block"
             >
-              <BarChart2 size={14} />
-              <span>{t('trackProgressBtn')}</span>
+              View Certificate Progress →
             </button>
           </div>
         </div>
       </section>
 
-      {/* 1. Smart Recommendations Section */}
-      <section className="animate-enter delay-1">
-        <SmartRecommendations resources={resources} />
-      </section>
-
-      {/* 2. Seasonal Farmer Advisory Section */}
-      <section className="animate-enter delay-2">
-        <SeasonalAdvisory resources={resources} />
-      </section>
-
-      {/* 3. Wool Problem Identification Guide Section */}
-      <section className="animate-enter delay-3">
-        <WoolProblemGuide resources={resources} />
-      </section>
-
-      {/* 4. Training Categories Grid */}
-      <section className="animate-enter delay-4">
-        <div className="section-heading mb-6">
-          <div>
-            <p className="eyebrow text-primary"><Sparkles size={13} /> {t('trainingModules')}</p>
-            <h2 className="text-2xl font-bold text-textPrimary">{t('selectCategory')}</h2>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {categories.map((cat) => {
-            const IconComponent = cat.icon;
-            const resourceCount = counts[cat.key] ?? 0;
-
+      {/* 6 Category Bento Cards */}
+      <section className="space-y-4">
+        <h2 className="text-xl md:text-2xl font-serif font-bold text-deepBrown">
+          Curated Knowledge Modules
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {categories.map(cat => {
+            const Icon = cat.icon;
             return (
-              <button
+              <div
                 key={cat.key}
                 onClick={() => navigate(`/learn/category/${cat.key}`)}
-                className={`flex flex-col justify-between p-6 rounded-2xl bg-surface border shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-card-hover text-left group`}
+                className="bento-card bento-card-hover p-6 cursor-pointer flex flex-col justify-between space-y-4 group"
               >
-                <div>
-                  <span className={`grid h-12 w-12 place-items-center rounded-2xl ${cat.color} border shadow-sm mb-4`}>
-                    <IconComponent size={22} />
-                  </span>
-                  <h3 className="text-lg font-bold text-textPrimary group-hover:text-primary transition-colors mb-2">
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="grid h-11 w-11 place-items-center rounded-2xl bg-burgundy/10 text-burgundy group-hover:bg-burgundy group-hover:text-honeyGold transition-colors">
+                      <Icon size={20} />
+                    </span>
+                    <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-honeyGold/20 text-deepBrown">
+                      {counts[cat.key] || 4} Guides
+                    </span>
+                  </div>
+                  <h3 className="font-serif font-bold text-base text-deepBrown group-hover:text-burgundy transition-colors">
                     {cat.title}
                   </h3>
-                  <p className="text-sm text-textSecondary leading-relaxed">
+                  <p className="text-xs text-deepBrown/70 leading-relaxed">
                     {cat.desc}
                   </p>
                 </div>
-                
-                <div className="mt-6 flex items-center justify-between w-full border-t border-border/60 pt-4">
-                  <span className="text-xs text-textMuted font-medium">
-                    {loading ? t('loading') : `${resourceCount} ${resourceCount === 1 ? t('resourceSingular') : t('resourcePlural')}`}
-                  </span>
-                  <span className="text-xs font-bold text-primary group-hover:translate-x-1 transition-transform flex items-center gap-1">
-                    <span>{t('startLearning')}</span>
-                    <ArrowRight size={14} />
-                  </span>
+
+                <div className="pt-2 flex items-center gap-1.5 text-xs font-bold text-burgundy group-hover:translate-x-1 transition-transform border-t border-border/60">
+                  <span>Explore Guides</span>
+                  <ArrowRight size={14} />
                 </div>
-              </button>
+              </div>
             );
           })}
         </div>
       </section>
 
-      {/* 5. Producers & Artisans Section */}
-      <section className="animate-enter delay-4">
-        <div className="rounded-2xl bg-gradient-to-r from-[#2d3a6b]/10 via-[#3b4d8a]/8 to-[#4a5faa]/10 border border-blue-200/60 p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5">
-          <div className="flex items-start gap-4">
-            <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-blue-100 text-blue-700 shadow-sm">
-              <Users size={22} />
-            </span>
-            <div>
-              <h3 className="text-lg font-bold text-textPrimary mb-1">{t('producersAndArtisans')}</h3>
-              <p className="text-sm text-textSecondary leading-relaxed max-w-md">
-                {t('exploreProducersDesc')}
-              </p>
-            </div>
-          </div>
-          <button
-            onClick={() => navigate('/learn/producers')}
-            className="shrink-0 inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-[#3b4d8a] text-white font-bold text-sm shadow-md hover:bg-[#2d3a6b] transition-all duration-200 active:scale-[0.98] hover:-translate-y-0.5 hover:shadow-lg whitespace-nowrap"
-          >
-            <span>{t('exploreProducersBtn')}</span>
-            <ArrowRight size={15} />
-          </button>
-        </div>
-      </section>
+      {/* Advisory & Recommendations */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <SeasonalAdvisory />
+        <SmartRecommendations />
+      </div>
 
-      {/* Learning Progress Modal */}
-      <LearningProgressModal
-        isOpen={isProgressOpen}
-        onClose={() => setIsProgressOpen(false)}
-        stats={progressStats}
-      />
+      <WoolProblemGuide />
+
+      {isProgressOpen && (
+        <LearningProgressModal
+          isOpen={isProgressOpen}
+          onClose={() => setIsProgressOpen(false)}
+          stats={progressStats}
+        />
+      )}
     </main>
   );
 }

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
-  Leaf,
   ArrowRight,
   Sparkles,
   QrCode,
@@ -14,7 +13,6 @@ import {
   Layers,
   Store,
   ChevronRight,
-  ExternalLink,
   Menu,
   X,
   Building2,
@@ -26,6 +24,16 @@ import {
   HelpCircle,
   Clock,
   Check,
+  Play,
+  Activity,
+  Cpu,
+  Search,
+  ExternalLink,
+  ChevronDown,
+  Thermometer,
+  Droplets,
+  Volume2,
+  Scale
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
@@ -36,1017 +44,1030 @@ const HONEY_VARIETIES = [
   {
     name: 'Mustard Blossom',
     origin: 'Rajasthan (Bharatpur, Alwar) & Haryana',
-    micron: '17.8% Moisture',
-    yieldPct: 'Purity 99.4%',
+    moisture: '17.8% Moisture',
+    purity: 'Purity 99.4%',
     uses: 'Immunity booster, traditional wellness, creamed honey',
     tag: 'Quick Granulating Golden',
-    tone: 'bg-amber-50 text-amber-900 border-amber-200',
-    colorHex: '#D97706',
+    accent: '#C06E30',
+    image: '/honey-hero.jpg',
   },
   {
     name: 'Kashmir White Sidr',
     origin: 'Jammu & Kashmir (Pulwama, Tral Valley)',
-    micron: '16.9% Moisture',
-    yieldPct: 'Enzymes >32 DN',
+    moisture: '16.9% Moisture',
+    purity: 'Enzymes >32 DN',
     uses: 'Luxury export honey, medicinal therapeutic use',
     tag: 'Himalayan High Altitude',
-    tone: 'bg-emerald-50 text-emerald-900 border-emerald-200',
-    colorHex: '#059669',
+    accent: '#861C1C',
+    image: '/honey-harvest.jpg',
   },
   {
     name: 'Acacia / Kikar',
     origin: 'Punjab, Himachal & Uttarakhand Foothills',
-    micron: '18.2% Moisture',
-    yieldPct: 'High Fructose',
+    moisture: '18.2% Moisture',
+    purity: 'High Fructose',
     uses: 'Natural sweetener, diabetic friendly, slow crystallization',
     tag: 'Crystal Clear Amber',
-    tone: 'bg-yellow-50 text-yellow-900 border-yellow-200',
-    colorHex: '#CA8A04',
+    accent: '#F4B345',
+    image: '/smart-apiary.jpg',
   },
   {
     name: 'Muzaffarpur Shahi Lychee',
     origin: 'Bihar (Muzaffarpur, Vaishali Orchards)',
-    micron: '18.5% Moisture',
-    yieldPct: 'Pollen 92%',
+    moisture: '18.5% Moisture',
+    purity: 'Pollen 92%',
     uses: 'Exotic fruit aroma, dessert drizzle, energy tonics',
     tag: 'Delicate Floral Aroma',
-    tone: 'bg-rose-50 text-rose-900 border-rose-200',
-    colorHex: '#E11D48',
+    accent: '#C06E30',
+    image: '/honey-hero.jpg',
   },
   {
     name: 'Wild Forest Multifloral',
     origin: 'Madhya Pradesh & Maharashtra Satpura Range',
-    micron: '18.8% Moisture',
-    yieldPct: 'Antioxidant Rich',
+    moisture: '18.8% Moisture',
+    purity: 'Antioxidant Rich',
     uses: 'Ayurvedic formulations, cough & sore throat care',
     tag: 'Deep Dark Forest Amber',
-    tone: 'bg-stone-100 text-stone-900 border-stone-300',
-    colorHex: '#78350F',
+    accent: '#281D1C',
+    image: '/honey-harvest.jpg',
   },
   {
     name: 'Jamun Blossom',
     origin: 'Uttar Pradesh (Saharanpur, Bareilly) & Punjab',
-    micron: '17.6% Moisture',
-    yieldPct: 'Low Glycemic',
+    moisture: '17.6% Moisture',
+    purity: 'Low Glycemic',
     uses: 'Diabetic care, digestion booster, bitter-sweet tonic',
     tag: 'Black Plum Blossom',
-    tone: 'bg-purple-50 text-purple-900 border-purple-200',
-    colorHex: '#7E22CE',
+    accent: '#861C1C',
+    image: '/honey-lab.jpg',
   },
 ];
-const WOOL_BREEDS = HONEY_VARIETIES;
 
-function getEcosystemRoles(t) {
-  return [
-    {
-      id: 'farmer', icon: Sprout, title: t('roleFarmerTitle'), subtitle: t('roleFarmerSubtitle'),
-      points: [t('roleFarmerPt1'), t('roleFarmerPt2'), t('roleFarmerPt3'), t('roleFarmerPt4')],
-      cta: t('roleFarmerCta'), color: 'border-emerald-200 bg-emerald-50/40 text-emerald-800', accentColor: '#3F6B3F',
-    },
-    {
-      id: 'buyer', icon: Building2, title: t('roleBuyerTitle'), subtitle: t('roleBuyerSubtitle'),
-      points: [t('roleBuyerPt1'), t('roleBuyerPt2'), t('roleBuyerPt3'), t('roleBuyerPt4')],
-      cta: t('roleBuyerCta'), color: 'border-sky-200 bg-sky-50/40 text-sky-800', accentColor: '#3A6B8A',
-    },
-    {
-      id: 'processor', icon: Factory, title: t('roleProcessorTitle'), subtitle: t('roleProcessorSubtitle'),
-      points: [t('roleProcessorPt1'), t('roleProcessorPt2'), t('roleProcessorPt3'), t('roleProcessorPt4')],
-      cta: t('roleProcessorCta'), color: 'border-amber-200 bg-amber-50/40 text-amber-900', accentColor: '#B9793E',
-    },
-    {
-      id: 'artisan', icon: Palette, title: t('roleArtisanTitle'), subtitle: t('roleArtisanSubtitle'),
-      points: [t('roleArtisanPt1'), t('roleArtisanPt2'), t('roleArtisanPt3'), t('roleArtisanPt4')],
-      cta: t('roleArtisanCta'), color: 'border-purple-200 bg-purple-50/40 text-purple-800', accentColor: '#7C3AED',
-    },
-  ];
-}
-
-function getFaqs(t) {
-  return [
-    { q: t('faq1Q'), a: t('faq1A') },
-    { q: t('faq2Q'), a: t('faq2A') },
-    { q: t('faq3Q'), a: t('faq3A') },
-    { q: t('faq4Q'), a: t('faq4A') },
-  ];
-}
+const JOURNEY_STAGES = [
+  {
+    id: 'hives',
+    title: 'Hives',
+    subtitle: 'Honey, hives, quality, future',
+    icon: '🏠',
+    image: '/smart-apiary.jpg',
+    link: '/farmer/dashboard',
+    accentColor: '#861C1C',
+    badgeText: 'Smart IoT Hives',
+    desc: 'Solar-powered hive sensors track brood temperature, weight gains, and colony acoustic health.'
+  },
+  {
+    id: 'harvest',
+    title: 'Harvest',
+    subtitle: 'Collected with care, from nature',
+    icon: '🌸',
+    image: '/honey-harvest.jpg',
+    link: '/batches/add',
+    accentColor: '#C06E30',
+    badgeText: 'Ethical Extraction',
+    desc: 'Unheated raw comb extraction logged immediately with GPS coordinates and floral bloom tagging.'
+  },
+  {
+    id: 'processing',
+    title: 'Processing',
+    subtitle: 'Purity through advanced methods',
+    icon: '⚙️',
+    image: '/honey-hero.jpg',
+    link: '/processor/dashboard',
+    accentColor: '#F4B345',
+    badgeText: 'Micro-Filtration',
+    desc: 'Low-temperature settling tanks preserve active invertase and diastase enzymes without caramelization.'
+  },
+  {
+    id: 'quality',
+    title: 'Quality',
+    subtitle: 'Tested for safety and authenticity',
+    icon: '🛡️',
+    image: '/honey-lab.jpg',
+    link: '/quality',
+    accentColor: '#861C1C',
+    badgeText: 'NMR & Pollen DNA',
+    desc: 'KVIC accredited testing confirms zero C3/C4 syrup adulteration and verifies pollen origin fingerprints.'
+  },
+  {
+    id: 'bottling',
+    title: 'Bottling',
+    subtitle: 'Sealed for freshness',
+    icon: '🧴',
+    image: '/honey-hero.jpg',
+    link: '/processor/batches',
+    accentColor: '#C06E30',
+    badgeText: 'Tamper Evident',
+    desc: 'Automated hermetic sealing and cryptographically signed QR passport generation for every individual jar.'
+  },
+  {
+    id: 'consumer',
+    title: 'Consumer',
+    subtitle: 'Real honey. Real trust.',
+    icon: '👤',
+    image: '/honey-harvest.jpg',
+    link: '/buyer/honey-passport/HC-RJ-2026-000108',
+    accentColor: '#F4B345',
+    badgeText: '100% Provenance',
+    desc: 'Consumers scan the jar QR to inspect beekeeper story, lab test certificates, and blockchain hashes.'
+  },
+];
 
 export default function LandingPage() {
   const { profile } = useAuth();
   const navigate = useNavigate();
   const { t } = useLanguage();
-  const ECOSYSTEM_ROLES = getEcosystemRoles(t);
-  const FAQS = getFaqs(t);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [prices, setPrices] = useState([]);
-  const [selectedRole, setSelectedRole] = useState(0);
+  const [videoModalOpen, setVideoModalOpen] = useState(false);
+  const [searchBatchId, setSearchBatchId] = useState('');
+  const [activeStage, setActiveStage] = useState(0);
+  const [activeVariety, setActiveVariety] = useState(0);
   const [activeFaq, setActiveFaq] = useState(null);
+  
+  // Interactive IoT Beehive Telemetry State Simulator
+  const [hiveTemp, setHiveTemp] = useState(34.8);
+  const [hiveHumidity, setHiveHumidity] = useState(58);
+  const [hiveFrequency, setHiveFrequency] = useState(245);
+  const [hiveWeight, setHiveWeight] = useState(42.6);
+
+  const [prices, setPrices] = useState([
+    { state: 'Rajasthan', wool_type: 'Mustard Blossom Raw', price_per_kg: 285, change_percent: 3.4 },
+    { state: 'Gujarat', wool_type: 'Kutch Wild Acacia Bloom', price_per_kg: 310, change_percent: 1.8 },
+    { state: 'Himachal Pradesh', wool_type: 'Himalayan Multifloral Forest', price_per_kg: 440, change_percent: 4.2 },
+    { state: 'Jammu & Kashmir', wool_type: 'Kashmir White Sidr', price_per_kg: 850, change_percent: 2.1 },
+    { state: 'Maharashtra', wool_type: 'Mahabaleshwar Jamun Honey', price_per_kg: 425, change_percent: -0.8 },
+    { state: 'Bihar', wool_type: 'Muzaffarpur Shahi Lychee', price_per_kg: 340, change_percent: 1.2 },
+    { state: 'Karnataka', wool_type: 'Coorg Stingless Dammer Bee', price_per_kg: 1200, change_percent: 0.9 },
+  ]);
 
   useEffect(() => {
     getAllStatePrices().then(res => {
       if (!res.error && res.data?.length > 0) {
         setPrices(res.data);
-      } else {
-        // Fallback default mandi prices for impressive landing presentation
-        setPrices([
-          { state: 'Rajasthan', wool_type: 'Mustard Blossom Raw', price_per_kg: 285, change_percent: 3.4 },
-          { state: 'Gujarat', wool_type: 'Kutch Wild Acacia Bloom', price_per_kg: 310, change_percent: 1.8 },
-          { state: 'Himachal Pradesh', wool_type: 'Himalayan Multifloral Forest', price_per_kg: 440, change_percent: 4.2 },
-          { state: 'Jammu & Kashmir', wool_type: 'Kashmir White Sidr', price_per_kg: 850, change_percent: 2.1 },
-          { state: 'Maharashtra', wool_type: 'Mahabaleshwar Jamun Honey', price_per_kg: 425, change_percent: -0.8 },
-          { state: 'Bihar', wool_type: 'Muzaffarpur Shahi Lychee', price_per_kg: 340, change_percent: 1.2 },
-          { state: 'Karnataka', wool_type: 'Coorg Stingless Dammer Bee', price_per_kg: 1200, change_percent: 0.9 },
-        ]);
       }
     });
   }, []);
 
+  const handleSearchPassport = (e) => {
+    e.preventDefault();
+    const id = searchBatchId.trim() || 'HC-RJ-2026-000108';
+    navigate(`/buyer/honey-passport/${id}`);
+  };
+
+  const FAQS = [
+    {
+      q: 'How does Honey Chain guarantee 100% pure honey without adulteration?',
+      a: 'Honey Chain combines IoT hive weight sensors, automated GPS harvest stamping, and multi-tier lab tests (NMR Spectroscopy, SMR, and C3/C4 isotopic analysis). Each batch hash is permanently committed to an immutable blockchain ledger before packaging.'
+    },
+    {
+      q: 'Can consumers verify the exact beekeeper and apiary location?',
+      a: 'Yes! Scanning the QR code on any Honey Chain certified jar opens the Digital Honey Passport, showing the beekeeper profile, apiary village in India, harvest date, floral bloom, and downloadable laboratory purity certificates.'
+    },
+    {
+      q: 'How does this platform support beekeepers under KVIC Honey Mission?',
+      a: 'Beekeepers receive transparent APMC Mandi benchmark pricing, instant fair payments directly from verified FMCG processors, AI-powered hive yield telemetry, and subsidized testing support.'
+    },
+    {
+      q: 'What is the role of AI in the Honey Chain ecosystem?',
+      a: 'AI models analyze acoustic colony frequencies to alert beekeepers before swarming or disease outbreaks, verify pollen microscopic images for authentic floral origin tagging, and detect sugar adulteration patterns during lab assays.'
+    }
+  ];
+
   return (
-    <div className="min-h-screen bg-background text-textPrimary flex flex-col selection:bg-primaryLight selection:text-primary">
-      {/* ─── Sticky Navbar ─── */}
-      <header className="sticky top-0 z-40 bg-surface/90 backdrop-blur-md border-b border-border/70 transition-all">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-4">
-          {/* Brand Logo */}
-          <Link to="/" className="flex items-center gap-3 font-bold text-primary text-xl tracking-tight shrink-0 group">
-            <img
-              src="/logo.png"
-              alt="HoneyChain"
-              className="h-12 w-12 sm:h-14 sm:w-14 object-contain rounded-2xl shadow-sm transition-transform group-hover:scale-105"
-            />
+    <div className="min-h-screen bg-[#FAF7EE] text-[#281D1C] flex flex-col font-sans selection:bg-[#F4B345]/40 selection:text-[#281D1C]">
+      
+      {/* ─── 1. APPROVED FLOATING ROUNDED NAVIGATION BAR ─── */}
+      <header className="sticky top-0 z-50 pt-3 sm:pt-4 px-3 sm:px-6 lg:px-8">
+        <div className="max-w-[92rem] mx-auto bg-[#FAF7EE]/90 backdrop-blur-md rounded-full border border-[#E8E3CF] shadow-card px-4 sm:px-7 h-16 sm:h-20 flex items-center justify-between gap-3 transition-all duration-300">
+          
+          {/* Brand Logo matching reference */}
+          <Link to="/" className="flex items-center gap-3 font-extrabold text-[#281D1C] text-lg sm:text-xl tracking-tight shrink-0 group">
+            <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-2xl bg-gradient-to-br from-[#F4B345] to-[#C06E30] flex items-center justify-center text-white shadow-sm transition-transform group-hover:scale-105">
+              <span className="text-xl sm:text-2xl">🐝</span>
+            </div>
             <div className="flex flex-col">
-              <span className="text-xl sm:text-2xl font-black tracking-tight text-textPrimary leading-none">
-                Honey<span className="text-primary">Chain</span>
+              <span className="leading-tight text-lg sm:text-2xl font-black font-serif text-[#281D1C]">
+                Honey<span className="text-[#861C1C]"> Chain</span>
               </span>
-              <span className="text-[11px] font-bold text-accent tracking-wider uppercase mt-1">
-                KVIC Honey Mission • MSME
+              <span className="text-[10px] font-semibold text-[#5E524D] tracking-widest uppercase">
+                Pure · Natural · Trusted
               </span>
             </div>
           </Link>
 
-          {/* Desktop Nav Links */}
-          <nav className="hidden lg:flex items-center gap-1 xl:gap-2">
-            <a href="#features" className="px-3.5 py-2 rounded-xl text-sm font-medium text-textSecondary hover:text-primary hover:bg-primaryLight/40 transition-colors">
-              Smart Hives
+          {/* Center Navigation Links matching reference */}
+          <nav className="hidden lg:flex items-center gap-1.5 p-1 rounded-full bg-[#FAF7EE]/80 border border-[#E8E3CF]/70 shadow-neomorph-inset">
+            <Link to="/" className="px-5 py-2 rounded-full text-xs font-bold bg-[#861C1C] text-white shadow-sm transition-all">
+              Home
+            </Link>
+            <a href="#about" className="px-4 py-2 rounded-full text-xs font-semibold text-[#5E524D] hover:text-[#281D1C] hover:bg-black/5 transition-colors">
+              About
             </a>
-            <a href="#mandi-rates" className="px-3.5 py-2 rounded-xl text-sm font-medium text-textSecondary hover:text-primary hover:bg-primaryLight/40 transition-colors">
-              Honey Mandi
+            <a href="#features" className="px-4 py-2 rounded-full text-xs font-semibold text-[#5E524D] hover:text-[#281D1C] hover:bg-black/5 transition-colors">
+              Features
             </a>
-            <a href="#how-it-works" className="px-3.5 py-2 rounded-xl text-sm font-medium text-textSecondary hover:text-primary hover:bg-primaryLight/40 transition-colors">
-              Blockchain Flow
+            <a href="#journey" className="px-4 py-2 rounded-full text-xs font-semibold text-[#5E524D] hover:text-[#281D1C] hover:bg-black/5 transition-colors">
+              How It Works
             </a>
-            <a href="#breeds" className="px-3.5 py-2 rounded-xl text-sm font-medium text-textSecondary hover:text-primary hover:bg-primaryLight/40 transition-colors">
-              Floral Varieties
+            <a href="#reviews" className="px-4 py-2 rounded-full text-xs font-semibold text-[#5E524D] hover:text-[#281D1C] hover:bg-black/5 transition-colors">
+              Reviews
             </a>
-            <a href="#traceability" className="px-3.5 py-2 rounded-xl text-sm font-medium text-textSecondary hover:text-primary hover:bg-primaryLight/40 transition-colors">
-              Honey Passport
-            </a>
+            <Link to="/farmer/dashboard" className="px-4 py-2 rounded-full text-xs font-bold text-[#861C1C] hover:bg-[#861C1C]/10 transition-colors flex items-center gap-1">
+              <span>Dashboard</span>
+              <span className="text-[10px]">↗</span>
+            </Link>
+            <Link to="/login" className="px-4 py-2 rounded-full text-xs font-semibold text-[#5E524D] hover:text-[#281D1C] hover:bg-black/5 transition-colors">
+              Login
+            </Link>
           </nav>
 
-          {/* Right Action CTA */}
-          <div className="hidden sm:flex items-center gap-3">
-            <LanguageSelector />
-            {profile ? (
-              <Link
-                to={profile.role === 'admin' ? '/admin' : '/'}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-white font-semibold text-sm shadow-md hover:bg-primaryDark hover:shadow-lg transition-all"
-              >
-                <span>{t('goToDashboard')}</span>
-                <ArrowRight size={16} />
-              </Link>
-            ) : (
-              <>
-                <Link
-                  to="/login"
-                  className="px-4 py-2.5 rounded-xl text-sm font-semibold text-textPrimary hover:text-primary hover:bg-primaryLight/50 transition-colors"
-                >
-                  {t('footerSignIn')}
-                </Link>
-                <Link
-                  to="/register"
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-white font-semibold text-sm shadow-sm hover:bg-primaryDark hover:shadow-md transition-all active:scale-[0.98]"
-                >
-                  <span>{t('joinFree')}</span>
-                  <ArrowRight size={15} />
-                </Link>
-              </>
-            )}
-          </div>
+          {/* Right Action: Trace Your Honey CTA & Language */}
+          <div className="flex items-center gap-2.5 sm:gap-3">
+            <div className="hidden sm:block">
+              <LanguageSelector compact />
+            </div>
 
-          {/* Mobile Hamburger Button */}
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden grid h-10 w-10 place-items-center rounded-xl bg-background border border-border text-textPrimary hover:bg-primaryLight/40 transition-colors"
-            aria-label="Toggle menu"
-          >
-            {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
-          </button>
+            <Link
+              to="/buyer/honey-passport/HC-RJ-2026-000108"
+              className="inline-flex items-center gap-2 rounded-full bg-[#F4B345] px-5 sm:px-6 py-2.5 text-xs sm:text-sm font-bold text-[#281D1C] shadow-gold hover:bg-[#F6C063] transition-all hover:scale-105 active:scale-95"
+            >
+              <span>Trace Your Honey</span>
+              <span className="text-base font-bold">→</span>
+            </Link>
+
+            {/* Mobile Hamburger */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="lg:hidden grid h-9 w-9 place-items-center rounded-full bg-[#FAF7EE] border border-[#E8E3CF] text-[#281D1C]"
+              aria-label="Toggle menu"
+            >
+              {mobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
+            </button>
+          </div>
         </div>
 
         {/* Mobile Dropdown Drawer */}
         {mobileMenuOpen && (
-          <div className="lg:hidden border-b border-border/80 bg-surface px-4 pt-3 pb-6 space-y-3 animate-fade-in shadow-xl">
+          <div className="lg:hidden mt-2 p-4 rounded-3xl bg-[#FAF7EE] border border-[#E8E3CF] shadow-card-lg space-y-3 animate-fade-in">
             <nav className="flex flex-col space-y-1">
-              <a
-                href="#features"
-                onClick={() => setMobileMenuOpen(false)}
-                className="px-3.5 py-2.5 rounded-xl text-sm font-semibold text-textSecondary hover:bg-primaryLight/50 hover:text-primary"
-              >
-                {t('navFeatures')}
+              <Link to="/" onClick={() => setMobileMenuOpen(false)} className="px-4 py-2.5 rounded-full text-xs font-bold bg-[#861C1C] text-white">
+                Home
+              </Link>
+              <Link to="/farmer/dashboard" onClick={() => setMobileMenuOpen(false)} className="px-4 py-2.5 rounded-full text-xs font-bold text-[#861C1C] bg-[#861C1C]/10">
+                Beekeeper Dashboard →
+              </Link>
+              <a href="#about" onClick={() => setMobileMenuOpen(false)} className="px-4 py-2.5 rounded-full text-xs font-semibold text-[#5E524D]">
+                About
               </a>
-              <a
-                href="#mandi-rates"
-                onClick={() => setMobileMenuOpen(false)}
-                className="px-3.5 py-2.5 rounded-xl text-sm font-semibold text-textSecondary hover:bg-primaryLight/50 hover:text-primary"
-              >
-                {t('navLiveMandiRates')}
+              <a href="#features" onClick={() => setMobileMenuOpen(false)} className="px-4 py-2.5 rounded-full text-xs font-semibold text-[#5E524D]">
+                Features
               </a>
-              <a
-                href="#how-it-works"
-                onClick={() => setMobileMenuOpen(false)}
-                className="px-3.5 py-2.5 rounded-xl text-sm font-semibold text-textSecondary hover:bg-primaryLight/50 hover:text-primary"
-              >
-                {t('navHowItWorks')}
+              <a href="#journey" onClick={() => setMobileMenuOpen(false)} className="px-4 py-2.5 rounded-full text-xs font-semibold text-[#5E524D]">
+                Six-Stage Traceability
               </a>
-              <a
-                href="#breeds"
-                onClick={() => setMobileMenuOpen(false)}
-                className="px-3.5 py-2.5 rounded-xl text-sm font-semibold text-textSecondary hover:bg-primaryLight/50 hover:text-primary"
-              >
-                {t('navBreeds')}
-              </a>
-              <a
-                href="#traceability"
-                onClick={() => setMobileMenuOpen(false)}
-                className="px-3.5 py-2.5 rounded-xl text-sm font-semibold text-textSecondary hover:bg-primaryLight/50 hover:text-primary"
-              >
-                {t('navTraceability')}
-              </a>
+              <Link to="/quality" onClick={() => setMobileMenuOpen(false)} className="px-4 py-2.5 rounded-full text-xs font-semibold text-[#5E524D]">
+                KVIC Quality Lab
+              </Link>
             </nav>
-
-            <div className="pt-3 border-t border-border/60 flex flex-col gap-2">
+            <div className="pt-2 border-t border-[#E8E3CF] flex items-center justify-between">
               <LanguageSelector compact />
-              {profile ? (
-                <Link
-                  to={profile.role === 'admin' ? '/admin' : '/'}
-                  className="w-full py-3 rounded-xl bg-primary text-white font-semibold text-center text-sm shadow-sm"
-                >
-                  {t('goToDashboard')}
-                </Link>
-              ) : (
-                <>
-                  <Link
-                    to="/login"
-                    className="w-full py-2.5 rounded-xl border border-border bg-surface text-textPrimary font-semibold text-center text-sm"
-                  >
-                    {t('footerSignIn')}
-                  </Link>
-                  <Link
-                    to="/register"
-                    className="w-full py-2.5 rounded-xl bg-primary text-white font-semibold text-center text-sm shadow-sm"
-                  >
-                    {t('joinFreeCreateAccount')}
-                  </Link>
-                </>
-              )}
+              <Link to="/login" className="px-4 py-2 rounded-full text-xs font-bold bg-[#861C1C] text-white">
+                Sign In
+              </Link>
             </div>
           </div>
         )}
       </header>
 
-      {/* ─── Hero Section ─── */}
-      <section className="relative overflow-hidden pt-10 pb-16 sm:pt-16 sm:pb-24 lg:pt-20 lg:pb-32">
-        {/* Decorative background glow */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[600px] bg-[radial-gradient(ellipse_at_top,rgba(63,107,63,0.14)_0%,rgba(185,121,62,0.06)_40%,transparent_70%)] pointer-events-none" />
+      {/* ─── 2. SPLIT HERO COMPOSITION (MATCHING APPROVED REFERENCE) ─── */}
+      <section className="relative pt-6 sm:pt-10 pb-12 sm:pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden">
+        
+        {/* Subtle decorative background organic shape */}
+        <div className="absolute top-12 left-0 w-96 h-96 bg-[#F4B345]/10 rounded-full blur-3xl pointer-events-none -translate-x-1/2" />
+        <div className="absolute top-1/3 right-0 w-[30rem] h-[30rem] bg-[#861C1C]/5 rounded-full blur-3xl pointer-events-none translate-x-1/3" />
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
-            {/* Left Hero Text */}
-            <div className="lg:col-span-7 text-center lg:text-left">
-              {/* Eyebrow Badge */}
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-100 text-amber-900 border border-amber-300 text-xs font-bold uppercase tracking-wider mb-6 shadow-sm">
-                <Sparkles size={14} className="text-amber-600" />
-                <span>Ministry of MSME • KVIC Honey Mission</span>
+        <div className="max-w-[92rem] mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
+            
+            {/* Left Hero Column: Editorial Typography & CTAs */}
+            <div className="lg:col-span-6 flex flex-col justify-center text-left">
+              
+              {/* Eyebrow with burnt orange bar matching reference */}
+              <div className="flex items-center gap-2.5 mb-4">
+                <span className="h-0.5 w-7 bg-[#C06E30] rounded-full" />
+                <span className="text-[11px] sm:text-xs font-extrabold uppercase tracking-[0.25em] text-[#C06E30]">
+                  BLOCKCHAIN • AI • IOT
+                </span>
               </div>
 
-              {/* Headline */}
-              <h1 className="text-4xl sm:text-5xl xl:text-6xl font-extrabold tracking-tight text-textPrimary leading-[1.12]">
-                Hive to Home: <br className="hidden sm:inline" />
-                Pure Indian Honey <span className="text-primary">Verified on Blockchain</span>
+              {/* Large Editorial Headline */}
+              <h1 className="text-4xl sm:text-6xl xl:text-[4.2rem] font-bold text-[#281D1C] leading-[1.08] tracking-tight font-serif">
+                Every drop <br />
+                <span className="text-[#861C1C] italic font-normal">has a story.</span>
               </h1>
 
               {/* Subtitle */}
-              <p className="mt-5 text-base sm:text-lg text-textSecondary leading-relaxed max-w-2xl mx-auto lg:mx-0">
-                Eliminating adulteration with end-to-end blockchain traceability, IoT smart hive health telemetry, and NMR lab certification empowering rural beekeepers across India.
+              <p className="mt-5 sm:mt-6 text-sm sm:text-base lg:text-lg text-[#5E524D] leading-relaxed max-w-xl">
+                Honey Chain brings complete transparency to your honey — from the hive to your home. Trace, verify and trust with the power of blockchain, AI and IoT.
               </p>
 
-              {/* CTAs */}
-              <div className="mt-8 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3.5">
-                <Link
-                  to="/farmer/dashboard"
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-2xl bg-primary text-white font-bold text-base shadow-lg shadow-primary/25 hover:bg-primaryDark hover:shadow-xl transition-all duration-200 active:scale-[0.98]"
-                >
-                  <span>Beekeeper Smart Portal</span>
-                  <ArrowRight size={18} />
-                </Link>
-
-                <a
-                  href="#mandi-rates"
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl bg-surface border border-border text-textPrimary font-semibold text-base shadow-sm hover:border-primary/40 hover:bg-primaryLight/20 transition-all"
-                >
-                  <TrendingUp size={18} className="text-primary" />
-                  <span>Honey Mandi Rates</span>
-                </a>
-
+              {/* Hero Action Buttons */}
+              <div className="mt-7 sm:mt-8 flex flex-wrap items-center gap-3.5">
                 <Link
                   to="/buyer/honey-passport/HC-RJ-2026-000108"
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-4 py-3.5 text-sm font-semibold text-textSecondary hover:text-primary"
+                  className="inline-flex items-center gap-2.5 rounded-full bg-[#861C1C] px-7 py-3.5 text-xs sm:text-sm font-bold text-white shadow-burgundy hover:bg-[#6A1515] transition-all hover:scale-105 active:scale-95"
                 >
-                  <QrCode size={16} className="text-primary" />
-                  <span>Sample Honey Passport</span>
+                  <span>Trace Your Honey</span>
+                  <span className="text-base font-bold">→</span>
                 </Link>
+
+                <Link
+                  to="/farmer/dashboard"
+                  className="inline-flex items-center gap-2.5 rounded-full bg-[#F4B345] px-6 py-3.5 text-xs sm:text-sm font-bold text-[#281D1C] shadow-gold hover:bg-[#F6C063] transition-all hover:scale-105 active:scale-95"
+                >
+                  <span>Open Beekeeper Dashboard</span>
+                  <span className="text-base font-bold">→</span>
+                </Link>
+
+                <button
+                  onClick={() => setVideoModalOpen(true)}
+                  className="inline-flex items-center gap-2 rounded-full bg-white/80 border border-[#E8E3CF] px-4 py-3 text-xs sm:text-sm font-bold text-[#281D1C] shadow-soft hover:bg-white hover:border-[#D6CEB5] transition-all hover:scale-105 active:scale-95"
+                >
+                  <span className="grid h-5 w-5 place-items-center rounded-full bg-[#281D1C] text-white text-[9px]">
+                    <Play size={9} className="fill-current ml-0.5" />
+                  </span>
+                  <span>Watch Video</span>
+                </button>
               </div>
 
-              {/* Trust Badges */}
-              <div className="mt-10 pt-8 border-t border-border/70 flex flex-wrap items-center justify-center lg:justify-start gap-6 text-xs font-semibold text-textSecondary">
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 size={16} className="text-primary shrink-0" />
-                  <span>KVIC Bee Box Scheme Aligned</span>
+              {/* Bottom Floating Pill Badge Card matching reference */}
+              <div className="mt-8 sm:mt-12 inline-flex items-center gap-4 sm:gap-6 p-3 sm:p-4 rounded-3xl bg-[#FAF7EE] border border-[#E8E3CF] shadow-neomorph max-w-md">
+                <div className="flex items-center gap-2.5">
+                  <div className="grid h-10 w-10 place-items-center rounded-2xl bg-[#FEF6E4] text-[#C06E30] text-lg shrink-0 border border-[#F4B345]/30">
+                    🐝
+                  </div>
+                  <div className="text-[11px] leading-tight">
+                    <p className="font-bold text-[#281D1C]">Real Honey</p>
+                    <p className="text-[#5E524D]">Real Farmers</p>
+                    <p className="text-[#9B918B]">Real Stories</p>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <QrCode size={16} className="text-accent shrink-0" />
-                  <span>Tamper-Proof Blockchain QR</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <ShieldCheck size={16} className="text-info shrink-0" />
-                  <span>NMR & FSSAI Lab Certified</span>
+
+                <div className="h-9 w-px bg-[#E8E3CF]" />
+
+                <div className="flex items-center gap-2.5">
+                  <div className="grid h-10 w-10 place-items-center rounded-2xl bg-[#F3F4EE] text-[#861C1C] text-sm shrink-0 border border-[#C8CBB8]">
+                    🍃
+                  </div>
+                  <div className="text-[11px] leading-tight">
+                    <p className="font-bold text-[#281D1C]">Powered by</p>
+                    <p className="text-[#C06E30] font-semibold">Blockchain + AI + IoT</p>
+                  </div>
                 </div>
               </div>
+
             </div>
 
-            {/* Right Interactive Card Preview */}
-            <div className="lg:col-span-5 relative">
-              {/* Decorative floating badge */}
-              <div className="hidden sm:flex absolute -top-6 -left-6 z-20 items-center gap-2.5 px-4 py-2.5 rounded-2xl bg-surface border border-border shadow-card-hover animate-pulse-subtle">
-                <span className="grid h-8 w-8 place-items-center rounded-xl bg-primaryLight text-primary">
-                  <TrendingUp size={16} />
-                </span>
-                <div>
-                  <p className="text-[11px] font-bold text-textMuted uppercase">Spring Nectar Flow</p>
-                  <p className="text-xs font-bold text-primary">+1.4 kg / Day Active</p>
+            {/* Right Hero Column: Scenic Golden Honey Imagery + Frosted Verification Card */}
+            <div className="lg:col-span-6 relative">
+              <div className="relative rounded-[2.5rem] overflow-hidden border border-[#E8E3CF] shadow-card-lg bg-[#FAF7EE] group">
+                
+                {/* High quality sunlit honey & mountains visual */}
+                <div className="relative aspect-[4/3] sm:aspect-[16/11] overflow-hidden">
+                  <img
+                    src="/honey-hero.jpg"
+                    alt="Pure Golden Honey Jars and Honeycombs"
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                  {/* Subtle warm overlay gradient */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#281D1C]/60 via-transparent to-black/10" />
                 </div>
-              </div>
 
-              {/* Main Visual Batch Card */}
-              <div className="relative rounded-3xl bg-surface border border-border/80 p-6 sm:p-7 shadow-card-lg">
-                {/* Card Top */}
-                <div className="flex items-center justify-between pb-4 border-b border-border/60">
+                {/* Frosted Glass Batch Verification Card (matching reference overlay) */}
+                <div className="absolute top-4 right-4 sm:top-6 sm:right-6 max-w-[240px] sm:max-w-[270px] rounded-3xl bg-[#281D1C]/85 backdrop-blur-xl border border-white/20 p-4 sm:p-5 text-white shadow-card-lg animate-float-slow">
+                  
+                  {/* QR & Batch ID header */}
                   <div className="flex items-center gap-3">
-                    <span className="grid h-10 w-10 place-items-center rounded-xl bg-amber-50 text-amber-700 font-bold">
-                      <Package size={20} />
-                    </span>
-                    <div>
-                      <p className="text-xs font-bold uppercase tracking-wider text-textMuted">Certified Honey Lot</p>
-                      <h3 className="font-bold text-textPrimary text-base">Batch #HC-RJ-2026-000108</h3>
-                    </div>
-                  </div>
-                  <span className="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 font-bold text-xs border border-emerald-300/60">
-                    NMR 100% Pure
-                  </span>
-                </div>
-
-                {/* Card Specs Grid */}
-                <div className="grid grid-cols-3 gap-3 my-5">
-                  <div className="p-3 rounded-2xl bg-background border border-border/70 text-center">
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-textMuted">Harvest</p>
-                    <p className="text-lg font-bold text-textPrimary mt-0.5">60 kg</p>
-                    <span className="text-[10px] text-amber-700 font-semibold">Mustard Bloom</span>
-                  </div>
-                  <div className="p-3 rounded-2xl bg-background border border-border/70 text-center">
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-textMuted">Moisture</p>
-                    <p className="text-lg font-bold text-primary mt-0.5">17.8%</p>
-                    <span className="text-[10px] text-textSecondary">Optimal &lt;20%</span>
-                  </div>
-                  <div className="p-3 rounded-2xl bg-background border border-border/70 text-center">
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-textMuted">HMF Level</p>
-                    <p className="text-lg font-bold text-accent mt-0.5">11.4 mg</p>
-                    <span className="text-[10px] text-textSecondary">Fresh Unheated</span>
-                  </div>
-                </div>
-
-                {/* Provenance Details */}
-                <div className="space-y-2 text-xs">
-                  <div className="flex items-center justify-between p-2.5 rounded-xl bg-primaryLight/30 border border-primary/10">
-                    <span className="text-textSecondary flex items-center gap-1.5">
-                      <MapPin size={14} className="text-primary" /> Apiary Location
-                    </span>
-                    <strong className="text-textPrimary">Bharatpur Mustard Belt, RJ</strong>
-                  </div>
-                  <div className="flex items-center justify-between p-2.5 rounded-xl bg-background border border-border/70">
-                    <span className="text-textSecondary flex items-center gap-1.5">
-                      <Clock size={14} className="text-textMuted" /> Extracted On
-                    </span>
-                    <strong className="text-textPrimary">14 Feb 2026</strong>
-                  </div>
-                </div>
-
-                {/* Simulated QR Action */}
-                <div className="mt-5 pt-4 border-t border-border/60 flex items-center justify-between gap-4">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-xl bg-white border border-border shadow-sm">
-                      <QrCode size={36} className="text-amber-700" />
+                    <div className="p-1.5 rounded-xl bg-white text-black shrink-0 shadow-sm">
+                      <QrCode size={36} className="text-[#281D1C]" />
                     </div>
                     <div>
-                      <p className="text-xs font-bold text-textPrimary">Blockchain Sealed QR</p>
-                      <p className="text-[11px] text-textMuted">Instant consumer verification</p>
+                      <p className="text-[9px] uppercase tracking-wider text-white/70 font-semibold">Batch ID</p>
+                      <h4 className="text-xs sm:text-sm font-black font-mono tracking-tight text-[#F4B345]">HC2026-00124</h4>
+                      <div className="mt-1 inline-flex items-center gap-1 rounded-full bg-emerald-500/20 border border-emerald-400/40 px-2 py-0.5 text-[9px] font-bold text-emerald-300">
+                        <Check size={9} />
+                        <span>Authentic</span>
+                      </div>
                     </div>
                   </div>
+
+                  <p className="text-[10px] text-white/60 mt-3 font-medium">Scan to verify provenance</p>
+
+                  <div className="mt-3 pt-3 border-t border-white/10 space-y-2 text-[11px]">
+                    <div className="flex items-center justify-between">
+                      <span className="text-white/70 flex items-center gap-1.5">
+                        <MapPin size={12} className="text-[#F4B345]" /> Origin
+                      </span>
+                      <strong className="text-white font-semibold">Himachal Pradesh</strong>
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <span className="text-white/70 flex items-center gap-1.5">
+                        <Clock size={12} className="text-[#F4B345]" /> Harvest Date
+                      </span>
+                      <strong className="text-white font-semibold">12 Apr 2026</strong>
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <span className="text-white/70 flex items-center gap-1.5">
+                        <ShieldCheck size={12} className="text-emerald-400" /> Quality Grade
+                      </span>
+                      <strong className="text-emerald-300 font-bold">Premium NMR</strong>
+                    </div>
+                  </div>
+
                   <Link
                     to="/buyer/honey-passport/HC-RJ-2026-000108"
-                    className="px-3 py-1.5 rounded-xl bg-primary text-white text-xs font-bold hover:bg-primaryDark transition-colors shrink-0"
+                    className="mt-3 block text-center w-full py-1.5 rounded-full bg-[#F4B345] text-[#281D1C] font-bold text-[10px] hover:bg-[#F6C063] transition-colors"
                   >
-                    View Passport
+                    View Full Digital Passport →
                   </Link>
                 </div>
+
               </div>
             </div>
+
           </div>
         </div>
       </section>
 
-      {/* ─── Continuous Mandi Rate Ticker ─── */}
-      <section id="mandi-rates" className="ticker-wrap bg-surface shadow-inner">
-        <div className="ticker-move">
-          {[...prices, ...prices].map((item, idx) => (
-            <div
-              key={idx}
-              className="inline-flex items-center gap-3 px-4 py-1 rounded-xl bg-background/80 border border-border/60 text-xs font-medium"
-            >
-              <span className="font-bold text-textPrimary">{item.state}</span>
-              <span className="text-textSecondary">{item.wool_type}</span>
-              <span className="font-bold text-primary">₹{item.price_per_kg}/kg</span>
-              <span
-                className={`inline-flex items-center text-[11px] font-bold ${
-                  item.change_percent >= 0 ? 'text-emerald-700' : 'text-rose-600'
-                }`}
-              >
-                {item.change_percent >= 0 ? `+${item.change_percent}%` : `${item.change_percent}%`}
-              </span>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ─── Key Value Chain Pillars (Features) ─── */}
-      <section id="features" className="py-16 sm:py-24 bg-background">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-14">
-            <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-primary bg-primaryLight px-3 py-1.5 rounded-full mb-3">
-              <Layers size={13} /> {t('integratedArchitecture')}
-            </div>
-            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-textPrimary">
-              {t('featuresHeadline')}
-            </h2>
-            <p className="mt-4 text-base text-textSecondary">
-              {t('featuresSubtext')}
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Feature 1 */}
-            <div className="glass-card p-7 flex flex-col justify-between">
-              <div>
-                <span className="grid h-12 w-12 place-items-center rounded-2xl bg-emerald-50 text-emerald-700 mb-5 shadow-sm">
-                  <QrCode size={24} />
-                </span>
-                <h3 className="text-xl font-bold text-textPrimary">{t('feature1Title')}</h3>
-                <p className="mt-3 text-sm text-textSecondary leading-relaxed">
-                  {t('feature1Desc')}
-                </p>
-              </div>
-              <div className="mt-6 pt-4 border-t border-border/60 flex items-center gap-2 text-xs font-bold text-primary">
-                <CheckCircle2 size={15} /> {t('feature1Tag')}
-              </div>
-            </div>
-
-            {/* Feature 2 */}
-            <div className="glass-card p-7 flex flex-col justify-between">
-              <div>
-                <span className="grid h-12 w-12 place-items-center rounded-2xl bg-amber-50 text-amber-800 mb-5 shadow-sm">
-                  <TrendingUp size={24} />
-                </span>
-                <h3 className="text-xl font-bold text-textPrimary">{t('feature2Title')}</h3>
-                <p className="mt-3 text-sm text-textSecondary leading-relaxed">
-                  {t('feature2Desc')}
-                </p>
-              </div>
-              <div className="mt-6 pt-4 border-t border-border/60 flex items-center gap-2 text-xs font-bold text-accent">
-                <CheckCircle2 size={15} /> {t('feature2Tag')}
-              </div>
-            </div>
-
-            {/* Feature 3 */}
-            <div className="glass-card p-7 flex flex-col justify-between">
-              <div>
-                <span className="grid h-12 w-12 place-items-center rounded-2xl bg-sky-50 text-sky-800 mb-5 shadow-sm">
-                  <Store size={24} />
-                </span>
-                <h3 className="text-xl font-bold text-textPrimary">{t('feature3Title')}</h3>
-                <p className="mt-3 text-sm text-textSecondary leading-relaxed">
-                  {t('feature3Desc')}
-                </p>
-              </div>
-              <div className="mt-6 pt-4 border-t border-border/60 flex items-center gap-2 text-xs font-bold text-info">
-                <CheckCircle2 size={15} /> {t('feature3Tag')}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ─── How It Works Workflow ─── */}
-      <section id="how-it-works" className="py-16 sm:py-24 bg-surface border-y border-border/70">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-accent bg-accentLight px-3 py-1.5 rounded-full mb-3">
-              <Sparkles size={13} /> {t('stepByStepFlow')}
-            </div>
-            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-textPrimary">
-              {t('howItWorksHeadline')}
-            </h2>
-            <p className="mt-3 text-base text-textSecondary">
-              {t('howItWorksSubtext')}
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 relative">
-            {/* Step 1 */}
-            <div className="p-6 rounded-3xl bg-background border border-border flex flex-col justify-between">
-              <div>
-                <div className="flex items-center justify-between mb-4">
-                  <span className="font-extrabold text-2xl text-primary font-mono">01</span>
-                  <span className="grid h-10 w-10 place-items-center rounded-xl bg-primaryLight text-primary">
-                    <Sprout size={20} />
-                  </span>
-                </div>
-                <h4 className="text-lg font-bold text-textPrimary">{t('step1Title')}</h4>
-                <p className="mt-2 text-xs text-textSecondary leading-relaxed">
-                  {t('step1Desc')}
-                </p>
-              </div>
-              <div className="mt-5 text-[11px] font-semibold text-textMuted bg-surface p-2.5 rounded-xl border border-border/60">
-                🏷️ {t('step1Tag').replace('🏷️ ', '')}
-              </div>
-            </div>
-
-            {/* Step 2 */}
-            <div className="p-6 rounded-3xl bg-background border border-border flex flex-col justify-between">
-              <div>
-                <div className="flex items-center justify-between mb-4">
-                  <span className="font-extrabold text-2xl text-accent font-mono">02</span>
-                  <span className="grid h-10 w-10 place-items-center rounded-xl bg-accentLight text-accent">
-                    <BarChart3 size={20} />
-                  </span>
-                </div>
-                <h4 className="text-lg font-bold text-textPrimary">{t('step2Title')}</h4>
-                <p className="mt-2 text-xs text-textSecondary leading-relaxed">
-                  {t('step2Desc')}
-                </p>
-              </div>
-              <div className="mt-5 text-[11px] font-semibold text-textMuted bg-surface p-2.5 rounded-xl border border-border/60">
-                📊 {t('step2Tag').replace('📊 ', '')}
-              </div>
-            </div>
-
-            {/* Step 3 */}
-            <div className="p-6 rounded-3xl bg-background border border-border flex flex-col justify-between">
-              <div>
-                <div className="flex items-center justify-between mb-4">
-                  <span className="font-extrabold text-2xl text-info font-mono">03</span>
-                  <span className="grid h-10 w-10 place-items-center rounded-xl bg-infoLight text-info">
-                    <Factory size={20} />
-                  </span>
-                </div>
-                <h4 className="text-lg font-bold text-textPrimary">{t('step3Title')}</h4>
-                <p className="mt-2 text-xs text-textSecondary leading-relaxed">
-                  {t('step3Desc')}
-                </p>
-              </div>
-              <div className="mt-5 text-[11px] font-semibold text-textMuted bg-surface p-2.5 rounded-xl border border-border/60">
-                🧪 {t('step3Tag').replace('🧪 ', '')}
-              </div>
-            </div>
-
-            {/* Step 4 */}
-            <div className="p-6 rounded-3xl bg-background border border-border flex flex-col justify-between">
-              <div>
-                <div className="flex items-center justify-between mb-4">
-                  <span className="font-extrabold text-2xl text-purple-700 font-mono">04</span>
-                  <span className="grid h-10 w-10 place-items-center rounded-xl bg-purple-100 text-purple-700">
-                    <Palette size={20} />
-                  </span>
-                </div>
-                <h4 className="text-lg font-bold text-textPrimary">{t('step4Title')}</h4>
-                <p className="mt-2 text-xs text-textSecondary leading-relaxed">
-                  {t('step4Desc')}
-                </p>
-              </div>
-              <div className="mt-5 text-[11px] font-semibold text-textMuted bg-surface p-2.5 rounded-xl border border-border/60">
-                ✨ {t('step4Tag').replace('✨ ', '')}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ─── Indigenous Indian Honey Varieties Catalog ─── */}
-      <section id="breeds" className="py-16 sm:py-24 bg-background">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
+      {/* ─── 3. APPROVED SIX-STAGE BENTO TRACEABILITY JOURNEY ─── */}
+      <section id="journey" className="py-12 sm:py-16 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[92rem] mx-auto">
+          
+          {/* Section Header */}
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8 sm:mb-10">
             <div>
-              <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-primary bg-primaryLight px-3 py-1.5 rounded-full mb-2">
-                <Leaf size={13} /> {t('naturalWealth')}
-              </div>
-              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-textPrimary">
-                {t('breedsHeadline')}
+              <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#C06E30]">
+                SIX-STAGE PROVENANCE
+              </span>
+              <h2 className="text-2xl sm:text-4xl font-bold text-[#281D1C] font-serif mt-1">
+                From Pristine Hives to Your Table
               </h2>
-              <p className="mt-2 text-sm text-textSecondary max-w-xl">
-                {t('breedsSubtext')}
-              </p>
             </div>
-            <Link
-              to="/register"
-              className="inline-flex items-center gap-1.5 text-sm font-bold text-primary hover:text-primaryDark self-start md:self-auto"
-            >
-              {t('browseAllLots')}
-            </Link>
+            <p className="text-xs sm:text-sm text-[#5E524D] max-w-md">
+              Every drop is protected by cryptographic smart contracts, multi-parameter lab assays, and IoT hive health tracking.
+            </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {WOOL_BREEDS.map(breed => (
+          {/* 6 Bento Journey Cards matching reference */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
+            {JOURNEY_STAGES.map((stage, idx) => (
               <div
-                key={breed.name}
-                className="group rounded-3xl bg-surface border border-border/80 p-6 shadow-sm hover:shadow-card-hover hover:border-primary/40 transition-all duration-300 flex flex-col justify-between"
+                key={stage.id}
+                className="group relative flex flex-col rounded-3xl overflow-hidden bg-white border border-[#E8E3CF] shadow-card transition-all duration-300 hover:shadow-card-hover hover:border-[#D6CEB5] hover:-translate-y-1"
               >
-                <div>
-                  <div className="flex items-center justify-between mb-3">
-                    <span className={`px-3 py-1 rounded-full text-xs font-bold border ${breed.tone}`}>
-                      {breed.tag}
-                    </span>
-                    <span className="text-xs font-semibold text-textMuted flex items-center gap-1">
-                      <MapPin size={12} /> {breed.origin.split(' ')[0]}
-                    </span>
-                  </div>
-
-                  <h3 className="text-xl font-bold text-textPrimary group-hover:text-primary transition-colors">
-                    {breed.name}
-                  </h3>
-                  <p className="text-xs text-textMuted mt-0.5">{breed.origin}</p>
-
-                  <div className="grid grid-cols-2 gap-2.5 my-4 p-3 rounded-2xl bg-background border border-border/60">
-                    <div>
-                      <p className="text-[10px] uppercase font-bold text-textMuted">{t('fiberDiameter')}</p>
-                      <p className="text-sm font-bold text-textPrimary">{breed.micron}</p>
-                    </div>
-                    <div>
-                      <p className="text-[10px] uppercase font-bold text-textMuted">{t('cleanYield')}</p>
-                      <p className="text-sm font-bold text-primary">{breed.yieldPct}</p>
-                    </div>
-                  </div>
-
-                  <p className="text-xs text-textSecondary leading-relaxed">
-                    <strong className="text-textPrimary font-semibold">{t('idealFor')}</strong> {breed.uses}
-                  </p>
+                {/* Top Image with organic curved bottom cutout */}
+                <div className="relative aspect-[4/3] overflow-hidden bg-[#FEF6E4]">
+                  <img
+                    src={stage.image}
+                    alt={stage.title}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+                  
+                  {/* Stage Number Badge */}
+                  <span className="absolute top-2.5 left-2.5 text-[9px] font-black uppercase px-2 py-0.5 rounded-full bg-black/60 text-[#F4B345] backdrop-blur-xs">
+                    0{idx + 1}
+                  </span>
                 </div>
 
-                <div className="mt-5 pt-4 border-t border-border/60 flex items-center justify-between text-xs">
-                  <span className="text-textMuted font-medium">{t('traceableLotAvailability')}</span>
-                  <span className="font-bold text-primary inline-flex items-center gap-1">
-                    {t('availableLabel')} <Check size={14} />
-                  </span>
+                {/* Floating Circle Icon */}
+                <div className="relative -mt-6 px-4 flex justify-between items-end">
+                  <div 
+                    className="w-11 h-11 rounded-2xl flex items-center justify-center text-lg text-white shadow-md border-2 border-white"
+                    style={{ backgroundColor: stage.accentColor }}
+                  >
+                    <span>{stage.icon}</span>
+                  </div>
+                </div>
+
+                {/* Content */}
+                <div className="p-4 pt-2 flex flex-col flex-1">
+                  <h3 className="text-base font-bold text-[#281D1C] font-serif group-hover:text-[#861C1C] transition-colors">
+                    {stage.title}
+                  </h3>
+                  <p className="text-[11px] text-[#5E524D] mt-1 leading-snug">
+                    {stage.subtitle}
+                  </p>
+
+                  <div className="mt-auto pt-3 flex items-center justify-between border-t border-[#E8E3CF]/60">
+                    <span className="text-[10px] font-bold text-[#C06E30]">{stage.badgeText}</span>
+                    <Link
+                      to={stage.link}
+                      className="grid h-7 w-7 place-items-center rounded-full bg-[#FAF7EE] text-[#281D1C] hover:bg-[#861C1C] hover:text-white transition-colors"
+                      aria-label={stage.title}
+                    >
+                      <ArrowRight size={12} />
+                    </Link>
+                  </div>
                 </div>
               </div>
             ))}
           </div>
+
+          {/* Script Flourish on Bottom Right matching reference */}
+          <div className="mt-6 flex justify-end pr-2">
+            <span className="font-serif italic text-sm sm:text-base text-[#861C1C] font-normal tracking-wide">
+              Pure by Nature, Verified by Technology
+            </span>
+          </div>
+
         </div>
       </section>
 
-      {/* ─── Role-Based Portals (Stakeholder Explorer) ─── */}
-      <section className="py-16 sm:py-24 bg-surface border-t border-border/70">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-12">
-            <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-primary bg-primaryLight px-3 py-1.5 rounded-full mb-3">
-              <Users size={13} /> {t('roleTailoredPortals')}
+      {/* ─── 4. LIVE HONEY MANDI BENCHMARK RATES TICKER & SEARCH ─── */}
+      <section id="mandi-rates" className="py-8 bg-[#FAF7EE] border-y border-[#E8E3CF]">
+        <div className="max-w-[92rem] mx-auto px-4 sm:px-6 lg:px-8">
+          
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-4">
+            <div className="flex items-center gap-2">
+              <div className="grid h-8 w-8 place-items-center rounded-xl bg-[#FEF6E4] text-[#C06E30]">
+                <TrendingUp size={16} />
+              </div>
+              <span className="text-xs font-bold uppercase tracking-wider text-[#281D1C]">
+                APMC & KVIC Honey Mandi Benchmark Rates (Live Today)
+              </span>
             </div>
-            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-textPrimary">
-              {t('rolePortalsHeadline')}
+
+            {/* Quick Batch Lookup Input */}
+            <form onSubmit={handleSearchPassport} className="flex items-center gap-2 w-full md:w-auto">
+              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-[#E8E3CF] shadow-soft flex-1 md:w-72">
+                <Search size={14} className="text-[#9B918B]" />
+                <input
+                  type="text"
+                  placeholder="Enter Batch ID (e.g. HC2026-00124)..."
+                  value={searchBatchId}
+                  onChange={(e) => setSearchBatchId(e.target.value)}
+                  className="bg-transparent text-xs text-[#281D1C] outline-none w-full placeholder:text-[#9B918B]"
+                />
+              </div>
+              <button
+                type="submit"
+                className="px-4 py-1.5 rounded-full bg-[#861C1C] text-white text-xs font-bold shadow-burgundy hover:bg-[#6A1515] transition-all"
+              >
+                Verify
+              </button>
+            </form>
+          </div>
+
+          {/* Marquee ticker */}
+          <div className="overflow-hidden whitespace-nowrap py-2 border border-[#E8E3CF] rounded-2xl bg-white shadow-soft">
+            <div className="ticker-move flex gap-8 items-center text-xs">
+              {prices.map((p, i) => (
+                <div key={i} className="inline-flex items-center gap-2 px-3">
+                  <span className="font-bold text-[#281D1C]">{p.state}:</span>
+                  <span className="text-[#5E524D]">{p.wool_type}</span>
+                  <strong className="text-[#861C1C] font-bold">₹{p.price_per_kg}/kg</strong>
+                  <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${p.change_percent >= 0 ? 'bg-emerald-50 text-emerald-700' : 'bg-rose-50 text-rose-700'}`}>
+                    {p.change_percent >= 0 ? `+${p.change_percent}%` : `${p.change_percent}%`}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      {/* ─── 5. BENTO SHOWCASE: IOT TELEMETRY & AI PURITY LAB ─── */}
+      <section id="features" className="py-14 sm:py-20 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[92rem] mx-auto">
+          
+          <div className="text-center max-w-2xl mx-auto mb-12">
+            <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#C06E30]">
+              INTELLIGENT AGRI-TECH
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-bold text-[#281D1C] font-serif mt-1">
+              Smart Hives & AI Spectroscopy
             </h2>
-            <p className="mt-3 text-base text-textSecondary">
-              {t('rolePortalsSubtext')}
+            <p className="text-xs sm:text-sm text-[#5E524D] mt-2">
+              Replacing manual guesswork with solar-powered continuous hive telemetry and NMR lab purity validation.
             </p>
           </div>
 
-          {/* Role selector tabs */}
-          <div className="flex flex-wrap items-center justify-center gap-2 mb-8">
-            {ECOSYSTEM_ROLES.map((role, idx) => {
-              const Icon = role.icon;
-              const isSelected = selectedRole === idx;
-              return (
-                <button
-                  key={role.id}
-                  onClick={() => setSelectedRole(idx)}
-                  className={`flex items-center gap-2 px-5 py-3 rounded-2xl text-sm font-bold transition-all duration-200 ${
-                    isSelected
-                      ? 'bg-primary text-white shadow-md scale-105'
-                      : 'bg-background border border-border text-textSecondary hover:border-primary/40'
-                  }`}
-                >
-                  <Icon size={18} />
-                  <span>{role.title}</span>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Selected Role Showcase Card */}
-          {(() => {
-            const role = ECOSYSTEM_ROLES[selectedRole];
-            const Icon = role.icon;
-            return (
-              <div className="rounded-3xl bg-background border border-border p-6 sm:p-10 shadow-sm max-w-4xl mx-auto animate-fade-in">
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-border/70">
-                  <div className="flex items-center gap-3.5">
-                    <span className="grid h-12 w-12 place-items-center rounded-2xl bg-primaryLight text-primary">
-                      <Icon size={24} />
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            
+            {/* Bento Card 1: Interactive IoT Smart Hive Telemetry (7 cols) */}
+            <div className="lg:col-span-7 rounded-3xl bg-white border border-[#E8E3CF] p-6 sm:p-8 shadow-card flex flex-col justify-between">
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-3">
+                    <span className="grid h-10 w-10 place-items-center rounded-2xl bg-[#FEF6E4] text-[#C06E30]">
+                      <Cpu size={20} />
                     </span>
                     <div>
-                      <h3 className="text-2xl font-bold text-textPrimary">{role.title}</h3>
-                      <p className="text-sm text-textSecondary mt-0.5">{role.subtitle}</p>
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-[#9B918B]">Live Hardware Feed</span>
+                      <h3 className="text-lg sm:text-xl font-bold font-serif text-[#281D1C]">Smart Beehive Telemetry Box #14</h3>
                     </div>
                   </div>
-                  <Link
-                    to="/register"
-                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-white text-sm font-bold shadow hover:bg-primaryDark transition-all"
-                  >
-                    <span>{role.cta}</span>
-                    <ArrowRight size={15} />
-                  </Link>
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 text-xs font-bold border border-emerald-200">
+                    <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+                    Online • Bharatpur Mustard Belt
+                  </span>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
-                  {role.points.map((pt, i) => (
-                    <div key={i} className="flex items-start gap-3 p-3.5 rounded-2xl bg-surface border border-border/60">
-                      <CheckCircle2 size={18} className="text-primary shrink-0 mt-0.5" />
-                      <span className="text-xs sm:text-sm font-medium text-textPrimary leading-snug">{pt}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            );
-          })()}
-        </div>
-      </section>
-
-      {/* ─── Traceability Spotlight / Simulator ─── */}
-      <section id="traceability" className="py-16 sm:py-24 bg-background">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="rounded-[2.5rem] bg-gradient-to-br from-[#1b3d26] via-[#2a5035] to-[#3f6b3f] text-white p-8 sm:p-12 lg:p-16 shadow-2xl relative overflow-hidden">
-            {/* Background elements */}
-            <div className="hero-orb orb-one opacity-25" />
-            <div className="hero-orb orb-two opacity-20" />
-
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center relative z-10">
-              <div className="lg:col-span-7">
-                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 text-emerald-200 border border-white/20 text-xs font-semibold backdrop-blur-md mb-6">
-                  <ShieldCheck size={15} className="text-emerald-300" />
-                  <span>{t('esgComplianceStandard')}</span>
-                </div>
-
-                <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight">
-                  {t('everyThreadStoryPre')} <br />
-                  <span className="text-emerald-200">{t('everyThreadStoryPost')}</span>
-                </h2>
-
-                <p className="mt-5 text-white/80 text-base sm:text-lg leading-relaxed max-w-xl">
-                  {t('traceabilitySpotlightDesc')}
+                <p className="text-xs sm:text-sm text-[#5E524D] leading-relaxed mb-6">
+                  Continuous multi-sensor monitoring of brood temperature, colony humidity, weight accretion during nectar flow, and acoustic frequency to forecast swarm triggers.
                 </p>
 
-                <div className="mt-8 flex flex-wrap gap-4">
-                  <Link
-                    to="/register"
-                    className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-white text-primary font-bold text-sm shadow-lg hover:bg-emerald-50 transition-all"
-                  >
-                    <span>{t('registerFlocksOrFacility')}</span>
-                    <ArrowRight size={16} />
-                  </Link>
-                  <Link
-                    to="/login"
-                    className="inline-flex items-center gap-2 px-5 py-3.5 rounded-xl bg-white/10 border border-white/25 text-white font-semibold text-sm backdrop-blur hover:bg-white/20 transition-all"
-                  >
-                    <span>{t('tryPlatformDemo')}</span>
-                  </Link>
+                {/* 4 Sensor Telemetry Tiles */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-6">
+                  <div className="p-4 rounded-2xl bg-[#FAF7EE] border border-[#E8E3CF] text-center">
+                    <div className="flex items-center justify-center gap-1 text-[#C06E30] text-xs font-bold mb-1">
+                      <Thermometer size={14} /> Temp
+                    </div>
+                    <p className="text-xl sm:text-2xl font-black text-[#281D1C]">{hiveTemp}°C</p>
+                    <span className="text-[10px] text-emerald-700 font-semibold">Optimal 34.5°C</span>
+                  </div>
+
+                  <div className="p-4 rounded-2xl bg-[#FAF7EE] border border-[#E8E3CF] text-center">
+                    <div className="flex items-center justify-center gap-1 text-sky-700 text-xs font-bold mb-1">
+                      <Droplets size={14} /> Humidity
+                    </div>
+                    <p className="text-xl sm:text-2xl font-black text-[#281D1C]">{hiveHumidity}%</p>
+                    <span className="text-[10px] text-emerald-700 font-semibold">Safe &lt;65%</span>
+                  </div>
+
+                  <div className="p-4 rounded-2xl bg-[#FAF7EE] border border-[#E8E3CF] text-center">
+                    <div className="flex items-center justify-center gap-1 text-purple-700 text-xs font-bold mb-1">
+                      <Volume2 size={14} /> Frequency
+                    </div>
+                    <p className="text-xl sm:text-2xl font-black text-[#281D1C]">{hiveFrequency} Hz</p>
+                    <span className="text-[10px] text-emerald-700 font-semibold">Normal Buzz</span>
+                  </div>
+
+                  <div className="p-4 rounded-2xl bg-[#FAF7EE] border border-[#E8E3CF] text-center">
+                    <div className="flex items-center justify-center gap-1 text-amber-700 text-xs font-bold mb-1">
+                      <Scale size={14} /> Comb Weight
+                    </div>
+                    <p className="text-xl sm:text-2xl font-black text-[#861C1C]">{hiveWeight} kg</p>
+                    <span className="text-[10px] text-[#C06E30] font-bold">+1.8 kg Today</span>
+                  </div>
                 </div>
               </div>
 
-              {/* QR Verification Box */}
-              <div className="lg:col-span-5 flex justify-center">
-                <div className="w-full max-w-sm rounded-3xl bg-surface text-textPrimary p-6 shadow-2xl border border-white/40 animate-pulse-subtle">
-                  <div className="flex items-center justify-between pb-3 border-b border-border/60">
-                    <span className="text-xs font-bold text-primary flex items-center gap-1.5 uppercase tracking-wide">
-                      <Sparkles size={14} /> {t('traceabilityCheck')}
-                    </span>
-                    <span className="text-[10px] font-bold bg-emerald-100 text-emerald-800 px-2.5 py-0.5 rounded-full">
-                      {t('authenticLabel')}
-                    </span>
-                  </div>
-
-                  <div className="my-5 flex flex-col items-center justify-center p-4 rounded-2xl bg-background border border-border/80">
-                    <QrCode size={140} className="text-textPrimary" />
-                    <p className="text-[11px] text-textMuted font-mono mt-2">{t('lotNumber')}</p>
-                  </div>
-
-                  <div className="space-y-2 text-xs">
-                    <div className="flex justify-between py-1 border-b border-border/40">
-                      <span className="text-textSecondary">{t('producerLabelLower')}</span>
-                      <span className="font-bold text-textPrimary">Ramesh Gurjar (Bikaner)</span>
-                    </div>
-                    <div className="flex justify-between py-1 border-b border-border/40">
-                      <span className="text-textSecondary">{t('breedGradeLabel')}</span>
-                      <span className="font-bold text-textPrimary">Chokla • Grade A (28.4µm)</span>
-                    </div>
-                    <div className="flex justify-between py-1">
-                      <span className="text-textSecondary">{t('scouringFacility')}</span>
-                      <span className="font-bold text-textPrimary">Rajasthan State Scourers</span>
-                    </div>
-                  </div>
-                </div>
+              <div className="pt-4 border-t border-[#E8E3CF] flex flex-wrap items-center justify-between gap-3">
+                <span className="text-xs text-[#5E524D]">
+                  LoRaWAN + ESP32 solar telemetry transmits every 15 minutes to KVIC cloud.
+                </span>
+                <Link
+                  to="/farmer/dashboard"
+                  className="px-4 py-2 rounded-full bg-[#861C1C] text-white text-xs font-bold shadow-sm hover:bg-[#6A1515] transition-all"
+                >
+                  Open Beekeeper Console →
+                </Link>
               </div>
             </div>
+
+            {/* Bento Card 2: AI & NMR Laboratory Purity (5 cols) */}
+            <div className="lg:col-span-5 rounded-3xl bg-[#281D1C] text-white p-6 sm:p-8 shadow-card flex flex-col justify-between relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-[#F4B345]/10 rounded-full blur-3xl pointer-events-none" />
+              
+              <div>
+                <div className="flex items-center gap-2 mb-2 text-[#F4B345] text-xs font-bold uppercase tracking-wider">
+                  <ShieldCheck size={16} />
+                  <span>KVIC Central Testing Lab</span>
+                </div>
+                
+                <h3 className="text-xl sm:text-2xl font-bold font-serif text-white">
+                  NMR Fingerprinting & Adulteration Guard
+                </h3>
+                
+                <p className="text-xs sm:text-sm text-white/80 mt-2 leading-relaxed">
+                  Every honey batch undergoes 1H-NMR Nuclear Magnetic Resonance profile inspection to catch rice syrup, invert sugar, or C4 cane syrup additions.
+                </p>
+
+                <div className="mt-5 space-y-3">
+                  <div className="p-3 rounded-2xl bg-white/10 border border-white/10 flex items-center justify-between text-xs">
+                    <span className="text-white/80">C3/C4 Isotopic Carbon Ratio</span>
+                    <strong className="text-emerald-400 font-mono font-bold">-26.4 ‰ (100% Floral)</strong>
+                  </div>
+                  <div className="p-3 rounded-2xl bg-white/10 border border-white/10 flex items-center justify-between text-xs">
+                    <span className="text-white/80">Hydroxymethylfurfural (HMF)</span>
+                    <strong className="text-[#F4B345] font-mono font-bold">11.2 mg/kg (Fresh Unheated)</strong>
+                  </div>
+                  <div className="p-3 rounded-2xl bg-white/10 border border-white/10 flex items-center justify-between text-xs">
+                    <span className="text-white/80">Pollen Density & Species DNA</span>
+                    <strong className="text-white font-mono font-bold">94.8% Apis mellifera</strong>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-6 pt-4 border-t border-white/15 flex items-center justify-between">
+                <span className="text-[11px] text-white/70">FSSAI & BIS 494:2022 Compliant</span>
+                <Link
+                  to="/quality"
+                  className="px-4 py-2 rounded-full bg-[#F4B345] text-[#281D1C] font-bold text-xs hover:bg-[#F6C063] transition-colors"
+                >
+                  Inspect Lab Portal →
+                </Link>
+              </div>
+            </div>
+
           </div>
         </div>
       </section>
 
-      {/* ─── Impact Statistics ─── */}
-      <section className="py-14 bg-surface border-y border-border/70">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-            <div className="p-4">
-              <p className="text-3xl sm:text-4xl font-extrabold text-primary font-mono">10,000+</p>
-              <p className="text-xs sm:text-sm font-semibold text-textSecondary mt-1">{t('pastoralistsConnected')}</p>
+      {/* ─── 6. HONEY VARIETIES & FLORAL ORIGIN GEOGRAPHY BENTO ─── */}
+      <section id="varieties" className="py-14 sm:py-20 px-4 sm:px-6 lg:px-8 bg-[#FAF7EE]">
+        <div className="max-w-[92rem] mx-auto">
+          
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8 sm:mb-12">
+            <div>
+              <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#C06E30]">
+                AUTHENTIC INDIAN FLORA
+              </span>
+              <h2 className="text-3xl sm:text-4xl font-bold text-[#281D1C] font-serif mt-1">
+                Monofloral Geographic Varieties
+              </h2>
             </div>
-            <div className="p-4">
-              <p className="text-3xl sm:text-4xl font-extrabold text-accent font-mono">8 States</p>
-              <p className="text-xs sm:text-sm font-semibold text-textSecondary mt-1">{t('mandiFeedsMonitored')}</p>
-            </div>
-            <div className="p-4">
-              <p className="text-3xl sm:text-4xl font-extrabold text-info font-mono">50,000+ kg</p>
-              <p className="text-xs sm:text-sm font-semibold text-textSecondary mt-1">{t('fleeceLotsTraced')}</p>
-            </div>
-            <div className="p-4">
-              <p className="text-3xl sm:text-4xl font-extrabold text-emerald-700 font-mono">100%</p>
-              <p className="text-xs sm:text-sm font-semibold text-textSecondary mt-1">{t('directValueToProducers')}</p>
-            </div>
+            <p className="text-xs sm:text-sm text-[#5E524D] max-w-md">
+              Distinct aroma profiles, pollen fingerprints, and crystallization traits directly mapped to regional bee flora belts.
+            </p>
           </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {HONEY_VARIETIES.map((v, i) => (
+              <div
+                key={i}
+                className="group rounded-3xl bg-white border border-[#E8E3CF] overflow-hidden shadow-card transition-all duration-300 hover:shadow-card-hover hover:border-[#D6CEB5] hover:-translate-y-1 flex flex-col"
+              >
+                <div className="relative aspect-[16/10] overflow-hidden bg-[#FEF6E4]">
+                  <img
+                    src={v.image}
+                    alt={v.name}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                  <span className="absolute top-3 left-3 px-3 py-1 rounded-full bg-[#281D1C]/80 text-[#F4B345] text-[10px] font-bold backdrop-blur-xs">
+                    {v.tag}
+                  </span>
+                </div>
+
+                <div className="p-6 flex flex-col flex-1">
+                  <h3 className="text-xl font-bold text-[#281D1C] font-serif group-hover:text-[#861C1C] transition-colors">
+                    {v.name}
+                  </h3>
+                  <p className="text-xs text-[#C06E30] font-semibold mt-1 flex items-center gap-1">
+                    <MapPin size={13} /> {v.origin}
+                  </p>
+
+                  <p className="text-xs text-[#5E524D] mt-3 leading-relaxed">
+                    {v.uses}
+                  </p>
+
+                  <div className="mt-auto pt-4 border-t border-[#E8E3CF] flex items-center justify-between text-xs">
+                    <span className="font-semibold text-[#281D1C]">{v.moisture}</span>
+                    <span className="font-bold text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
+                      {v.purity}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
         </div>
       </section>
 
-      {/* ─── FAQ Section ─── */}
-      <section className="py-16 sm:py-24 bg-background">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-primary bg-primaryLight px-3 py-1.5 rounded-full mb-3">
-              <HelpCircle size={13} /> {t('questionsAndAnswers')}
+      {/* ─── 7. MULTI-STAKEHOLDER ECOSYSTEM BENTO ─── */}
+      <section id="about" className="py-14 sm:py-20 px-4 sm:px-6 lg:px-8 bg-white border-y border-[#E8E3CF]">
+        <div className="max-w-[92rem] mx-auto">
+          
+          <div className="text-center max-w-2xl mx-auto mb-12">
+            <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#C06E30]">
+              COMPLETE SUPPLY CHAIN
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-bold text-[#281D1C] font-serif mt-1">
+              Connecting Every Partner
+            </h2>
+            <p className="text-xs sm:text-sm text-[#5E524D] mt-2">
+              From smallholder rural apiarists to nationwide FMCG brands and conscious consumers.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+            
+            {/* Stakeholder 1 */}
+            <div className="p-6 rounded-3xl bg-[#FAF7EE] border border-[#E8E3CF] flex flex-col justify-between transition-all hover:shadow-card hover:-translate-y-1">
+              <div>
+                <div className="grid h-12 w-12 place-items-center rounded-2xl bg-[#861C1C] text-white text-xl mb-4 shadow-sm">
+                  🐝
+                </div>
+                <h3 className="text-lg font-bold font-serif text-[#281D1C]">Beekeepers</h3>
+                <p className="text-xs text-[#5E524D] mt-2 leading-relaxed">
+                  Log apiary boxes, view fair Mandi price alerts, and sell verified raw honey lots with zero intermediary cuts.
+                </p>
+              </div>
+              <Link to="/farmer/dashboard" className="mt-5 text-xs font-bold text-[#861C1C] flex items-center gap-1 hover:gap-2 transition-all">
+                Beekeeper Portal →
+              </Link>
             </div>
-            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-textPrimary">
-              {t('faqHeadline')}
+
+            {/* Stakeholder 2 */}
+            <div className="p-6 rounded-3xl bg-[#FAF7EE] border border-[#E8E3CF] flex flex-col justify-between transition-all hover:shadow-card hover:-translate-y-1">
+              <div>
+                <div className="grid h-12 w-12 place-items-center rounded-2xl bg-[#C06E30] text-white text-xl mb-4 shadow-sm">
+                  🔬
+                </div>
+                <h3 className="text-lg font-bold font-serif text-[#281D1C]">Quality Labs</h3>
+                <p className="text-xs text-[#5E524D] mt-2 leading-relaxed">
+                  Run NMR & moisture tests, mint tamper-proof cryptographic certificates, and flag adulteration automatically.
+                </p>
+              </div>
+              <Link to="/quality" className="mt-5 text-xs font-bold text-[#C06E30] flex items-center gap-1 hover:gap-2 transition-all">
+                Lab Inspector Portal →
+              </Link>
+            </div>
+
+            {/* Stakeholder 3 */}
+            <div className="p-6 rounded-3xl bg-[#FAF7EE] border border-[#E8E3CF] flex flex-col justify-between transition-all hover:shadow-card hover:-translate-y-1">
+              <div>
+                <div className="grid h-12 w-12 place-items-center rounded-2xl bg-[#281D1C] text-white text-xl mb-4 shadow-sm">
+                  🏭
+                </div>
+                <h3 className="text-lg font-bold font-serif text-[#281D1C]">Bottling Plants</h3>
+                <p className="text-xs text-[#5E524D] mt-2 leading-relaxed">
+                  Intake verified raw barrels, process at gentle temperatures, and generate unique QR batch serialization.
+                </p>
+              </div>
+              <Link to="/processor/dashboard" className="mt-5 text-xs font-bold text-[#281D1C] flex items-center gap-1 hover:gap-2 transition-all">
+                Bottling Facility Portal →
+              </Link>
+            </div>
+
+            {/* Stakeholder 4 */}
+            <div className="p-6 rounded-3xl bg-[#FAF7EE] border border-[#E8E3CF] flex flex-col justify-between transition-all hover:shadow-card hover:-translate-y-1">
+              <div>
+                <div className="grid h-12 w-12 place-items-center rounded-2xl bg-[#F4B345] text-[#281D1C] text-xl mb-4 shadow-sm">
+                  🛒
+                </div>
+                <h3 className="text-lg font-bold font-serif text-[#281D1C]">FMCG Buyers</h3>
+                <p className="text-xs text-[#5E524D] mt-2 leading-relaxed">
+                  Direct procurement of Grade-A certified honey in bulk barrels or branded retail jars with complete provenance.
+                </p>
+              </div>
+              <Link to="/buyer/marketplace" className="mt-5 text-xs font-bold text-[#C06E30] flex items-center gap-1 hover:gap-2 transition-all">
+                Buyer Marketplace →
+              </Link>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+      {/* ─── 8. FAQS ACCORDION ─── */}
+      <section className="py-14 sm:py-20 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto">
+          
+          <div className="text-center mb-10">
+            <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#C06E30]">
+              FREQUENTLY ASKED QUESTIONS
+            </span>
+            <h2 className="text-3xl font-bold text-[#281D1C] font-serif mt-1">
+              Everything You Need to Know
             </h2>
           </div>
 
           <div className="space-y-3">
-            {FAQS.map((faq, idx) => {
-              const isOpen = activeFaq === idx;
-              return (
-                <div
-                  key={idx}
-                  className="rounded-2xl bg-surface border border-border/80 overflow-hidden transition-colors"
+            {FAQS.map((faq, i) => (
+              <div
+                key={i}
+                className="rounded-2xl bg-white border border-[#E8E3CF] overflow-hidden shadow-soft transition-colors"
+              >
+                <button
+                  onClick={() => setActiveFaq(activeFaq === i ? null : i)}
+                  className="w-full px-6 py-4 flex items-center justify-between text-left font-bold text-sm sm:text-base text-[#281D1C] hover:text-[#861C1C] transition-colors"
                 >
-                  <button
-                    type="button"
-                    onClick={() => setActiveFaq(isOpen ? null : idx)}
-                    className="w-full p-5 text-left font-bold text-sm sm:text-base text-textPrimary flex items-center justify-between gap-4 hover:text-primary transition-colors"
-                  >
-                    <span>{faq.q}</span>
-                    <ChevronRight
-                      size={18}
-                      className={`text-textMuted transition-transform duration-200 ${
-                        isOpen ? 'rotate-90 text-primary' : ''
-                      }`}
-                    />
-                  </button>
-                  {isOpen && (
-                    <div className="px-5 pb-5 text-xs sm:text-sm text-textSecondary leading-relaxed border-t border-border/40 pt-3 animate-fade-in">
-                      {faq.a}
-                    </div>
-                  )}
-                </div>
-              );
-            })}
+                  <span>{faq.q}</span>
+                  <ChevronDown
+                    size={18}
+                    className={`text-[#C06E30] transition-transform duration-200 ${activeFaq === i ? 'rotate-180' : ''}`}
+                  />
+                </button>
+                {activeFaq === i && (
+                  <div className="px-6 pb-5 pt-1 text-xs sm:text-sm text-[#5E524D] leading-relaxed border-t border-[#E8E3CF]/60">
+                    {faq.a}
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
+
         </div>
       </section>
 
-      {/* ─── Final High-Converting CTA Banner ─── */}
-      <section className="py-16 bg-surface border-t border-border/70">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="rounded-3xl bg-gradient-to-r from-primary to-primaryDark text-white p-8 sm:p-12 text-center shadow-xl relative overflow-hidden">
-            <div className="hero-orb orb-two opacity-20" />
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">
-              {t('readyToElevate')}
-            </h2>
-            <p className="mt-3 text-white/85 text-sm sm:text-base max-w-xl mx-auto leading-relaxed">
-              {t('finalCtaDesc')}
-            </p>
-            <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
-              <Link
-                to="/register"
-                className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-white text-primary font-bold text-base shadow-md hover:bg-emerald-50 transition-all"
+      {/* ─── 9. VIDEO DOCUMENTARY MODAL ─── */}
+      {videoModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md animate-fade-in">
+          <div className="relative w-full max-w-4xl bg-[#281D1C] rounded-3xl overflow-hidden border border-white/20 shadow-2xl">
+            <div className="p-4 bg-[#1C1514] flex items-center justify-between text-white border-b border-white/10">
+              <div className="flex items-center gap-2">
+                <span className="text-lg">🐝</span>
+                <span className="font-bold font-serif text-sm">Honey Chain: The Hive to Home Journey</span>
+              </div>
+              <button
+                onClick={() => setVideoModalOpen(false)}
+                className="grid h-8 w-8 place-items-center rounded-full bg-white/10 hover:bg-white/20 text-white"
               >
-                {t('createFreeAccount')}
-              </Link>
-              <Link
-                to="/login"
-                className="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-white/10 border border-white/30 text-white font-semibold text-base hover:bg-white/20 transition-all"
+                <X size={16} />
+              </button>
+            </div>
+            <div className="aspect-video bg-black flex items-center justify-center relative">
+              <iframe
+                className="w-full h-full"
+                src="https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ?autoplay=1"
+                title="Honey Chain Story"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            </div>
+            <div className="p-4 bg-[#281D1C] text-xs text-white/80 flex items-center justify-between">
+              <span>National Beekeeping & Honey Mission • KVIC / Ministry of MSME</span>
+              <button
+                onClick={() => setVideoModalOpen(false)}
+                className="px-4 py-1.5 rounded-full bg-[#F4B345] text-[#281D1C] font-bold"
               >
-                {t('signInWithDemo')}
-              </Link>
+                Close Video
+              </button>
             </div>
           </div>
         </div>
-      </section>
+      )}
 
-      {/* ─── Rich Footer ─── */}
-      <footer className="mt-auto border-t border-border/80 bg-background text-textSecondary text-xs">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 pb-10 border-b border-border/70">
-            {/* Col 1 */}
-            <div className="space-y-3">
-              <Link to="/" className="flex items-center gap-2 font-bold text-textPrimary text-lg group">
-                <img
-                  src="/logo.png"
-                  alt="HoneyChain"
-                  className="h-8 w-8 object-contain rounded-xl shadow-xs"
-                />
-                <span className="leading-none font-black">
-                  Honey<span className="text-primary">Chain</span>
-                </span>
-              </Link>
-              <p className="text-textMuted text-xs leading-relaxed">
-                {t('footerTagline')}
+      {/* ─── 10. EDITORIAL FOOTER ─── */}
+      <footer className="mt-auto bg-[#281D1C] text-white pt-12 pb-8 border-t border-white/10">
+        <div className="max-w-[92rem] mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-8 pb-10 border-b border-white/10">
+            
+            <div className="md:col-span-5">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#F4B345] to-[#C06E30] flex items-center justify-center text-white text-xl">
+                  🐝
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold font-serif text-white">Honey Chain</h3>
+                  <p className="text-[10px] text-[#F4B345] tracking-widest uppercase font-semibold">Pure · Natural · Trusted</p>
+                </div>
+              </div>
+              <p className="mt-3 text-xs text-white/70 leading-relaxed max-w-sm">
+                Empowering Indian beekeepers with IoT telemetry, immutable blockchain provenance, and AI purity verification under the KVIC Honey Mission.
               </p>
             </div>
 
-            {/* Col 2 */}
-            <div>
-              <p className="font-bold text-textPrimary uppercase tracking-wider text-xs mb-3">{t('footerStakeholders')}</p>
-              <ul className="space-y-2">
-                <li><Link to="/register" className="hover:text-primary transition-colors">{t('footerPastoralistsFarmers')}</Link></li>
-                <li><Link to="/register" className="hover:text-primary transition-colors">{t('footerTextileMills')}</Link></li>
-                <li><Link to="/register" className="hover:text-primary transition-colors">{t('footerScouringUnits')}</Link></li>
-                <li><Link to="/register" className="hover:text-primary transition-colors">{t('footerArtisansWeavers')}</Link></li>
+            <div className="md:col-span-2">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-[#F4B345] mb-3">Portals</h4>
+              <ul className="space-y-2 text-xs text-white/80">
+                <li><Link to="/farmer/dashboard" className="hover:text-[#F4B345]">Beekeeper Panel</Link></li>
+                <li><Link to="/quality" className="hover:text-[#F4B345]">KVIC Lab Testing</Link></li>
+                <li><Link to="/processor/dashboard" className="hover:text-[#F4B345]">Bottling Unit</Link></li>
+                <li><Link to="/buyer/marketplace" className="hover:text-[#F4B345]">Buyer Mandi</Link></li>
               </ul>
             </div>
 
-            {/* Col 3 */}
-            <div>
-              <p className="font-bold text-textPrimary uppercase tracking-wider text-xs mb-3">{t('footerKeyBreeds')}</p>
-              <ul className="space-y-2">
-                <li><span className="hover:text-primary cursor-default">Chokla (Rajasthan)</span></li>
-                <li><span className="hover:text-primary cursor-default">Patanwadi (Gujarat)</span></li>
-                <li><span className="hover:text-primary cursor-default">Gaddi / Merino (HP, J&K)</span></li>
-                <li><span className="hover:text-primary cursor-default">Deccani (MH, KA, TG)</span></li>
+            <div className="md:col-span-2">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-[#F4B345] mb-3">Honey Flora</h4>
+              <ul className="space-y-2 text-xs text-white/80">
+                <li><a href="#varieties" className="hover:text-[#F4B345]">Mustard Bloom</a></li>
+                <li><a href="#varieties" className="hover:text-[#F4B345]">Kashmir Sidr</a></li>
+                <li><a href="#varieties" className="hover:text-[#F4B345]">Wild Forest</a></li>
+                <li><a href="#varieties" className="hover:text-[#F4B345]">Shahi Lychee</a></li>
               </ul>
             </div>
 
-            {/* Col 4 */}
-            <div>
-              <p className="font-bold text-textPrimary uppercase tracking-wider text-xs mb-3">{t('footerQuickLinks')}</p>
-              <ul className="space-y-2">
-                <li><Link to="/login" className="hover:text-primary transition-colors">{t('footerSignIn')}</Link></li>
-                <li><Link to="/register" className="hover:text-primary transition-colors">{t('footerRegisterFree')}</Link></li>
-                <li><a href="#mandi-rates" className="hover:text-primary transition-colors">{t('footerLiveMandiPrices')}</a></li>
-                <li><a href="#traceability" className="hover:text-primary transition-colors">{t('footerQrPassport')}</a></li>
-              </ul>
+            <div className="md:col-span-3">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-[#F4B345] mb-3">Verification</h4>
+              <p className="text-xs text-white/70 mb-3">
+                Scan jar QR or query any batch ID to inspect the complete cryptographic audit trail.
+              </p>
+              <Link
+                to="/buyer/honey-passport/HC-RJ-2026-000108"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#861C1C] text-white font-bold text-xs shadow-sm hover:bg-[#6A1515]"
+              >
+                <span>Sample Passport</span>
+                <span>→</span>
+              </Link>
             </div>
+
           </div>
 
-          <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-textMuted">
-            <p>© {new Date().getFullYear()} {t('footerCopyright')}</p>
-            <p className="flex items-center gap-4">
-              <span>{t('footerFarmToFabric2')}</span>
-              <span>•</span>
-              <span>{t('footerProvenance')}</span>
-            </p>
+          <div className="pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-white/60 gap-3">
+            <p>© {new Date().getFullYear()} Honey Chain • SIH26021 • KVIC Honey Mission & Ministry of MSME</p>
+            <p className="font-serif italic text-white/80">Every drop has a story.</p>
           </div>
         </div>
       </footer>
+
     </div>
   );
 }

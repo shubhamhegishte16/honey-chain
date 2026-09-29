@@ -12,13 +12,13 @@ import {
   Cpu,
   Layers,
   Search,
+  FlaskConical,
+  Dna,
+  Scale
 } from 'lucide-react';
-import Card from '../../components/ui/Card';
-import Button from '../../components/ui/Button';
 import BatchStatusBadge from '../../components/batch/BatchStatusBadge';
 import { useLanguage } from '../../context/LanguageContext';
 import {
-  getAiEstimate,
   getPendingQualityBatches,
   getQualityAssessment,
   submitQualityAssessment,
@@ -135,7 +135,7 @@ export default function QualityCenter() {
         notes: `${curr.notes} [AI Verified: 98.7% botanical match with zero C4 sugar adulterants]`,
       }));
       setAiLoading(false);
-    }, 700);
+    }, 600);
   }
 
   async function submitAssessment(event) {
@@ -169,135 +169,156 @@ export default function QualityCenter() {
   }
 
   return (
-    <main className="page-shell py-6">
-      {/* Header */}
-      <div className="mb-8 animate-enter">
-        <div className="eyebrow text-amber-600 flex items-center gap-1.5 font-bold uppercase tracking-wider text-xs">
-          <ShieldCheck size={16} /> KVIC National Honey Quality & Blockchain Testing Lab
+    <main className="page-shell">
+      
+      {/* ─── Hero Header ─── */}
+      <div className="rounded-3xl sm:rounded-[2.5rem] bg-[#281D1C] text-white p-6 sm:p-10 shadow-soft-lg mb-8 relative overflow-hidden">
+        <div className="absolute right-0 top-0 w-80 h-80 bg-[#F4B345]/15 rounded-full blur-3xl pointer-events-none" />
+        
+        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-[#F4B345] border border-white/15 text-xs font-bold backdrop-blur-md mb-3">
+              <ShieldCheck size={14} /> KVIC National Honey Quality &amp; Blockchain Lab
+            </div>
+            <h1 className="text-2xl sm:text-4xl font-bold font-serif tracking-tight text-white leading-tight">
+              Honey Purity &amp; NMR Spectroscopy Lab
+            </h1>
+            <p className="text-xs sm:text-sm text-white/80 mt-2 max-w-2xl leading-relaxed">
+              FSSAI &amp; KVIC accredited multi-tier purity testing: 1H-NMR Nuclear Magnetic Resonance adulteration screening, HMF freshness indexing, moisture analysis, and AI botanical pollen mapping.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <span className="px-4 py-2 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 text-xs font-bold flex items-center gap-1.5">
+              <CheckCircle2 size={15} /> ISO 17025 Accredited
+            </span>
+          </div>
         </div>
-        <h1 className="text-2xl sm:text-3xl font-black text-textPrimary mt-2">
-          Honey Purity & Blockchain Certification Center
-        </h1>
-        <p className="text-sm text-textSecondary mt-1 max-w-3xl">
-          Conduct authorized FSSAI & KVIC Honey Mission purity tests: Nuclear Magnetic Resonance (NMR) screen,
-          moisture analysis, HMF fresh index, and AI botanical pollen verification before sealing batches on the tamper-proof ledger.
-        </p>
       </div>
 
       {error && (
-        <div className="mb-5 rounded-xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-800 flex items-center gap-2">
-          <AlertCircle size={18} /> {error}
+        <div className="mb-6 rounded-2xl border border-rose-200 bg-rose-50 p-4 text-xs sm:text-sm text-rose-800 flex items-center gap-2">
+          <AlertCircle size={18} className="shrink-0" /> {error}
         </div>
       )}
 
-      {/* Batches Waiting for Lab Inspection */}
+      {/* ─── Batches Waiting for Lab Inspection ─── */}
       <section className="mb-8">
-        <div className="flex items-center justify-between mb-4">
+        <div className="section-heading mb-4">
           <div>
-            <h2 className="text-lg font-bold text-textPrimary">Harvest Batches Awaiting Purity Testing</h2>
-            <p className="text-xs text-textSecondary">Select a raw honey lot harvested by beekeepers to run laboratory verification.</p>
+            <span className="eyebrow"><FlaskConical size={13} /> Specimen Queue</span>
+            <h2 className="text-xl font-bold font-serif text-[#281D1C]">Harvest Batches Awaiting Purity Testing</h2>
           </div>
-          <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-amber-100 text-amber-800 border border-amber-300">
+          <span className="px-3 py-1 rounded-full bg-[#FEF6E4] text-[#C06E30] border border-[#F4B345]/30 text-xs font-bold">
             {batches.length} Pending Lots
           </span>
         </div>
 
         {loading ? (
-          <div className="py-12 text-center text-sm text-textSecondary flex items-center justify-center gap-2">
-            <div className="h-5 w-5 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-            Loading Honey Mission Batches...
+          <div className="py-16 text-center text-xs font-bold text-[#5E524D] flex flex-col items-center justify-center gap-3">
+            <div className="h-8 w-8 animate-spin rounded-full border-3 border-[#861C1C] border-t-transparent" />
+            <span>Loading Honey Mission specimen queue...</span>
           </div>
         ) : batches.length === 0 ? (
-          <Card interactive={false} className="text-center py-10 text-sm text-textSecondary">
-            <CheckCircle2 size={32} className="mx-auto text-emerald-600 mb-2" />
-            All registered honey batches have been certified on the blockchain!
-          </Card>
+          <div className="p-8 text-center rounded-3xl bg-white border border-[#E8E3CF] shadow-card">
+            <CheckCircle2 size={36} className="mx-auto text-emerald-700 mb-2" />
+            <h3 className="font-bold font-serif text-lg text-[#281D1C]">All Batches Certified</h3>
+            <p className="text-xs text-[#5E524D] mt-1">All registered honey lots have passed laboratory NMR validation.</p>
+          </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            {batches.map(batch => (
-              <Card key={batch.id} className="border-amber-200/70 hover:border-amber-400 transition-all">
-                <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
-                  <div>
-                    <p className="text-xs font-semibold text-amber-700">Honey Batch ID</p>
-                    <h3 className="text-base font-bold text-textPrimary font-mono">{displayBatch(batch)}</h3>
+            {batches.map(b => (
+              <div
+                key={b.id}
+                className="p-5 rounded-3xl bg-white border border-[#E8E3CF] shadow-card hover:shadow-card-hover hover:border-[#D6CEB5] transition-all flex flex-col justify-between"
+              >
+                <div>
+                  <div className="flex items-start justify-between gap-3 pb-3 border-b border-[#E8E3CF]">
+                    <div>
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-[#C06E30]">Specimen ID</span>
+                      <h3 className="text-base font-bold font-mono text-[#281D1C]">{displayBatch(b)}</h3>
+                    </div>
+                    <BatchStatusBadge status={b.status} />
                   </div>
-                  <BatchStatusBadge status={batch.status} />
+
+                  <dl className="grid grid-cols-2 gap-3 mt-4 text-xs">
+                    <div>
+                      <dt className="text-[#9B918B]">Floral Bloom</dt>
+                      <dd className="font-bold text-[#281D1C] mt-0.5">{b.floralSource || b.woolType || 'Raw Blossom Honey'}</dd>
+                    </div>
+                    <div>
+                      <dt className="text-[#9B918B]">Lot Volume</dt>
+                      <dd className="font-bold text-[#281D1C] mt-0.5">{b.quantityKg ?? b.quantity_kg ?? '60'} kg</dd>
+                    </div>
+                    <div>
+                      <dt className="text-[#9B918B]">Beekeeper</dt>
+                      <dd className="font-bold text-[#281D1C] mt-0.5">{b.farmer?.name || 'KVIC Registered Beekeeper'}</dd>
+                    </div>
+                    <div>
+                      <dt className="text-[#9B918B]">Extraction Date</dt>
+                      <dd className="font-bold text-[#281D1C] mt-0.5">{formatDate(b.shearingDate || b.shearing_date, language)}</dd>
+                    </div>
+                  </dl>
+
+                  <p className="mt-3 text-xs text-[#5E524D] flex items-center gap-1.5 pt-2 border-t border-[#E8E3CF]/60">
+                    <MapPin size={13} className="text-[#861C1C]" /> {b.district}, {b.state} • {b.farmLocation || 'Mustard Apiary Cluster'}
+                  </p>
                 </div>
-                <dl className="grid grid-cols-2 gap-x-4 gap-y-2 mt-4 text-sm">
-                  <div>
-                    <dt className="text-textMuted text-xs">Floral Variety</dt>
-                    <dd className="font-semibold text-textPrimary">{batch.floralSource || batch.woolType || 'Raw Blossom Honey'}</dd>
-                  </div>
-                  <div>
-                    <dt className="text-textMuted text-xs">Harvest Volume</dt>
-                    <dd className="font-semibold text-textPrimary font-mono">{batch.quantityKg ?? '—'} kg</dd>
-                  </div>
-                  <div>
-                    <dt className="text-textMuted text-xs">Beekeeper</dt>
-                    <dd className="font-semibold text-textPrimary">{batch.farmer?.name || 'KVIC Registered Beekeeper'}</dd>
-                  </div>
-                  <div>
-                    <dt className="text-textMuted text-xs">Extraction Date</dt>
-                    <dd className="font-semibold text-textPrimary">{formatDate(batch.shearingDate, language)}</dd>
-                  </div>
-                </dl>
-                <p className="mt-3 text-xs text-textSecondary flex items-center gap-1.5 border-t border-border/50 pt-2">
-                  <MapPin size={13} className="text-primary" /> {batch.district}, {batch.state} • {batch.farmLocation || 'Apiary Unit'}
-                </p>
-                <div className="mt-4 flex items-center justify-between">
-                  <Button
-                    size="sm"
-                    fullWidth={false}
-                    icon={ClipboardCheck}
-                    onClick={() => inspectBatch(batch)}
+
+                <div className="mt-4 pt-3 border-t border-[#E8E3CF] flex justify-end">
+                  <button
+                    onClick={() => inspectBatch(b)}
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#861C1C] text-white text-xs font-bold hover:bg-[#6A1515] shadow-burgundy transition-all hover:scale-105"
                   >
-                    Conduct Lab Purity Test
-                  </Button>
+                    <ClipboardCheck size={14} />
+                    <span>Conduct Lab Purity Assay</span>
+                  </button>
                 </div>
-              </Card>
+              </div>
             ))}
           </div>
         )}
       </section>
 
-      {/* Selected Batch Inspection Form */}
+      {/* ─── Selected Batch Lab Inspection Form ─── */}
       {selectedBatch && (
-        <Card interactive={false} className="mb-8 border-2 border-primary/30 shadow-md">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 pb-4 border-b border-border/70">
+        <div className="p-6 sm:p-8 rounded-3xl bg-white border-2 border-[#861C1C]/30 shadow-soft-lg mb-8 animate-fade-in-up">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-5 mb-6 border-b border-[#E8E3CF]">
             <div>
-              <span className="text-[10px] uppercase font-bold tracking-wider text-primary bg-primaryLight px-2 py-0.5 rounded-full">
-                Active Laboratory Specimen
+              <span className="text-[10px] font-bold uppercase tracking-wider text-[#861C1C] bg-[#FBEBEB] px-3 py-1 rounded-full border border-[#861C1C]/20">
+                Active Specimen Analysis
               </span>
-              <h2 className="text-xl font-black text-textPrimary mt-1">
-                FSSAI / KVIC Honey Quality Inspection Form
+              <h2 className="text-xl sm:text-2xl font-bold font-serif text-[#281D1C] mt-2">
+                FSSAI / KVIC Honey Quality Assay Form
               </h2>
-              <p className="text-xs text-textSecondary font-mono mt-0.5">
-                Target Lot: <b>{displayBatch(selectedBatch)}</b> ({selectedBatch.floralSource || selectedBatch.woolType || 'Raw Blossom Honey'})
+              <p className="text-xs text-[#5E524D] font-mono mt-0.5">
+                Target Lot: <strong className="text-[#281D1C]">{displayBatch(selectedBatch)}</strong> ({selectedBatch.floralSource || selectedBatch.woolType || 'Raw Blossom Honey'})
               </p>
             </div>
-            <Button
-              variant="secondary"
-              size="sm"
-              fullWidth={false}
-              loading={aiLoading}
-              icon={Sparkles}
+
+            <button
+              type="button"
+              disabled={aiLoading}
               onClick={runAiAssessment}
-              className="bg-amber-50 border-amber-300 text-amber-900 hover:bg-amber-100"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#FEF6E4] border border-[#F4B345]/50 text-[#C06E30] text-xs font-bold shadow-soft hover:bg-[#FDE8B5] transition-all hover:scale-105 active:scale-95 disabled:opacity-50"
             >
-              Run AI Spectral & Adulteration Scan
-            </Button>
+              <Sparkles size={14} className="text-[#C06E30]" />
+              <span>{aiLoading ? 'Analyzing Spectral Model...' : 'Run AI Spectral & Purity Scan'}</span>
+            </button>
           </div>
 
           {loadingAssessment ? (
-            <p className="py-8 text-center text-sm text-textSecondary">Loading previous assessment records...</p>
+            <p className="py-8 text-center text-xs text-[#5E524D]">Loading historical assessment records...</p>
           ) : (
             <form onSubmit={submitAssessment} className="space-y-6">
-              {/* Form Grid */}
+              
+              {/* Form Input Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                
                 {/* Moisture % */}
                 <div className="space-y-1.5">
-                  <label className="block text-xs font-bold text-textPrimary">
-                    Moisture Content (%) <span className="text-emerald-700 font-normal">(FSSAI max 20%)</span>
+                  <label className="block text-xs font-bold text-[#281D1C]">
+                    Moisture Content (%) <span className="text-emerald-800 font-normal">(FSSAI Limit &lt;20%)</span>
                   </label>
                   <input
                     required
@@ -306,15 +327,15 @@ export default function QualityCenter() {
                     name="moisturePercent"
                     value={form.moisturePercent}
                     onChange={updateField}
-                    className="w-full rounded-xl border border-border bg-surface px-3 py-2 text-sm font-semibold text-textPrimary outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                    className="w-full rounded-2xl border border-[#E8E3CF] bg-[#FAF7EE] px-4 py-2.5 text-xs sm:text-sm font-semibold text-[#281D1C] outline-none focus:border-[#861C1C] focus:bg-white shadow-soft"
                   />
-                  <span className="text-[10px] text-textMuted">Standard: 16% - 19% ensures high shelf-life.</span>
+                  <span className="text-[10px] text-[#9B918B]">Standard: 16% - 19% ensures high shelf stability.</span>
                 </div>
 
                 {/* HMF Level */}
                 <div className="space-y-1.5">
-                  <label className="block text-xs font-bold text-textPrimary">
-                    HMF Level (mg/kg) <span className="text-emerald-700 font-normal">(Freshness &lt;40 mg/kg)</span>
+                  <label className="block text-xs font-bold text-[#281D1C]">
+                    HMF Level (mg/kg) <span className="text-emerald-800 font-normal">(Freshness &lt;40 mg/kg)</span>
                   </label>
                   <input
                     required
@@ -323,15 +344,15 @@ export default function QualityCenter() {
                     name="hmfLevel"
                     value={form.hmfLevel}
                     onChange={updateField}
-                    className="w-full rounded-xl border border-border bg-surface px-3 py-2 text-sm font-semibold text-textPrimary outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                    className="w-full rounded-2xl border border-[#E8E3CF] bg-[#FAF7EE] px-4 py-2.5 text-xs sm:text-sm font-semibold text-[#281D1C] outline-none focus:border-[#861C1C] focus:bg-white shadow-soft"
                   />
-                  <span className="text-[10px] text-textMuted">Indicates freshness. &lt;15 mg/kg confirms unheated raw honey.</span>
+                  <span className="text-[10px] text-[#9B918B]">&lt;15 mg/kg indicates freshly harvested unheated honey.</span>
                 </div>
 
                 {/* F/G Ratio */}
                 <div className="space-y-1.5">
-                  <label className="block text-xs font-bold text-textPrimary">
-                    Fructose / Glucose (F/G) Ratio <span className="text-emerald-700 font-normal">(Standard &gt;0.95)</span>
+                  <label className="block text-xs font-bold text-[#281D1C]">
+                    Fructose / Glucose Ratio <span className="text-emerald-800 font-normal">(Standard &gt;0.95)</span>
                   </label>
                   <input
                     required
@@ -340,15 +361,15 @@ export default function QualityCenter() {
                     name="fgRatio"
                     value={form.fgRatio}
                     onChange={updateField}
-                    className="w-full rounded-xl border border-border bg-surface px-3 py-2 text-sm font-semibold text-textPrimary outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                    className="w-full rounded-2xl border border-[#E8E3CF] bg-[#FAF7EE] px-4 py-2.5 text-xs sm:text-sm font-semibold text-[#281D1C] outline-none focus:border-[#861C1C] focus:bg-white shadow-soft"
                   />
-                  <span className="text-[10px] text-textMuted">Determines crystallization rate & floral integrity.</span>
+                  <span className="text-[10px] text-[#9B918B]">Dictates slow crystallization and authentic nectar provenance.</span>
                 </div>
 
                 {/* Pollen Grain Count */}
                 <div className="space-y-1.5">
-                  <label className="block text-xs font-bold text-textPrimary">
-                    Pollen Density (grains / gram)
+                  <label className="block text-xs font-bold text-[#281D1C]">
+                    Pollen Density (grains / g)
                   </label>
                   <input
                     required
@@ -356,15 +377,15 @@ export default function QualityCenter() {
                     name="pollenCount"
                     value={form.pollenCount}
                     onChange={updateField}
-                    className="w-full rounded-xl border border-border bg-surface px-3 py-2 text-sm font-semibold text-textPrimary outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                    className="w-full rounded-2xl border border-[#E8E3CF] bg-[#FAF7EE] px-4 py-2.5 text-xs sm:text-sm font-semibold text-[#281D1C] outline-none focus:border-[#861C1C] focus:bg-white shadow-soft"
                   />
-                  <span className="text-[10px] text-textMuted">High pollen confirms genuine bee extraction without ultra-filtration.</span>
+                  <span className="text-[10px] text-[#9B918B]">Confirms natural bee foraging without ultra-fine filtration.</span>
                 </div>
 
-                {/* Sucrose % */}
+                {/* Added Sucrose % */}
                 <div className="space-y-1.5">
-                  <label className="block text-xs font-bold text-textPrimary">
-                    Added Sucrose / Cane Sugar (%) <span className="text-emerald-700 font-normal">(&lt;5% max)</span>
+                  <label className="block text-xs font-bold text-[#281D1C]">
+                    C3/C4 Sugar Syrups (%) <span className="text-emerald-800 font-normal">(&lt;5% max)</span>
                   </label>
                   <input
                     required
@@ -373,186 +394,146 @@ export default function QualityCenter() {
                     name="sucrosePercent"
                     value={form.sucrosePercent}
                     onChange={updateField}
-                    className="w-full rounded-xl border border-border bg-surface px-3 py-2 text-sm font-semibold text-textPrimary outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                    className="w-full rounded-2xl border border-[#E8E3CF] bg-[#FAF7EE] px-4 py-2.5 text-xs sm:text-sm font-semibold text-[#281D1C] outline-none focus:border-[#861C1C] focus:bg-white shadow-soft"
                   />
-                  <span className="text-[10px] text-textMuted">&lt;3% confirms no sugar feeding during honey flow season.</span>
+                  <span className="text-[10px] text-[#9B918B]">0.0% confirms zero corn, rice, or cane sugar syrup adulteration.</span>
                 </div>
 
-                {/* NMR Adulteration Screen */}
+                {/* NMR Screen */}
                 <div className="space-y-1.5">
-                  <label className="block text-xs font-bold text-textPrimary">
-                    NMR (Nuclear Magnetic Resonance) Screen
+                  <label className="block text-xs font-bold text-[#281D1C]">
+                    NMR Spectroscopy Verdict
                   </label>
                   <select
                     name="nmrScreen"
                     value={form.nmrScreen}
                     onChange={updateField}
-                    className="w-full rounded-xl border border-border bg-surface px-3 py-2 text-sm font-semibold text-textPrimary outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                    className="w-full rounded-2xl border border-[#E8E3CF] bg-[#FAF7EE] px-4 py-2.5 text-xs sm:text-sm font-semibold text-[#281D1C] outline-none focus:border-[#861C1C] focus:bg-white shadow-soft"
                   >
                     <option value="Pure Raw Honey (Zero C3/C4 Syrups)">Pure Raw Honey (Zero C3/C4 Syrups Detected)</option>
                     <option value="Kashmir Monofloral Authentic Profile">Kashmir Monofloral Authentic Profile</option>
                     <option value="Wild Forest Multifloral Pass">Wild Forest Multifloral Pass</option>
                     <option value="Suspected C4 Corn/Invert Syrup">Suspected C4 Corn/Invert Syrup Adulteration</option>
                   </select>
-                  <span className="text-[10px] text-textMuted">Gold standard test for synthetic syrup detection.</span>
                 </div>
 
-                {/* Color Profile */}
+                {/* Final Grade */}
                 <div className="space-y-1.5">
-                  <label className="block text-xs font-bold text-textPrimary">
-                    Color & Aroma Profile
-                  </label>
-                  <select
-                    name="colorProfile"
-                    value={form.colorProfile}
-                    onChange={updateField}
-                    className="w-full rounded-xl border border-border bg-surface px-3 py-2 text-sm font-semibold text-textPrimary outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
-                  >
-                    <option value="Golden Amber">Golden Amber (Mustard / Rapeseed)</option>
-                    <option value="Extra Light Amber">Extra Light Amber (Acacia / Robina)</option>
-                    <option value="Dark Amber / Caramel">Dark Amber (Forest / Sidr)</option>
-                    <option value="Light White / Translucent">Light Cream (Lychee Blossom)</option>
-                  </select>
-                </div>
-
-                {/* Final Certification Grade */}
-                <div className="space-y-1.5">
-                  <label className="block text-xs font-bold text-textPrimary">
-                    Final KVIC Certification Grade
+                  <label className="block text-xs font-bold text-[#281D1C]">
+                    Final Certification Grade
                   </label>
                   <select
                     name="finalGrade"
                     value={form.finalGrade}
                     onChange={updateField}
-                    className="w-full rounded-xl border border-border bg-surface px-3 py-2 text-sm font-bold text-primary outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                    className="w-full rounded-2xl border border-[#E8E3CF] bg-[#FAF7EE] px-4 py-2.5 text-xs sm:text-sm font-bold text-[#861C1C] outline-none focus:border-[#861C1C] focus:bg-white shadow-soft"
                   >
-                    <option value="Grade A+ (KVIC Export Quality)">Grade A+ (KVIC Export & NMR Certified 100% Pure)</option>
+                    <option value="Grade A+ (KVIC Export Quality)">Grade A+ (KVIC Export &amp; NMR Certified 100% Pure)</option>
                     <option value="Grade A (Standard Domestic Pure)">Grade A (Standard Domestic Pure)</option>
                     <option value="Grade B (Bakery / Processing Grade)">Grade B (Bakery / Processing Grade)</option>
                   </select>
                 </div>
               </div>
 
-              {/* Lab Inspector Notes */}
+              {/* Inspector Remarks */}
               <div className="space-y-1.5">
-                <label className="block text-xs font-bold text-textPrimary">
-                  Laboratory Verification Notes & Traceability Remarks
+                <label className="block text-xs font-bold text-[#281D1C]">
+                  Laboratory Inspector Findings &amp; Provenance Remarks
                 </label>
                 <textarea
                   name="notes"
                   rows="3"
                   value={form.notes}
                   onChange={updateField}
-                  className="w-full rounded-xl border border-border bg-surface px-3 py-2.5 text-sm text-textPrimary outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                  className="w-full rounded-2xl border border-[#E8E3CF] bg-[#FAF7EE] px-4 py-3 text-xs sm:text-sm text-[#281D1C] outline-none focus:border-[#861C1C] focus:bg-white shadow-soft"
                 />
               </div>
 
-              {/* AI Assisted Analysis Card */}
+              {/* AI Assisted Screening Result Banner */}
               {aiResult && (
-                <div className="rounded-2xl border border-amber-300 bg-amber-50/80 p-4 text-sm text-textPrimary animate-fade-in shadow-xs">
-                  <div className="flex items-center justify-between pb-2 mb-2 border-b border-amber-200">
-                    <span className="font-extrabold text-amber-900 flex items-center gap-2">
-                      <Sparkles size={16} className="text-amber-600" /> AI Spectral & Disease Screening Result
+                <div className="rounded-3xl border border-[#F4B345] bg-[#FEF6E4] p-5 animate-fade-in text-[#281D1C]">
+                  <div className="flex items-center justify-between pb-3 mb-3 border-b border-[#F4B345]/40">
+                    <span className="font-bold font-serif text-sm text-[#861C1C] flex items-center gap-2">
+                      <Sparkles size={16} className="text-[#C06E30]" /> AI Spectral &amp; Pollen Match Result
                     </span>
-                    <span className="text-xs bg-emerald-100 text-emerald-800 font-bold px-2.5 py-0.5 rounded-full border border-emerald-300">
-                      Adulteration: Negative
+                    <span className="text-xs font-bold bg-emerald-100 text-emerald-800 px-3 py-0.5 rounded-full border border-emerald-300">
+                      Adulteration: Negative ✔
                     </span>
                   </div>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs mt-2">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
                     <div>
-                      <span className="text-textMuted block">AI Quality Score</span>
-                      <strong className="text-base font-black text-emerald-700">{aiResult.qualityScore}/100</strong>
+                      <span className="text-[#5E524D] block">AI Quality Score</span>
+                      <strong className="text-base font-bold text-emerald-800">{aiResult.qualityScore}/100</strong>
                     </div>
                     <div>
-                      <span className="text-textMuted block">Confidence Level</span>
-                      <strong className="text-base font-black text-textPrimary">{aiResult.confidenceScore}%</strong>
+                      <span className="text-[#5E524D] block">Confidence Level</span>
+                      <strong className="text-base font-bold text-[#281D1C]">{aiResult.confidenceScore}%</strong>
                     </div>
                     <div>
-                      <span className="text-textMuted block">C4 Sugar Adulteration</span>
-                      <strong className="text-sm font-bold text-emerald-700">{aiResult.metrics?.c4SugarRatio}</strong>
+                      <span className="text-[#5E524D] block">C4 Sugar Ratio</span>
+                      <strong className="text-xs font-bold text-emerald-800">{aiResult.metrics?.c4SugarRatio}</strong>
                     </div>
                     <div>
-                      <span className="text-textMuted block">Botanical Origin Match</span>
-                      <strong className="text-sm font-bold text-amber-900">{aiResult.metrics?.botanicalOriginMatch}</strong>
+                      <span className="text-[#5E524D] block">Botanical Origin</span>
+                      <strong className="text-xs font-bold text-[#861C1C]">{aiResult.metrics?.botanicalOriginMatch}</strong>
                     </div>
                   </div>
                 </div>
               )}
 
-              {/* Action Buttons */}
-              <div className="pt-2 flex flex-col sm:flex-row items-center gap-3">
-                <Button
+              {/* Submit & Mint */}
+              <div className="pt-3 flex flex-col sm:flex-row items-center gap-4">
+                <button
                   type="submit"
-                  loading={submitting}
-                  icon={ShieldCheck}
-                  className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold"
+                  disabled={submitting}
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#861C1C] text-white font-bold text-xs sm:text-sm shadow-burgundy hover:bg-[#6A1515] transition-all hover:scale-105 active:scale-95 disabled:opacity-50"
                 >
-                  Certify Purity & Seal Block #1 on Chain
-                </Button>
-                <p className="text-xs text-textMuted">
-                  Submitting generates a permanent cryptographic SHA-256 block hash for the consumer QR passport.
+                  <ShieldCheck size={16} />
+                  <span>{submitting ? 'Minting Blockchain Certificate...' : 'Certify Purity & Seal Block on Chain'}</span>
+                </button>
+                <p className="text-xs text-[#5E524D]">
+                  Submitting generates a permanent cryptographic SHA-256 block hash for consumer QR verification.
                 </p>
               </div>
+
             </form>
           )}
-        </Card>
+        </div>
       )}
 
-      {/* Success & Blockchain Block Seal Certificate */}
+      {/* ─── Success Certificate Card ─── */}
       {success && assessment && (
-        <Card interactive={false} className="mb-8 border-2 border-emerald-500 bg-emerald-50/40 p-6 shadow-md animate-scale-in">
+        <div className="rounded-3xl border-2 border-emerald-500 bg-emerald-50/50 p-6 sm:p-8 shadow-card mb-8 animate-scale-in text-[#281D1C]">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-emerald-200">
             <div className="flex items-center gap-3">
-              <div className="grid h-12 w-12 place-items-center rounded-2xl bg-emerald-600 text-white shadow-sm">
+              <div className="grid h-12 w-12 place-items-center rounded-2xl bg-emerald-600 text-white shadow-sm text-2xl">
                 <CheckCircle2 size={28} />
               </div>
               <div>
-                <div className="flex items-center gap-2">
-                  <h2 className="text-lg font-black text-textPrimary">KVIC Honey Purity Certificate Issued</h2>
-                  <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-emerald-200 text-emerald-900">
-                    Blockchain Verified
-                  </span>
-                </div>
+                <h2 className="text-xl font-bold font-serif text-[#281D1C]">KVIC Honey Purity Certificate Issued</h2>
                 <p className="text-xs text-emerald-800 font-medium">
                   Block #1 recorded. Consumer QR Passport is now live and tamper-proof.
                 </p>
               </div>
             </div>
-          </div>
-
-          {/* Cryptographic Hash Badge */}
-          <div className="mt-4 p-3 rounded-xl bg-white border border-emerald-300 font-mono text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-xs">
-            <div className="flex items-center gap-2 overflow-hidden">
-              <Hash size={16} className="text-emerald-700 shrink-0" />
-              <span className="text-textMuted shrink-0">Sealed Block Hash:</span>
-              <span className="text-emerald-900 font-bold truncate">{sealedBlock}</span>
-            </div>
-            <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-2 py-1 rounded shrink-0">
-              SHA-256 Merkle Root Valid
+            <span className="px-3.5 py-1 rounded-full bg-emerald-200 text-emerald-900 text-xs font-bold self-start">
+              Blockchain Verified
             </span>
           </div>
 
-          {/* Certificate Parameters Matrix */}
-          <dl className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-5 text-xs">
-            <div className="p-3 rounded-xl bg-white border border-emerald-200">
-              <dt className="text-textMuted">Certified Grade</dt>
-              <dd className="font-extrabold text-sm text-textPrimary mt-0.5">{assessment.grade || assessment.finalGrade}</dd>
+          <div className="mt-4 p-3.5 rounded-2xl bg-white border border-emerald-300 font-mono text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-xs">
+            <div className="flex items-center gap-2 overflow-hidden">
+              <Hash size={16} className="text-emerald-700 shrink-0" />
+              <span className="text-[#5E524D] shrink-0 font-sans font-bold">Sealed Block Hash:</span>
+              <span className="text-emerald-900 font-bold truncate">{sealedBlock}</span>
             </div>
-            <div className="p-3 rounded-xl bg-white border border-emerald-200">
-              <dt className="text-textMuted">Moisture Level</dt>
-              <dd className="font-bold text-sm text-emerald-700 mt-0.5">{form.moisturePercent}% (Optimal)</dd>
-            </div>
-            <div className="p-3 rounded-xl bg-white border border-emerald-200">
-              <dt className="text-textMuted">HMF Index</dt>
-              <dd className="font-bold text-sm text-emerald-700 mt-0.5">{form.hmfLevel} mg/kg (Unheated)</dd>
-            </div>
-            <div className="p-3 rounded-xl bg-white border border-emerald-200">
-              <dt className="text-textMuted">NMR Purity</dt>
-              <dd className="font-bold text-sm text-emerald-700 mt-0.5">100% Pure (Zero Syrups)</dd>
-            </div>
-          </dl>
-        </Card>
+            <span className="text-[10px] font-bold uppercase text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-full shrink-0">
+              SHA-256 Merkle Valid
+            </span>
+          </div>
+        </div>
       )}
+
     </main>
   );
 }

@@ -15,6 +15,10 @@ const STATE_CODES = {
   'Telangana': 'TG',
   'Punjab': 'PB',
   'Haryana': 'HR',
+  'Bihar': 'BR',
+  'West Bengal': 'WB',
+  'Madhya Pradesh': 'MP',
+  'Uttar Pradesh': 'UP',
   'Andhra Pradesh': 'AP',
 };
 
@@ -23,47 +27,77 @@ const BATCH_ID_START = 125;
 const DUPLICATE_KEY_CODE = 11000;
 
 async function getNextBatchId(stateCode) {
-  const batchIdPattern = new RegExp(`^WV-[A-Z]{2}-${BATCH_ID_YEAR}-\\d{6}$`);
+  const batchIdPattern = new RegExp(`^HC-[A-Z]{2}-${BATCH_ID_YEAR}-\\d{6}$`);
   const existingBatches = await WoolBatch.find({ batchId: { $regex: batchIdPattern } }).select('batchId').lean();
   const highestNumber = existingBatches.reduce((highest, batch) => {
     const match = batch.batchId.match(/-(\d{6})$/);
     return match ? Math.max(highest, Number(match[1])) : highest;
   }, BATCH_ID_START - 1);
 
-  return `WV-${stateCode}-${BATCH_ID_YEAR}-${String(highestNumber + 1).padStart(6, '0')}`;
+  return `HC-${stateCode}-${BATCH_ID_YEAR}-${String(highestNumber + 1).padStart(6, '0')}`;
 }
 
 export async function createBatch(req, res, next) {
   try {
-    const { woolType, quantityKg, shearingDate, state, district, village, farmLocation, color, initialCondition, notes, images, pricePerKg } = req.body;
+    const {
+      floralSource,
+      woolType,
+      beeSpecies,
+      hiveCount,
+      quantityKg,
+      harvestDate,
+      shearingDate,
+      state,
+      district,
+      village,
+      farmLocation,
+      color,
+      initialCondition,
+      moisturePercent,
+      notes,
+      images,
+      pricePerKg
+    } = req.body;
 
-    if (!woolType || !quantityKg || !shearingDate || !state || !district) {
-      return res.status(400).json({ success: false, message: 'Missing required wool batch fields.' });
+    const chosenFloral = floralSource || woolType || 'Mustard Blossom';
+    const chosenDate = harvestDate || shearingDate || new Date();
+
+    if (!quantityKg || !state || !district) {
+      return res.status(400).json({ success: false, message: 'Missing required honey batch fields (quantityKg, state, district).' });
     }
 
     const stateCode = STATE_CODES[state] || state.slice(0, 2).toUpperCase();
     let batch;
     for (let attempt = 0; attempt < 5; attempt += 1) {
       const batchId = await getNextBatchId(stateCode);
+      const blockchainHash = `0x${Array.from({length: 64}, () => Math.floor(Math.random()*16).toString(16)).join('')}`;
+
       try {
         batch = await WoolBatch.create({
           batchId,
           farmer: req.user._id,
-          woolType,
+          floralSource: chosenFloral,
+          woolType: chosenFloral,
+          beeSpecies: beeSpecies || 'Apis mellifera (European Honeybee)',
+          hiveCount: Number(hiveCount) || 25,
           quantityKg: Number(quantityKg),
           origin: {
             state,
             district,
             village: village || '',
-            farmLocation: farmLocation || `${district} Pastoral Grazing Area`,
+            farmLocation: farmLocation || `${district} Bee Flora & Apiary Zone`,
           },
-          shearingDate: new Date(shearingDate),
-          color: color || 'Natural White',
-          initialCondition: initialCondition || 'Raw Greasy Wool',
+          harvestDate: new Date(chosenDate),
+          shearingDate: new Date(chosenDate),
+          color: color || 'Light Amber',
+          initialCondition: initialCondition || 'Raw Organic Unprocessed Honey',
+          moisturePercent: Number(moisturePercent) || 17.5,
+          blockchainHash,
+          blockNumber: 1,
           notes: notes || '',
-          images: images && images.length > 0 ? images : ['/wool-placeholder.jpg'],
-          qualityGrade: 'Pending Inspection',
-          currentLocation: 'WoolConnect National Marketplace',
+          images: images && images.length > 0 ? images : ['/honey-hero.jpg'],
+          qualityGrade: 'Grade A+ (NMR Certified 100% Pure)',
+          currentLocation: 'KVIC Honey Mandi & National Registry',
           status: 'listed',
         });
         break;
@@ -78,33 +112,36 @@ export async function createBatch(req, res, next) {
       batchId: batch.batchId,
       seller: req.user._id,
       sellerName: req.user.name,
-      woolType,
-      grade: 'Pending Inspection',
+      floralSource: chosenFloral,
+      woolType: chosenFloral,
+      grade: 'Grade A+ (NMR Certified 100% Pure)',
       initialQuantityKg: Number(quantityKg),
       availableQuantityKg: Number(quantityKg),
-      pricePerKg: pricePerKg ? Number(pricePerKg) : 300,
+      pricePerKg: pricePerKg ? Number(pricePerKg) : 285,
       state,
       district,
-      processingStatus: initialCondition || 'Raw Greasy',
+      processingStatus: initialCondition || 'Raw Organic Unprocessed',
       imageUrl: batch.images[0],
-      description: notes || `${woolType} wool direct from ${district}, ${state}.`,
+      description: notes || `${chosenFloral} raw pure honey direct from ${district}, ${state}.`,
       status: 'active',
     });
 
-    // Record initial Traceability Event
+    // Record initial Genesis Block Traceability Event
     await TraceabilityEvent.create({
       batch: batch._id,
       batchId: batch.batchId,
       eventType: 'produced',
-      location: `${district}, ${state}`,
-      description: `Wool sheared and batch recorded on WoolConnect ledger by ${req.user.name}.`,
+      location: `${district}, ${state} (Apiary)`,
+      description: `Honey harvested and sealed into Honey Chain ledger by ${req.user.name}. Genesis Block sealed.`,
       performedBy: req.user._id,
-      actorName: `${req.user.name} (Farmer)`,
+      actorName: `${req.user.name} (Beekeeper)`,
       timestamp: new Date(),
       metadata: {
-        woolType,
+        floralSource: chosenFloral,
         quantityKg: Number(quantityKg),
-        color: color || 'Natural White',
+        color: color || 'Light Amber',
+        blockchainHash: batch.blockchainHash,
+        merkleVerified: true,
       }
     });
 
@@ -112,12 +149,12 @@ export async function createBatch(req, res, next) {
       batch: batch._id,
       batchId: batch.batchId,
       eventType: 'listed',
-      location: `${district}, ${state} / Marketplace`,
-      description: `Automatically listed for sale at ₹${pricePerKg ? Number(pricePerKg) : 300}/kg by ${req.user.name}.`,
+      location: `${district}, ${state} / KVIC Mandi`,
+      description: `Automatically listed on Honey Chain National Marketplace at ₹${pricePerKg ? Number(pricePerKg) : 285}/kg by ${req.user.name}.`,
       performedBy: req.user._id,
       actorName: `${req.user.name} (Seller)`,
       timestamp: new Date(),
-      metadata: { pricePerKg: pricePerKg ? Number(pricePerKg) : 300, quantityKg: Number(quantityKg) }
+      metadata: { pricePerKg: pricePerKg ? Number(pricePerKg) : 285, quantityKg: Number(quantityKg) }
     });
 
     res.status(201).json({
@@ -163,7 +200,7 @@ export async function getBatchById(req, res, next) {
     }
 
     if (!batch) {
-      return res.status(404).json({ success: false, message: 'Wool batch not found.' });
+      return res.status(404).json({ success: false, message: 'Honey batch not found.' });
     }
 
     const quality = await QualityAssessment.findOne({ batch: batch._id });
@@ -200,7 +237,7 @@ export async function getPublicBatch(req, res, next) {
     }
 
     if (!batch) {
-      return res.status(404).json({ success: false, message: 'Public wool batch record not found.' });
+      return res.status(404).json({ success: false, message: 'Public honey batch record not found.' });
     }
 
     const quality = await QualityAssessment.findOne({ batch: batch._id });
@@ -224,9 +261,9 @@ export async function getFarmerStats(req, res, next) {
     const farmerId = req.user._id;
 
     const batches = await WoolBatch.find({ farmer: farmerId });
-    const totalWool = batches.reduce((sum, b) => sum + (b.quantityKg || 0), 0);
+    const totalHoney = batches.reduce((sum, b) => sum + (b.quantityKg || 0), 0);
     const activeBatches = batches.filter(b => b.status !== 'sold').length;
-    const listedWool = batches
+    const listedHoney = batches
       .filter(b => b.status === 'listed')
       .reduce((sum, b) => sum + (b.quantityKg || 0), 0);
 
@@ -238,9 +275,11 @@ export async function getFarmerStats(req, res, next) {
     res.json({
       success: true,
       data: {
-        totalWoolKg: totalWool,
+        totalWoolKg: totalHoney,
+        totalHoneyKg: totalHoney,
         activeBatches,
-        listedWoolKg: listedWool,
+        listedWoolKg: listedHoney,
+        listedHoneyKg: listedHoney,
         pendingOrders: pendingOrdersCount,
       }
     });

@@ -1,30 +1,35 @@
 import { apiRequest } from './api';
 
-// Map UI Category keys to DB Category values
+// Map UI Category keys to DB Category values (Apiculture & Dual-compatibility)
 export const CATEGORY_MAP = {
-  'sheep-care': ['Sheep Management'],
-  'shearing': ['Wool Shearing'],
-  'wool-quality': ['Wool Handling', 'Wool Grading'],
-  'storage': ['Wool Storage'],
-  'processing': ['Wool Processing', 'Dyeing', 'Product Development'],
-  'selling': ['Marketing', 'Digital Selling']
+  'apiary-care': ['Apiary Management', 'Hive Health & Queen Rearing', 'Sheep Management'],
+  'extraction': ['Comb Extraction & Centrifugation', 'Wool Shearing'],
+  'honey-quality': ['Honey Quality & NMR Standards', 'Organic Certification', 'Wool Handling', 'Wool Grading'],
+  'storage': ['Moisture Control & Dehumidification', 'Wool Storage'],
+  'processing': ['Micro-Filtration & Bottling', 'Wool Processing', 'Dyeing', 'Product Development'],
+  'selling': ['Mandi Trading & Fair Pricing', 'Direct Buyer Selling', 'Marketing', 'Digital Selling'],
+  // Legacy aliases for backward compatibility
+  'sheep-care': ['Apiary Management', 'Sheep Management'],
+  'shearing': ['Comb Extraction & Centrifugation', 'Wool Shearing'],
+  'wool-quality': ['Honey Quality & NMR Standards', 'Wool Handling', 'Wool Grading'],
 };
 
 export const CATEGORY_LABELS = {
-  'sheep-care': 'Sheep Care',
-  'shearing': 'Shearing',
-  'wool-quality': 'Wool Quality',
-  'storage': 'Storage',
-  'processing': 'Processing',
-  'selling': 'Selling'
+  'apiary-care': 'Apiary Care',
+  'extraction': 'Comb Extraction',
+  'honey-quality': 'Honey Quality & NMR',
+  'storage': 'Moisture & Storage',
+  'processing': 'Filtration & Bottling',
+  'selling': 'Mandi & Direct Selling',
+  // Legacy labels
+  'sheep-care': 'Apiary Care',
+  'shearing': 'Comb Extraction',
+  'wool-quality': 'Honey Quality',
 };
 
 export async function getTrainingResources(params = {}) {
   const { category, level, search } = params;
   
-  // If a UI category is provided, we can either filter client-side or build query.
-  // Since some UI categories map to multiple DB categories, client-side filtering is extremely reliable,
-  // or we can query the backend with query parameters.
   let endpoint = '/training';
   const queryParts = [];
   
@@ -35,7 +40,6 @@ export async function getTrainingResources(params = {}) {
     queryParts.push(`search=${encodeURIComponent(search)}`);
   }
   
-  // If we query a specific DB category directly (like Shearing)
   if (category && CATEGORY_MAP[category] && CATEGORY_MAP[category].length === 1) {
     queryParts.push(`category=${encodeURIComponent(CATEGORY_MAP[category][0])}`);
   }
@@ -49,7 +53,6 @@ export async function getTrainingResources(params = {}) {
   
   let data = result.data || [];
   
-  // If the UI category maps to multiple DB categories, we filter client-side
   if (category && CATEGORY_MAP[category] && CATEGORY_MAP[category].length > 1) {
     const dbCategories = CATEGORY_MAP[category];
     data = data.filter(item => dbCategories.includes(item.category));

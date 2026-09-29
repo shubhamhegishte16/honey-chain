@@ -14,8 +14,6 @@ import {
   ExternalLink,
   Hash,
 } from 'lucide-react';
-import Card from '../../components/ui/Card';
-import Button from '../../components/ui/Button';
 import BatchStatusBadge from '../../components/batch/BatchStatusBadge';
 import { getBatchById } from '../../services/batches.service';
 import { getTrackingEvents } from '../../services/tracking.service';
@@ -26,49 +24,49 @@ const EVENT_CONFIG = {
     label: 'Harvested & Genesis Block #0',
     desc: 'Comb extraction recorded on-apiary with GPS coordinates',
     icon: '🐝',
-    tone: 'bg-amber-50 text-amber-900 border-amber-300',
+    tone: 'bg-[#FEF6E4] text-[#C06E30] border-[#F4B345]/30',
   },
   quality_checked: {
     label: 'KVIC Lab NMR Tested & Block #1',
     desc: 'Moisture <18%, HMF fresh index, and NMR sugar adulteration passed',
     icon: '🔬',
-    tone: 'bg-emerald-50 text-emerald-900 border-emerald-300',
+    tone: 'bg-emerald-50 text-emerald-800 border-emerald-200',
   },
   stored: {
     label: 'Apiary Barrel Vaulted',
     desc: 'Hermetically sealed food-grade 30kg drum storage at 18-20°C',
     icon: '🏬',
-    tone: 'bg-amber-50 text-amber-900 border-amber-300',
+    tone: 'bg-[#FEF6E4] text-[#C06E30] border-[#F4B345]/30',
   },
   processed: {
     label: 'Micro-Filtered & Bottled (Block #2)',
     desc: 'Gentle warm cloth filtration and automated 500g jar packing',
     icon: '🍯',
-    tone: 'bg-amber-50 text-amber-900 border-amber-300',
+    tone: 'bg-[#FBEBEB] text-[#861C1C] border-[#861C1C]/20',
   },
   listed: {
     label: 'Listed on Honey Mandi',
     desc: 'Available for direct FMCG & consumer procurement',
     icon: '🛒',
-    tone: 'bg-indigo-50 text-indigo-800 border-indigo-300',
+    tone: 'bg-sky-50 text-sky-800 border-sky-200',
   },
   sold: {
     label: 'Procured & Smart Contract Settled',
     desc: 'Instant direct-to-beekeeper escrow payment released',
     icon: '💰',
-    tone: 'bg-emerald-50 text-emerald-800 border-emerald-300',
+    tone: 'bg-emerald-50 text-emerald-800 border-emerald-200',
   },
   dispatched: {
     label: 'In Transit',
     desc: 'Dispatched via regional agro-freight with temperature logging',
     icon: '🚚',
-    tone: 'bg-blue-50 text-blue-800 border-blue-300',
+    tone: 'bg-blue-50 text-blue-800 border-blue-200',
   },
   delivered: {
     label: 'Delivered (Block #3)',
     desc: 'Verified by consumer via smartphone QR scan',
     icon: '✨',
-    tone: 'bg-green-50 text-green-800 border-green-300',
+    tone: 'bg-emerald-50 text-emerald-800 border-emerald-200',
   },
 };
 
@@ -91,9 +89,9 @@ export default function BatchTraceability() {
             event_type: 'produced',
             actorName: batchResult.data.users?.name || batchResult.data.farmer?.name || 'Ramesh Singh (Beekeeper)',
             location: `${batchResult.data.district || 'Bharatpur'}, ${batchResult.data.state || 'Rajasthan'}`,
-            description: `Raw honey harvest recorded on HoneyChain digital ledger. Volume: ${batchResult.data.quantity_kg || 50} kg ${batchResult.data.wool_type || 'Mustard Blossom Honey'}.`,
+            description: `Raw honey harvest recorded on Honey Chain digital ledger. Volume: ${batchResult.data.quantity_kg || 60} kg ${batchResult.data.wool_type || 'Mustard Blossom Honey'}.`,
             timestamp: batchResult.data.shearing_date || batchResult.data.extractionDate || new Date().toISOString(),
-            blockHash: batchResult.data.blockHash || '0x9a4e8f12c3b5d7e01234abcd5678ef901234567890abcdef1234567890abcdef',
+            blockHash: batchResult.data.blockHash || '0x7e8f23a91b4028e49d68241cfda609e20b3967812cd9e8f17042a991823efca4',
             blockNumber: 0,
           });
         }
@@ -107,118 +105,123 @@ export default function BatchTraceability() {
   const floral = batch?.floralSource || batch?.wool_type || 'Mustard Blossom Raw Honey';
 
   return (
-    <main className="page-shell max-w-3xl mx-auto py-6">
+    <main className="page-shell max-w-4xl mx-auto">
+      
+      {/* Top Header */}
       <div className="mb-6 flex items-center justify-between">
         <Link
           to={batch ? `/batches/${batch._id || batch.id}/details` : '/farmer/tracking'}
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-textSecondary hover:text-primary transition-colors group"
+          className="inline-flex items-center gap-1.5 text-xs font-bold text-[#5E524D] hover:text-[#281D1C] transition-colors group"
         >
-          <ArrowLeft size={15} className="transition-transform group-hover:-translate-x-0.5" />
+          <ArrowLeft size={16} className="transition-transform group-hover:-translate-x-1" />
           <span>Back to Lot Details</span>
         </Link>
 
-        <span className="text-xs text-primary font-bold flex items-center gap-1 bg-primaryLight px-2.5 py-1 rounded-full border border-primary/20">
-          <ShieldCheck size={14} /> Tamper-Proof HoneyChain Ledger
+        <span className="text-xs text-[#861C1C] font-bold flex items-center gap-1 bg-[#FBEBEB] px-3 py-1 rounded-full border border-[#861C1C]/20">
+          <ShieldCheck size={14} /> Tamper-Proof Provenance Ledger
         </span>
       </div>
 
       <div className="mb-6">
-        <div className="eyebrow text-amber-600 mb-1 flex items-center gap-1 font-bold text-xs uppercase tracking-wider">
-          <Sparkles size={13} /> Blockchain Immutable Provenance
-        </div>
-        <h1 className="text-2xl sm:text-3xl font-black text-textPrimary">
+        <span className="eyebrow"><Sparkles size={13} /> Blockchain Immutable Provenance</span>
+        <h1 className="text-2xl sm:text-3xl font-bold font-serif text-[#281D1C] mt-1">
           Hive-to-Bottle Traceability Log
         </h1>
-        <p className="text-xs sm:text-sm text-textSecondary mt-1">
-          Cryptographically chained checkpoints verifying floral origin, apiary telemetry, laboratory testing, and consumer delivery.
+        <p className="text-xs sm:text-sm text-[#5E524D] mt-1 leading-relaxed">
+          Cryptographically chained checkpoints verifying floral origin, apiary IoT telemetry, NMR lab testing, and consumer QR delivery.
         </p>
       </div>
 
       {loading ? (
-        <div className="py-20 flex justify-center items-center gap-2">
-          <div className="h-7 w-7 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-          <span className="text-sm text-textSecondary">Verifying blockchain blocks...</span>
+        <div className="py-20 flex flex-col items-center justify-center gap-3">
+          <div className="h-8 w-8 animate-spin rounded-full border-3 border-[#861C1C] border-t-transparent" />
+          <span className="text-xs font-bold text-[#5E524D]">Verifying cryptographic block tree...</span>
         </div>
       ) : batch ? (
         <div className="space-y-6">
+          
           {/* Batch Summary Header Card */}
-          <div className="rounded-3xl bg-surface border border-border/80 p-5 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="rounded-3xl bg-white border border-[#E8E3CF] p-5 sm:p-6 shadow-card flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <span className="font-mono text-xs font-bold text-primary bg-primaryLight px-2 py-0.5 rounded-md">
+              <span className="font-mono text-xs font-bold text-[#861C1C] bg-[#FBEBEB] px-2.5 py-1 rounded-full border border-[#861C1C]/20">
                 {batchIdDisplay}
               </span>
-              <h2 className="text-lg font-bold text-textPrimary mt-1">{floral}</h2>
-              <p className="text-xs text-textSecondary flex items-center gap-1 mt-0.5">
-                <MapPin size={12} className="text-primary" /> {batch.district || 'Bharatpur'}, {batch.state || 'Rajasthan'}
+              <h2 className="text-lg font-bold font-serif text-[#281D1C] mt-2">{floral}</h2>
+              <p className="text-xs text-[#5E524D] flex items-center gap-1 mt-0.5">
+                <MapPin size={12} className="text-[#C06E30]" /> {batch.district || 'Bharatpur'}, {batch.state || 'Rajasthan'}
               </p>
             </div>
 
             <div className="flex items-center gap-3">
               <Link
                 to={`/buyer/honey-passport/${batchIdDisplay}`}
-                className="px-3.5 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold shadow-xs transition-all flex items-center gap-1.5"
+                className="px-4 py-2 rounded-full bg-[#861C1C] text-white text-xs font-bold shadow-burgundy hover:bg-[#6A1515] transition-all flex items-center gap-1.5"
               >
-                <ExternalLink size={14} /> Open Honey Passport
+                <ExternalLink size={13} /> Open Honey Passport
               </Link>
               <BatchStatusBadge status={batch.status} />
             </div>
           </div>
 
           {/* Timeline */}
-          <div className="relative pl-6 sm:pl-8 space-y-8 before:absolute before:left-[15px] sm:before:left-[19px] before:top-3 before:bottom-3 before:w-0.5 before:bg-gradient-to-b before:from-amber-500 before:via-amber-400 before:to-emerald-500">
+          <div className="relative pl-6 sm:pl-8 space-y-6 before:absolute before:left-[15px] sm:before:left-[19px] before:top-3 before:bottom-3 before:w-0.5 before:bg-gradient-to-b before:from-[#F4B345] before:via-[#C06E30] before:to-emerald-600">
             {events.map((ev, index) => {
               const cfg = EVENT_CONFIG[ev.event_type || ev.eventType] || EVENT_CONFIG.produced;
               return (
                 <div key={ev.id || index} className="relative group animate-enter">
-                  {/* Timeline icon node */}
-                  <div className="absolute -left-[30px] sm:-left-[38px] top-1 h-8 w-8 rounded-full bg-surface border-2 border-amber-500 grid place-items-center text-sm shadow-sm group-hover:scale-110 transition-transform">
+                  
+                  {/* Node Icon */}
+                  <div className="absolute -left-[30px] sm:-left-[38px] top-1.5 h-8 w-8 rounded-full bg-white border-2 border-[#C06E30] grid place-items-center text-sm shadow-sm group-hover:scale-110 transition-transform">
                     {cfg.icon}
                   </div>
 
                   {/* Card Content */}
-                  <div className="rounded-2xl bg-surface border border-border/80 p-5 shadow-sm group-hover:border-amber-400 transition-all">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 pb-2 border-b border-border/50">
+                  <div className="rounded-3xl bg-white border border-[#E8E3CF] p-5 sm:p-6 shadow-card group-hover:border-[#D6CEB5] transition-all">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 pb-3 border-b border-[#E8E3CF]">
                       <div className="flex items-center gap-2">
-                        <span className="font-extrabold text-sm text-textPrimary">{cfg.label}</span>
+                        <span className="font-bold font-serif text-sm text-[#281D1C]">{cfg.label}</span>
                         <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${cfg.tone}`}>
                           Block #{ev.blockNumber ?? index}
                         </span>
                       </div>
-                      <span className="text-[11px] text-textMuted flex items-center gap-1 font-mono">
-                        <Clock size={11} /> {ev.timestamp ? new Date(ev.timestamp).toLocaleString() : 'Recent'}
+                      <span className="text-[11px] text-[#9B918B] flex items-center gap-1 font-mono">
+                        <Clock size={12} /> {ev.timestamp ? new Date(ev.timestamp).toLocaleString() : 'Recent'}
                       </span>
                     </div>
 
-                    <p className="text-xs text-textSecondary mt-2.5 leading-relaxed">{ev.description}</p>
+                    <p className="text-xs text-[#5E524D] mt-3 leading-relaxed">{ev.description}</p>
 
-                    <div className="mt-3 pt-2 border-t border-border/40 flex flex-wrap items-center justify-between gap-2 text-[11px]">
-                      <span className="text-textMuted flex items-center gap-1">
-                        <User size={12} className="text-primary" /> {ev.actorName || 'Authorized Signatory'}
+                    <div className="mt-3 pt-3 border-t border-[#E8E3CF]/60 flex flex-wrap items-center justify-between gap-2 text-[11px]">
+                      <span className="text-[#5E524D] flex items-center gap-1">
+                        <User size={12} className="text-[#861C1C]" /> {ev.actorName || 'Authorized Signatory'}
                       </span>
-                      <span className="text-textMuted flex items-center gap-1">
-                        <MapPin size={12} className="text-primary" /> {ev.location || 'India'}
+                      <span className="text-[#5E524D] flex items-center gap-1">
+                        <MapPin size={12} className="text-[#C06E30]" /> {ev.location || 'India'}
                       </span>
                     </div>
 
                     {/* SHA-256 Hash */}
                     {ev.blockHash && (
-                      <div className="mt-2.5 p-2 rounded-lg bg-background border border-border/60 text-[10px] font-mono text-textMuted flex items-center gap-1.5 overflow-hidden">
-                        <Hash size={12} className="text-amber-600 shrink-0" />
-                        <span className="shrink-0 font-semibold text-textSecondary">Hash:</span>
-                        <span className="truncate text-amber-800 font-bold">{ev.blockHash}</span>
+                      <div className="mt-2.5 p-2 rounded-xl bg-[#FAF7EE] border border-[#E8E3CF] text-[10px] font-mono text-[#5E524D] flex items-center gap-1.5 overflow-hidden">
+                        <Hash size={12} className="text-[#861C1C] shrink-0" />
+                        <span className="shrink-0 font-bold text-[#281D1C]">Hash:</span>
+                        <span className="truncate text-[#861C1C] font-semibold">{ev.blockHash}</span>
                       </div>
                     )}
                   </div>
+
                 </div>
               );
             })}
           </div>
+
         </div>
       ) : (
-        <Card interactive={false} className="text-center py-12 text-sm text-textSecondary">
+        <div className="p-8 text-center rounded-3xl bg-white border border-[#E8E3CF] shadow-card text-xs text-[#5E524D]">
           Honey batch record not found.
-        </Card>
+        </div>
       )}
+
     </main>
   );
 }

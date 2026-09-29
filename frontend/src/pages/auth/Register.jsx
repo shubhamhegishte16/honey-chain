@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import {
-  Leaf,
   User,
   Phone,
   Mail,
@@ -10,7 +9,6 @@ import {
   EyeOff,
   ArrowRight,
   ArrowLeft,
-  CheckCircle2,
   Sparkles,
   ShieldCheck,
   Building2,
@@ -18,8 +16,6 @@ import {
   Palette,
   Sprout,
 } from 'lucide-react';
-import Input from '../../components/ui/Input';
-import Button from '../../components/ui/Button';
 import { signUp } from '../../services/auth.service';
 import { useAuth } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
@@ -29,26 +25,26 @@ const ROLE_DETAILS = {
   farmer: {
     icon: Sprout,
     title: 'Beekeeper / Apiary Master',
-    desc: 'Beekeeper recording honey harvest batches & checking mandi rates.',
-    color: 'text-amber-600',
+    desc: 'Record honey harvest batches, inspect hive sensors & check APMC mandi rates.',
+    color: 'text-burgundy',
   },
   buyer: {
     icon: Building2,
     title: 'FMCG Buyer / Brand',
-    desc: 'FMCG brand, exporter, or retailer sourcing NMR-certified honey with QR provenance.',
-    color: 'text-sky-600',
+    desc: 'Source NMR-certified honey lots with cryptographic QR provenance.',
+    color: 'text-burntOrange',
   },
   processor: {
     icon: Factory,
     title: 'Bottling Unit / Processor',
-    desc: 'Filtration facility, testing lab or warehouse logging processing milestones.',
-    color: 'text-amber-700',
+    desc: 'Log micro-filtration, moisture assays, and retail packaging lines.',
+    color: 'text-deepBrown',
   },
   artisan: {
     icon: Palette,
     title: 'Cooperative / Value Adder',
-    desc: 'Honey SHG, cooperative, or artisan creating value-added honey products.',
-    color: 'text-purple-600',
+    desc: 'Honey SHG or cooperative managing community apiary extraction.',
+    color: 'text-honeyGold',
   },
 };
 
@@ -61,8 +57,8 @@ export default function Register() {
     mobile: '',
     email: '',
     password: '',
-    state: 'Rajasthan',
-    district: 'Bikaner',
+    state: 'Himachal Pradesh',
+    district: 'Kangra',
     role: 'farmer',
   });
   const [showPassword, setShowPassword] = useState(false);
@@ -98,361 +94,248 @@ export default function Register() {
     if (!form.password || form.password.length < 6) {
       e.password = t('passwordLengthRequired', 'Password must be at least 6 characters');
     }
-    if (!form.state) e.state = t('stateRequired', 'Please select your state');
-    if (!form.district) e.district = t('districtRequired', 'Please select your district');
-    if (!form.role) e.role = t('roleRequired', 'Please select your user type');
-    if (!agreeTerms) e.terms = t('acceptTermsRequired', 'Please accept the terms to proceed');
-
-    setErrors(e);
-    return Object.keys(e).length === 0;
+    return e;
   }
 
   async function handleRegister(e) {
     e.preventDefault();
     setSubmitError('');
-    if (!validate()) return;
-    setLoading(true);
-
-    const { data, error } = await signUp(form);
-    if (error) {
-      setLoading(false);
-      setSubmitError(error.message || t('registrationFailed', 'Registration failed. Please try again.'));
+    const validationErrors = validate();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
       return;
     }
+    if (!agreeTerms) {
+      setSubmitError(t('agreeTermsRequired', 'Please agree to terms and conditions'));
+      return;
+    }
+
+    setLoading(true);
+    const { data, error } = await signUp({
+      name: form.name.trim(),
+      email: form.email.trim().toLowerCase(),
+      password: form.password,
+      mobile: form.mobile.replace(/\D/g, ''),
+      state: form.state,
+      district: form.district,
+      role: form.role,
+    });
+
+    if (error) {
+      setLoading(false);
+      setSubmitError(error.message || t('registrationFailed', 'Registration failed.'));
+      return;
+    }
+
     await setProfileAfterAuth(data.user);
     setLoading(false);
     navigate('/');
   }
 
   const selectedStateObj = INDIAN_STATES.find(s => s.name === form.state);
-  const stateCode = selectedStateObj?.code;
-  const districts = stateCode ? DISTRICTS_BY_STATE[stateCode] || [] : [];
+  const districtList = selectedStateObj ? DISTRICTS_BY_STATE[selectedStateObj.code] || [] : [];
 
   return (
-    <div className="min-h-screen w-full bg-background flex items-stretch justify-center">
-      <div className="w-full max-w-6xl flex flex-col lg:flex-row lg:shadow-2xl lg:my-auto lg:rounded-3xl lg:overflow-hidden lg:min-h-[640px]">
-        {/* Left Showcase Panel */}
-        <div className="auth-showcase-panel hidden lg:flex lg:w-[42%] lg:shrink-0 flex-col relative overflow-hidden p-10">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.1)_0%,transparent_60%)] pointer-events-none" />
-          <div className="hero-orb orb-one opacity-25" />
-          <div className="hero-orb orb-two opacity-20" />
-
-          <div className="relative z-10">
+    <div className="min-h-screen w-full bg-warmIvory flex items-center justify-center p-4 sm:p-6 lg:p-10 font-sans">
+      <div className="w-full max-w-5xl bento-card overflow-hidden grid grid-cols-1 lg:grid-cols-12 shadow-xl border border-border">
+        {/* Left Showcase */}
+        <div className="lg:col-span-5 bg-gradient-to-br from-burgundy via-[#681414] to-deepBrown p-8 lg:p-10 text-warmIvory flex flex-col justify-between relative overflow-hidden">
+          <div className="relative z-10 space-y-6">
             <Link
               to="/"
-              className="inline-flex items-center gap-2 text-white/90 hover:text-white text-xs font-semibold uppercase tracking-wider mb-8 transition-colors group"
+              className="inline-flex items-center gap-2 text-warmIvory/80 hover:text-honeyGold text-xs font-bold uppercase tracking-wider transition-colors group"
             >
-              <ArrowLeft size={15} className="transition-transform group-hover:-translate-x-1" />
-              Back to HoneyChain Home
+              <ArrowLeft size={14} className="transition-transform group-hover:-translate-x-1" />
+              Back to Honey Chain
             </Link>
 
-            <div className="flex items-center gap-3.5">
-              <img
-                src="/logo.png"
-                alt="HoneyChain"
-                className="h-16 w-16 object-contain rounded-2xl bg-white p-1 shadow-lg"
-              />
+            <div className="flex items-center gap-3">
+              <div className="h-12 w-12 rounded-2xl bg-honeyGold text-deepBrown grid place-items-center shadow-md">
+                <span className="font-serif font-black text-xl">HC</span>
+              </div>
               <div>
-                <span className="text-2xl font-black tracking-tight text-white block">
-                  Honey<span className="text-amber-300">Chain</span>
+                <span className="text-xl font-serif font-bold text-warmIvory block">
+                  Honey<span className="text-honeyGold">Chain</span>
                 </span>
-                <span className="text-xs font-semibold text-amber-200">National Honey Ecosystem Platform</span>
+                <span className="text-[11px] font-mono text-honeyGold/90 uppercase tracking-wider">Join National Network</span>
               </div>
             </div>
           </div>
 
-          <div className="relative z-10 my-auto py-6">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 text-amber-200 text-xs font-semibold backdrop-blur-md mb-4 border border-white/15">
-              <Sparkles size={14} className="text-amber-300" />
-              Join 10,000+ Verified Beekeepers & Buyers
-            </div>
+          <div className="relative z-10 py-6 space-y-4">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-honeyGold/20 text-honeyGold text-xs font-bold border border-honeyGold/30">
+              <Sparkles size={13} />
+              Multi-Stakeholder Onboarding
+            </span>
 
-            <h2 className="text-3xl xl:text-4xl font-bold tracking-tight text-white leading-tight">
-              One platform connecting <br />
-              <span className="text-amber-200">every step of the honey value chain.</span>
+            <h2 className="text-2xl font-serif font-bold text-warmIvory leading-tight">
+              Direct Apiary Traceability for India's Honey Mission.
             </h2>
 
-            <p className="mt-4 text-white/80 text-sm leading-relaxed max-w-md">
-              Whether you are recording your seasonal honey extraction in Bharatpur or procuring fine acacia in Bengaluru, HoneyChain delivers transparency and value.
+            <p className="text-xs text-warmIvory/80 leading-relaxed">
+              Register your apiary, testing laboratory, bottling plant, or FMCG procurement team in under 2 minutes.
             </p>
-
-            <div className="mt-6 space-y-2.5 max-w-md">
-              <div className="flex items-center gap-3 p-3 rounded-xl bg-white/10 border border-white/10 text-xs text-white/90">
-                <CheckCircle2 size={16} className="text-amber-300 shrink-0" />
-                <span>Instant QR passport generation for every honey lot</span>
-              </div>
-              <div className="flex items-center gap-3 p-3 rounded-xl bg-white/10 border border-white/10 text-xs text-white/90">
-                <CheckCircle2 size={16} className="text-amber-300 shrink-0" />
-                <span>Direct APMC mandi pricing & trend intelligence</span>
-              </div>
-              <div className="flex items-center gap-3 p-3 rounded-xl bg-white/10 border border-white/10 text-xs text-white/90">
-                <CheckCircle2 size={16} className="text-amber-300 shrink-0" />
-                <span>Zero intermediary commission for beekeeper producers</span>
-              </div>
-            </div>
           </div>
 
-          <div className="relative z-10 pt-6 border-t border-white/15 flex items-center justify-between text-xs text-white/75">
-            <div className="flex items-center gap-2">
-              <ShieldCheck size={16} className="text-emerald-300 shrink-0" />
-              <span>{t('encryptedDataPrivacy', 'Encrypted data & privacy guaranteed')}</span>
-            </div>
-            <Link to="/login" className="text-emerald-200 hover:text-white font-semibold">
-              {t('alreadyRegistered', 'Already registered? Log in →')}
-            </Link>
+          <div className="relative z-10 pt-4 border-t border-warmIvory/20 flex items-center gap-2 text-[11px] text-warmIvory/70">
+            <ShieldCheck size={14} className="text-honeyGold" />
+            <span>KVIC & APMC Compliant Framework</span>
           </div>
         </div>
 
-        {/* Right Form Container */}
-        <div className="flex-1 flex flex-col items-center bg-surface lg:bg-white px-4 py-8 sm:px-8 lg:px-12 overflow-y-auto">
-          {/* Mobile Header */}
-          <div className="w-full max-w-xl flex items-center justify-between lg:hidden mb-6">
-            <Link to="/" className="flex items-center gap-2.5 font-black text-textPrimary text-lg">
-              <img
-                src="/logo.png"
-                alt="HoneyChain"
-                className="h-10 w-10 object-contain rounded-xl shadow-xs"
-              />
-              <span>Honey<span className="text-primary">Chain</span></span>
-            </Link>
-            <Link
-              to="/login"
-              className="text-xs font-semibold text-primary hover:text-primaryDark flex items-center gap-1"
-            >
-              {t('signInInstead', 'Sign In instead →')}
-            </Link>
-          </div>
-
-          <div className="w-full max-w-xl">
-            {/* Header */}
-            <div className="mb-6">
-              <h1 className="text-2xl font-bold tracking-tight text-textPrimary">{t('createAccount', 'Create Account')}</h1>
-              <p className="text-sm text-textSecondary mt-1">
-                {t('selectRoleDetails', 'Select your role and enter your details to join HoneyChain')}
-              </p>
+        {/* Right Form */}
+        <div className="lg:col-span-7 p-8 lg:p-10 bg-warmIvory/70 overflow-y-auto max-h-[90vh]">
+          <div className="max-w-md w-full mx-auto space-y-6">
+            <div>
+              <h1 className="text-2xl font-serif font-bold text-deepBrown">Create Account</h1>
+              <p className="text-xs text-deepBrown/70 mt-1">Select your ecosystem role and register</p>
             </div>
 
-            <form onSubmit={handleRegister} noValidate>
-              {/* Role Selector — compact single-row pills instead of 4 large cards */}
-              <div className="mb-5">
-                <label className="block font-semibold text-xs text-textSecondary uppercase tracking-wider mb-2">
-                  {t('yourRole', 'Your Role')} <span className="text-primary font-bold">*</span>
-                </label>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                  {ROLES.map(role => {
-                    const details = ROLE_DETAILS[role.value] || ROLE_DETAILS.farmer;
-                    const Icon = details.icon;
-                    const isSelected = form.role === role.value;
-                    const roleLabelKey = 'role' + role.value.charAt(0).toUpperCase() + role.value.slice(1);
+            {submitError && (
+              <div className="p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs font-bold">
+                {submitError}
+              </div>
+            )}
 
+            <form onSubmit={handleRegister} className="space-y-4">
+              {/* Role Selection */}
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-deepBrown uppercase tracking-wider">Select Your Role</label>
+                <div className="grid grid-cols-2 gap-2.5">
+                  {Object.entries(ROLE_DETAILS).map(([key, details]) => {
+                    const isSelected = form.role === key;
+                    const Icon = details.icon;
                     return (
                       <button
-                        key={role.value}
                         type="button"
-                        title={details.desc}
-                        onClick={() => update('role', role.value)}
-                        className={`p-2.5 rounded-xl border text-center transition-all duration-150 flex flex-col items-center gap-1.5 ${
+                        key={key}
+                        onClick={() => update('role', key)}
+                        className={`p-3 rounded-2xl border text-left transition-all ${
                           isSelected
-                            ? 'border-primary bg-primaryLight/40 ring-2 ring-primary/30 shadow-sm'
-                            : 'border-border/80 bg-surface hover:border-primary/40 hover:bg-background'
+                            ? 'bg-burgundy text-warmIvory border-burgundy shadow-md shadow-burgundy/15'
+                            : 'bg-warmIvory border-border text-deepBrown hover:bg-burntOrange/10'
                         }`}
                       >
-                        <span
-                          className={`grid h-8 w-8 place-items-center rounded-lg ${
-                            isSelected ? 'bg-primary text-white' : 'bg-primaryLight text-primary'
-                          }`}
-                        >
-                          <Icon size={15} />
-                        </span>
-                        <span className="font-semibold text-[11px] text-textPrimary leading-tight">
-                          {t(roleLabelKey, role.label)}
-                        </span>
+                        <div className="flex items-center gap-2 mb-1">
+                          <Icon size={16} className={isSelected ? 'text-honeyGold' : details.color} />
+                          <span className="font-bold text-xs">{details.title.split('/')[0]}</span>
+                        </div>
+                        <p className={`text-[10px] leading-tight ${isSelected ? 'text-warmIvory/80' : 'text-deepBrown/60'}`}>
+                          {details.desc}
+                        </p>
                       </button>
                     );
                   })}
                 </div>
-                {errors.role && <p className="text-error text-xs mt-1.5 font-medium">{errors.role}</p>}
               </div>
 
-              {/* Personal Details */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4">
-                <Input
-                  label={t('fullName', 'Full Name')}
-                  id="name"
-                  name="name"
-                  icon={User}
-                  value={form.name}
-                  onChange={e => update('name', e.target.value)}
-                  placeholder="e.g. Ramesh Gurjar"
-                  error={errors.name}
-                  autoComplete="name"
-                  required
-                />
-
-                <Input
-                  label={t('mobileNumber', 'Mobile Number')}
-                  type="tel"
-                  id="mobile"
-                  name="mobile"
-                  icon={Phone}
-                  value={form.mobile}
-                  onChange={e => update('mobile', e.target.value)}
-                  placeholder="10-digit mobile"
-                  error={errors.mobile}
-                  autoComplete="tel"
-                  required
-                />
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4">
-                <Input
-                  label={t('emailAddress', 'Email Address')}
-                  type="email"
-                  id="email"
-                  name="email"
-                  icon={Mail}
-                  value={form.email}
-                  onChange={e => update('email', e.target.value)}
-                  placeholder="you@domain.com"
-                  error={errors.email}
-                  autoComplete="email"
-                  required
-                />
-
-                <Input
-                  label={t('password', 'Password')}
-                  type={showPassword ? 'text' : 'password'}
-                  id="password"
-                  name="password"
-                  icon={Lock}
-                  value={form.password}
-                  onChange={e => update('password', e.target.value)}
-                  placeholder={t('minCharacters', 'Min. 6 characters')}
-                  error={errors.password}
-                  autoComplete="new-password"
-                  required
-                  rightElement={
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="text-textMuted hover:text-textPrimary p-1 focus:outline-none"
-                      aria-label={showPassword ? t('hidePassword', 'Hide password') : t('showPassword', 'Show password')}
-                    >
-                      {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                    </button>
-                  }
-                />
-              </div>
-
-              {/* Location — dropdowns instead of pill walls */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 mb-5">
-                <div>
-                  <label htmlFor="state" className="block font-semibold text-xs text-textSecondary uppercase tracking-wider mb-1.5">
-                    {t('state', 'State')} <span className="text-primary font-bold">*</span>
-                  </label>
-                  <select
-                    id="state"
-                    name="state"
-                    value={form.state}
-                    onChange={e => update('state', e.target.value)}
-                    className="w-full rounded-xl border border-border/80 bg-surface px-3 py-2.5 text-sm text-textPrimary focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
-                  >
-                    {INDIAN_STATES.map(s => (
-                      <option key={s.code} value={s.name}>
-                        {s.name}
-                      </option>
-                    ))}
-                  </select>
-                  {errors.state && <p className="text-error text-xs mt-1 font-medium">{errors.state}</p>}
-                </div>
-
-                {districts.length > 0 && (
-                  <div>
-                    <label htmlFor="district" className="block font-semibold text-xs text-textSecondary uppercase tracking-wider mb-1.5">
-                      {t('district', 'District')} <span className="text-primary font-bold">*</span>
-                    </label>
-                    <select
-                      id="district"
-                      name="district"
-                      value={form.district}
-                      onChange={e => update('district', e.target.value)}
-                      className="w-full rounded-xl border border-border/80 bg-surface px-3 py-2.5 text-sm text-textPrimary focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
-                    >
-                      {districts.map(d => (
-                        <option key={d} value={d}>
-                          {d}
-                        </option>
-                      ))}
-                    </select>
-                    {errors.district && <p className="text-error text-xs mt-1 font-medium">{errors.district}</p>}
-                  </div>
-                )}
-              </div>
-
-              {/* Terms checkbox */}
-              <div className="mb-5">
-                <label className="flex items-start gap-2.5 cursor-pointer text-xs text-textSecondary select-none">
+              {/* Personal Info */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="space-y-1">
+                  <label className="text-xs font-bold text-deepBrown uppercase tracking-wider">Full Name</label>
                   <input
-                    type="checkbox"
-                    checked={agreeTerms}
-                    onChange={e => setAgreeTerms(e.target.checked)}
-                    className="mt-0.5 rounded border-border text-primary focus:ring-primary h-4 w-4 cursor-pointer accent-primary shrink-0"
+                    type="text"
+                    required
+                    value={form.name}
+                    onChange={(e) => update('name', e.target.value)}
+                    placeholder="e.g. Ramesh Thakur"
+                    className="w-full px-3.5 py-2.5 bg-warmIvory border border-border rounded-2xl text-xs text-deepBrown focus:outline-none focus:border-burgundy"
                   />
-                  <span>
-                    {t('agreeTerms', 'I agree to the HoneyChain Terms of Service and Data Privacy Policy.')}
-                  </span>
-                </label>
-                {errors.terms && <p className="text-error text-xs mt-1 font-medium">{errors.terms}</p>}
+                  {errors.name && <p className="text-[10px] text-rose-700 font-bold">{errors.name}</p>}
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-xs font-bold text-deepBrown uppercase tracking-wider">Mobile Number</label>
+                  <input
+                    type="tel"
+                    required
+                    value={form.mobile}
+                    onChange={(e) => update('mobile', e.target.value)}
+                    placeholder="9816044219"
+                    className="w-full px-3.5 py-2.5 bg-warmIvory border border-border rounded-2xl text-xs text-deepBrown focus:outline-none focus:border-burgundy"
+                  />
+                  {errors.mobile && <p className="text-[10px] text-rose-700 font-bold">{errors.mobile}</p>}
+                </div>
               </div>
 
-              {/* Submit Error */}
-              {submitError && (
-                <div className="flex items-start gap-2.5 p-3.5 mb-5 rounded-xl bg-errorLight/70 border border-error/20 animate-fade-in">
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    className="text-error shrink-0 mt-0.5"
+              <div className="space-y-1">
+                <label className="text-xs font-bold text-deepBrown uppercase tracking-wider">Email Address</label>
+                <input
+                  type="email"
+                  required
+                  value={form.email}
+                  onChange={(e) => update('email', e.target.value)}
+                  placeholder="beekeeper@apiary.in"
+                  className="w-full px-3.5 py-2.5 bg-warmIvory border border-border rounded-2xl text-xs text-deepBrown focus:outline-none focus:border-burgundy"
+                />
+                {errors.email && <p className="text-[10px] text-rose-700 font-bold">{errors.email}</p>}
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-xs font-bold text-deepBrown uppercase tracking-wider">Password</label>
+                <div className="relative">
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    required
+                    value={form.password}
+                    onChange={(e) => update('password', e.target.value)}
+                    placeholder="At least 6 characters"
+                    className="w-full pl-3.5 pr-10 py-2.5 bg-warmIvory border border-border rounded-2xl text-xs text-deepBrown focus:outline-none focus:border-burgundy"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-deepBrown/40"
                   >
-                    <circle cx="12" cy="12" r="10" />
-                    <line x1="12" y1="8" x2="12" y2="12" />
-                    <line x1="12" y1="16" x2="12.01" y2="16" />
-                  </svg>
-                  <p className="text-error text-xs font-medium leading-relaxed">{submitError}</p>
+                    {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
+                  </button>
                 </div>
-              )}
+                {errors.password && <p className="text-[10px] text-rose-700 font-bold">{errors.password}</p>}
+              </div>
 
-              <Button
-                title={t('createAccountEnter', 'Create Account & Enter Platform')}
-                type="submit"
-                loading={loading}
-                icon={ArrowRight}
-                size="lg"
-                className="mt-1 shadow-md hover:shadow-lg transition-all w-full"
-              />
-
-              {/* Switch to login */}
-              <div className="text-center mt-6 pt-5 border-t border-border/60">
-                <p className="text-sm text-textSecondary">
-                  {t('alreadyRegistered', 'Already registered?')}{' '}
-                  <Link
-                    to="/login"
-                    className="font-bold text-primary hover:text-primaryDark transition-colors inline-flex items-center gap-1 group"
+              {/* Location */}
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1">
+                  <label className="text-xs font-bold text-deepBrown uppercase tracking-wider">State</label>
+                  <select
+                    value={form.state}
+                    onChange={(e) => update('state', e.target.value)}
+                    className="w-full px-3 py-2.5 bg-warmIvory border border-border rounded-2xl text-xs text-deepBrown focus:outline-none focus:border-burgundy"
                   >
-                    {t('signInHere', 'Sign in here')}
-                    <ArrowRight size={14} className="transition-transform group-hover:translate-x-0.5" />
-                  </Link>
-                </p>
+                    {INDIAN_STATES.map(s => <option key={s.code} value={s.name}>{s.name}</option>)}
+                  </select>
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-xs font-bold text-deepBrown uppercase tracking-wider">District</label>
+                  <select
+                    value={form.district}
+                    onChange={(e) => update('district', e.target.value)}
+                    className="w-full px-3 py-2.5 bg-warmIvory border border-border rounded-2xl text-xs text-deepBrown focus:outline-none focus:border-burgundy"
+                  >
+                    {districtList.map(d => <option key={d} value={d}>{d}</option>)}
+                  </select>
+                </div>
+              </div>
+
+              <div className="pt-2">
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full py-3.5 bg-burgundy text-warmIvory font-bold text-xs rounded-2xl hover:bg-burgundy/90 transition-all shadow-md shadow-burgundy/15 disabled:opacity-60"
+                >
+                  {loading ? 'Registering on Blockchain…' : 'Complete Registration →'}
+                </button>
               </div>
             </form>
-          </div>
 
-          <p className="mt-8 text-center text-xs text-textMuted max-w-md">
-            {t('zeroSignupFee', 'Zero signup fee. Instant access to live mandi rates, lot registration, and buyer networking.')}
-          </p>
+            <div className="pt-4 border-t border-border/80 text-center text-xs text-deepBrown/70">
+              <span>Already registered? </span>
+              <Link to="/login" className="font-bold text-burgundy hover:underline">
+                Sign In
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
     </div>

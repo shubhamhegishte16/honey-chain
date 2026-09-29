@@ -43,7 +43,7 @@ app.get('/api/health', (req, res) => {
   res.json({
     status: 'online',
     timestamp: new Date().toISOString(),
-    service: 'WoolConnect Backend REST API',
+    service: 'Honey Chain Backend REST API (SIH26021)',
     version: '1.0.0',
     db: isDbReady ? 'connected' : 'memory-mode'
   });

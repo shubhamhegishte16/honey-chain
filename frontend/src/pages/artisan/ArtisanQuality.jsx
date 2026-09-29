@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { ShieldCheck, Package, Sparkles, ChevronDown, ChevronUp } from 'lucide-react';
+import { ShieldCheck, Package, Sparkles, ChevronDown, ChevronUp, Award } from 'lucide-react';
 import Card from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
 import Input from '../../components/ui/Input';
@@ -9,9 +9,6 @@ import { useToast } from '../../context/ToastContext';
 import { getAssignedProcessingRequests } from '../../services/processing.service';
 import { submitQualityAssessment } from '../../services/quality.service';
 
-// Option `value` is the actual stored data value (kept in English so existing
-// records / backend contracts are unaffected). `labelKey` is the translation
-// key used only for the visible label shown to the user.
 const FIBER_OPTIONS = [
   { value: 'Excellent', labelKey: 'qualityFiberExcellent' },
   { value: 'Good', labelKey: 'qualityFiberGood' },
@@ -39,11 +36,11 @@ const CONTAMINATION_OPTIONS = [
 function Select({ label, value, onChange, options, t }) {
   return (
     <div className="mb-4">
-      <label className="block font-semibold text-sm text-textPrimary mb-1.5">{label}</label>
+      <label className="block font-bold text-xs uppercase tracking-wider text-deepBrown mb-1.5">{label}</label>
       <select
         value={value}
         onChange={onChange}
-        className="w-full min-h-[48px] rounded-xl border border-border/90 bg-surface px-3.5 py-2 text-sm text-textPrimary focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+        className="w-full px-4 py-2.5 rounded-2xl border border-border bg-warmIvory text-xs text-deepBrown focus:outline-none focus:ring-2 focus:ring-burgundy/15 focus:border-burgundy font-medium"
       >
         {options.map(opt => <option key={opt.value} value={opt.value}>{t(opt.labelKey)}</option>)}
       </select>
@@ -94,127 +91,139 @@ export default function ArtisanQuality() {
 
   useEffect(() => {
     load();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function handleSubmit(req) {
-    const batchId = req.batch?._id || req.batch?.id;
-    if (!batchId) return;
-    const form = formFor(req.id);
+    const batchId = req.batch?._id || req.batch?.id || req.batch_id;
     setSubmittingId(req.id);
     const { error } = await submitQualityAssessment({
       batchId,
-      ...form,
-      isAiAssisted: false,
+      ...formFor(batchId),
     });
     setSubmittingId(null);
     if (error) {
       toast.showError(t('somethingWrongTryAgain'));
       return;
     }
-    toast.showSuccess(t('successProcessingUpdated'));
-    setOpenId(null);
+    toast.showSuccess(t('successQualityAssessmentSubmitted'));
     load();
   }
 
   return (
-    <main className="page-shell">
-      <div className="mb-6">
-        <div className="eyebrow text-primary mb-1">
-          <Sparkles size={13} /> {t('quality')}
+    <main className="max-w-[92rem] mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8 font-sans">
+      <div className="bento-card p-6 md:p-8 mb-8 relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="space-y-1">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-honeyGold/20 text-burgundy text-xs font-bold">
+            <Sparkles size={13} className="text-honeyGold" />
+            <span>KVIC Laboratory Testing</span>
+          </div>
+          <h1 className="text-2xl md:text-3xl font-serif font-bold text-deepBrown">
+            {t('qualityAssessment')}
+          </h1>
+          <p className="text-sm text-deepBrown/70 max-w-xl">
+            Evaluate physical clarity, floral aroma, pollen density, and assign grade tiers.
+          </p>
         </div>
-        <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-textPrimary">
-          {t('qualityObservationTitle')}
-        </h1>
-        <p className="text-xs sm:text-sm text-textSecondary mt-1 max-w-xl">{t('qualityObservationHelp')}</p>
       </div>
 
       {loading ? (
-        <div className="py-20 flex justify-center">
-          <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+        <div className="py-16 flex justify-center">
+          <div className="h-10 w-10 animate-spin rounded-full border-3 border-burgundy border-t-transparent" />
         </div>
       ) : requests.length === 0 ? (
-        <div className="p-10 sm:p-16 text-center rounded-3xl bg-surface border border-border flex flex-col items-center">
-          <span className="grid h-16 w-16 place-items-center rounded-3xl bg-primaryLight text-primary mb-4 shadow-sm">
-            <ShieldCheck size={32} />
-          </span>
-          <h3 className="font-bold text-lg text-textPrimary">{t('noQualityQueue')}</h3>
-          <p className="text-xs sm:text-sm text-textSecondary max-w-sm mt-1">{t('noQualityQueueHelp')}</p>
+        <div className="p-12 text-center bento-card flex flex-col items-center">
+          <div className="grid h-16 w-16 place-items-center rounded-3xl bg-honeyGold/20 text-burgundy mb-4 shadow-md shadow-honeyGold/10">
+            <ShieldCheck size={30} />
+          </div>
+          <h3 className="font-serif font-bold text-lg text-deepBrown">{t('noPendingQualityAssessments')}</h3>
+          <p className="text-xs text-deepBrown/70 max-w-sm mt-1">{t('allAssignedBatchesInspected')}</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-4">
+        <div className="space-y-4">
           {requests.map(req => {
+            const batchId = req.batch?._id || req.batch?.id || req.batch_id;
+            const form = formFor(batchId);
             const isOpen = openId === req.id;
-            const form = formFor(req.id);
+
             return (
-              <Card key={req.id}>
-                <button
-                  className="w-full flex items-center justify-between gap-3"
+              <div key={req.id} className="bento-card p-6 md:p-8 space-y-4">
+                <div 
                   onClick={() => setOpenId(isOpen ? null : req.id)}
+                  className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 cursor-pointer select-none"
                 >
                   <div className="flex items-center gap-3">
-                    <span className="grid h-11 w-11 place-items-center rounded-2xl bg-amber-50 text-amber-800 shrink-0">
-                      <Package size={20} />
+                    <span className="grid h-12 w-12 place-items-center rounded-2xl bg-honeyGold/20 text-burgundy shrink-0">
+                      <ShieldCheck size={24} />
                     </span>
-                    <div className="text-left">
-                      <p className="font-bold text-sm text-textPrimary">{req.batch_id}</p>
-                      <p className="text-xs text-textSecondary font-medium">{req.service_type} • {req.quantity_kg} kg</p>
+                    <div>
+                      <p className="font-mono font-bold text-sm text-burgundy">Batch #{req.batch_id}</p>
+                      <p className="text-xs font-bold text-deepBrown">{req.floralSource || req.wool_type || 'Raw Blossom'} Honey • {req.quantity_kg} kg</p>
                     </div>
                   </div>
-                  <span className="inline-flex items-center gap-1 text-xs font-bold text-amber-800 bg-amber-50 px-2.5 py-1 rounded-full">
-                    {t('qualityStatusPending')}
-                    {isOpen ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
-                  </span>
-                </button>
+                  <div className="flex items-center gap-2">
+                    <span className="px-3 py-1 rounded-full text-xs font-bold bg-honeyGold/20 text-burgundy">
+                      Pending Assay
+                    </span>
+                    {isOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                  </div>
+                </div>
 
                 {isOpen && (
-                  <div className="mt-5 pt-5 border-t border-border/60">
-                    <Select
-                      label={t('fibreConditionLabel')}
-                      value={form.fiberAppearance}
-                      onChange={e => updateForm(req.id, 'fiberAppearance', e.target.value)}
-                      options={FIBER_OPTIONS}
-                      t={t}
-                    />
-                    <Select
-                      label={t('colourConsistencyLabel')}
-                      value={form.color}
-                      onChange={e => updateForm(req.id, 'color', e.target.value)}
-                      options={COLOR_OPTIONS}
-                      t={t}
-                    />
-                    <Select
-                      label={t('cleanlinessLabel')}
-                      value={form.cleanliness}
-                      onChange={e => updateForm(req.id, 'cleanliness', e.target.value)}
-                      options={CLEANLINESS_OPTIONS}
-                      t={t}
-                    />
-                    <Select
-                      label={t('contaminationLabel')}
-                      value={form.visibleContamination}
-                      onChange={e => updateForm(req.id, 'visibleContamination', e.target.value)}
-                      options={CONTAMINATION_OPTIONS}
-                      t={t}
-                    />
-                    <Input
-                      label={t('remarksLabel')}
-                      multiline
-                      value={form.notes}
-                      onChange={e => updateForm(req.id, 'notes', e.target.value)}
-                      placeholder={t('remarksLabel')}
-                    />
-                    <Button
-                      fullWidth={false}
-                      icon={ShieldCheck}
-                      loading={submittingId === req.id}
-                      onClick={() => handleSubmit(req)}
-                    >
-                      {t('submitObservation')}
-                    </Button>
+                  <div className="pt-4 border-t border-border/80 space-y-4 animate-enter">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <Select
+                        label="Clarity & Refraction"
+                        value={form.fiberAppearance}
+                        onChange={(e) => updateForm(batchId, 'fiberAppearance', e.target.value)}
+                        options={FIBER_OPTIONS}
+                        t={t}
+                      />
+                      <Select
+                        label="Color & Floral Tone"
+                        value={form.color}
+                        onChange={(e) => updateForm(batchId, 'color', e.target.value)}
+                        options={COLOR_OPTIONS}
+                        t={t}
+                      />
+                      <Select
+                        label="Moisture & Viscosity"
+                        value={form.cleanliness}
+                        onChange={(e) => updateForm(batchId, 'cleanliness', e.target.value)}
+                        options={CLEANLINESS_OPTIONS}
+                        t={t}
+                      />
+                      <Select
+                        label="Pollen Contamination / C4 Test"
+                        value={form.visibleContamination}
+                        onChange={(e) => updateForm(batchId, 'visibleContamination', e.target.value)}
+                        options={CONTAMINATION_OPTIONS}
+                        t={t}
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block font-bold text-xs uppercase tracking-wider text-deepBrown mb-1.5">Assay Remarks</label>
+                      <textarea
+                        rows="2"
+                        value={form.notes}
+                        onChange={(e) => updateForm(batchId, 'notes', e.target.value)}
+                        placeholder="Lab notes regarding floral spectrum, pollen count, or NMR signature..."
+                        className="w-full px-4 py-3 bg-warmIvory border border-border rounded-2xl text-xs text-deepBrown focus:outline-none focus:border-burgundy resize-none"
+                      />
+                    </div>
+
+                    <div className="flex justify-end pt-2">
+                      <button
+                        disabled={submittingId === req.id}
+                        onClick={() => handleSubmit(req)}
+                        className="btn-burgundy text-xs"
+                      >
+                        {submittingId === req.id ? 'Minting Lab Certificate…' : 'Publish Quality Assessment Block →'}
+                      </button>
+                    </div>
                   </div>
                 )}
-              </Card>
+              </div>
             );
           })}
         </div>

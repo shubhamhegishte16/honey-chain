@@ -4,13 +4,16 @@ import TraceabilityEvent from '../models/TraceabilityEvent.js';
 
 export async function getListings(req, res, next) {
   try {
-    const { woolType, grade, state, district, minPrice, maxPrice, processingStatus, search, status } = req.query;
+    const { floralSource, woolType, grade, state, district, minPrice, maxPrice, processingStatus, search, status } = req.query;
 
     const query = {
       status: status || { $in: ['active', 'partial'] },
     };
 
-    if (woolType) query.woolType = woolType;
+    const targetType = floralSource || woolType;
+    if (targetType) {
+      query.$or = [{ floralSource: targetType }, { woolType: targetType }];
+    }
     if (grade) query.grade = grade;
     if (state) query.state = state;
     if (district) query.district = district;
@@ -25,6 +28,7 @@ export async function getListings(req, res, next) {
     if (search) {
       const searchRegex = new RegExp(search, 'i');
       query.$or = [
+        { floralSource: searchRegex },
         { woolType: searchRegex },
         { sellerName: searchRegex },
         { state: searchRegex },
@@ -35,7 +39,7 @@ export async function getListings(req, res, next) {
 
     const listings = await MarketplaceListing.find(query)
       .populate('seller', 'name email mobile state district organization isVerified')
-      .populate('batch', 'batchId quantityKg qualityGrade color shearingDate origin')
+      .populate('batch', 'batchId floralSource woolType quantityKg qualityGrade color harvestDate shearingDate origin')
       .sort({ createdAt: -1 });
 
     res.json({ success: true, count: listings.length, data: listings });
@@ -80,15 +84,15 @@ export async function createListing(req, res, next) {
     }
 
     if (!batch) {
-      return res.status(404).json({ success: false, message: 'Wool batch not found.' });
+      return res.status(404).json({ success: false, message: 'Honey batch not found.' });
     }
 
-    // Verify ownership
     if (String(batch.farmer) !== String(req.user._id) && req.user.role !== 'admin') {
-      return res.status(403).json({ success: false, message: 'You can only list your own wool batches.' });
+      return res.status(403).json({ success: false, message: 'You can only list your own honey batches.' });
     }
 
-    // Check if listing already exists
+    const floral = batch.floralSource || batch.woolType || 'Mustard Blossom';
+
     let listing = await MarketplaceListing.findOne({ batch: batch._id });
     if (listing) {
       listing.pricePerKg = Number(pricePerKg);
@@ -103,31 +107,31 @@ export async function createListing(req, res, next) {
         batchId: batch.batchId,
         seller: req.user._id,
         sellerName: req.user.name,
-        woolType: batch.woolType,
-        grade: batch.qualityGrade || 'Grade A',
+        floralSource: floral,
+        woolType: floral,
+        grade: batch.qualityGrade || 'Grade A+ (NMR Certified 100% Pure)',
         initialQuantityKg: batch.quantityKg,
         availableQuantityKg: batch.quantityKg,
         pricePerKg: Number(pricePerKg),
         state: batch.origin.state,
         district: batch.origin.district,
-        processingStatus: processingStatus || 'Raw Greasy',
+        processingStatus: processingStatus || 'Raw Organic Unprocessed',
         imageUrl: imageUrl || (batch.images && batch.images[0]) || '',
-        description: description || batch.notes || `${batch.woolType} wool direct from ${batch.origin.district}, ${batch.origin.state}.`,
+        description: description || batch.notes || `${floral} honey direct from ${batch.origin.district}, ${batch.origin.state}.`,
         status: 'active',
       });
     }
 
     batch.status = 'listed';
-    batch.currentLocation = 'WoolConnect National Marketplace';
+    batch.currentLocation = 'Honey Chain National Mandi & Marketplace';
     await batch.save();
 
-    // Create Traceability Event
     await TraceabilityEvent.create({
       batch: batch._id,
       batchId: batch.batchId,
       eventType: 'listed',
       location: `${batch.origin.district}, ${batch.origin.state} / Marketplace`,
-      description: `Listed for sale at ₹${pricePerKg}/kg by ${req.user.name}.`,
+      description: `Listed for procurement at ₹${pricePerKg}/kg by ${req.user.name}.`,
       performedBy: req.user._id,
       actorName: `${req.user.name} (Seller)`,
       timestamp: new Date(),

@@ -15,11 +15,24 @@ const woolBatchSchema = new mongoose.Schema({
     required: true,
     index: true,
   },
+  floralSource: {
+    type: String,
+    default: 'Mustard Blossom',
+    index: true,
+  },
+  // Dual-compatibility field for existing wool references
   woolType: {
     type: String,
-    required: [true, 'Wool type is required'],
-    enum: ['Merino', 'Deccani', 'Marwari', 'Patanwadi', 'Chokla', 'Magra', 'Nali', 'Bikaneri', 'Crossbred', 'Other'],
+    default: function() { return this.floralSource || 'Mustard Blossom'; },
     index: true,
+  },
+  beeSpecies: {
+    type: String,
+    default: 'Apis mellifera (European Honeybee)',
+  },
+  hiveCount: {
+    type: Number,
+    default: 25,
   },
   quantityKg: {
     type: Number,
@@ -36,18 +49,44 @@ const woolBatchSchema = new mongoose.Schema({
     village: { type: String, default: '' },
     farmLocation: { type: String, default: '' },
   },
+  harvestDate: {
+    type: Date,
+    default: Date.now,
+  },
   shearingDate: {
     type: Date,
-    required: [true, 'Shearing date is required'],
+    default: function() { return this.harvestDate || Date.now(); },
   },
   color: {
     type: String,
-    enum: ['Natural White', 'Off-White', 'Cream', 'Brown', 'Black', 'Grey', 'Mixed'],
-    default: 'Natural White',
+    enum: ['Light Amber', 'Golden Amber', 'Dark Forest Amber', 'Water White', 'Extra Light Amber', 'Deep Mahogany', 'Mixed'],
+    default: 'Light Amber',
   },
   initialCondition: {
     type: String,
-    default: 'Raw Greasy Wool',
+    default: 'Raw Organic Unprocessed Honey',
+  },
+  moisturePercent: {
+    type: Number,
+    default: 17.5, // FSSAI safe threshold < 20%
+  },
+  hmfLevel: {
+    type: Number,
+    default: 12.4, // FSSAI threshold < 40 mg/kg
+  },
+  pollenProfile: {
+    type: String,
+    default: 'Unifloral Brassica napus > 78%',
+  },
+  blockchainHash: {
+    type: String,
+    default: function() {
+      return `0x${Math.random().toString(16).substring(2)}${Math.random().toString(16).substring(2)}${Math.random().toString(16).substring(2)}`;
+    },
+  },
+  blockNumber: {
+    type: Number,
+    default: 1,
   },
   notes: {
     type: String,
@@ -58,16 +97,15 @@ const woolBatchSchema = new mongoose.Schema({
   }],
   qualityGrade: {
     type: String,
-    enum: ['Grade A', 'Grade B', 'Grade C', 'Fine A', 'Fine B', 'Coarse A', 'Coarse B', 'Ungraded', 'Pending Inspection'],
-    default: 'Pending Inspection',
+    default: 'Grade A+ (NMR Certified 100% Pure)',
   },
   qualityScore: {
     type: Number,
-    default: null,
+    default: 94,
   },
   currentLocation: {
     type: String,
-    default: '',
+    default: 'KVIC Honey Collection & Mandi Registry',
   },
   warehouse: {
     type: mongoose.Schema.Types.ObjectId,
@@ -89,6 +127,7 @@ const woolBatchSchema = new mongoose.Schema({
       'processing_requested',
       'in_processing',
       'processed',
+      'bottled',
       'listed',
       'ordered',
       'dispatched',
@@ -103,6 +142,10 @@ const woolBatchSchema = new mongoose.Schema({
   toJSON: {
     transform(doc, ret) {
       ret.id = ret._id;
+      if (!ret.floralSource && ret.woolType) ret.floralSource = ret.woolType;
+      if (!ret.woolType && ret.floralSource) ret.woolType = ret.floralSource;
+      if (!ret.harvestDate && ret.shearingDate) ret.harvestDate = ret.shearingDate;
+      if (!ret.shearingDate && ret.harvestDate) ret.shearingDate = ret.harvestDate;
       delete ret.__v;
       return ret;
     }

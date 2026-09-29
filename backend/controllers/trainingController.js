@@ -50,42 +50,44 @@ export async function aiAssistantChat(req, res, next) {
     let responseText = '';
     let recommendations = [];
 
-    if (q.includes('monsoon') || q.includes('rain') || q.includes('moisture') || q.includes('wet')) {
-      responseText = `**Monsoon Wool Care & Storage Protocol:**
-1. **Never shear sheep in wet conditions**: Shearing damp fleece causes immediate mildew formation and fibre rotting inside packed bales.
-2. **Elevated Pallet Stacking**: Store all wool bags at least 15 cm off damp concrete/earthen floors on wooden or plastic pallets.
-3. **Humidity Barrier**: Wrap stacks in breathable waterproof tarpaulins with silica desiccants; avoid airtight plastic wrap which traps internal condensation.
-4. **Regular Aeration**: On dry overcast days, open side ventilators to circulate air without exposing fleece to direct rain splashes.`;
-      recommendations = ['Store wool on pallets', 'Check warehouse relative humidity (<65%)', 'Use moisture-proof gunny bags'];
-    } else if (q.includes('grade') || q.includes('grading') || q.includes('quality') || q.includes('micron')) {
-      responseText = `**Official Wool Grading & Valuation Guidelines:**
-* **Grade A (Apparel Grade)**: Micron < 25µm, Staple Length > 65mm, Vegetable Matter < 2%, Moisture < 14%. Sells at 30-40% premium.
-* **Grade B (Carpet & Medium)**: Micron 25-32µm, Staple Length 45-65mm, Vegetable Matter 2-5%.
-* **Grade C (Industrial/Coarse)**: Staple Length < 45mm, high burr and dirt content.
+    if (q.includes('moisture') || q.includes('ferment') || q.includes('water') || q.includes('damp')) {
+      responseText = `**Honey Moisture Management & Fermentation Prevention:**
+1. **Harvest Only Sealed Combs**: Only extract frames where at least 75-80% of honey cells are wax-capped by bees. Capped cells indicate natural moisture < 18%.
+2. **Dehumidification**: In humid coastal or monsoon harvest zones, use solar or low-temperature dehumidifiers before extraction.
+3. **Moisture Standard**: FSSAI requires moisture content ≤ 20.0%. Honey below 18% never ferments and maintains unlimited shelf life.
+4. **Hermetic Storage**: Store extracted raw honey in food-grade, airtight 304-grade stainless steel barrels with food-grade silicone gaskets.`;
+      recommendations = ['Extract only 80%+ sealed honeycombs', 'Check refractometer reading before extraction', 'Use airtight food-grade storage drums'];
+    } else if (q.includes('nmr') || q.includes('purity') || q.includes('adulterat') || q.includes('c4') || q.includes('hmf')) {
+      responseText = `**Official Honey Quality & NMR Standards (FSSAI & KVIC):**
+* **NMR Spectroscopy**: Analyzes botanical signature; detects all forms of foreign inverted sugar syrups (rice syrup, corn syrup, beet sugar).
+* **Moisture**: Must be < 20% (Grade A+ requires < 18%).
+* **HMF (Hydroxymethylfurfural)**: Must be < 40 mg/kg (High HMF indicates overheating or aging).
+* **C4 Sugar Isotope Ratio**: Must be negative (< 1%).
+* **Fructose to Glucose Ratio**: Minimum 0.95 (Ensures natural enzymatic balance).
 
-**Tip for Maximum Return:** Skirt your fleece immediately after shearing to remove belly and leg stained wool. Skirting takes 3 minutes and upgrades the entire main fleece to Grade A!`;
-      recommendations = ['Perform immediate post-shearing skirting', 'Use WoolConnect AI scanner for instant preliminary check', 'Register batch with digital test report'];
-    } else if (q.includes('price') || q.includes('sell') || q.includes('market') || q.includes('buyer')) {
-      responseText = `**Maximizing Sales Value on WoolConnect:**
-1. **Direct Marketplace Listing**: Eliminate 20-30% middleman margins by creating a direct verified listing with photo evidence.
-2. **QR Traceability Badge**: Buyers and textile mills pay top rates when they can scan your batch QR code and verify authentic origin in Rajasthan/Gujarat/J&K.
-3. **Check Live Mandi Prices**: Consult our Market Intelligence board before quoting prices to ensure you capture current upward price momentum.`;
-      recommendations = ['Generate QR batch code for every shearing', 'Check state price trends on Market Prices page', 'Respond promptly to buyer inquiries'];
-    } else if (q.includes('scour') || q.includes('process') || q.includes('card') || q.includes('dye')) {
-      responseText = `**Wool Processing & Value Addition:**
-* **Scouring**: Removes grease (lanolin), dirt, and sweat salts. Always use neutral non-ionic detergents at 50-55°C.
-* **Carding**: Aligns tangled fibres into uniform slivers. Increases raw fleece value by over 60%.
-* **Dyeing**: Natural dyes (walnut hull, madder, pomegranate) with alum mordant produce organic eco-certified yarn that commands premium export pricing.`;
-      recommendations = ['Connect with verified processing mills on the Processing tab', 'Store scoured wool in clean dust-free covers'];
+**Tip for Higher Value:** NMR-certified pure unifloral honey commands a 40-60% export and domestic premium!`;
+      recommendations = ['Request digital NMR test certificate via KVIC lab', 'Avoid heating raw honey above 45°C', 'Register batch with Honey Chain QR passport'];
+    } else if (q.includes('price') || q.includes('sell') || q.includes('market') || q.includes('buyer') || q.includes('mandi')) {
+      responseText = `**Maximizing Honey Revenue on Honey Chain:**
+1. **Direct Mandi Listing**: Connect directly with FMCG brands, Ayurvedic pharmacies, and organic buyers without middleman cuts.
+2. **QR Traceability Badge**: Verified batch origin in Bharatpur, Kashmir, or Sundarbans with blockchain proof commands premium rates.
+3. **Check APMC Benchmarks**: Consult our live Mandi Intelligence to track daily prices for Mustard, Sidr, Acacia, and Multifloral varieties.`;
+      recommendations = ['Generate QR batch passport for each harvest', 'Check state price trends on Mandi Prices page', 'Respond promptly to buyer procurement RFQs'];
+    } else if (q.includes('extract') || q.includes('centrifug') || q.includes('filter') || q.includes('bottle')) {
+      responseText = `**Honey Processing & Bottling Best Practices:**
+* **Centrifugal Extraction**: Use stainless steel food-grade radial extractors without damaging comb foundations.
+* **Micro-Filtration**: Gravity filter through 80-micron food-grade stainless mesh to remove wax fragments while preserving natural pollen grains.
+* **Hermetic Bottling**: Clean sterilized glass or PET jars with induction heat seals protect aroma and prevent moisture re-absorption.`;
+      recommendations = ['Send raw lots to verified processing facilities on the Processing tab', 'Store bottled honey away from direct sunlight'];
     } else {
-      responseText = `**WoolConnect AI Expert Advice:**
-To optimize your wool yield and profitability:
-1. **Record Every Clip**: Create a batch record immediately upon shearing to assign an immutable Batch ID and QR token.
-2. **Certified Quality Testing**: Request inspection or use our AI camera preliminary scanner to determine micron class and grade.
-3. **Direct Procurement**: List on the platform marketplace to connect with textile mills and artisan cooperatives directly across India.
+      responseText = `**Honey Chain AI Apiculture Advisory:**
+To optimize your apiary yield and honey quality:
+1. **Log Every Harvest Lot**: Create a batch record immediately upon comb extraction to assign an immutable Batch ID and QR token.
+2. **Certified Quality Testing**: Request inspection or use our AI camera preliminary scanner to determine moisture, pollen density, and floral grade.
+3. **Direct Procurement**: List on the platform marketplace to connect with certified Ayurvedic processors and direct consumers across India.
 
-*Note: AI-generated advisory based on Central Wool Development Board guidelines and pastoralist best practices.*`;
-      recommendations = ['Browse Knowledge Center articles', 'View Market Prices for your state', 'Add a new Wool Batch'];
+*Note: AI-generated advisory aligned with National Bee Board (NBB) and KVIC Honey Mission guidelines.*`;
+      recommendations = ['Browse Knowledge Center apiculture articles', 'View Mandi Prices for your state', 'Log a new Honey Batch'];
     }
 
     res.json({
@@ -94,7 +96,7 @@ To optimize your wool yield and profitability:
         question,
         answer: responseText,
         recommendedActions: recommendations,
-        disclaimer: 'AI-assisted advisory. Please consult regional veterinary and agricultural extension officers for clinical livestock treatments.',
+        disclaimer: 'AI-assisted advisory. Please consult regional apiculture extension officers for colony disease management.',
       }
     });
   } catch (error) {

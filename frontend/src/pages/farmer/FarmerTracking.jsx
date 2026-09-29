@@ -20,8 +20,6 @@ import {
 import { useAuth } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
 import BatchStatusBadge from '../../components/batch/BatchStatusBadge';
-import Button from '../../components/ui/Button';
-import RequestProcessingModal from '../../components/processing/RequestProcessingModal';
 import { getBatchesByFarmer } from '../../services/batches.service';
 
 export default function FarmerTracking() {
@@ -31,7 +29,6 @@ export default function FarmerTracking() {
   const [batches, setBatches] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [selectedBatchForProcessing, setSelectedBatchForProcessing] = useState(null);
 
   const [search, setSearch] = useState('');
   const [activeFilter, setActiveFilter] = useState('all');
@@ -64,24 +61,23 @@ export default function FarmerTracking() {
   });
 
   return (
-    <main className="page-shell py-6">
+    <main className="page-shell">
+      
       {/* ─── Header ─── */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
-          <div className="eyebrow text-amber-600 mb-1 flex items-center gap-1 font-bold text-xs uppercase tracking-wider">
-            <Sparkles size={13} /> KVIC Honey Mission Apiary Lots
-          </div>
-          <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-textPrimary">
+          <span className="eyebrow"><Sparkles size={13} /> KVIC Honey Mission Apiary Lots</span>
+          <h1 className="text-2xl sm:text-3xl font-bold font-serif tracking-tight text-[#281D1C] mt-1">
             My Honey Harvest Batches
           </h1>
-          <p className="text-xs sm:text-sm text-textSecondary mt-0.5">
-            Total Harvested: {batches.reduce((sum, batch) => sum + Number(batch.quantity_kg || batch.quantityKg || 0), 0).toLocaleString()} kg
+          <p className="text-xs sm:text-sm text-[#5E524D] mt-1">
+            Total Harvested: <strong className="text-[#281D1C]">{batches.reduce((sum, batch) => sum + Number(batch.quantity_kg || batch.quantityKg || 0), 0).toLocaleString()} kg</strong> across all active apiaries
           </p>
         </div>
 
         <button
           onClick={() => navigate('/batches/add')}
-          className="self-start sm:self-auto inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-white font-bold text-sm shadow-sm hover:bg-primaryDark hover:shadow-md transition-all active:scale-[0.98]"
+          className="self-start sm:self-auto inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#861C1C] text-white font-bold text-xs sm:text-sm shadow-burgundy hover:bg-[#6A1515] transition-all hover:scale-105 active:scale-95"
         >
           <ClipboardPlus size={16} />
           <span>Log Honey Harvest</span>
@@ -91,13 +87,13 @@ export default function FarmerTracking() {
       {/* ─── Search & Status Filters ─── */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 mb-6">
         <div className="relative flex-1 max-w-md">
-          <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-textMuted" />
+          <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9B918B]" />
           <input
             type="text"
             value={search}
             onChange={e => setSearch(e.target.value)}
-            placeholder="Search by lot ID, flora (Mustard, Acacia), or district..."
-            className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-border bg-surface text-sm text-textPrimary placeholder:text-textMuted focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+            placeholder="Search by lot ID, floral bloom, or district..."
+            className="w-full pl-11 pr-4 py-2.5 rounded-full border border-[#E8E3CF] bg-white text-xs sm:text-sm text-[#281D1C] placeholder:text-[#9B918B] focus:outline-none focus:ring-2 focus:ring-[#F4B345]/30 focus:border-[#F4B345] shadow-soft"
           />
         </div>
 
@@ -106,10 +102,10 @@ export default function FarmerTracking() {
             <button
               key={filter.id}
               onClick={() => setActiveFilter(filter.id)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0 ${
+              className={`px-3.5 py-1.5 rounded-full text-xs font-semibold shrink-0 transition-all ${
                 activeFilter === filter.id
-                  ? 'bg-primary text-white shadow-xs'
-                  : 'bg-surface border border-border/80 text-textSecondary hover:bg-background'
+                  ? 'bg-[#861C1C] text-white shadow-burgundy font-bold'
+                  : 'bg-white border border-[#E8E3CF] text-[#5E524D] hover:border-[#D6CEB5]'
               }`}
             >
               {filter.label}
@@ -120,18 +116,18 @@ export default function FarmerTracking() {
 
       {/* ─── Batch List ─── */}
       {loading ? (
-        <div className="py-16 flex justify-center items-center gap-2">
-          <div className="h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-          <span className="text-sm text-textSecondary">Loading apiary records...</span>
+        <div className="py-20 flex flex-col items-center justify-center gap-3">
+          <div className="h-8 w-8 animate-spin rounded-full border-3 border-[#861C1C] border-t-transparent" />
+          <span className="text-xs font-bold text-[#5E524D]">Loading apiary records...</span>
         </div>
       ) : filteredBatches.length === 0 ? (
-        <div className="text-center py-16 bg-surface border border-border/70 rounded-3xl p-8">
+        <div className="text-center py-16 bg-white border border-[#E8E3CF] rounded-3xl p-8 shadow-card">
           <span className="text-4xl">🐝</span>
-          <h3 className="text-base font-bold text-textPrimary mt-3">No Honey Batches Found</h3>
-          <p className="text-xs text-textSecondary mt-1">Start by recording your first raw honey harvest extraction.</p>
+          <h3 className="text-base font-bold font-serif text-[#281D1C] mt-3">No Honey Batches Found</h3>
+          <p className="text-xs text-[#5E524D] mt-1">Start by recording your first raw honey harvest extraction.</p>
           <button
             onClick={() => navigate('/batches/add')}
-            className="mt-4 px-4 py-2 rounded-xl bg-primary text-white text-xs font-bold"
+            className="mt-4 px-5 py-2.5 rounded-full bg-[#861C1C] text-white text-xs font-bold shadow-burgundy hover:bg-[#6A1515]"
           >
             Log New Harvest
           </button>
@@ -141,42 +137,42 @@ export default function FarmerTracking() {
           {filteredBatches.map(batch => {
             const batchId = batch.batch_id || batch.batchId || batch.id;
             const floral = batch.floralSource || batch.wool_type || 'Mustard Blossom Raw Honey';
-            const weight = batch.quantity_kg || batch.quantityKg || 50;
+            const weight = batch.quantity_kg || batch.quantityKg || 60;
 
             return (
               <div
                 key={batchId}
-                className="rounded-3xl bg-surface border border-border/80 p-5 hover:border-amber-400 hover:shadow-card transition-all flex flex-col justify-between"
+                className="rounded-3xl bg-white border border-[#E8E3CF] p-5 hover:border-[#F4B345] hover:shadow-card-hover transition-all flex flex-col justify-between"
               >
                 <div>
-                  <div className="flex items-center justify-between gap-2 mb-3">
-                    <span className="text-xs font-extrabold font-mono text-primary bg-primaryLight px-2.5 py-0.5 rounded-full">
+                  <div className="flex items-center justify-between gap-2 mb-3 pb-2 border-b border-[#E8E3CF]/60">
+                    <span className="text-xs font-bold font-mono text-[#861C1C] bg-[#FBEBEB] px-2.5 py-0.5 rounded-full border border-[#861C1C]/20">
                       {batchId}
                     </span>
                     <BatchStatusBadge status={batch.status} />
                   </div>
 
-                  <h3 className="font-extrabold text-base text-textPrimary">{floral}</h3>
-                  <p className="text-xs text-textSecondary mt-0.5 flex items-center gap-1">
-                    <MapPin size={12} className="text-primary" /> {batch.district || 'Bharatpur'}, {batch.state || 'Rajasthan'}
+                  <h3 className="font-bold font-serif text-base text-[#281D1C]">{floral}</h3>
+                  <p className="text-xs text-[#5E524D] mt-0.5 flex items-center gap-1">
+                    <MapPin size={12} className="text-[#C06E30]" /> {batch.district || 'Bharatpur'}, {batch.state || 'Rajasthan'}
                   </p>
 
-                  <div className="grid grid-cols-2 gap-2 mt-4 p-3 bg-amber-50/50 rounded-2xl border border-amber-200/50 text-xs">
+                  <div className="grid grid-cols-2 gap-2 mt-4 p-3 bg-[#FAF7EE] rounded-2xl border border-[#E8E3CF] text-xs">
                     <div>
-                      <span className="text-textMuted block text-[10px] uppercase font-bold">Quantity</span>
-                      <strong className="text-sm font-black text-amber-900 font-mono">{weight} kg</strong>
+                      <span className="text-[#9B918B] block text-[10px] uppercase font-bold">Quantity</span>
+                      <strong className="text-sm font-bold text-[#861C1C] font-mono">{weight} kg</strong>
                     </div>
                     <div>
-                      <span className="text-textMuted block text-[10px] uppercase font-bold">Quality Grade</span>
-                      <strong className="text-xs font-bold text-emerald-700">{batch.qualityGrade || 'Grade A+'}</strong>
+                      <span className="text-[#9B918B] block text-[10px] uppercase font-bold">Quality Grade</span>
+                      <strong className="text-xs font-bold text-emerald-800">{batch.qualityGrade || 'Grade A+'}</strong>
                     </div>
                   </div>
                 </div>
 
-                <div className="mt-5 pt-3 border-t border-border/60 flex items-center justify-between gap-2">
+                <div className="mt-5 pt-3 border-t border-[#E8E3CF] flex items-center justify-between gap-2">
                   <Link
                     to={`/batches/${batch._id || batch.id}/details`}
-                    className="text-xs font-bold text-primary hover:underline flex items-center gap-1"
+                    className="text-xs font-bold text-[#861C1C] hover:underline flex items-center gap-1"
                   >
                     View Details →
                   </Link>
@@ -185,16 +181,16 @@ export default function FarmerTracking() {
                     <Link
                       to={`/batches/${batch._id || batch.id}/qr`}
                       title="QR Code"
-                      className="p-2 rounded-xl bg-background border border-border hover:border-primary/50 text-textSecondary hover:text-primary transition-colors"
+                      className="p-2 rounded-full bg-[#FAF7EE] border border-[#E8E3CF] hover:border-[#F4B345] text-[#5E524D] hover:text-[#281D1C] transition-colors"
                     >
-                      <QrCode size={15} />
+                      <QrCode size={14} />
                     </Link>
                     <Link
                       to={`/buyer/honey-passport/${batchId}`}
                       title="Public Passport"
-                      className="p-2 rounded-xl bg-amber-100 border border-amber-300 hover:bg-amber-200 text-amber-900 transition-colors"
+                      className="p-2 rounded-full bg-[#FEF6E4] border border-[#F4B345]/40 text-[#C06E30] hover:bg-[#FDE8B5] transition-colors"
                     >
-                      <ShieldCheck size={15} />
+                      <ShieldCheck size={14} />
                     </Link>
                   </div>
                 </div>
@@ -203,6 +199,7 @@ export default function FarmerTracking() {
           })}
         </div>
       )}
+
     </main>
   );
 }

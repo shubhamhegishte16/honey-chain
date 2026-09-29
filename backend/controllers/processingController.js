@@ -82,7 +82,7 @@ export async function getProcessingRequests(req, res, next) {
     const requests = await ProcessingRequest.find(filter)
       .populate('farmer', 'name email mobile state district')
       .populate('processor', 'name email mobile state district organization')
-      .populate('batch', 'batchId woolType quantityKg qualityGrade')
+      .populate('batch', 'batchId floralSource woolType quantityKg qualityGrade')
       .sort({ createdAt: -1 });
 
     res.json({ success: true, count: requests.length, data: requests });
@@ -114,14 +114,14 @@ export async function markBatchReceived(req, res, next) {
     const { id } = req.params;
     const batch = await WoolBatch.findById(id);
     if (!batch) {
-      return res.status(404).json({ success: false, message: 'Wool batch not found.' });
+      return res.status(404).json({ success: false, message: 'Honey batch not found.' });
     }
     if (String(batch.processor) !== String(req.user._id)) {
       return res.status(403).json({ success: false, message: 'Not authorised to receive this batch.' });
     }
 
     batch.status = 'in_processing';
-    batch.currentLocation = `${req.user.organization || req.user.name} (Processing Mill) — Received`;
+    batch.currentLocation = `${req.user.organization || req.user.name} (Processing & Bottling Facility) — Received`;
     await batch.save();
 
     await ProcessingRequest.updateMany(
@@ -134,17 +134,17 @@ export async function markBatchReceived(req, res, next) {
       batchId: batch.batchId,
       eventType: 'processing_received',
       location: `${req.user.district}, ${req.user.state}`,
-      description: `Batch received at ${req.user.organization || req.user.name} and registered for processing.`,
+      description: `Raw honey batch received at ${req.user.organization || req.user.name} and registered for micro-filtration and bottling.`,
       performedBy: req.user._id,
-      actorName: `${req.user.name} (Processor)`,
+      actorName: `${req.user.name} (Processing Facility)`,
       timestamp: new Date(),
       metadata: { processorId: req.user._id },
     });
 
     await Notification.create({
       recipient: batch.farmer,
-      title: `Batch ${batch.batchId} Received`,
-      message: `Your wool batch has been received by ${req.user.organization || req.user.name} and processing has begun.`,
+      title: `Batch ${batch.batchId} Received at Facility`,
+      message: `Your honey batch has been received by ${req.user.organization || req.user.name} and processing/bottling has commenced.`,
       type: 'processing',
       relatedId: batch.batchId,
       link: `/batches/${batch.batchId}/traceability`,
@@ -165,7 +165,7 @@ export async function getActiveProcessing(req, res, next) {
       status: 'in_progress',
     })
       .populate('farmer', 'name mobile state district')
-      .populate('batch', 'batchId woolType quantityKg qualityGrade status currentLocation')
+      .populate('batch', 'batchId floralSource woolType quantityKg qualityGrade status currentLocation')
       .sort({ updatedAt: -1 });
 
     res.json({ success: true, count: requests.length, data: requests });
@@ -191,7 +191,7 @@ export async function requestProcessing(req, res, next) {
     }
 
     if (!batch) {
-      return res.status(404).json({ success: false, message: 'Wool batch not found.' });
+      return res.status(404).json({ success: false, message: 'Honey batch not found.' });
     }
 
     let processor = null;
@@ -202,7 +202,7 @@ export async function requestProcessing(req, res, next) {
     }
 
     if (!processor) {
-      return res.status(404).json({ success: false, message: 'Designated wool processor not found.' });
+      return res.status(404).json({ success: false, message: 'Designated honey processor not found.' });
     }
 
     const count = await ProcessingRequest.countDocuments();
@@ -210,12 +210,15 @@ export async function requestProcessing(req, res, next) {
     const qty = Number(quantityKg) || batch.quantityKg;
 
     const rateMap = {
+      'Comb Extraction & Centrifugation': 15,
+      'Micro-Filtration & Settling': 12,
+      'Moisture Dehumidification (<18%)': 18,
+      'Crystallization Control & Creaming': 20,
+      'Hermetic Sterilized Bottling & QR Labelling': 25,
+      'Full Apiculture Processing & Bottling': 45,
       'Scouring & Carding': 18,
       'Sorting & Grading': 12,
-      'Combing': 22,
-      'Spinning': 35,
-      'Dyeing': 28,
-      'Full Processing': 65,
+      'Full Processing': 45,
     };
     const estimatedCost = Math.round(qty * (rateMap[serviceType] || 20));
 
@@ -246,7 +249,7 @@ export async function requestProcessing(req, res, next) {
       location: `${processor.district}, ${processor.state}`,
       description: `${serviceType} request (${requestId}) submitted to ${processor.organization || processor.name}.`,
       performedBy: req.user._id,
-      actorName: `${req.user.name} (Farmer)`,
+      actorName: `${req.user.name} (Beekeeper)`,
       timestamp: new Date(),
       metadata: { requestId, serviceType, estimatedCost }
     });
@@ -254,7 +257,7 @@ export async function requestProcessing(req, res, next) {
     await Notification.create({
       recipient: processor._id,
       title: `New Processing Request: ${requestId}`,
-      message: `${req.user.name} requested ${serviceType} for ${qty} kg ${batch.woolType} wool.`,
+      message: `${req.user.name} requested ${serviceType} for ${qty} kg ${batch.floralSource || batch.woolType} honey.`,
       type: 'processing',
       relatedId: requestId,
       link: '/processor/dashboard',
@@ -266,9 +269,6 @@ export async function requestProcessing(req, res, next) {
   }
 }
 
-// Allowed status transitions for the processing workflow:
-// requested -> accepted -> in_progress -> completed
-// requested/accepted -> rejected
 const VALID_TRANSITIONS = {
   requested: ['accepted', 'in_progress', 'rejected'],
   accepted: ['in_progress', 'rejected'],
@@ -281,7 +281,7 @@ const VALID_TRANSITIONS = {
 export async function updateProcessingStatus(req, res, next) {
   try {
     const { id } = req.params;
-    const { status, outputNotes } = req.body;
+    const { status, outputNotes, bottlesPacked } = req.body;
 
     const allowedStatuses = ['requested', 'accepted', 'in_progress', 'completed', 'rejected'];
     if (!status || !allowedStatuses.includes(status)) {
@@ -293,9 +293,6 @@ export async function updateProcessingStatus(req, res, next) {
       return res.status(404).json({ success: false, message: 'Processing request not found.' });
     }
 
-    // Authorization: never rely on frontend role checks alone.
-    // Admins may manage any processing request. Artisans/processors may
-    // only update requests that are actually assigned to them.
     if (req.user.role !== 'admin') {
       if (!['artisan', 'processor'].includes(req.user.role)) {
         return res.status(403).json({ success: false, message: 'You are not authorized to update processing requests.' });
@@ -306,8 +303,6 @@ export async function updateProcessingStatus(req, res, next) {
       }
     }
 
-    // Enforce valid workflow transitions (admins may still only move requests
-    // forward through the defined workflow, unless already in a terminal state).
     if (status !== request.status) {
       const allowedNext = VALID_TRANSITIONS[request.status] || [];
       if (!allowedNext.includes(status)) {
@@ -319,6 +314,7 @@ export async function updateProcessingStatus(req, res, next) {
     }
 
     request.status = status;
+    if (bottlesPacked) request.bottlesPacked = Number(bottlesPacked);
     if (status === 'completed') {
       request.completionDate = new Date();
     }
@@ -329,11 +325,11 @@ export async function updateProcessingStatus(req, res, next) {
       if (status === 'in_progress') {
         batch.status = 'in_processing';
         batch.processor = req.user._id;
-        batch.currentLocation = `${req.user.organization || req.user.name} (Processing Mill)`;
+        batch.currentLocation = `${req.user.organization || req.user.name} (Processing Facility)`;
         await batch.save();
       } else if (status === 'completed') {
-        batch.status = 'processed';
-        batch.currentLocation = `${req.user.organization || req.user.name} (Processed & Packaged)`;
+        batch.status = 'bottled';
+        batch.currentLocation = `${req.user.organization || req.user.name} (Hermetically Sealed & QR Labelled Jars)`;
         await batch.save();
 
         await TraceabilityEvent.create({
@@ -341,11 +337,11 @@ export async function updateProcessingStatus(req, res, next) {
           batchId: batch.batchId,
           eventType: 'processed',
           location: `${req.user.district}, ${req.user.state}`,
-          description: `${request.serviceType} completed by ${req.user.organization || req.user.name}. ${outputNotes || 'Wool processed and prepared for textile manufacturing.'}`,
+          description: `${request.serviceType} completed by ${req.user.organization || req.user.name}. ${outputNotes || 'Honey filtered at 50-micron, settled, and hermetically bottled with blockchain QR seal.'}`,
           performedBy: req.user._id,
           actorName: `${req.user.name} (Processor)`,
           timestamp: new Date(),
-          metadata: { requestId: request.requestId, serviceType: request.serviceType }
+          metadata: { requestId: request.requestId, serviceType: request.serviceType, bottlesPacked: request.bottlesPacked || Math.round(batch.quantityKg * 2) }
         });
       } else if (status === 'rejected') {
         batch.status = 'quality_checked';
@@ -378,7 +374,7 @@ export async function getProcessingHistory(req, res, next) {
       status: { $in: ['completed', 'rejected'] },
     })
       .populate('farmer', 'name mobile state district')
-      .populate('batch', 'batchId woolType quantityKg qualityGrade')
+      .populate('batch', 'batchId floralSource woolType quantityKg qualityGrade')
       .sort({ updatedAt: -1 });
 
     res.json({ success: true, count: requests.length, data: requests });
@@ -393,7 +389,7 @@ export async function getProcessedProducts(req, res, next) {
     const processorId = req.user._id;
     const batches = await WoolBatch.find({
       processor: processorId,
-      status: { $in: ['processed', 'listed', 'ordered', 'dispatched', 'delivered', 'sold'] },
+      status: { $in: ['processed', 'bottled', 'listed', 'ordered', 'dispatched', 'delivered', 'sold'] },
     })
       .populate('farmer', 'name mobile state district')
       .sort({ updatedAt: -1 });

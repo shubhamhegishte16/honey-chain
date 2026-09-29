@@ -14,7 +14,6 @@ import {
   RefreshCw,
   CheckCircle2,
 } from 'lucide-react';
-import Card from '../../components/ui/Card';
 import { getAllStatePrices, getMarketNews, getPriceHistory } from '../../services/market.service';
 import { useLanguage } from '../../context/LanguageContext';
 
@@ -32,8 +31,8 @@ function Sparkline({ history, rising = true }) {
     })
     .join(' ');
 
-  const strokeColor = rising ? '#3F6B3F' : '#B3422F';
-  const fillColor = rising ? 'rgba(63, 107, 63, 0.12)' : 'rgba(179, 66, 47, 0.12)';
+  const strokeColor = rising ? '#2E7D32' : '#861C1C';
+  const fillColor = rising ? 'rgba(46, 125, 50, 0.12)' : 'rgba(134, 28, 28, 0.12)';
 
   return (
     <div className="w-28 sm:w-36 h-10 flex items-center justify-end">
@@ -106,63 +105,64 @@ export default function FarmerMarket() {
 
   return (
     <main className="page-shell">
+      
       {/* ─── Header ─── */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
-          <div className="eyebrow text-amber-600 mb-1 flex items-center gap-1 font-bold text-xs uppercase tracking-wider">
-            <Sparkles size={13} /> Honey Mandi APMC Benchmark Rates
-          </div>
-          <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-textPrimary">
+          <span className="eyebrow"><Sparkles size={13} /> APMC Benchmark Rates</span>
+          <h1 className="text-2xl sm:text-3xl font-bold font-serif tracking-tight text-[#281D1C] mt-1">
             National Honey Mandi Rates
           </h1>
-          <p className="text-xs sm:text-sm text-textSecondary mt-0.5">
-            Real-time APMC wholesale prices for raw honey varieties across Indian beekeeping states.
+          <p className="text-xs sm:text-sm text-[#5E524D] mt-1">
+            Real-time APMC wholesale and KVIC benchmark prices for monofloral raw honey lots across India.
           </p>
         </div>
 
         <button
           onClick={loadData}
           disabled={loading}
-          className="self-start sm:self-auto inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-surface border border-border text-xs font-semibold text-textSecondary hover:text-primary hover:border-primary/40 transition-colors"
+          className="self-start sm:self-auto inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white border border-[#E8E3CF] text-xs font-bold text-[#281D1C] hover:bg-[#FAF7EE] shadow-soft transition-all"
         >
-          <RefreshCw size={14} className={loading ? 'animate-spin' : ''} />
+          <RefreshCw size={13} className={loading ? 'animate-spin' : ''} />
           <span>Refresh Rates</span>
         </button>
       </div>
 
       {loading ? (
-        <div className="py-20 flex justify-center">
-          <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+        <div className="py-20 flex flex-col items-center justify-center gap-3">
+          <div className="h-8 w-8 animate-spin rounded-full border-3 border-[#861C1C] border-t-transparent" />
+          <span className="text-xs font-bold text-[#5E524D]">Loading live APMC Mandi rates...</span>
         </div>
       ) : (
         <div className="space-y-8 animate-fade-in">
+          
           {/* ─── Featured Selected Rate Card ─── */}
           {selected && (
-            <div className="rounded-3xl bg-surface border border-border p-6 sm:p-8 shadow-card-hover relative overflow-hidden">
+            <div className="rounded-3xl bg-white border border-[#E8E3CF] p-6 sm:p-8 shadow-card relative overflow-hidden">
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                 <div>
                   <div className="flex items-center gap-2 mb-2">
-                    <span className="px-3 py-1 rounded-full text-xs font-bold bg-primaryLight text-primary">
+                    <span className="px-3 py-1 rounded-full text-xs font-bold bg-[#FBEBEB] text-[#861C1C] border border-[#861C1C]/20">
                       {selected.floralSource || selected.wool_type || 'Mustard Blossom Honey'}
                     </span>
-                    <span className="text-xs font-semibold text-textMuted flex items-center gap-1">
-                      <MapPin size={12} /> {t('region')}: {selected.state}
+                    <span className="text-xs font-semibold text-[#5E524D] flex items-center gap-1">
+                      <MapPin size={12} className="text-[#C06E30]" /> Region: {selected.state}
                     </span>
                   </div>
 
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-3xl sm:text-4xl font-extrabold text-textPrimary font-mono">
+                  <div className="flex items-baseline gap-2 mt-1">
+                    <span className="text-3xl sm:text-4xl font-extrabold text-[#281D1C] font-serif">
                       ₹{selected.price_per_kg}
                     </span>
-                    <span className="text-sm font-semibold text-textSecondary">/ kg</span>
+                    <span className="text-sm font-semibold text-[#5E524D]">/ kg</span>
                   </div>
 
-                  <div className="mt-2 flex items-center gap-2">
+                  <div className="mt-2.5 flex items-center gap-2">
                     <span
-                      className={`inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-full ${
+                      className={`inline-flex items-center gap-1 text-xs font-bold px-2.5 py-0.5 rounded-full ${
                         Number(selected.change_percent || 0) >= 0
-                          ? 'bg-emerald-50 text-emerald-700'
-                          : 'bg-rose-50 text-rose-700'
+                          ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
+                          : 'bg-rose-50 text-rose-800 border border-rose-200'
                       }`}
                     >
                       {Number(selected.change_percent || 0) >= 0 ? (
@@ -172,16 +172,15 @@ export default function FarmerMarket() {
                       )}
                       <span>
                         {Number(selected.change_percent || 0) >= 0 ? '+' : ''}
-                        {selected.change_percent}% {t('fourteenDayTrend')}
+                        {selected.change_percent}% 14-Day Mandi Trend
                       </span>
                     </span>
-                    <span className="text-xs text-textMuted">{t('change')}: {selected.change_percent}%</span>
                   </div>
                 </div>
 
                 <div className="flex flex-col items-start md:items-end justify-between self-stretch">
-                  <span className="text-[11px] font-bold uppercase tracking-wider text-textMuted mb-2">
-                    {t('market')}
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#9B918B] mb-2">
+                    Price Trendline
                   </span>
                   <Sparkline
                     history={selected.history}
@@ -192,29 +191,28 @@ export default function FarmerMarket() {
             </div>
           )}
 
-          {/* ─── Search & State Filter Controls ─── */}
+          {/* ─── Search & State Filters ─── */}
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
             <div className="relative flex-1 max-w-md">
-              <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-textMuted" />
+              <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9B918B]" />
               <input
                 type="text"
                 value={search}
                 onChange={e => setSearch(e.target.value)}
-                placeholder={t('searchBreedState')}
-                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-border bg-surface text-sm text-textPrimary placeholder:text-textMuted focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                placeholder="Search by state or honey variety..."
+                className="w-full pl-11 pr-4 py-2.5 rounded-full border border-[#E8E3CF] bg-white text-xs sm:text-sm text-[#281D1C] placeholder:text-[#9B918B] focus:outline-none focus:ring-2 focus:ring-[#F4B345]/30 focus:border-[#F4B345] shadow-soft"
               />
             </div>
 
-            {/* State Filter Pills */}
-            <div className="flex items-center gap-1.5 overflow-x-auto pb-1 max-w-full">
+            <div className="flex items-center gap-1.5 overflow-x-auto pb-1 max-w-full no-scrollbar">
               {uniqueStates.map(st => (
                 <button
                   key={st}
                   onClick={() => setFilterState(st)}
                   className={`px-3.5 py-1.5 rounded-full text-xs font-semibold shrink-0 transition-all ${
                     filterState === st
-                      ? 'bg-primary text-white shadow-sm'
-                      : 'bg-surface border border-border text-textSecondary hover:border-primary/40'
+                      ? 'bg-[#861C1C] text-white shadow-burgundy font-bold'
+                      : 'bg-white border border-[#E8E3CF] text-[#5E524D] hover:border-[#D6CEB5]'
                   }`}
                 >
                   {st}
@@ -224,7 +222,7 @@ export default function FarmerMarket() {
           </div>
 
           {/* ─── State-wise Prices Grid ─── */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {filteredPrices.map(p => {
               const isSelected =
                 selected?.state === p.state && selected?.wool_type === p.wool_type;
@@ -234,20 +232,20 @@ export default function FarmerMarket() {
                 <div
                   key={`${p.state}-${p.wool_type}`}
                   onClick={() => setSelected(p)}
-                  className={`p-4 rounded-2xl border transition-all duration-200 cursor-pointer flex flex-col justify-between ${
+                  className={`p-5 rounded-3xl border transition-all duration-200 cursor-pointer flex flex-col justify-between ${
                     isSelected
-                      ? 'border-primary bg-primaryLight/30 ring-2 ring-primary/30 shadow-sm'
-                      : 'border-border/80 bg-surface hover:border-primary/40 hover:shadow-card'
+                      ? 'border-[#861C1C] bg-[#FBEBEB]/40 ring-2 ring-[#861C1C]/20 shadow-card'
+                      : 'border-[#E8E3CF] bg-white hover:border-[#F4B345] hover:shadow-card'
                   }`}
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div>
-                      <p className="font-bold text-sm text-textPrimary">{p.state}</p>
-                      <p className="text-xs text-textSecondary mt-0.5">{p.floralSource || p.wool_type || 'Raw Honey'}</p>
+                      <p className="font-bold font-serif text-base text-[#281D1C]">{p.state}</p>
+                      <p className="text-xs text-[#5E524D] mt-0.5">{p.floralSource || p.wool_type || 'Raw Honey'}</p>
                     </div>
                     <span
                       className={`inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full ${
-                        isRising ? 'bg-emerald-50 text-emerald-700' : 'bg-rose-50 text-rose-700'
+                        isRising ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' : 'bg-rose-50 text-rose-800 border border-rose-200'
                       }`}
                     >
                       {isRising ? '+' : ''}
@@ -255,15 +253,15 @@ export default function FarmerMarket() {
                     </span>
                   </div>
 
-                  <div className="mt-4 pt-3 border-t border-border/60 flex items-center justify-between">
+                  <div className="mt-4 pt-3 border-t border-[#E8E3CF] flex items-center justify-between">
                     <div>
-                      <span className="text-lg font-extrabold text-textPrimary">
+                      <span className="text-lg font-bold font-serif text-[#281D1C]">
                         ₹{p.price_per_kg}
                       </span>
-                      <span className="text-xs text-textSecondary"> /kg</span>
+                      <span className="text-xs text-[#5E524D]"> /kg</span>
                     </div>
-                    <span className="text-xs font-bold text-primary inline-flex items-center gap-0.5">
-                      {t('viewDetailsArrow')}
+                    <span className="text-xs font-bold text-[#861C1C] inline-flex items-center gap-0.5">
+                      Inspect Trend →
                     </span>
                   </div>
                 </div>
@@ -271,15 +269,13 @@ export default function FarmerMarket() {
             })}
           </div>
 
-          {/* ─── Mandi Market News & Bulletins ─── */}
+          {/* ─── Mandi Bulletins ─── */}
           {news.length > 0 && (
-            <div className="pt-6 border-t border-border/70">
+            <div className="pt-6 border-t border-[#E8E3CF]">
               <div className="section-heading mb-4">
                 <div>
-                  <p className="eyebrow text-primary">
-                    <Newspaper size={13} /> {t('market')}
-                  </p>
-                  <h2 className="text-xl font-bold text-textPrimary">{t('mandiBulletins')}</h2>
+                  <span className="eyebrow"><Newspaper size={13} /> Market Intelligence</span>
+                  <h2 className="text-xl font-bold font-serif text-[#281D1C]">Honey Mandi Bulletins</h2>
                 </div>
               </div>
 
@@ -287,18 +283,18 @@ export default function FarmerMarket() {
                 {news.map((item, idx) => (
                   <div
                     key={item.id || idx}
-                    className="p-5 rounded-2xl bg-surface border border-border/80 shadow-sm flex flex-col justify-between"
+                    className="p-5 rounded-3xl bg-white border border-[#E8E3CF] shadow-card flex flex-col justify-between"
                   >
                     <div>
-                      <h3 className="font-bold text-sm sm:text-base text-textPrimary leading-snug">
+                      <h3 className="font-bold font-serif text-sm sm:text-base text-[#281D1C] leading-snug">
                         {item.title}
                       </h3>
-                      <p className="text-xs text-textSecondary mt-2 leading-relaxed">
+                      <p className="text-xs text-[#5E524D] mt-2 leading-relaxed">
                         {item.summary}
                       </p>
                     </div>
 
-                    <div className="mt-4 pt-3 border-t border-border/60 flex items-center justify-between text-xs text-textMuted">
+                    <div className="mt-4 pt-3 border-t border-[#E8E3CF] flex items-center justify-between text-xs text-[#9B918B]">
                       <span className="flex items-center gap-1">
                         <Calendar size={12} />
                         {new Date(item.published_at).toLocaleDateString('en-IN', {
@@ -307,15 +303,17 @@ export default function FarmerMarket() {
                           year: 'numeric',
                         })}
                       </span>
-                      <span className="font-semibold text-primary">{item.source}</span>
+                      <span className="font-bold text-[#861C1C]">{item.source}</span>
                     </div>
                   </div>
                 ))}
               </div>
             </div>
           )}
+
         </div>
       )}
+
     </main>
   );
 }

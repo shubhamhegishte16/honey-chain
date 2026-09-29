@@ -60,12 +60,21 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: '',
   },
+  hiveCount: {
+    type: Number,
+    default: 25,
+  },
   flockSize: {
     type: Number,
-    default: 0,
+    default: function() { return this.hiveCount || 25; },
   },
+  beeSpecies: [{
+    type: String,
+    default: ['Apis mellifera', 'Apis cerana indica'],
+  }],
   primaryBreeds: [{
     type: String,
+    default: ['Apis mellifera', 'Apis cerana indica'],
   }],
   savedListings: [{
     type: mongoose.Schema.Types.ObjectId,
@@ -76,6 +85,8 @@ const userSchema = new mongoose.Schema({
   toJSON: {
     transform(doc, ret) {
       ret.id = ret._id;
+      if (ret.flockSize && !ret.hiveCount) ret.hiveCount = ret.flockSize;
+      if (ret.hiveCount && !ret.flockSize) ret.flockSize = ret.hiveCount;
       delete ret.password;
       delete ret.__v;
       return ret;
