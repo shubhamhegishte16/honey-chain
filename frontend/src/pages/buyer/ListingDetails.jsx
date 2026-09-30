@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getListingById } from '../../services/marketplace.service';
-import { ShoppingBag, MapPin, Sparkles, AlertCircle, ArrowLeft, ShieldCheck, ChevronRight, Award, QrCode } from 'lucide-react';
+import { addSavedListing, removeSavedListing, getSavedListings } from '../../services/auth.service';
+import { ShoppingBag, MapPin, Sparkles, AlertCircle, ArrowLeft, ShieldCheck, ChevronRight, Award, QrCode, Bookmark, Check } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
 
 export default function ListingDetails() {
@@ -9,6 +10,7 @@ export default function ListingDetails() {
   const navigate = useNavigate();
   const { t } = useLanguage();
   const [listing, setListing] = useState(null);
+  const [isSaved, setIsSaved] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [quantity, setQuantity] = useState(1);
@@ -22,10 +24,28 @@ export default function ListingDetails() {
       } else {
         setListing(res.data);
       }
+      try {
+        const savedRes = await getSavedListings();
+        if (savedRes.data && Array.isArray(savedRes.data)) {
+          setIsSaved(savedRes.data.some(l => String(l._id || l.id) === String(id)));
+        }
+      } catch (e) {}
       setLoading(false);
     }
     if (id) load();
   }, [id]);
+
+  const handleToggleSave = async () => {
+    if (!listing) return;
+    const lotId = String(listing._id || listing.id);
+    if (isSaved) {
+      setIsSaved(false);
+      await removeSavedListing(lotId);
+    } else {
+      setIsSaved(true);
+      await addSavedListing(listing);
+    }
+  };
 
   if (loading) {
     return (
@@ -174,6 +194,18 @@ export default function ListingDetails() {
               className="w-full py-3.5 bg-burgundy text-warmIvory font-bold text-xs rounded-2xl hover:bg-burgundy/90 transition-all shadow-md shadow-burgundy/15 flex items-center justify-center gap-2"
             >
               <ShoppingBag size={16} /> Proceed to Escrow Checkout →
+            </button>
+
+            <button
+              onClick={handleToggleSave}
+              className={`w-full py-2.5 px-4 rounded-2xl border text-xs font-bold transition-all flex items-center justify-center gap-2 shadow-xs ${
+                isSaved
+                  ? 'bg-honeyGold/20 border-honeyGold text-burgundy'
+                  : 'bg-warmIvory border-border text-deepBrown/80 hover:bg-border/40'
+              }`}
+            >
+              <Bookmark size={15} className={isSaved ? 'fill-burgundy text-burgundy' : ''} />
+              <span>{isSaved ? 'Saved in My Lots' : 'Save Lot to Shortlist'}</span>
             </button>
 
             <div className="pt-2 flex items-center justify-center gap-2 text-[11px] text-deepBrown/60">

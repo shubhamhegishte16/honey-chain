@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { Filter, MapPin, Search, ShoppingBag, Sparkles, Tag, ChevronRight, Bookmark, ShieldCheck, Scale } from 'lucide-react';
+import { Filter, MapPin, Search, ShoppingBag, Sparkles, Tag, ChevronRight, Bookmark, ShieldCheck, Scale, Check } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { getListings } from '../../services/marketplace.service';
-import { addSavedListing } from '../../services/auth.service';
+import { addSavedListing, removeSavedListing, getSavedListings } from '../../services/auth.service';
 import { INDIAN_STATES, WOOL_TYPES } from '../../constants/states';
 import { useLanguage } from '../../context/LanguageContext';
 
@@ -10,10 +10,21 @@ export default function MarketplaceExperience({ allowBuying = false }) {
   const navigate = useNavigate();
   const { t } = useLanguage();
   const [listings, setListings] = useState([]);
+  const [savedIds, setSavedIds] = useState(new Set());
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [state, setState] = useState('');
   const [woolType, setWoolType] = useState('');
+
+  const loadSaved = async () => {
+    try {
+      const res = await getSavedListings();
+      if (res.data && Array.isArray(res.data)) {
+        const ids = new Set(res.data.map(l => String(l._id || l.id)));
+        setSavedIds(ids);
+      }
+    } catch (e) {}
+  };
 
   const load = async () => {
     setLoading(true);
@@ -24,6 +35,23 @@ export default function MarketplaceExperience({ allowBuying = false }) {
     });
     setListings(result.data || []);
     setLoading(false);
+    loadSaved();
+  };
+
+  const handleToggleSave = async (e, listing) => {
+    e.stopPropagation();
+    const id = String(listing._id || listing.id);
+    const isSaved = savedIds.has(id);
+    const nextSaved = new Set(savedIds);
+    if (isSaved) {
+      nextSaved.delete(id);
+      setSavedIds(nextSaved);
+      await removeSavedListing(id);
+    } else {
+      nextSaved.add(id);
+      setSavedIds(nextSaved);
+      await addSavedListing(listing);
+    }
   };
 
   useEffect(() => { load(); }, [state, woolType]);
@@ -130,14 +158,15 @@ export default function MarketplaceExperience({ allowBuying = false }) {
 
                     {allowBuying && (
                       <button 
-                        onClick={async (e) => { 
-                          e.stopPropagation(); 
-                          await addSavedListing(listing.id);
-                        }} 
-                        className="absolute top-3 right-3 p-2 rounded-full bg-white/80 hover:bg-white text-[#281D1C] shadow-sm transition-colors"
-                        title="Save Honey Lot"
+                        onClick={(e) => handleToggleSave(e, listing)} 
+                        className={`absolute top-3 right-3 p-2.5 rounded-full shadow-md transition-all ${
+                          savedIds.has(String(listing._id || listing.id))
+                            ? 'bg-[#861C1C] text-[#F4B345] ring-2 ring-[#F4B345]'
+                            : 'bg-white/90 hover:bg-white text-[#281D1C] hover:scale-105'
+                        }`}
+                        title={savedIds.has(String(listing._id || listing.id)) ? 'Saved in Shortlist' : 'Save to Shortlist'}
                       >
-                        <Bookmark size={15} />
+                        <Bookmark size={15} className={savedIds.has(String(listing._id || listing.id)) ? 'fill-[#F4B345]' : ''} />
                       </button>
                     )}
                   </div>

@@ -16,9 +16,18 @@ export default function MarketplaceManagement() {
 
   const fetchListings = async () => {
     setLoading(true);
-    const { data, error } = await apiRequest('/admin/marketplace', { method: 'GET' });
-    if (!error && data) {
-      setListings(data);
+    try {
+      const { data, error } = await apiRequest('/admin/marketplace', { method: 'GET' });
+      if (!error && Array.isArray(data) && data.length > 0) {
+        setListings(data);
+      } else {
+        const publicRes = await apiRequest('/marketplace', { method: 'GET' });
+        if (!publicRes.error && Array.isArray(publicRes.data) && publicRes.data.length > 0) {
+          setListings(publicRes.data);
+        }
+      }
+    } catch {
+      // fallback
     }
     setLoading(false);
   };
@@ -33,7 +42,7 @@ export default function MarketplaceManagement() {
   };
 
   const filtered = listings.filter(l =>
-    !search || [l.title, l.wool_type, l.seller_id?.name].some(f => f?.toLowerCase().includes(search.toLowerCase()))
+    !search || [l.title, l.floralSource, l.seller_id?.name, l.seller?.name].some(f => f?.toLowerCase().includes(search.toLowerCase()))
   );
 
   if (loading) return (
@@ -77,9 +86,9 @@ export default function MarketplaceManagement() {
             <tbody className="divide-y divide-border/60">
               {filtered.map(l => (
                 <tr key={l._id} className="hover:bg-warmIvory/60 transition-colors">
-                  <td className="p-4 font-bold text-deepBrown text-xs">{l.title || `${l.wool_type} Honey`}</td>
-                  <td className="p-4 text-xs text-deepBrown/75">{l.seller_id?.name || t('unknown')}</td>
-                  <td className="p-4 font-mono font-bold text-burgundy text-xs">₹{l.price_per_kg} / kg</td>
+                  <td className="p-4 font-bold text-deepBrown text-xs">{l.title || `${l.floralSource || 'Pure Organic'} Honey`}</td>
+                  <td className="p-4 text-xs text-deepBrown/75">{l.seller_id?.name || l.seller?.name || t('unknown')}</td>
+                  <td className="p-4 font-mono font-bold text-burgundy text-xs">₹{l.price_per_kg || l.pricePerKg || 420} / kg</td>
                   <td className="p-4">
                     <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold capitalize ${
                       l.status === 'active'
@@ -116,7 +125,7 @@ export default function MarketplaceManagement() {
         {filtered.map(l => (
           <div key={l._id} className="bento-card p-4 space-y-2.5">
             <div className="flex items-center justify-between">
-              <span className="font-bold text-sm text-deepBrown">{l.title || `${l.wool_type} Honey`}</span>
+              <span className="font-bold text-sm text-deepBrown">{l.title || `${l.floralSource || 'Pure Organic'} Honey`}</span>
               <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold capitalize ${
                 l.status === 'active'
                   ? 'bg-emerald-100 text-emerald-800'

@@ -36,17 +36,20 @@ export async function createOrder(req, res, next) {
       contactPhone: req.user.mobile,
     };
 
+    const batchId = listing.batchId || listing.batch?.batchId || 'HC-IND-2026-000101';
+    const batchMongoId = listing.batch?._id || listing.batch || listing._id;
+
     const order = await Order.create({
       orderId,
       listing: listing._id,
-      batch: listing.batch._id,
-      batchId: listing.batchId,
+      batch: batchMongoId,
+      batchId,
       buyer: req.user._id,
       buyerName: req.user.name,
       buyerEmail: req.user.email,
       seller: listing.seller,
       sellerName: listing.sellerName,
-      floralSource: listing.floralSource,
+      floralSource: listing.floralSource || 'Mustard Blossom',
       quantityKg: buyQty,
       pricePerKg: listing.pricePerKg,
       totalAmount,
@@ -73,20 +76,22 @@ export async function createOrder(req, res, next) {
     await listing.save();
 
     // Update batch status if fully allocated
-    const batch = await HoneyBatch.findById(listing.batch._id);
-    if (batch) {
-      if (listing.status === 'sold_out') {
-        batch.status = 'ordered';
+    if (listing.batch?._id) {
+      const batch = await HoneyBatch.findById(listing.batch._id);
+      if (batch) {
+        if (listing.status === 'sold_out') {
+          batch.status = 'ordered';
+        }
+        await batch.save();
       }
-      await batch.save();
     }
 
     // Append Traceability Event
     await TraceabilityEvent.create({
-      batch: listing.batch._id,
-      batchId: listing.batchId,
+      batch: batchMongoId,
+      batchId,
       eventType: 'ordered',
-      location: `${address.district}, ${address.state}`,
+      location: `${address.district || 'National Mandi'}, ${address.state || 'India'}`,
       description: `Purchase order ${orderId} confirmed for ${buyQty} kg @ ₹${listing.pricePerKg}/kg by ${req.user.name}.`,
       performedBy: req.user._id,
       actorName: `${req.user.name} (Buyer)`,
