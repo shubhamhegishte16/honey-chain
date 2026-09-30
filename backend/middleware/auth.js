@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'woolconnect_jwt_secret_key_2026_sih';
+const JWT_SECRET = process.env.JWT_SECRET || 'honeychain_jwt_secret_key_2026_sih';
 
 export async function protect(req, res, next) {
   try {

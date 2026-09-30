@@ -39,12 +39,12 @@ export default function ResourceListing() {
         };
         const { data, error } = await getTrainingResources(params);
         if (error) {
-          setError(t('somethingWrongWool'));
+          setError(t('somethingWrongHoney'));
         } else {
           setResources(data || []);
         }
       } catch (err) {
-        setError(t('somethingWrongWool'));
+        setError(t('somethingWrongHoney'));
         console.error(err);
       } finally {
         setLoading(false);

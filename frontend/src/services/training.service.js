@@ -1,17 +1,13 @@
 import { apiRequest } from './api';
 
-// Map UI Category keys to DB Category values (Apiculture & Dual-compatibility)
+// Map UI Category keys to DB Category values (Apiculture)
 export const CATEGORY_MAP = {
-  'apiary-care': ['Apiary Management', 'Hive Health & Queen Rearing', 'Sheep Management'],
-  'extraction': ['Comb Extraction & Centrifugation', 'Wool Shearing'],
-  'honey-quality': ['Honey Quality & NMR Standards', 'Organic Certification', 'Wool Handling', 'Wool Grading'],
-  'storage': ['Moisture Control & Dehumidification', 'Wool Storage'],
-  'processing': ['Micro-Filtration & Bottling', 'Wool Processing', 'Dyeing', 'Product Development'],
-  'selling': ['Mandi Trading & Fair Pricing', 'Direct Buyer Selling', 'Marketing', 'Digital Selling'],
-  // Legacy aliases for backward compatibility
-  'sheep-care': ['Apiary Management', 'Sheep Management'],
-  'shearing': ['Comb Extraction & Centrifugation', 'Wool Shearing'],
-  'wool-quality': ['Honey Quality & NMR Standards', 'Wool Handling', 'Wool Grading'],
+  'apiary-care': ['Apiary Management', 'Hive Health & Queen Rearing'],
+  'extraction': ['Comb Extraction & Centrifugation'],
+  'honey-quality': ['Honey Quality & NMR Standards', 'Organic Certification'],
+  'storage': ['Moisture Control & Dehumidification'],
+  'processing': ['Micro-Filtration & Bottling', 'Product Development'],
+  'selling': ['Mandi Trading & Fair Pricing', 'Direct Buyer Selling', 'Digital Selling'],
 };
 
 export const CATEGORY_LABELS = {
@@ -21,10 +17,6 @@ export const CATEGORY_LABELS = {
   'storage': 'Moisture & Storage',
   'processing': 'Filtration & Bottling',
   'selling': 'Mandi & Direct Selling',
-  // Legacy labels
-  'sheep-care': 'Apiary Care',
-  'shearing': 'Comb Extraction',
-  'wool-quality': 'Honey Quality',
 };
 
 export async function getTrainingResources(params = {}) {
@@ -45,22 +37,16 @@ export async function getTrainingResources(params = {}) {
   }
   
   if (queryParts.length > 0) {
-    endpoint += `?${queryParts.join('&')}`;
+    endpoint += '?' + queryParts.join('&');
   }
   
-  const result = await apiRequest(endpoint, { method: 'GET' });
-  if (result.error) return result;
-  
-  let data = result.data || [];
-  
-  if (category && CATEGORY_MAP[category] && CATEGORY_MAP[category].length > 1) {
-    const dbCategories = CATEGORY_MAP[category];
-    data = data.filter(item => dbCategories.includes(item.category));
-  }
-  
-  return { ...result, data };
+  return apiRequest(endpoint, { method: 'GET' });
 }
 
 export async function getTrainingResourceById(id) {
-  return await apiRequest(`/training/${id}`, { method: 'GET' });
+  return apiRequest(`/training/${id}`, { method: 'GET' });
+}
+
+export async function markResourceCompleted(id) {
+  return apiRequest(`/training/${id}/complete`, { method: 'POST' });
 }

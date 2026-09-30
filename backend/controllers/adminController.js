@@ -1,5 +1,5 @@
 import User from '../models/User.js';
-import WoolBatch from '../models/WoolBatch.js';
+import HoneyBatch from '../models/HoneyBatch.js';
 import MarketplaceListing from '../models/MarketplaceListing.js';
 import Order from '../models/Order.js';
 import Warehouse from '../models/Warehouse.js';
@@ -18,17 +18,16 @@ export async function getAdminDashboard(req, res, next) {
       recentOrders
     ] = await Promise.all([
       User.countDocuments(),
-      WoolBatch.countDocuments(),
+      HoneyBatch.countDocuments(),
       MarketplaceListing.countDocuments(),
       ProcessingRequest.countDocuments(),
       User.find().sort({ createdAt: -1 }).limit(5).select('name email role'),
-      Order.find().sort({ createdAt: -1 }).limit(5).select('floralSource woolType quantityKg status')
+      Order.find().sort({ createdAt: -1 }).limit(5).select('floralSource quantityKg status')
     ]);
 
     const formattedOrders = recentOrders.map(o => ({
       _id: o._id,
-      floralSource: o.floralSource || o.woolType || 'Mustard Blossom',
-      wool_type: o.floralSource || o.woolType || 'Mustard Blossom',
+      floralSource: o.floralSource || 'Mustard Blossom',
       quantity_kg: o.quantityKg || 0,
       status: o.status
     }));
@@ -65,12 +64,12 @@ export async function getAdminOverview(req, res, next) {
       User.countDocuments({ role: 'buyer' }),
       User.countDocuments({ role: 'processor' }),
       Warehouse.countDocuments(),
-      WoolBatch.countDocuments(),
+      HoneyBatch.countDocuments(),
       MarketplaceListing.countDocuments(),
       Order.countDocuments(),
     ]);
 
-    const batches = await WoolBatch.find();
+    const batches = await HoneyBatch.find();
     const realHoneyVolume = batches.reduce((sum, b) => sum + (b.quantityKg || 0), 0);
 
     const orders = await Order.find();
@@ -93,7 +92,6 @@ export async function getAdminOverview(req, res, next) {
       marketplaceListings: listingsDisplay,
       totalOrders: ordersDisplay,
       totalHoneyVolumeKg: realHoneyVolume > 0 ? realHoneyVolume + 412000 : 412500,
-      totalWoolVolumeKg: realHoneyVolume > 0 ? realHoneyVolume + 412000 : 412500,
       grossMarketplaceTrade: realRevenue > 0 ? realRevenue + 18500000 : 21450000,
       
       stateDistribution: [
@@ -165,7 +163,7 @@ export async function toggleUserVerification(req, res, next) {
 
 export async function getAllBatchesAdmin(req, res, next) {
   try {
-    const batches = await WoolBatch.find()
+    const batches = await HoneyBatch.find()
       .populate('farmer', 'name email mobile state district')
       .populate('warehouse', 'name code')
       .populate('processor', 'name organization')

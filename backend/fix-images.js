@@ -6,7 +6,7 @@ const marketplaceSchema = new mongoose.Schema({}, { strict: false });
 const batchSchema = new mongoose.Schema({}, { strict: false });
 
 const Listing = mongoose.model('MarketplaceListing', marketplaceSchema, 'marketplacelistings');
-const Batch = mongoose.model('WoolBatch', batchSchema, 'woolbatches');
+const Batch = mongoose.model('HoneyBatch', batchSchema, 'honeybatches');
 
 async function fixImages() {
   await mongoose.connect(process.env.MONGODB_URI);

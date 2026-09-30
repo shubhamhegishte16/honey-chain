@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 const marketplaceListingSchema = new mongoose.Schema({
   batch: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'WoolBatch',
+    ref: 'HoneyBatch',
     required: true,
     index: true,
   },
@@ -25,11 +25,6 @@ const marketplaceListingSchema = new mongoose.Schema({
   floralSource: {
     type: String,
     default: 'Mustard Blossom',
-    index: true,
-  },
-  woolType: {
-    type: String,
-    default: function() { return this.floralSource || 'Mustard Blossom'; },
     index: true,
   },
   grade: {
@@ -87,8 +82,6 @@ const marketplaceListingSchema = new mongoose.Schema({
   toJSON: {
     transform(doc, ret) {
       ret.id = ret._id;
-      if (!ret.floralSource && ret.woolType) ret.floralSource = ret.woolType;
-      if (!ret.woolType && ret.floralSource) ret.woolType = ret.floralSource;
       delete ret.__v;
       return ret;
     }

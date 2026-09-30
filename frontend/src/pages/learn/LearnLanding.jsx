@@ -18,7 +18,7 @@ import {
 } from 'lucide-react';
 import { getTrainingResources } from '../../services/training.service';
 import SeasonalAdvisory from '../../components/learn/SeasonalAdvisory';
-import WoolProblemGuide from '../../components/learn/WoolProblemGuide';
+import ApiaryProblemGuide from '../../components/learn/ApiaryProblemGuide';
 import SmartRecommendations from '../../components/learn/SmartRecommendations';
 import LearningProgressModal from '../../components/learn/LearningProgressModal';
 import { calculateProgressStats } from '../../services/learningProgress.service';
@@ -26,9 +26,9 @@ import { useLanguage } from '../../context/LanguageContext';
 import { TRAINING_TRANSLATIONS, getTranslatedResource } from '../../services/trainingTranslations.service';
 
 const CATEGORY_MAP_FOR_STATS = {
-  'sheep-care': { label: 'Bee Colony Care', dbCategories: ['Colony Health', 'Hive Inspection'] },
-  'shearing': { label: 'Honey Harvesting', dbCategories: ['Extraction Techniques', 'Comb Management'] },
-  'wool-quality': { label: 'Honey Purity Standards', dbCategories: ['Moisture Testing', 'NMR Quality'] },
+  'bee-care': { label: 'Bee Colony Care', dbCategories: ['Colony Health', 'Hive Inspection'] },
+  'harvesting': { label: 'Honey Harvesting', dbCategories: ['Extraction Techniques', 'Comb Management'] },
+  'honey-quality': { label: 'Honey Purity Standards', dbCategories: ['Moisture Testing', 'NMR Quality'] },
   'storage': { label: 'Storage & Conditioning', dbCategories: ['Honey Barrel Storage', 'Humidity Control'] },
   'processing': { label: 'Filtration & Bottling', dbCategories: ['Micro-Filtration', 'Packaging'] },
   'selling': { label: 'Honey Mandi & Direct Trade', dbCategories: ['Marketing', 'Digital Selling'] },
@@ -46,19 +46,19 @@ export default function LearnLanding() {
 
   const categories = [
     {
-      key: 'sheep-care',
+      key: 'bee-care',
       title: 'Apiary & Hive Management',
       desc: 'Colony nutrition, seasonal queen rearing, and mite prevention.',
       icon: Heart,
     },
     {
-      key: 'shearing',
+      key: 'harvesting',
       title: 'Honey Harvesting Methods',
       desc: 'Comb uncapping, centrifugal spin, and sustainable harvest cycles.',
       icon: Feather,
     },
     {
-      key: 'wool-quality',
+      key: 'honey-quality',
       title: 'Purity & NMR Standards',
       desc: 'FSSAI moisture thresholds, HMF parameters, and pollen analysis.',
       icon: Award,
@@ -90,9 +90,9 @@ export default function LearnLanding() {
         setRawResources(data);
 
         const categoryCounts = {
-          'sheep-care': 0,
-          'shearing': 0,
-          'wool-quality': 0,
+          'bee-care': 0,
+          'harvesting': 0,
+          'honey-quality': 0,
           'storage': 0,
           'processing': 0,
           'selling': 0,
@@ -100,11 +100,11 @@ export default function LearnLanding() {
 
         data.forEach(item => {
           const cat = item.category?.toLowerCase() || '';
-          if (cat.includes('care') || cat.includes('health') || cat.includes('feed')) categoryCounts['sheep-care']++;
-          else if (cat.includes('shear') || cat.includes('harvest')) categoryCounts['shearing']++;
-          else if (cat.includes('qual') || cat.includes('grad') || cat.includes('purity')) categoryCounts['wool-quality']++;
+          if (cat.includes('care') || cat.includes('health') || cat.includes('feed')) categoryCounts['bee-care']++;
+          else if (cat.includes('shear') || cat.includes('harvest') || cat.includes('extract')) categoryCounts['harvesting']++;
+          else if (cat.includes('qual') || cat.includes('grad') || cat.includes('purity') || cat.includes('nmr')) categoryCounts['honey-quality']++;
           else if (cat.includes('stor') || cat.includes('ware')) categoryCounts['storage']++;
-          else if (cat.includes('proc') || cat.includes('spin') || cat.includes('filter')) categoryCounts['processing']++;
+          else if (cat.includes('proc') || cat.includes('spin') || cat.includes('filter') || cat.includes('bottle')) categoryCounts['processing']++;
           else if (cat.includes('sell') || cat.includes('mark') || cat.includes('trade')) categoryCounts['selling']++;
         });
 
@@ -166,16 +166,28 @@ export default function LearnLanding() {
           </form>
         </div>
 
-        <div className="flex flex-col gap-3 shrink-0 relative z-10">
-          <div className="p-4 rounded-3xl bg-honeyGold/10 border border-honeyGold/30 text-center space-y-2">
-            <Trophy size={28} className="mx-auto text-burgundy" />
-            <p className="text-xs font-bold text-deepBrown">Learning Progress</p>
-            <p className="text-2xl font-serif font-bold text-burgundy">{progressStats.overallPercentage}%</p>
+        <div className="flex flex-col sm:flex-row md:flex-col items-center gap-3 shrink-0 relative z-10">
+          <div className="relative w-40 sm:w-48 h-32 rounded-3xl overflow-hidden border border-border shadow-md">
+            <img
+              src="/beekeeper-farmer.jpg"
+              alt="Indian Beekeeper in Mustard Field"
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+            <span className="absolute bottom-2 left-2 right-2 text-[10px] font-bold text-white text-center">
+              Field Certified
+            </span>
+          </div>
+
+          <div className="w-full p-4 rounded-3xl bg-honeyGold/10 border border-honeyGold/30 text-center space-y-1">
+            <Trophy size={22} className="mx-auto text-burgundy" />
+            <p className="text-[11px] font-bold text-deepBrown">Training Progress</p>
+            <p className="text-xl font-serif font-bold text-burgundy">{progressStats.overallPercentage}%</p>
             <button
               onClick={() => setIsProgressOpen(true)}
-              className="text-[11px] font-bold text-burgundy hover:underline block"
+              className="text-[10px] font-bold text-burgundy hover:underline block mx-auto"
             >
-              View Certificate Progress →
+              View Certificate →
             </button>
           </div>
         </div>
@@ -228,7 +240,7 @@ export default function LearnLanding() {
         <SmartRecommendations />
       </div>
 
-      <WoolProblemGuide />
+      <ApiaryProblemGuide />
 
       {isProgressOpen && (
         <LearningProgressModal

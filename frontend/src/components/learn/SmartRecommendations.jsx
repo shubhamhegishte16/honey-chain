@@ -17,9 +17,9 @@ export default function SmartRecommendations({ resources = [] }) {
   const [expandedId, setExpandedId] = useState(null);
 
   const availableInterests = [
-    { key: 'sheep-care', label: t('catSheepCare'), icon: Heart },
-    { key: 'shearing', label: t('catShearing'), icon: Scissors },
-    { key: 'wool-quality', label: t('catWoolQuality'), icon: Award },
+    { key: 'bee-care', label: t('catBeeCare'), icon: Heart },
+    { key: 'harvesting', label: t('catHarvesting'), icon: Scissors },
+    { key: 'honey-quality', label: t('catHoneyQuality'), icon: Award },
     { key: 'storage', label: t('catStorage'), icon: Warehouse },
     { key: 'processing', label: t('catProcessing'), icon: Hammer },
     { key: 'selling', label: t('catSelling'), icon: TrendingUp }

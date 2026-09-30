@@ -117,10 +117,10 @@ export default function ArtisanBatchDetails() {
           className="inline-flex items-center gap-1.5 text-xs font-semibold text-textSecondary hover:text-primary transition-colors group"
         >
           <ArrowLeft size={15} className="transition-transform group-hover:-translate-x-0.5" />
-          <span>{t('assignedWool')}</span>
+          <span>{t('assignedHoney')}</span>
         </Link>
         <span className="text-xs text-primary font-bold flex items-center gap-1">
-          <ShieldCheck size={14} /> {t('woolPassportTitle')}
+          <ShieldCheck size={14} /> {t('honeyPassportTitle')}
         </span>
       </div>
 
@@ -132,12 +132,12 @@ export default function ArtisanBatchDetails() {
           </span>
           <div>
             <h2 className="font-bold text-lg text-textPrimary">{request.batch_id}</h2>
-            <p className="text-xs text-textSecondary font-semibold">{t('woolInformation')}</p>
+            <p className="text-xs text-textSecondary font-semibold">{t('honeyInformation')}</p>
           </div>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-sm">
           <div>
-            <p className="text-[10px] uppercase font-bold text-textMuted">{t('woolId')}</p>
+            <p className="text-[10px] uppercase font-bold text-textMuted">{t('honeyId')}</p>
             <p className="font-semibold text-textPrimary">{request.batch_id}</p>
           </div>
           <div>

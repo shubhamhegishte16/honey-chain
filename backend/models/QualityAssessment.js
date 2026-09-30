@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 const qualityAssessmentSchema = new mongoose.Schema({
   batch: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'WoolBatch',
+    ref: 'HoneyBatch',
     required: true,
     index: true,
   },
@@ -17,10 +17,6 @@ const qualityAssessmentSchema = new mongoose.Schema({
     type: String,
     enum: ['Clear & Translucent', 'Uniform Light Amber', 'Naturally Crystalline', 'Cloudy / Strained'],
     default: 'Clear & Translucent',
-  },
-  fiberAppearance: {
-    type: String,
-    default: 'Excellent Pure Nectar',
   },
   color: {
     type: String,
@@ -76,14 +72,6 @@ const qualityAssessmentSchema = new mongoose.Schema({
   nmrSpectrumStatus: {
     type: String,
     default: 'NMR Certified Authentic Botanical Profile',
-  },
-  stapleLengthMm: {
-    type: Number,
-    default: 72,
-  },
-  micronEstimate: {
-    type: Number,
-    default: 21.5,
   },
   preliminaryGrade: {
     type: String,

@@ -1,4 +1,4 @@
-package com.woolconnect.app;
+package com.honeychain.app;
 
 import com.getcapacitor.BridgeActivity;
 

@@ -1,11 +1,11 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { LANGUAGES, translations } from '../translations';
 
-const STORAGE_KEY = 'woolconnect_language';
+const STORAGE_KEY = 'honeychain_language';
 const LanguageContext = createContext(null);
 
 function detectLanguage() {
-  const saved = localStorage.getItem(STORAGE_KEY);
+  const saved = localStorage.getItem(STORAGE_KEY) || localStorage.getItem('honeychain_language');
   if (saved && translations[saved]) return saved;
   const browser = navigator.language?.slice(0, 2);
   return translations[browser] ? browser : 'en';

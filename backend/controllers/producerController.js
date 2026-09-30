@@ -2,12 +2,12 @@ import Producer from '../models/Producer.js';
 
 export async function getProducers(req, res, next) {
   try {
-    const { state, district, woolType, search } = req.query;
+    const { state, district, floralSource, search } = req.query;
     const query = {};
 
     if (state) query.state = state;
     if (district) query.district = district;
-    if (woolType) query.woolTypes = woolType;
+    if (floralSource) query.honeyVarieties = floralSource;
 
     if (search) {
       const searchRegex = new RegExp(search, 'i');

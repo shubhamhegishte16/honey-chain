@@ -10,10 +10,10 @@ import { getAssignedProcessingRequests } from '../../services/processing.service
 import { submitQualityAssessment } from '../../services/quality.service';
 
 const FIBER_OPTIONS = [
-  { value: 'Excellent', labelKey: 'qualityFiberExcellent' },
-  { value: 'Good', labelKey: 'qualityFiberGood' },
-  { value: 'Moderate', labelKey: 'qualityFiberModerate' },
-  { value: 'Coarse', labelKey: 'qualityFiberCoarse' },
+  { value: 'Excellent', labelKey: 'qualityGradeAPlus' },
+  { value: 'Good', labelKey: 'qualityGradeA' },
+  { value: 'Moderate', labelKey: 'qualityGradeStandard' },
+  { value: 'Coarse', labelKey: 'qualityGradeB' },
 ];
 const COLOR_OPTIONS = [
   { value: 'Consistent White', labelKey: 'qualityColorConsistentWhite' },
@@ -174,7 +174,7 @@ export default function ArtisanQuality() {
                       <Select
                         label="Clarity & Refraction"
                         value={form.fiberAppearance}
-                        onChange={(e) => updateForm(batchId, 'fiberAppearance', e.target.value)}
+                        onChange={(e) => updateForm(batchId, 'honeyAppearance', e.target.value)}
                         options={FIBER_OPTIONS}
                         t={t}
                       />

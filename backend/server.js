@@ -78,7 +78,8 @@ async function startServer() {
 
     app.listen(PORT, () => {
       console.log(`===================================================`);
-      console.log(`🐑 WoolConnect REST API Server running on port ${PORT}`);
+      console.log(`🍯 HoneyChain REST API Server running on port ${PORT}`);
+      console.log(`🐝 National Honey Mission & KVIC Apiculture Registry`);
       console.log(`📡 URL: http://localhost:${PORT}/api`);
       console.log(`🏥 Health Check: http://localhost:${PORT}/api/health`);
       console.log(`===================================================`);
@@ -87,7 +88,7 @@ async function startServer() {
     console.error('Server startup notice:', error.message);
     // Still start Express server so API health and endpoints are served
     app.listen(PORT, () => {
-      console.log(`🐑 WoolConnect Server running on port ${PORT}`);
+      console.log(`🍯 HoneyChain Server running on port ${PORT}`);
     });
   }
 }

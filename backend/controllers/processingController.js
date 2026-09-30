@@ -1,5 +1,5 @@
 import ProcessingRequest from '../models/ProcessingRequest.js';
-import WoolBatch from '../models/WoolBatch.js';
+import HoneyBatch from '../models/HoneyBatch.js';
 import User from '../models/User.js';
 import TraceabilityEvent from '../models/TraceabilityEvent.js';
 import Notification from '../models/Notification.js';
@@ -28,7 +28,7 @@ export async function getProcessorStats(req, res, next) {
       ProcessingRequest.countDocuments({ processor: processorId, status: 'completed' }),
     ]);
 
-    const incomingBatches = await WoolBatch.countDocuments({
+    const incomingBatches = await HoneyBatch.countDocuments({
       processor: processorId,
       status: 'processing_requested',
     });
@@ -82,7 +82,7 @@ export async function getProcessingRequests(req, res, next) {
     const requests = await ProcessingRequest.find(filter)
       .populate('farmer', 'name email mobile state district')
       .populate('processor', 'name email mobile state district organization')
-      .populate('batch', 'batchId floralSource woolType quantityKg qualityGrade')
+      .populate('batch', 'batchId floralSource quantityKg qualityGrade')
       .sort({ createdAt: -1 });
 
     res.json({ success: true, count: requests.length, data: requests });
@@ -95,7 +95,7 @@ export async function getProcessingRequests(req, res, next) {
 export async function getIncomingBatches(req, res, next) {
   try {
     const processorId = req.user._id;
-    const batches = await WoolBatch.find({
+    const batches = await HoneyBatch.find({
       processor: processorId,
       status: 'processing_requested',
     })
@@ -112,7 +112,7 @@ export async function getIncomingBatches(req, res, next) {
 export async function markBatchReceived(req, res, next) {
   try {
     const { id } = req.params;
-    const batch = await WoolBatch.findById(id);
+    const batch = await HoneyBatch.findById(id);
     if (!batch) {
       return res.status(404).json({ success: false, message: 'Honey batch not found.' });
     }
@@ -165,7 +165,7 @@ export async function getActiveProcessing(req, res, next) {
       status: 'in_progress',
     })
       .populate('farmer', 'name mobile state district')
-      .populate('batch', 'batchId floralSource woolType quantityKg qualityGrade status currentLocation')
+      .populate('batch', 'batchId floralSource quantityKg qualityGrade status currentLocation')
       .sort({ updatedAt: -1 });
 
     res.json({ success: true, count: requests.length, data: requests });
@@ -185,9 +185,9 @@ export async function requestProcessing(req, res, next) {
 
     let batch = null;
     if (batchId.match(/^[0-9a-fA-F]{24}$/)) {
-      batch = await WoolBatch.findById(batchId);
+      batch = await HoneyBatch.findById(batchId);
     } else {
-      batch = await WoolBatch.findOne({ batchId: batchId.toUpperCase() });
+      batch = await HoneyBatch.findOne({ batchId: batchId.toUpperCase() });
     }
 
     if (!batch) {
@@ -216,9 +216,6 @@ export async function requestProcessing(req, res, next) {
       'Crystallization Control & Creaming': 20,
       'Hermetic Sterilized Bottling & QR Labelling': 25,
       'Full Apiculture Processing & Bottling': 45,
-      'Scouring & Carding': 18,
-      'Sorting & Grading': 12,
-      'Full Processing': 45,
     };
     const estimatedCost = Math.round(qty * (rateMap[serviceType] || 20));
 
@@ -257,7 +254,7 @@ export async function requestProcessing(req, res, next) {
     await Notification.create({
       recipient: processor._id,
       title: `New Processing Request: ${requestId}`,
-      message: `${req.user.name} requested ${serviceType} for ${qty} kg ${batch.floralSource || batch.woolType} honey.`,
+      message: `${req.user.name} requested ${serviceType} for ${qty} kg ${batch.floralSource} honey.`,
       type: 'processing',
       relatedId: requestId,
       link: '/processor/dashboard',
@@ -320,7 +317,7 @@ export async function updateProcessingStatus(req, res, next) {
     }
     await request.save();
 
-    const batch = await WoolBatch.findById(request.batch._id || request.batch);
+    const batch = await HoneyBatch.findById(request.batch._id || request.batch);
     if (batch) {
       if (status === 'in_progress') {
         batch.status = 'in_processing';
@@ -374,7 +371,7 @@ export async function getProcessingHistory(req, res, next) {
       status: { $in: ['completed', 'rejected'] },
     })
       .populate('farmer', 'name mobile state district')
-      .populate('batch', 'batchId floralSource woolType quantityKg qualityGrade')
+      .populate('batch', 'batchId floralSource quantityKg qualityGrade')
       .sort({ updatedAt: -1 });
 
     res.json({ success: true, count: requests.length, data: requests });
@@ -387,7 +384,7 @@ export async function getProcessingHistory(req, res, next) {
 export async function getProcessedProducts(req, res, next) {
   try {
     const processorId = req.user._id;
-    const batches = await WoolBatch.find({
+    const batches = await HoneyBatch.find({
       processor: processorId,
       status: { $in: ['processed', 'bottled', 'listed', 'ordered', 'dispatched', 'delivered', 'sold'] },
     })
@@ -404,7 +401,7 @@ export async function getProcessedProducts(req, res, next) {
 export async function getProcessorBatches(req, res, next) {
   try {
     const processorId = req.user._id;
-    const batches = await WoolBatch.find({ processor: processorId })
+    const batches = await HoneyBatch.find({ processor: processorId })
       .populate('farmer', 'name mobile state district')
       .sort({ createdAt: -1 });
 

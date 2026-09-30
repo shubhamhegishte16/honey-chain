@@ -2,12 +2,12 @@ import MarketPrice from '../models/MarketPrice.js';
 
 export async function getAllPrices(req, res, next) {
   try {
-    const { state, floralSource, woolType } = req.query;
+    const { state, floralSource } = req.query;
     const filter = {};
     if (state) filter.state = state;
-    const targetType = floralSource || woolType;
+    const targetType = floralSource;
     if (targetType) {
-      filter.$or = [{ floralSource: targetType }, { woolType: targetType }];
+      filter.floralSource = targetType;
     }
 
     const prices = await MarketPrice.find(filter).sort({ pricePerKg: -1 });
@@ -19,12 +19,12 @@ export async function getAllPrices(req, res, next) {
 
 export async function getPriceHistory(req, res, next) {
   try {
-    const { state, floralSource, woolType } = req.query;
+    const { state, floralSource } = req.query;
     const query = {};
     if (state) query.state = state;
-    const targetType = floralSource || woolType;
+    const targetType = floralSource;
     if (targetType) {
-      query.$or = [{ floralSource: targetType }, { woolType: targetType }];
+      query.floralSource = targetType;
     }
 
     const record = await MarketPrice.findOne(query);

@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 const traceabilityEventSchema = new mongoose.Schema({
   batch: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'WoolBatch',
+    ref: 'HoneyBatch',
     required: true,
     index: true,
   },

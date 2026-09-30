@@ -1,5 +1,5 @@
 import User from '../models/User.js';
-import WoolBatch from '../models/WoolBatch.js';
+import HoneyBatch from '../models/HoneyBatch.js';
 import QualityAssessment from '../models/QualityAssessment.js';
 import TraceabilityEvent from '../models/TraceabilityEvent.js';
 import MarketplaceListing from '../models/MarketplaceListing.js';
@@ -36,9 +36,7 @@ export async function seedDatabase() {
         organization: 'Brij Beekeepers Co-operative (KVIC Cluster)',
         isVerified: true,
         hiveCount: 120,
-        flockSize: 120,
         beeSpecies: ['Apis mellifera', 'Apis cerana indica'],
-        primaryBreeds: ['Apis mellifera', 'Apis cerana indica'],
       },
       {
         name: 'Anita Deshmukh',
@@ -90,7 +88,7 @@ export async function seedDatabase() {
       },
       {
         name: 'Honey Chain Central Admin',
-        email: 'admin@woolconnect.in',
+        email: 'admin@honeychain.in',
         mobile: '9800011227',
         password: 'password123',
         role: 'admin',
@@ -113,9 +111,7 @@ export async function seedDatabase() {
         organization: 'Kutch Desert Flora Beekeeping Society',
         isVerified: true,
         hiveCount: 160,
-        flockSize: 160,
         beeSpecies: ['Apis mellifera', 'Apis florea'],
-        primaryBreeds: ['Apis mellifera', 'Apis florea'],
       },
       {
         name: 'Farooq Ahmad Mir',
@@ -130,9 +126,7 @@ export async function seedDatabase() {
         organization: 'Kashmir Valley Organic Honey Guild',
         isVerified: true,
         hiveCount: 140,
-        flockSize: 140,
         beeSpecies: ['Apis cerana indica'],
-        primaryBreeds: ['Apis cerana indica'],
       }
     ]);
 
@@ -176,12 +170,12 @@ export async function seedDatabase() {
     const honeyImg2 = '/honey-harvest.jpg';
     const honeyImg3 = '/smart-apiary.jpg';
 
-    const batches = await WoolBatch.create([
+    const batches = await HoneyBatch.create([
       {
         batchId: 'HC-RJ-2026-000108',
         farmer: farmerRamesh._id,
         floralSource: 'Mustard Blossom',
-        woolType: 'Mustard Blossom',
+        floralSource: 'Mustard Blossom',
         beeSpecies: 'Apis mellifera (European Honeybee)',
         hiveCount: 45,
         quantityKg: 180,
@@ -210,7 +204,7 @@ export async function seedDatabase() {
         batchId: 'HC-JK-2026-000045',
         farmer: farmerFarooq._id,
         floralSource: 'Kashmir White Sidr',
-        woolType: 'Kashmir White Sidr',
+        floralSource: 'Kashmir White Sidr',
         beeSpecies: 'Apis cerana indica',
         hiveCount: 30,
         quantityKg: 95,
@@ -239,7 +233,7 @@ export async function seedDatabase() {
         batchId: 'HC-PB-2026-000140',
         farmer: farmerRamesh._id,
         floralSource: 'Wild Forest Multifloral',
-        woolType: 'Wild Forest Multifloral',
+        floralSource: 'Wild Forest Multifloral',
         beeSpecies: 'Apis mellifera',
         hiveCount: 50,
         quantityKg: 240,
@@ -338,7 +332,7 @@ export async function seedDatabase() {
         seller: farmerRamesh._id,
         sellerName: 'Ramesh Singh',
         floralSource: 'Mustard Blossom',
-        woolType: 'Mustard Blossom',
+        floralSource: 'Mustard Blossom',
         grade: 'Grade A+ (NMR Certified 100% Pure)',
         initialQuantityKg: 180,
         availableQuantityKg: 180,
@@ -357,7 +351,7 @@ export async function seedDatabase() {
         seller: farmerFarooq._id,
         sellerName: 'Farooq Ahmad Mir',
         floralSource: 'Kashmir White Sidr',
-        woolType: 'Kashmir White Sidr',
+        floralSource: 'Kashmir White Sidr',
         grade: 'Grade A+ (NMR Certified 100% Pure)',
         initialQuantityKg: 95,
         availableQuantityKg: 95,
@@ -385,7 +379,7 @@ export async function seedDatabase() {
         seller: farmerRamesh._id,
         sellerName: 'Ramesh Singh',
         floralSource: 'Mustard Blossom',
-        woolType: 'Mustard Blossom',
+        floralSource: 'Mustard Blossom',
         quantityKg: 60,
         pricePerKg: 285,
         totalAmount: 60 * 285,
@@ -448,7 +442,7 @@ export async function seedDatabase() {
       {
         state: 'Rajasthan',
         floralSource: 'Mustard Blossom',
-        woolType: 'Mustard Blossom',
+        floralSource: 'Mustard Blossom',
         pricePerKg: 285,
         changePercent: 3.8,
         history: generateHistory(275, 30),
@@ -456,7 +450,7 @@ export async function seedDatabase() {
       {
         state: 'Jammu & Kashmir',
         floralSource: 'Kashmir White Sidr',
-        woolType: 'Kashmir White Sidr',
+        floralSource: 'Kashmir White Sidr',
         pricePerKg: 650,
         changePercent: 5.4,
         history: generateHistory(620, 30),
@@ -464,7 +458,7 @@ export async function seedDatabase() {
       {
         state: 'Jammu & Kashmir',
         floralSource: 'Acacia (Kashmir Valley)',
-        woolType: 'Acacia (Kashmir Valley)',
+        floralSource: 'Acacia (Kashmir Valley)',
         pricePerKg: 480,
         changePercent: 4.1,
         history: generateHistory(460, 30),
@@ -472,7 +466,7 @@ export async function seedDatabase() {
       {
         state: 'Bihar',
         floralSource: 'Muzaffarpur Shahi Lychee',
-        woolType: 'Muzaffarpur Shahi Lychee',
+        floralSource: 'Muzaffarpur Shahi Lychee',
         pricePerKg: 340,
         changePercent: 2.8,
         history: generateHistory(330, 30),
@@ -480,7 +474,7 @@ export async function seedDatabase() {
       {
         state: 'Punjab',
         floralSource: 'Wild Forest Multifloral',
-        woolType: 'Wild Forest Multifloral',
+        floralSource: 'Wild Forest Multifloral',
         pricePerKg: 310,
         changePercent: 2.2,
         history: generateHistory(302, 30),
@@ -488,7 +482,7 @@ export async function seedDatabase() {
       {
         state: 'Maharashtra',
         floralSource: 'Jamun Blossom',
-        woolType: 'Jamun Blossom',
+        floralSource: 'Jamun Blossom',
         pricePerKg: 395,
         changePercent: 3.5,
         history: generateHistory(380, 30),
@@ -505,7 +499,7 @@ export async function seedDatabase() {
         district: 'Bharatpur',
         address: 'Uchain Tehsil, Bharatpur',
         honeyVarieties: ['Mustard Blossom', 'Multifloral Forest'],
-        woolTypes: ['Mustard Blossom', 'Multifloral Forest'],
+        floralSources: ['Mustard Blossom', 'Multifloral Forest'],
         annualProductionKg: 3200,
         hiveCount: 120,
         flockSize: 120,
@@ -525,7 +519,7 @@ export async function seedDatabase() {
         district: 'Srinagar',
         address: 'Tral Sector, Kashmir Valley',
         honeyVarieties: ['Kashmir White Sidr', 'Acacia (Kashmir Valley)'],
-        woolTypes: ['Kashmir White Sidr', 'Acacia (Kashmir Valley)'],
+        floralSources: ['Kashmir White Sidr', 'Acacia (Kashmir Valley)'],
         annualProductionKg: 1850,
         hiveCount: 140,
         flockSize: 140,
@@ -562,7 +556,7 @@ Monitor queen cell construction during peak nectar flow. Provide additional supe
         youtubeUrl: 'https://www.youtube.com/watch?v=JYASAHeFRKg',
         targetProblems: ['poor-quality'],
         recommendedSeasons: ['monsoon', 'processing'],
-        interests: ['sheep-care'],
+        interests: ['bee-care'],
         practicalSteps: [
           { step: 1, title: "Wear Protective Veil & Light Smoker", description: "Use cool pine needle or burlap smoke gently at hive entrance.", icon: "🐝" },
           { step: 2, title: "Examine Brood Pattern", description: "Verify compact worker brood pattern and presence of single centered eggs.", icon: "🔍" },
@@ -588,9 +582,9 @@ Use stainless steel decapping knives and centrifugal extractors to protect the d
         tags: ['Extraction', 'Harvesting', 'Purity'],
         views: 410,
         youtubeUrl: 'https://www.youtube.com/watch?v=N7CpW1mBodc',
-        targetProblems: ['shearing-problem', 'dirty-wool'],
-        recommendedSeasons: ['shearing'],
-        interests: ['shearing', 'wool-quality'],
+        targetProblems: ['hive-moisture', 'crystallization'],
+        recommendedSeasons: ['harvesting'],
+        interests: ['apiary-management', 'honey-quality'],
         practicalSteps: [
           { step: 1, title: "Select Capped Frames", description: "Choose frames with >80% wax capping.", icon: "📦" },
           { step: 2, title: "Decap Wax Cells", description: "Slice cappings smoothly using a warm stainless knife.", icon: "🔪" },
@@ -616,9 +610,9 @@ Use stainless steel decapping knives and centrifugal extractors to protect the d
         tags: ['NMR', 'Quality', 'FSSAI', 'Testing'],
         views: 520,
         youtubeUrl: 'https://www.youtube.com/watch?v=Ksc8wY_VFJk',
-        targetProblems: ['discolored-wool', 'poor-quality'],
-        recommendedSeasons: ['shearing', 'processing'],
-        interests: ['wool-quality'],
+        targetProblems: ['fermentation', 'high-hmf'],
+        recommendedSeasons: ['harvesting', 'processing'],
+        interests: ['honey-quality'],
         practicalSteps: [
           { step: 1, title: "Take Representative Core Sample", description: "Draw 100g sample from bottom, middle, and top of barrel.", icon: "🧪" },
           { step: 2, title: "Check Refractometer Brix", description: "Measure moisture percentage on calibrated refractometer.", icon: "📏" },

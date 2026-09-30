@@ -41,7 +41,7 @@ export async function connectDB() {
   try {
     mongodInstance = await MongoMemoryServer.create({
       instance: {
-        dbName: 'woolconnect',
+        dbName: 'honeychain',
       },
       binary: {
         timeout: 25000,

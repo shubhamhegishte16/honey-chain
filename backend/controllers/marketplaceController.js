@@ -1,19 +1,16 @@
 import MarketplaceListing from '../models/MarketplaceListing.js';
-import WoolBatch from '../models/WoolBatch.js';
+import HoneyBatch from '../models/HoneyBatch.js';
 import TraceabilityEvent from '../models/TraceabilityEvent.js';
 
 export async function getListings(req, res, next) {
   try {
-    const { floralSource, woolType, grade, state, district, minPrice, maxPrice, processingStatus, search, status } = req.query;
+    const { floralSource, grade, state, district, minPrice, maxPrice, processingStatus, search, status } = req.query;
 
     const query = {
       status: status || { $in: ['active', 'partial'] },
     };
 
-    const targetType = floralSource || woolType;
-    if (targetType) {
-      query.$or = [{ floralSource: targetType }, { woolType: targetType }];
-    }
+    if (floralSource) query.floralSource = floralSource;
     if (grade) query.grade = grade;
     if (state) query.state = state;
     if (district) query.district = district;
@@ -29,7 +26,6 @@ export async function getListings(req, res, next) {
       const searchRegex = new RegExp(search, 'i');
       query.$or = [
         { floralSource: searchRegex },
-        { woolType: searchRegex },
         { sellerName: searchRegex },
         { state: searchRegex },
         { district: searchRegex },
@@ -39,7 +35,7 @@ export async function getListings(req, res, next) {
 
     const listings = await MarketplaceListing.find(query)
       .populate('seller', 'name email mobile state district organization isVerified')
-      .populate('batch', 'batchId floralSource woolType quantityKg qualityGrade color harvestDate shearingDate origin')
+      .populate('batch', 'batchId floralSource quantityKg qualityGrade color harvestDate origin')
       .sort({ createdAt: -1 });
 
     res.json({ success: true, count: listings.length, data: listings });
@@ -78,9 +74,9 @@ export async function createListing(req, res, next) {
 
     let batch = null;
     if (batchId.match(/^[0-9a-fA-F]{24}$/)) {
-      batch = await WoolBatch.findById(batchId);
+      batch = await HoneyBatch.findById(batchId);
     } else {
-      batch = await WoolBatch.findOne({ batchId: batchId.toUpperCase() });
+      batch = await HoneyBatch.findOne({ batchId: batchId.toUpperCase() });
     }
 
     if (!batch) {
@@ -91,7 +87,7 @@ export async function createListing(req, res, next) {
       return res.status(403).json({ success: false, message: 'You can only list your own honey batches.' });
     }
 
-    const floral = batch.floralSource || batch.woolType || 'Mustard Blossom';
+    const floral = batch.floralSource || 'Mustard Blossom';
 
     let listing = await MarketplaceListing.findOne({ batch: batch._id });
     if (listing) {
@@ -108,7 +104,6 @@ export async function createListing(req, res, next) {
         seller: req.user._id,
         sellerName: req.user.name,
         floralSource: floral,
-        woolType: floral,
         grade: batch.qualityGrade || 'Grade A+ (NMR Certified 100% Pure)',
         initialQuantityKg: batch.quantityKg,
         availableQuantityKg: batch.quantityKg,

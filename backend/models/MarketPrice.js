@@ -11,11 +11,6 @@ const marketPriceSchema = new mongoose.Schema({
     default: 'Mustard Blossom',
     index: true,
   },
-  woolType: {
-    type: String,
-    default: function() { return this.floralSource || 'Mustard Blossom'; },
-    index: true,
-  },
   pricePerKg: {
     type: Number,
     required: true,
@@ -37,8 +32,6 @@ const marketPriceSchema = new mongoose.Schema({
   toJSON: {
     transform(doc, ret) {
       ret.id = ret._id;
-      if (!ret.floralSource && ret.woolType) ret.floralSource = ret.woolType;
-      if (!ret.woolType && ret.floralSource) ret.woolType = ret.floralSource;
       delete ret.__v;
       return ret;
     }

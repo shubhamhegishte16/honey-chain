@@ -1,6 +1,6 @@
 import Order from '../models/Order.js';
 import MarketplaceListing from '../models/MarketplaceListing.js';
-import WoolBatch from '../models/WoolBatch.js';
+import HoneyBatch from '../models/HoneyBatch.js';
 import TraceabilityEvent from '../models/TraceabilityEvent.js';
 import Notification from '../models/Notification.js';
 
@@ -46,7 +46,7 @@ export async function createOrder(req, res, next) {
       buyerEmail: req.user.email,
       seller: listing.seller,
       sellerName: listing.sellerName,
-      woolType: listing.woolType,
+      floralSource: listing.floralSource,
       quantityKg: buyQty,
       pricePerKg: listing.pricePerKg,
       totalAmount,
@@ -73,7 +73,7 @@ export async function createOrder(req, res, next) {
     await listing.save();
 
     // Update batch status if fully allocated
-    const batch = await WoolBatch.findById(listing.batch._id);
+    const batch = await HoneyBatch.findById(listing.batch._id);
     if (batch) {
       if (listing.status === 'sold_out') {
         batch.status = 'ordered';
@@ -98,7 +98,7 @@ export async function createOrder(req, res, next) {
     await Notification.create({
       recipient: listing.seller,
       title: `New Order Received: ${orderId}`,
-      message: `${req.user.name} placed an order for ${buyQty} kg ${listing.woolType} wool (₹${totalAmount.toLocaleString()}).`,
+      message: `${req.user.name} placed an order for ${buyQty} kg ${listing.floralSource} honey (₹${totalAmount.toLocaleString()}).`,
       type: 'order',
       relatedId: orderId,
       link: '/farmer/orders',
@@ -128,7 +128,7 @@ export async function getUserOrders(req, res, next) {
     const orders = await Order.find(filter)
       .populate('buyer', 'name email mobile state district organization')
       .populate('seller', 'name email mobile state district organization')
-      .populate('batch', 'batchId woolType qualityGrade')
+      .populate('batch', 'batchId floralSource qualityGrade')
       .sort({ createdAt: -1 });
 
     res.json({ success: true, count: orders.length, data: orders });
@@ -179,7 +179,7 @@ export async function updateOrderStatus(req, res, next) {
     await order.save();
 
     // Map to Traceability events if dispatched or delivered
-    const batch = await WoolBatch.findById(order.batch);
+    const batch = await HoneyBatch.findById(order.batch);
     if (batch) {
       if (status === 'dispatched') {
         batch.status = 'dispatched';
@@ -221,7 +221,7 @@ export async function updateOrderStatus(req, res, next) {
     await Notification.create({
       recipient: targetUserId,
       title: `Order ${order.orderId} ${status.toUpperCase()}`,
-      message: `Your order status for ${order.woolType} wool is now: ${status}.`,
+      message: `Your order status for ${order.floralSource} honey is now: ${status}.`,
       type: 'order',
       relatedId: order.orderId,
       link: req.user.role === 'buyer' ? '/buyer/orders' : '/farmer/orders',
@@ -242,13 +242,14 @@ export async function getBuyerAnalytics(req, res, next) {
     const totalSpent = orders.reduce((sum, o) => o.status !== 'cancelled' ? sum + (o.totalAmount || 0) : sum, 0);
     const totalVolume = orders.reduce((sum, o) => o.status !== 'cancelled' ? sum + (o.quantityKg || 0) : sum, 0);
     
-    const woolTypeStats = orders.reduce((acc, o) => {
+    const floralStats = orders.reduce((acc, o) => {
       if (o.status !== 'cancelled') {
-        acc[o.woolType] = (acc[o.woolType] || 0) + (o.quantityKg || 0);
+        const key = o.floralSource || 'Mustard Blossom';
+        acc[key] = (acc[key] || 0) + (o.quantityKg || 0);
       }
       return acc;
     }, {});
-    const topWoolTypes = Object.entries(woolTypeStats).sort((a, b) => b[1] - a[1]);
+    const topFloralSources = Object.entries(floralStats).sort((a, b) => b[1] - a[1]);
 
     res.json({ 
       success: true, 
@@ -257,7 +258,7 @@ export async function getBuyerAnalytics(req, res, next) {
         activeOrders: activeOrders.length,
         totalSpent,
         totalVolume,
-        topWoolTypes,
+        topFloralSources,
         recentOrders: orders.sort((a, b) => b.createdAt - a.createdAt).slice(0, 5)
       } 
     });

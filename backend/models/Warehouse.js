@@ -58,12 +58,11 @@ const warehouseSchema = new mongoose.Schema({
     default: '+91 98290 99881',
   },
   storageRequests: [{
-    batch: { type: mongoose.Schema.Types.ObjectId, ref: 'WoolBatch' },
+    batch: { type: mongoose.Schema.Types.ObjectId, ref: 'HoneyBatch' },
     batchId: { type: String },
     farmer: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     farmerName: { type: String },
     floralSource: { type: String },
-    woolType: { type: String },
     quantityKg: { type: Number },
     durationMonths: { type: Number, default: 1 },
     status: { type: String, enum: ['pending', 'accepted', 'rejected', 'stored', 'released'], default: 'pending' },

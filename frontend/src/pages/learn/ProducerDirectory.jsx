@@ -259,12 +259,12 @@ const SKILL_TRANSLATIONS = {
     'Dyeing': 'रंगाई',
     'Processing': 'प्रसंस्करण',
     'Product Design': 'उत्पाद डिज़ाइन',
-    'Sheep Care': 'मधुमक्खी देखभाल',
-    'Shearing': 'शहद निष्कर्षण',
+    'Bee Care': 'मधुमक्खी देखभाल',
+    'Extraction': 'शहद निष्कर्षण',
     'Digital Selling': 'डिजिटल बिक्री',
     'QR Traceability': 'क्यूआर ट्रेसिबिलिटी',
     'Pricing': 'मूल्य निर्धारण',
-    'Wool Processing': 'शहद प्रसंस्करण',
+    'Honey Processing': 'शहद प्रसंस्करण',
     'Carding': 'छनन',
     'Weaving': 'पैकेजिंग'
   },
@@ -285,14 +285,14 @@ const SKILL_TRANSLATIONS = {
     'Dyeing': 'रंगकाम',
     'Processing': 'प्रक्रिया',
     'Product Design': 'उत्पादन डिझाईन',
-    'Sheep Care': 'मधमाशी काळजी',
-    'Shearing': 'मध निष्कर्षण',
+    'Apiary Care': 'मधमाशी काळजी',
+    'Honey Extraction': 'मध निष्कर्षण',
     'Digital Selling': 'डिजिटल विक्री',
     'QR Traceability': 'क्यूआर ट्रेसिबिलिटी',
     'Pricing': 'दर निश्चिती',
-    'Wool Processing': 'मध प्रक्रिया',
-    'Carding': 'गाळणी',
-    'Weaving': 'पॅकेजिंग'
+    'Honey Processing': 'मध प्रक्रिया',
+    'Filtration': 'गाळणी',
+    'Packaging': 'पॅकेजिंग'
   }
 };
 
@@ -368,18 +368,18 @@ const translateName = (name, lang) => {
     translated = translated.replace('Demo Honey Beekeeper', 'डेमो मधुमक्खी पालक');
     translated = translated.replace('Demo Honey Cooperative', 'डेमो शहद सहकारी समिति');
     translated = translated.replace('Demo Honey Artisan', 'डेमो शहद कारीगर');
-    translated = translated.replace('Demo Wool Producer', 'डेमो मधुमक्खी पालक');
-    translated = translated.replace('Demo Wool Artisan', 'डेमो शहद कारीगर');
+    translated = translated.replace('Demo Honey Producer', 'डेमो मधुमक्खी पालक');
+    translated = translated.replace('Demo Honey Processor', 'डेमो शहद प्रसंस्करण केंद्र');
     translated = translated.replace('Demo Artisan', 'डेमो कारीगर');
-    translated = translated.replace('Demo Wool Seller', 'डेमो शहद विक्रेता');
+    translated = translated.replace('Demo Honey Seller', 'डेमो शहद विक्रेता');
   } else if (lang === 'mr') {
     translated = translated.replace('Demo Honey Beekeeper', 'डेमो मधमाशी पालक');
     translated = translated.replace('Demo Honey Cooperative', 'डेमो मध सहकारी संस्था');
     translated = translated.replace('Demo Honey Artisan', 'डेमो मध कारागीर');
-    translated = translated.replace('Demo Wool Producer', 'डेमो मधमाशी पालक');
-    translated = translated.replace('Demo Wool Artisan', 'डेमो मध कारागीर');
+    translated = translated.replace('Demo Honey Producer', 'डेमो मधमाशी पालक');
+    translated = translated.replace('Demo Honey Processor', 'डेमो मध प्रक्रिया केंद्र');
     translated = translated.replace('Demo Artisan', 'डेमो कारागीर');
-    translated = translated.replace('Demo Wool Seller', 'डेमो मध विक्रेता');
+    translated = translated.replace('Demo Honey Seller', 'डेमो मध विक्रेता');
   }
   
   // Replace region dash character variations
@@ -397,179 +397,179 @@ const translateDescription = (desc, lang) => {
   if (lang === 'en') return desc;
   if (lang === 'hi') {
     if (desc.includes('Focuses on fine Chokla and Magra')) {
-      return 'वूलकनेक्ट प्रोटोटाइप के लिए डेमो प्रोफाइल। बढ़िया चोकला और मगरा ऊन ग्रेडिंग और सुरक्षित मानसून भंडारण पर ध्यान केंद्रित करता है।';
+      return 'वूलकनेक्ट प्रोटोटाइप के लिए डेमो प्रोफाइल। बढ़िया चोकला और मगरा शहद ग्रेडिंग और सुरक्षित मानसून भंडारण पर ध्यान केंद्रित करता है।';
     }
     if (desc.includes('desert botanical dyes')) {
-      return 'डेमो कारीगर प्रोफाइल। पारंपरिक मरुस्थलीय जैविक रंगों का उपयोग करके हाथ से रंगे हुए ऊनी कालीनों का निर्माण करता है।';
+      return 'डेमो कारीगर प्रोफाइल। पारंपरिक मरुस्थलीय जैविक रंगों का उपयोग करके हाथ से रंगे हुए शहदी कालीनों का निर्माण करता है।';
     }
-    if (desc.includes('humane shearing and pre-shearing')) {
-      return 'डेमो प्रोफाइल। दयालु कतरन और कतरन से पहले भेड़ स्वास्थ्य प्रबंधन पर ध्यान केंद्रित करता है।';
+    if (desc.includes('sustainable comb extraction and apiary')) {
+      return 'डेमो प्रोफाइल। दयालु कतरन और कतरन से पहले मधुमक्खी स्वास्थ्य प्रबंधन पर ध्यान केंद्रित करता है।';
     }
-    if (desc.includes('Sells raw Nali wool directly')) {
-      return 'डेमो प्रोफाइल। डिजिटल प्लेटफॉर्म के माध्यम से मिलों को सीधे कच्ची नाली ऊन बेचता है।';
+    if (desc.includes('Sells raw Mustard honey directly')) {
+      return 'डेमो प्रोफाइल। डिजिटल प्लेटफॉर्म के माध्यम से मिलों को सीधे कच्ची नाली शहद बेचता है।';
     }
-    if (desc.includes('hand-woven Pali wool blankets')) {
-      return 'डेमो कारीगर प्रोफाइल। हाथ से बुने हुए पाली ऊनी कंबलों और स्कौरिंग तकनीकों में विशेषज्ञता रखता है।';
+    if (desc.includes('pure bottled Pali forest honey')) {
+      return 'डेमो कारीगर प्रोफाइल। हाथ से बुने हुए पाली शहदी कंबलों और स्कौरिंग तकनीकों में विशेषज्ञता रखता है।';
     }
-    if (desc.includes('Raises Patanwadi sheep')) {
-      return 'डेमो प्रोफाइल। कच्छ में पाटनवाड़ी भेड़ पालता है और स्वच्छ कतरन तकनीकों का अभ्यास करता है।';
+    if (desc.includes('Manages Apis cerana hives')) {
+      return 'डेमो प्रोफाइल। कच्छ में पाटनवाड़ी मधुमक्खी पालता है और स्वच्छ कतरन तकनीकों का अभ्यास करता है।';
     }
     if (desc.includes('embroidered woollen products')) {
-      return 'पाटनवाड़ी ऊन का उपयोग करके कढ़ाईदार ऊनी उत्पाद बनाने वाला डेमो कारीगर।';
+      return 'पाटनवाड़ी शहद का उपयोग करके कढ़ाईदार शहदी उत्पाद बनाने वाला डेमो कारीगर।';
     }
-    if (desc.includes('Maintains grade-A certified fleece')) {
-      return 'डेमो प्रोफाइल। उचित नमी भंडारण नियमों के साथ ग्रेड-ए प्रमाणित ऊन का रखरखाव करता है।';
+    if (desc.includes('Maintains grade-A certified raw honey')) {
+      return 'डेमो प्रोफाइल। उचित नमी भंडारण नियमों के साथ ग्रेड-ए प्रमाणित शहद का रखरखाव करता है।';
     }
     if (desc.includes('producing natural-dyed yarn')) {
       return 'डेमो कारीगर। प्राकृतिक रूप से रंगे धागे का उत्पादन और ऑनलाइन खरीदारों को सीधे विपणन करता है।';
     }
-    if (desc.includes('Deccani sheep farmer')) {
-      return 'डेमो प्रोफाइल। दक्कनी भेड़ किसान जो पशु चिकित्सा देखभाल और कुशल कतरन पर ध्यान केंद्रित करता है।';
+    if (desc.includes('Deccani beekeeper')) {
+      return 'डेमो प्रोफाइल। दक्कनी मधुमक्खी किसान जो पशु चिकित्सा देखभाल और कुशल कतरन पर ध्यान केंद्रित करता है।';
     }
-    if (desc.includes('Processes raw Deccani fleece')) {
-      return 'डेमो कारीगर प्रोफाइल। ऑनलाइन बेचे जाने वाले हथकरघा वस्त्रों में कच्ची दक्कनी ऊन का प्रसंस्करण करता है।';
+    if (desc.includes('Processes raw Multifloral honey')) {
+      return 'डेमो कारीगर प्रोफाइल। ऑनलाइन बेचे जाने वाले हथकरघा वस्त्रों में कच्ची दक्कनी शहद का प्रसंस्करण करता है।';
     }
     if (desc.includes('Satara')) {
-      return 'डेमो प्रोफाइल। मानसून के बाद ऊन भंडारण और ग्रेड प्रमाणीकरण को प्राथमिकता देता है।';
+      return 'डेमो प्रोफाइल। मानसून के बाद शहद भंडारण और ग्रेड प्रमाणीकरण को प्राथमिकता देता है।';
     }
     if (desc.includes('Changthangi goats')) {
-      return 'डेमो प्रोफाइल। पश्मीना के लिए चांगथांगी बकरियों का पालन करता है; चांगरा ऊन भी संभालता है।';
+      return 'डेमो प्रोफाइल। पश्मीना के लिए चांगथांगी बकरियों का पालन करता है; चांगरा शहद भी संभालता है।';
     }
     if (desc.includes('traditional Ladakhi')) {
-      return 'डेमो कारीगर प्रोफाइल। स्थानीय ऊन का उपयोग करके पारंपरिक लद्दाख के ऊनी उत्पाद बनाता है।';
+      return 'डेमो कारीगर प्रोफाइल। स्थानीय शहद का उपयोग करके पारंपरिक लद्दाख के शहदी उत्पाद बनाता है।';
     }
-    if (desc.includes('Kashmir wool directly')) {
-      return 'डेमो प्रोफाइल। क्यूआर-आधारित पता लगाने की क्षमता का उपयोग करके सीधे खरीदारों को कश्मीर ऊन बेचता है।';
+    if (desc.includes('Kashmir White Sidr honey directly')) {
+      return 'डेमो प्रोफाइल। क्यूआर-आधारित पता लगाने की क्षमता का उपयोग करके सीधे खरीदारों को कश्मीर शहद बेचता है।';
     }
     if (desc.includes('Kani shawls')) {
-      return 'प्राकृतिक रूप से रंगे कश्मीरी ऊन से कनी शॉल बनाने वाला डेमो कारीगर।';
+      return 'प्राकृतिक रूप से रंगे कश्मीरी शहद से कनी शॉल बनाने वाला डेमो कारीगर।';
     }
     if (desc.includes('Rampur Bushair')) {
-      return 'डेमो प्रोफाइल। मौसमी कतरन के साथ उच्च ऊंचाई पर रामपुर बुशहर भेड़ों का प्रबंधन करता है।';
+      return 'डेमो प्रोफाइल। मौसमी कतरन के साथ उच्च ऊंचाई पर रामपुर बुशहर मधुमक्खीों का प्रबंधन करता है।';
     }
     if (desc.includes('traditional Lahauli')) {
-      return 'पारंपरिक लाहौली ऊनी कपड़े बनाने वाला डेमो कारीगर।';
+      return 'पारंपरिक लाहौली शहदी कपड़े बनाने वाला डेमो कारीगर।';
     }
     if (desc.includes('Hand-spins and naturally dyes')) {
-      return 'डेमो कारीगर प्रोफाइल। जैविक हिमाचली ऊन से कुल्लू शॉल को हाथ से कातता है और प्राकृतिक रूप से रंगता है।';
+      return 'डेमो कारीगर प्रोफाइल। जैविक हिमाचली शहद से कुल्लू शॉल को हाथ से कातता है और प्राकृतिक रूप से रंगता है।';
     }
     if (desc.includes('Shimla')) {
-      return 'डेमो प्रोफाइल। शिमला जिलों के पास अंगोरा और गद्दी ऊन का स्रोत और ग्रेडिंग करता है।';
+      return 'डेमो प्रोफाइल। शिमला जिलों के पास अंगोरा और गद्दी शहद का स्रोत और ग्रेडिंग करता है।';
     }
     if (desc.includes('Nanda Devi')) {
-      return 'डेमो प्रोफाइल। मौसमी घास के मैदानों में चराई के साथ नंदा देवी क्षेत्र में झुंडों का प्रबंधन करता है।';
+      return 'डेमो प्रोफाइल। मौसमी घास के मैदानों में चराई के साथ नंदा देवी क्षेत्र में छत्तेों का प्रबंधन करता है।';
     }
     if (desc.includes('Kumaoni woollen shawls')) {
-      return 'स्थानीय स्तर पर प्राप्त ऊन से कुमाऊंनी ऊनी शॉल और कालीन बनाने वाला डेमो कारीगर।';
+      return 'स्थानीय स्तर पर प्राप्त शहद से कुमाऊंनी शहदी शॉल और कालीन बनाने वाला डेमो कारीगर।';
     }
-    if (desc.includes('alpine wool before')) {
-      return 'डेमो प्रोफाइल। डिजिटल बाजार में सूचीबद्ध करने से पहले अल्पाइन ऊन का भंडारण और ग्रेडिंग करता है।';
+    if (desc.includes('alpine raw honey before')) {
+      return 'डेमो प्रोफाइल। डिजिटल बाजार में सूचीबद्ध करने से पहले अल्पाइन शहद का भंडारण और ग्रेडिंग करता है।';
     }
     if (desc.includes('Bellary and Deccani')) {
-      return 'डेमो प्रोफाइल। बेल्लारी और दक्कनी संकर भेड़ों का पालन करता है; स्वच्छ कतरन पर ध्यान केंद्रित करता है।';
+      return 'डेमो प्रोफाइल। बेल्लारी और दक्कनी संकर मधुमक्खीों का पालन करता है; स्वच्छ कतरन पर ध्यान केंद्रित करता है।';
     }
     if (desc.includes('Kasuti-style embroidery')) {
-      return 'प्रीमियम बाजारों के लिए ऊनी कपड़ों में कसूती शैली की कढ़ाई बुनने वाला डेमो कारीगर।';
+      return 'प्रीमियम बाजारों के लिए शहदी कपड़ों में कसूती शैली की कढ़ाई बुनने वाला डेमो कारीगर।';
     }
-    if (desc.includes('Deccani wool batches')) {
-      return 'डेमो प्रोफाइल। उचित नमी नियंत्रण के साथ ग्रेड-ए दक्कनी ऊन के जत्थों का रखरखाव करता है।';
+    if (desc.includes('Deccani raw honey batches')) {
+      return 'डेमो प्रोफाइल। उचित नमी नियंत्रण के साथ ग्रेड-ए दक्कनी शहद के जत्थों का रखरखाव करता है।';
     }
-    if (desc.includes('Nellore sheep farmer')) {
-      return 'डेमो प्रोफाइल। नेल्लोर भेड़ किसान जो डिजिटल ऊन बिक्री प्लेटफार्मों की खोज कर रहा है।';
+    if (desc.includes('Nellore apiary farmer')) {
+      return 'डेमो प्रोफाइल। नेल्लोर मधुमक्खी किसान जो डिजिटल शहद बिक्री प्लेटफार्मों की खोज कर रहा है।';
     }
     if (desc.includes('Pochampally-inspired ikat')) {
-      return 'प्राकृतिक रूप से रंगे ऊनी धागे का उपयोग करके पोचमपल्ली से प्रेरित इकत पैटर्न बुनने वाला डेमो कारीगर।';
+      return 'प्राकृतिक रूप से रंगे शहदी धागे का उपयोग करके पोचमपल्ली से प्रेरित इकत पैटर्न बुनने वाला डेमो कारीगर।';
     }
-    if (desc.includes('Telangana wool in a small')) {
-      return 'डेमो प्रोफाइल। एक छोटे पारिवारिक सहकारी समिति में तेलंगाना ऊन का भंडारण और प्रसंस्करण करता है।';
+    if (desc.includes('Telangana honey in a small')) {
+      return 'डेमो प्रोफाइल। एक छोटे पारिवारिक सहकारी समिति में तेलंगाना शहद का भंडारण और प्रसंस्करण करता है।';
     }
   } else if (lang === 'mr') {
     if (desc.includes('Focuses on fine Chokla and Magra')) {
-      return 'वूलकनेक्ट प्रोटोटाइपसाठी डेमो प्रोफाइल. उत्तम चोकला आणि मगरा लोकर प्रतवारी आणि सुरक्षित मान्सून साठवणुकीवर लक्ष केंद्रित करते.';
+      return 'वूलकनेक्ट प्रोटोटाइपसाठी डेमो प्रोफाइल. उत्तम चोकला आणि मगरा मध प्रतवारी आणि सुरक्षित मान्सून साठवणुकीवर लक्ष केंद्रित करते.';
     }
     if (desc.includes('desert botanical dyes')) {
-      return 'डेमो कारागीर प्रोफाइल. पारंपारिक वाळवंटी वनस्पती रंगांचा वापर करून हाताने रंगवलेले लोकरीचे चटई तयार करतो.';
+      return 'डेमो कारागीर प्रोफाइल. पारंपारिक वाळवंटी वनस्पती रंगांचा वापर करून हाताने रंगवलेले मधीचे चटई तयार करतो.';
     }
-    if (desc.includes('humane shearing and pre-shearing')) {
-      return 'डेमो प्रोफाइल. मानवी कातरणी आणि कातरणीपूर्वी मेंढीच्या आरोग्य व्यवस्थापनावर लक्ष केंद्रित करते.';
+    if (desc.includes('sustainable comb extraction and apiary')) {
+      return 'डेमो प्रोफाइल. मानवी मध निष्कर्षण आणि मध निष्कर्षणपूर्वी मधमाशीच्या आरोग्य व्यवस्थापनावर लक्ष केंद्रित करते.';
     }
-    if (desc.includes('Sells raw Nali wool directly')) {
-      return 'डेमो प्रोफाइल. डिजिटल प्लॅटफॉर्मद्वारे थेट गिरण्यांना कच्ची नाली लोकर विकतो.';
+    if (desc.includes('Sells raw Mustard honey directly')) {
+      return 'डेमो प्रोफाइल. डिजिटल प्लॅटफॉर्मद्वारे थेट गिरण्यांना कच्ची नाली मध विकतो.';
     }
-    if (desc.includes('hand-woven Pali wool blankets')) {
-      return 'डेमो कारागीर प्रोफाइल. हाताने विणलेल्या पाली लोकरीच्या घोंगड्या आणि प्रक्रिया तंत्रात विशेष प्राविण्य आहे.';
+    if (desc.includes('pure bottled Pali forest honey')) {
+      return 'डेमो कारागीर प्रोफाइल. हाताने विणलेल्या पाली मधीच्या घोंगड्या आणि प्रक्रिया तंत्रात विशेष प्राविण्य आहे.';
     }
-    if (desc.includes('Raises Patanwadi sheep')) {
-      return 'डेमो प्रोफाइल. कच्छमध्ये पाटणवाडी मेंढ्या पाळतात आणि स्वच्छ कातरणी तंत्राचा सराव करतात.';
+    if (desc.includes('Manages Apis cerana hives')) {
+      return 'डेमो प्रोफाइल. कच्छमध्ये पाटणवाडी मधमाश्या पाळतात आणि स्वच्छ मध निष्कर्षण तंत्राचा सराव करतात.';
     }
     if (desc.includes('embroidered woollen products')) {
-      return 'पाटणवाडी लोकरीचा वापर करून भरतकाम केलेली लोकरी उत्पादने तयार करणारा डेमो कारागीर.';
+      return 'पाटणवाडी मधीचा वापर करून भरतकाम केलेली मधी उत्पादने तयार करणारा डेमो कारागीर.';
     }
-    if (desc.includes('Maintains grade-A certified fleece')) {
-      return 'डेमो प्रोफाइल. योग्य आर्द्रता साठवण प्रोटोकॉलसह ग्रेड-ए प्रमाणित लोकर राखते.';
+    if (desc.includes('Maintains grade-A certified raw honey')) {
+      return 'डेमो प्रोफाइल. योग्य आर्द्रता साठवण प्रोटोकॉलसह ग्रेड-ए प्रमाणित मध राखते.';
     }
     if (desc.includes('producing natural-dyed yarn')) {
       return 'डेमो कारागीर. नैसर्गिकरित्या रंगवलेले सूत तयार करतो आणि थेट ग्राहकांना ऑनलाइन विकतो.';
     }
-    if (desc.includes('Deccani sheep farmer')) {
-      return 'डेमो प्रोफाइल. दख्खनी मेंढी शेतकरी जो पशुवैद्यकीय काळजी आणि कार्यक्षम कातरणीवर लक्ष केंद्रित करतो.';
+    if (desc.includes('Deccani beekeeper')) {
+      return 'डेमो प्रोफाइल. दख्खनी मधमाशी शेतकरी जो पशुवैद्यकीय काळजी आणि कार्यक्षम मध निष्कर्षणवर लक्ष केंद्रित करतो.';
     }
-    if (desc.includes('Processes raw Deccani fleece')) {
-      return 'डेमो कारागीर प्रोफाइल. ऑनलाइन विकल्या जाणाऱ्या हातमाग कापडात कच्च्या दख्खनी लोकरीवर प्रक्रिया करतो.';
+    if (desc.includes('Processes raw Multifloral honey')) {
+      return 'डेमो कारागीर प्रोफाइल. ऑनलाइन विकल्या जाणाऱ्या हातमाग कापडात कच्च्या दख्खनी मधीवर प्रक्रिया करतो.';
     }
     if (desc.includes('Satara')) {
-      return 'डेमो प्रोफाइल. मान्सूननंतरच्या लोकर साठवणुकीला आणि ग्रेड प्रमाणपत्राला प्राधान्य देते.';
+      return 'डेमो प्रोफाइल. मान्सूननंतरच्या मध साठवणुकीला आणि ग्रेड प्रमाणपत्राला प्राधान्य देते.';
     }
     if (desc.includes('Changthangi goats')) {
-      return 'डेमो प्रोफाइल. पश्मिनासाठी चांगथांगी शेळ्या पाळतात; चांगरा लोकर देखील हाताळतात.';
+      return 'डेमो प्रोफाइल. पश्मिनासाठी चांगथांगी शेळ्या पाळतात; चांगरा मध देखील हाताळतात.';
     }
     if (desc.includes('traditional Ladakhi')) {
-      return 'डेमो कारागीर प्रोफाइल. स्थानिक लोकर वापरून पारंपारिक लडाखी लोकरीच्या वस्तू तयार करतो.';
+      return 'डेमो कारागीर प्रोफाइल. स्थानिक मध वापरून पारंपारिक लडाखी मधीच्या वस्तू तयार करतो.';
     }
-    if (desc.includes('Kashmir wool directly')) {
-      return 'डेमो प्रोफाइल. क्यूआर-आधारित ट्रेसिबिलिटी वापरून थेट खरेदीदारांना काश्मीर लोकर विकतो.';
+    if (desc.includes('Kashmir White Sidr honey directly')) {
+      return 'डेमो प्रोफाइल. क्यूआर-आधारित ट्रेसिबिलिटी वापरून थेट खरेदीदारांना काश्मीर मध विकतो.';
     }
     if (desc.includes('Kani shawls')) {
-      return 'नैसर्गिकरित्या रंगवलेल्या काश्मिरी लोकरीपासून कानी शाल तयार करणारा डेमो कारागीर.';
+      return 'नैसर्गिकरित्या रंगवलेल्या काश्मिरी मधीपासून कानी शाल तयार करणारा डेमो कारागीर.';
     }
     if (desc.includes('Rampur Bushair')) {
-      return 'डेमो प्रोफाइल. हंगामी कातरणीसह उंच भागातील रामपूर बुशायर मेंढ्यांचे व्यवस्थापन करतो.';
+      return 'डेमो प्रोफाइल. हंगामी मध निष्कर्षणसह उंच भागातील रामपूर बुशायर मधमाश्यांचे व्यवस्थापन करतो.';
     }
     if (desc.includes('traditional Lahauli')) {
-      return 'पारंपारिक लाहौली लोकरीचे कपडे तयार करणारा डेमो कारागीर.';
+      return 'पारंपारिक लाहौली मधीचे कपडे तयार करणारा डेमो कारागीर.';
     }
     if (desc.includes('Hand-spins and naturally dyes')) {
-      return 'डेमो कारागीर प्रोफाइल. सेंद्रिय हिमाचली लोकरीपासून कुल्लू शाल हाताने विणतो आणि नैसर्गिकरित्या रंगवतो.';
+      return 'डेमो कारागीर प्रोफाइल. सेंद्रिय हिमाचली मधीपासून कुल्लू शाल हाताने विणतो आणि नैसर्गिकरित्या रंगवतो.';
     }
     if (desc.includes('Shimla')) {
-      return 'डेमो प्रोफाइल. शिमला जिल्ह्यांजवळ अंगोरा आणि गद्दी लोकरीचे संकलन आणि प्रतवारी करतो.';
+      return 'डेमो प्रोफाइल. शिमला जिल्ह्यांजवळ अंगोरा आणि गद्दी मधीचे संकलन आणि प्रतवारी करतो.';
     }
     if (desc.includes('Nanda Devi')) {
-      return 'डेमो प्रोफाइल. नंदा देवी प्रदेशातील कळपांचे हंगामी चरण्याच्या व्यवस्थापनासह नियंत्रण करतो.';
+      return 'डेमो प्रोफाइल. नंदा देवी प्रदेशातील पोळेांचे हंगामी चरण्याच्या व्यवस्थापनासह नियंत्रण करतो.';
     }
     if (desc.includes('Kumaoni woollen shawls')) {
-      return 'स्थानिक पातळीवर मिळणाऱ्या लोकरीपासून कुमाउनी लोकरीच्या शाली आणि चटया तयार करणारा डेमो कारागीर.';
+      return 'स्थानिक पातळीवर मिळणाऱ्या मधीपासून कुमाउनी मधीच्या शाली आणि चटया तयार करणारा डेमो कारागीर.';
     }
-    if (desc.includes('alpine wool before')) {
-      return 'डेमो प्रोफाइल. डिजिटल बाजारात सूचीबद्ध करण्यापूर्वी अल्पाइन लोकरीची साठवणूक आणि प्रतवारी करतो.';
+    if (desc.includes('alpine raw honey before')) {
+      return 'डेमो प्रोफाइल. डिजिटल बाजारात सूचीबद्ध करण्यापूर्वी अल्पाइन मधीची साठवणूक आणि प्रतवारी करतो.';
     }
     if (desc.includes('Bellary and Deccani')) {
-      return 'डेमो प्रोफाइल. बेल्लारी आणि दख्खनी संकरित मेंढ्या पाळतात; स्वच्छ कातरणीवर लक्ष केंद्रित करते.';
+      return 'डेमो प्रोफाइल. बेल्लारी आणि दख्खनी संकरित मधमाश्या पाळतात; स्वच्छ मध निष्कर्षणवर लक्ष केंद्रित करते.';
     }
     if (desc.includes('Kasuti-style embroidery')) {
-      return 'प्रीमियम बाजारपेठेसाठी लोकरीच्या कपड्यांमध्ये कसुती पद्धतीचे भरतकाम करणारा डेमो कारागीर.';
+      return 'प्रीमियम बाजारपेठेसाठी मधीच्या कपड्यांमध्ये कसुती पद्धतीचे भरतकाम करणारा डेमो कारागीर.';
     }
-    if (desc.includes('Deccani wool batches')) {
-      return 'डेमो प्रोफाइल. योग्य आर्द्रता नियंत्रणासह ग्रेड-ए दख्खनी लोकरीचे जत्थे राखते.';
+    if (desc.includes('Deccani raw honey batches')) {
+      return 'डेमो प्रोफाइल. योग्य आर्द्रता नियंत्रणासह ग्रेड-ए दख्खनी मधीचे जत्थे राखते.';
     }
-    if (desc.includes('Nellore sheep farmer')) {
-      return 'डेमो प्रोफाइल. नेल्लोर मेंढी शेतकरी जो डिजिटल लोकर विक्री प्लॅटफॉर्म शोधत आहे.';
+    if (desc.includes('Nellore apiary farmer')) {
+      return 'डेमो प्रोफाइल. नेल्लोर मधमाशी शेतकरी जो डिजिटल मध विक्री प्लॅटफॉर्म शोधत आहे.';
     }
     if (desc.includes('Pochampally-inspired ikat')) {
-      return 'नैसर्गिकरित्या रंगवलेल्या लोकरीच्या सुताचा वापर करून पोचमपल्ली-प्रेरित इकत नमुने विणणारा डेमो कारागीर.';
+      return 'नैसर्गिकरित्या रंगवलेल्या मधीच्या सुताचा वापर करून पोचमपल्ली-प्रेरित इकत नमुने विणणारा डेमो कारागीर.';
     }
-    if (desc.includes('Telangana wool in a small')) {
-      return 'डेमो प्रोफाइल. लहान कौटुंबिक सहकारी संस्थेत तेलंगणा लोकरीची साठवणूक आणि प्रक्रिया करतो.';
+    if (desc.includes('Telangana honey in a small')) {
+      return 'डेमो प्रोफाइल. लहान कौटुंबिक सहकारी संस्थेत तेलंगणा मधीची साठवणूक आणि प्रक्रिया करतो.';
     }
   }
   return desc;
@@ -577,12 +577,9 @@ const translateDescription = (desc, lang) => {
 
 // ─── Training category display info generator ──────────────────────────────
 const CATEGORY_INFO = (t) => ({
-  'sheep-care':   { label: t('catSheepCare'),   color: 'bg-rose-50 text-rose-700 border-rose-200' },
-  'bee-care':     { label: t('catSheepCare'),   color: 'bg-rose-50 text-rose-700 border-rose-200' },
-  'shearing':     { label: t('catShearing'),     color: 'bg-amber-50 text-amber-800 border-amber-200' },
-  'harvesting':   { label: t('catShearing'),     color: 'bg-amber-50 text-amber-800 border-amber-200' },
-  'wool-quality': { label: t('catWoolQuality'), color: 'bg-sky-50 text-sky-700 border-sky-200' },
-  'honey-quality':{ label: t('catWoolQuality'), color: 'bg-sky-50 text-sky-700 border-sky-200' },
+  'bee-care':     { label: t('catBeeCare'),      color: 'bg-rose-50 text-rose-700 border-rose-200' },
+  'harvesting':   { label: t('catHarvesting'),   color: 'bg-amber-50 text-amber-800 border-amber-200' },
+  'honey-quality':{ label: t('catHoneyQuality'), color: 'bg-sky-50 text-sky-700 border-sky-200' },
   'storage':      { label: t('catStorage'),      color: 'bg-indigo-50 text-indigo-700 border-indigo-200' },
   'processing':   { label: t('catProcessing'),   color: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
   'selling':      { label: t('catSelling'),      color: 'bg-purple-50 text-purple-700 border-purple-200' },
@@ -791,9 +788,9 @@ export default function ProducerDirectory() {
       if (selectedRegion && p.region !== selectedRegion) return false;
       
       let dbType = selectedType;
-      if (selectedType === t('producerType') || selectedType === 'Wool Producer') dbType = 'Beekeeper';
+      if (selectedType === t('producerType') || selectedType === 'Beekeeper') dbType = 'Beekeeper';
       if (selectedType === t('artisanType')) dbType = 'Artisan';
-      if (selectedType && p.type !== dbType && !(dbType === 'Beekeeper' && (p.type === 'Beekeeper' || p.type === 'Wool Producer'))) return false;
+      if (selectedType && p.type !== dbType && !(dbType === 'Beekeeper' && (p.type === 'Beekeeper' || p.type === 'Beekeeper'))) return false;
 
       if (searchQuery.trim()) {
         const q = searchQuery.toLowerCase();
@@ -938,7 +935,7 @@ export default function ProducerDirectory() {
               )}
               {selectedType && (
                 <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold">
-                  {selectedType === 'Beekeeper' || selectedType === 'Wool Producer' ? t('producerType') : selectedType === 'Artisan' ? t('artisanType') : selectedType}
+                  {selectedType === 'Beekeeper' || selectedType === 'Beekeeper' ? t('producerType') : selectedType === 'Artisan' ? t('artisanType') : selectedType}
                   <button onClick={() => setSelectedType('')} aria-label="Remove type filter"><X size={11} /></button>
                 </span>
               )}

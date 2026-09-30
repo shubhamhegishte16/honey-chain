@@ -17,18 +17,18 @@ import Input from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
 import { useAuth } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
-import { createWoolBatch } from '../../services/batches.service';
+import { createHoneyBatch } from '../../services/batches.service';
 import { INDIAN_STATES, DISTRICTS_BY_STATE, WOOL_TYPES } from '../../constants/states';
 
-export default function AddWoolBatch() {
+export default function AddHoneyBatch() {
   const { profile } = useAuth();
   const navigate = useNavigate();
   const { t } = useLanguage();
 
   const [form, setForm] = useState({
-    woolType: 'Mustard Blossom',
+    floralSource: 'Mustard Blossom',
     quantity: '',
-    shearingDate: new Date().toISOString().split('T')[0],
+    harvestDate: new Date().toISOString().split('T')[0],
     state: profile?.state || 'Rajasthan',
     district: profile?.district || 'Bharatpur',
     farmLocation: '',
@@ -57,11 +57,11 @@ export default function AddWoolBatch() {
 
   function validate() {
     const e = {};
-    if (!form.woolType) e.woolType = 'Select floral nectar source';
+    if (!form.floralSource) e.floralSource = 'Select floral nectar source';
     if (!form.quantity || isNaN(Number(form.quantity)) || Number(form.quantity) <= 0) {
       e.quantity = t('validQtyRequired', 'Enter a valid positive quantity in kg');
     }
-    if (!form.shearingDate) e.shearingDate = 'Enter extraction date';
+    if (!form.harvestDate) e.harvestDate = 'Enter extraction date';
     if (!form.state) e.state = t('selectState', 'Select state');
     if (!form.district) e.district = t('selectDistrict', 'Select district');
     setErrors(e);
@@ -74,17 +74,17 @@ export default function AddWoolBatch() {
     if (!validate()) return;
     setLoading(true);
 
-    const { data, error } = await createWoolBatch({
+    const { data, error } = await createHoneyBatch({
       farmerId: profile?.id,
-      woolType: form.woolType,
+      floralSource: form.floralSource,
       quantityKg: Number(form.quantity),
-      shearingDate: form.shearingDate,
+      harvestDate: form.harvestDate,
       state: form.state,
       district: form.district,
       farmLocation: form.farmLocation,
       notes: form.notes,
-      pricePerKg: Number(form.pricePerKg) || 300,
-      images: [],
+      pricePerKg: Number(form.pricePerKg) || 285,
+      images: ['/honey-hero.jpg'],
     });
 
     setLoading(false);
@@ -113,7 +113,7 @@ export default function AddWoolBatch() {
         </Link>
 
         <span className="text-xs text-[#C06E30] font-bold flex items-center gap-1">
-          <Sparkles size={13} /> Automated Blockchain Genesis Block
+          <Sparkles size={13} /> Automated Cryptographic Genesis Block
         </span>
       </div>
 
@@ -141,9 +141,9 @@ export default function AddWoolBatch() {
                 <button
                   type="button"
                   key={breed}
-                  onClick={() => update('woolType', breed)}
+                  onClick={() => update('floralSource', breed)}
                   className={`px-4 py-2 rounded-full border text-xs font-bold transition-all duration-150 ${
-                    form.woolType === breed
+                    form.floralSource === breed
                       ? 'bg-[#861C1C] border-[#861C1C] text-white shadow-burgundy'
                       : 'bg-[#FAF7EE] border-[#E8E3CF] text-[#5E524D] hover:border-[#F4B345]'
                   }`}
@@ -152,7 +152,7 @@ export default function AddWoolBatch() {
                 </button>
               ))}
             </div>
-            {errors.woolType && <p className="text-[#861C1C] text-xs mt-1.5 font-semibold">{errors.woolType}</p>}
+            {errors.floralSource && <p className="text-[#861C1C] text-xs mt-1.5 font-semibold">{errors.floralSource}</p>}
           </div>
 
           {/* Section 2: Weight & Date */}
@@ -186,12 +186,12 @@ export default function AddWoolBatch() {
 
             <Input
               label="Extraction Date"
-              id="shearingDate"
+              id="harvestDate"
               type="date"
               icon={Calendar}
-              value={form.shearingDate}
-              onChange={e => update('shearingDate', e.target.value)}
-              error={errors.shearingDate}
+              value={form.harvestDate}
+              onChange={e => update('harvestDate', e.target.value)}
+              error={errors.harvestDate}
               required
             />
           </div>
@@ -300,7 +300,7 @@ export default function AddWoolBatch() {
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-[#861C1C] text-white font-bold text-xs sm:text-sm shadow-burgundy hover:bg-[#6A1515] transition-all hover:scale-105 active:scale-95 disabled:opacity-50"
             >
               <ClipboardPlus size={16} />
-              <span>{loading ? 'Minting Lot on Blockchain...' : 'Record Harvest & Generate QR Passport'}</span>
+              <span>{loading ? 'Minting Lot on Hash Ledger...' : 'Record Harvest & Generate QR Passport'}</span>
             </button>
             <button
               type="button"

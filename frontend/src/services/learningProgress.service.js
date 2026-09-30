@@ -1,8 +1,8 @@
-const STORAGE_KEY = 'woolconnect_learning_progress';
+const STORAGE_KEY = 'honeychain_learning_progress';
 
 export function getProgress() {
   try {
-    const data = localStorage.getItem(STORAGE_KEY);
+    const data = localStorage.getItem(STORAGE_KEY) || localStorage.getItem('honeychain_learning_progress');
     return data ? JSON.parse(data) : {};
   } catch (err) {
     console.error('Error loading learning progress:', err);

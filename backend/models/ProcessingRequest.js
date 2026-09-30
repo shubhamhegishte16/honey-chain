@@ -8,7 +8,7 @@ const processingRequestSchema = new mongoose.Schema({
   },
   batch: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'WoolBatch',
+    ref: 'HoneyBatch',
     required: true,
     index: true,
   },
@@ -45,14 +45,7 @@ const processingRequestSchema = new mongoose.Schema({
       'Moisture Dehumidification (<18%)',
       'Crystallization Control & Creaming',
       'Hermetic Sterilized Bottling & QR Labelling',
-      'Full Apiculture Processing & Bottling',
-      // Legacy compatibility
-      'Scouring & Carding',
-      'Sorting & Grading',
-      'Combing',
-      'Spinning',
-      'Dyeing',
-      'Full Processing'
+      'Full Apiculture Processing & Bottling'
     ],
     default: 'Micro-Filtration & Settling',
   },

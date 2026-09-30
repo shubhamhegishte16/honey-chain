@@ -52,7 +52,17 @@ export default function ProcessorDashboard() {
             </p>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex flex-col sm:flex-row items-center gap-4 shrink-0">
+            <div className="relative w-36 sm:w-44 h-24 sm:h-28 rounded-2xl overflow-hidden border border-white/20 shadow-md">
+              <img
+                src="/honey-bottling.jpg"
+                alt="Honey Bottling Line"
+                className="w-full h-full object-cover"
+              />
+              <span className="absolute bottom-1 left-1.5 px-2 py-0.5 rounded-full bg-black/60 text-[9px] font-bold text-[#F4B345] backdrop-blur-xs">
+                Active Line #2
+              </span>
+            </div>
             <button
               onClick={() => navigate('/processor/batches')}
               className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#F4B345] text-[#281D1C] font-bold text-xs sm:text-sm shadow-gold hover:bg-[#F6C063] transition-all hover:scale-105 active:scale-95"

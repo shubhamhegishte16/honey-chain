@@ -138,29 +138,42 @@ export default function FarmerDashboard() {
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3">
-            <button
-              onClick={() => navigate('/batches/add')}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#861C1C] text-white font-bold text-xs sm:text-sm shadow-burgundy hover:bg-[#6A1515] transition-all hover:scale-105 active:scale-95"
-            >
-              <ClipboardPlus size={16} />
-              <span>Log Honey Harvest</span>
-            </button>
+          <div className="flex flex-col sm:flex-row items-center gap-3">
+            <div className="relative w-36 sm:w-44 h-24 sm:h-28 rounded-2xl overflow-hidden border border-[#E8E3CF] shadow-sm hidden md:block">
+              <img
+                src="/smart-apiary.jpg"
+                alt="Smart Apiary Bee Boxes"
+                className="w-full h-full object-cover"
+              />
+              <span className="absolute bottom-1 left-1.5 px-2 py-0.5 rounded-full bg-[#281D1C]/80 text-[9px] font-bold text-[#F4B345] backdrop-blur-xs">
+                Apiary Sector 4
+              </span>
+            </div>
 
-            <button
-              onClick={() => navigate('/farmer/tracking')}
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-[#FAF7EE] border border-[#E8E3CF] text-[#281D1C] font-semibold text-xs sm:text-sm hover:bg-white hover:border-[#D6CEB5] transition-all"
-            >
-              <span>My Lots &amp; QR</span>
-              <ArrowRight size={14} />
-            </button>
+            <div className="flex flex-wrap items-center gap-2.5">
+              <button
+                onClick={() => navigate('/batches/add')}
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#861C1C] text-white font-bold text-xs sm:text-sm shadow-burgundy hover:bg-[#6A1515] transition-all hover:scale-105 active:scale-95"
+              >
+                <ClipboardPlus size={16} />
+                <span>Log Honey Harvest</span>
+              </button>
 
-            <Link
-              to="/"
-              className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full text-xs font-semibold text-[#5E524D] hover:text-[#861C1C] transition-colors"
-            >
-              <span>← Landing Page</span>
-            </Link>
+              <button
+                onClick={() => navigate('/farmer/tracking')}
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-[#FAF7EE] border border-[#E8E3CF] text-[#281D1C] font-semibold text-xs sm:text-sm hover:bg-white hover:border-[#D6CEB5] transition-all"
+              >
+                <span>My Lots &amp; QR</span>
+                <ArrowRight size={14} />
+              </button>
+
+              <Link
+                to="/"
+                className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full text-xs font-semibold text-[#5E524D] hover:text-[#861C1C] transition-colors"
+              >
+                <span>← Main Page</span>
+              </Link>
+            </div>
           </div>
         </div>
       </section>
@@ -255,8 +268,8 @@ export default function FarmerDashboard() {
               <div className="flex items-center gap-2">
                 <h3 className="font-bold text-lg font-serif text-[#281D1C]">Smart Hive IoT Telemetry</h3>
                 <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 text-[10px] font-bold uppercase">
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-600 animate-ping" />
-                  Live LoRaWAN
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-600 animate-pulse" />
+                  Simulated LoRaWAN Telemetry
                 </span>
               </div>
               <p className="text-xs text-[#5E524D] mt-0.5">Box #HIVE-RJ-042 • Mustard Bloom Apiary</p>

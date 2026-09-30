@@ -20,7 +20,7 @@ export function ToastProvider({ children }) {
     if ('Notification' in window) {
       if (Notification.permission === 'granted') {
         try {
-          new Notification('WoolConnect', { body: message, icon: '/logo.png' });
+          new Notification('HoneyChain', { body: message, icon: '/logo.png' });
         } catch (e) {
           console.warn('Native notification failed:', e);
         }
@@ -28,7 +28,7 @@ export function ToastProvider({ children }) {
         Notification.requestPermission().then(permission => {
           if (permission === 'granted') {
             try {
-              new Notification('WoolConnect', { body: message, icon: '/logo.png' });
+              new Notification('HoneyChain', { body: message, icon: '/logo.png' });
             } catch (e) {}
           }
         });

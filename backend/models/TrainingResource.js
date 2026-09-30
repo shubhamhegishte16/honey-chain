@@ -8,7 +8,7 @@ const trainingResourceSchema = new mongoose.Schema({
   category: {
     type: String,
     required: true,
-    enum: [
+        enum: [
       'Apiary Management',
       'Hive Health & Queen Rearing',
       'Comb Extraction & Centrifugation',
@@ -19,14 +19,6 @@ const trainingResourceSchema = new mongoose.Schema({
       'Flora & Seasonal Migration',
       'Mandi Trading & Fair Pricing',
       'Direct Buyer Selling',
-      // Legacy compatibility
-      'Sheep Management',
-      'Wool Shearing',
-      'Wool Handling',
-      'Wool Grading',
-      'Wool Storage',
-      'Wool Processing',
-      'Dyeing',
       'Product Development',
       'Marketing',
       'Digital Selling'

@@ -100,7 +100,7 @@ export default function RequestProcessingModal({ batch, isOpen, onClose, onSucce
         }, 1200);
       }
     } catch (err) {
-      setError(err.message || t('somethingWrongWool', 'Something went wrong. Please try again.'));
+      setError(err.message || t('somethingWrongHoney', 'Something went wrong. Please try again.'));
     } finally {
       setSubmitting(false);
     }

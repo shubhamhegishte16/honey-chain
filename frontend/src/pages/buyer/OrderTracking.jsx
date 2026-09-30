@@ -90,7 +90,7 @@ export default function OrderTracking() {
             <h3 className="font-serif font-bold text-lg text-deepBrown">{t('noActiveOrdersToTrack')}</h3>
             <p className="text-xs text-deepBrown/70 max-w-sm mt-1 mb-6">{t('allOrdersDeliveredOrNone')}</p>
             <button onClick={() => navigate('/buyer/marketplace')} className="btn-burgundy">
-              {t('findWool')}
+              {t('findHoney')}
             </button>
           </div>
         ) : (

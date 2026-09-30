@@ -1,1 +1,1 @@
-export { default } from './AddWoolBatch';
+export { default } from './AddHoneyBatch';

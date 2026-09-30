@@ -38,14 +38,14 @@ export default function ArtisanDashboard() {
   ).length;
 
   const cards = [
-    { label: t('assignedWool'), value: assignedCount, icon: Package, tone: 'bg-burgundy/10 text-burgundy', route: '/artisan/batches', tag: 'Assigned Lots' },
+    { label: t('assignedHoney'), value: assignedCount, icon: Package, tone: 'bg-burgundy/10 text-burgundy', route: '/artisan/batches', tag: 'Assigned Lots' },
     { label: t('processing'), value: processingCount, icon: Cog, tone: 'bg-honeyGold/20 text-burgundy', route: '/artisan/processing', tag: 'In Refinement' },
     { label: t('readyCompleted'), value: completedCount, icon: CheckCircle, tone: 'bg-emerald-100 text-emerald-800', route: '/artisan/completed', tag: 'Finished' },
     { label: t('qualityPending'), value: qualityCount, icon: ShieldCheck, tone: 'bg-burntOrange/15 text-burntOrange', route: '/artisan/quality', tag: 'NMR Pending' },
   ];
 
   const primaryActions = [
-    { label: t('viewAssignedWool'), icon: Package, route: '/artisan/batches', desc: 'Inspect raw comb consignments' },
+    { label: t('viewAssignedHoney'), icon: Package, route: '/artisan/batches', desc: 'Inspect raw comb consignments' },
     { label: t('startProcessingAction'), icon: Cog, route: '/artisan/processing', desc: 'Manage centrifugation & filtration' },
     { label: t('updateProcessingAction'), icon: ShieldCheck, route: '/artisan/quality', desc: 'Submit moisture & assay test logs' },
     { label: t('viewCompletedWork'), icon: CheckCircle, route: '/artisan/completed', desc: 'Archive of sealed consumer lots' },
@@ -77,7 +77,7 @@ export default function ArtisanDashboard() {
             className="btn-burgundy text-xs"
           >
             <Package size={16} />
-            <span>{t('viewAssignedWool')}</span>
+            <span>{t('viewAssignedHoney')}</span>
           </button>
         </div>
       </section>

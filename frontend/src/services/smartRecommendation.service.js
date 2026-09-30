@@ -3,7 +3,7 @@ const LAST_PROBLEM_STORAGE_KEY = 'honeychain_last_selected_problem';
 
 export function getUserInterests() {
   try {
-    const data = localStorage.getItem(INTERESTS_STORAGE_KEY) || localStorage.getItem('woolconnect_user_interests');
+    const data = localStorage.getItem(INTERESTS_STORAGE_KEY) || localStorage.getItem('honeychain_user_interests');
     return data ? JSON.parse(data) : [];
   } catch (err) {
     console.error('Error getting user interests:', err);
@@ -30,7 +30,7 @@ export function toggleUserInterest(interestKey) {
 
 export function getLastSelectedProblem() {
   try {
-    return localStorage.getItem(LAST_PROBLEM_STORAGE_KEY) || localStorage.getItem('woolconnect_last_selected_problem') || null;
+    return localStorage.getItem(LAST_PROBLEM_STORAGE_KEY) || localStorage.getItem('honeychain_last_selected_problem') || null;
   } catch (err) {
     return null;
   }
@@ -104,13 +104,6 @@ export function getSmartRecommendations(resources = [], userProgress = {}) {
         'Flora & Seasonal Migration': 'apiary-care',
         'Mandi Trading & Fair Pricing': 'selling',
         'Direct Buyer Selling': 'selling',
-        // Legacy fallback
-        'Sheep Management': 'apiary-care',
-        'Wool Shearing': 'extraction',
-        'Wool Handling': 'honey-quality',
-        'Wool Grading': 'honey-quality',
-        'Wool Storage': 'storage',
-        'Wool Processing': 'processing',
         'Digital Selling': 'selling'
       };
       

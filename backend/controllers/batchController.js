@@ -1,4 +1,4 @@
-import WoolBatch from '../models/WoolBatch.js';
+import HoneyBatch from '../models/HoneyBatch.js';
 import TraceabilityEvent from '../models/TraceabilityEvent.js';
 import QualityAssessment from '../models/QualityAssessment.js';
 import Order from '../models/Order.js';
@@ -28,7 +28,7 @@ const DUPLICATE_KEY_CODE = 11000;
 
 async function getNextBatchId(stateCode) {
   const batchIdPattern = new RegExp(`^HC-[A-Z]{2}-${BATCH_ID_YEAR}-\\d{6}$`);
-  const existingBatches = await WoolBatch.find({ batchId: { $regex: batchIdPattern } }).select('batchId').lean();
+  const existingBatches = await HoneyBatch.find({ batchId: { $regex: batchIdPattern } }).select('batchId').lean();
   const highestNumber = existingBatches.reduce((highest, batch) => {
     const match = batch.batchId.match(/-(\d{6})$/);
     return match ? Math.max(highest, Number(match[1])) : highest;
@@ -41,12 +41,10 @@ export async function createBatch(req, res, next) {
   try {
     const {
       floralSource,
-      woolType,
       beeSpecies,
       hiveCount,
       quantityKg,
       harvestDate,
-      shearingDate,
       state,
       district,
       village,
@@ -59,8 +57,8 @@ export async function createBatch(req, res, next) {
       pricePerKg
     } = req.body;
 
-    const chosenFloral = floralSource || woolType || 'Mustard Blossom';
-    const chosenDate = harvestDate || shearingDate || new Date();
+    const chosenFloral = floralSource || 'Mustard Blossom';
+    const chosenDate = harvestDate || new Date();
 
     if (!quantityKg || !state || !district) {
       return res.status(400).json({ success: false, message: 'Missing required honey batch fields (quantityKg, state, district).' });
@@ -73,11 +71,10 @@ export async function createBatch(req, res, next) {
       const blockchainHash = `0x${Array.from({length: 64}, () => Math.floor(Math.random()*16).toString(16)).join('')}`;
 
       try {
-        batch = await WoolBatch.create({
+        batch = await HoneyBatch.create({
           batchId,
           farmer: req.user._id,
           floralSource: chosenFloral,
-          woolType: chosenFloral,
           beeSpecies: beeSpecies || 'Apis mellifera (European Honeybee)',
           hiveCount: Number(hiveCount) || 25,
           quantityKg: Number(quantityKg),
@@ -88,7 +85,6 @@ export async function createBatch(req, res, next) {
             farmLocation: farmLocation || `${district} Bee Flora & Apiary Zone`,
           },
           harvestDate: new Date(chosenDate),
-          shearingDate: new Date(chosenDate),
           color: color || 'Light Amber',
           initialCondition: initialCondition || 'Raw Organic Unprocessed Honey',
           moisturePercent: Number(moisturePercent) || 17.5,
@@ -113,7 +109,6 @@ export async function createBatch(req, res, next) {
       seller: req.user._id,
       sellerName: req.user.name,
       floralSource: chosenFloral,
-      woolType: chosenFloral,
       grade: 'Grade A+ (NMR Certified 100% Pure)',
       initialQuantityKg: Number(quantityKg),
       availableQuantityKg: Number(quantityKg),
@@ -171,7 +166,7 @@ export async function getFarmerBatches(req, res, next) {
     const farmerId = req.user.role === 'admin' && req.query.farmerId ? req.query.farmerId : req.user._id;
     const filter = req.user.role === 'admin' && !req.query.farmerId ? {} : { farmer: farmerId };
 
-    const batches = await WoolBatch.find(filter)
+    const batches = await HoneyBatch.find(filter)
       .populate('farmer', 'name email mobile state district')
       .populate('warehouse', 'name code state district')
       .sort({ createdAt: -1 });
@@ -188,12 +183,12 @@ export async function getBatchById(req, res, next) {
     let batch = null;
 
     if (id.match(/^[0-9a-fA-F]{24}$/)) {
-      batch = await WoolBatch.findById(id)
+      batch = await HoneyBatch.findById(id)
         .populate('farmer', 'name email mobile state district organization')
         .populate('warehouse', 'name code state district facilities address')
         .populate('processor', 'name organization mobile state district');
     } else {
-      batch = await WoolBatch.findOne({ batchId: id.toUpperCase() })
+      batch = await HoneyBatch.findOne({ batchId: id.toUpperCase() })
         .populate('farmer', 'name email mobile state district organization')
         .populate('warehouse', 'name code state district facilities address')
         .populate('processor', 'name organization mobile state district');
@@ -225,12 +220,12 @@ export async function getPublicBatch(req, res, next) {
     let batch = null;
 
     if (batchId.match(/^[0-9a-fA-F]{24}$/)) {
-      batch = await WoolBatch.findById(batchId)
+      batch = await HoneyBatch.findById(batchId)
         .populate('farmer', 'name email mobile state district organization isVerified')
         .populate('warehouse', 'name code state district')
         .populate('processor', 'name organization');
     } else {
-      batch = await WoolBatch.findOne({ batchId: batchId.toUpperCase() })
+      batch = await HoneyBatch.findOne({ batchId: batchId.toUpperCase() })
         .populate('farmer', 'name email mobile state district organization isVerified')
         .populate('warehouse', 'name code state district')
         .populate('processor', 'name organization');
@@ -260,7 +255,7 @@ export async function getFarmerStats(req, res, next) {
   try {
     const farmerId = req.user._id;
 
-    const batches = await WoolBatch.find({ farmer: farmerId });
+    const batches = await HoneyBatch.find({ farmer: farmerId });
     const totalHoney = batches.reduce((sum, b) => sum + (b.quantityKg || 0), 0);
     const activeBatches = batches.filter(b => b.status !== 'sold').length;
     const listedHoney = batches
@@ -275,10 +270,8 @@ export async function getFarmerStats(req, res, next) {
     res.json({
       success: true,
       data: {
-        totalWoolKg: totalHoney,
         totalHoneyKg: totalHoney,
         activeBatches,
-        listedWoolKg: listedHoney,
         listedHoneyKg: listedHoney,
         pendingOrders: pendingOrdersCount,
       }

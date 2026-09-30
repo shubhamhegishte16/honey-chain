@@ -96,7 +96,7 @@ export default function QualityCenter() {
     } else {
       setForm({
         ...initialHoneyForm,
-        floralSource: batch.woolType || 'Mustard Blossom',
+        floralSource: batch.floralSource || batch.woolType || 'Mustard Blossom',
       });
     }
     setLoadingAssessment(false);
@@ -188,8 +188,18 @@ export default function QualityCenter() {
             </p>
           </div>
 
-          <div className="flex items-center gap-3">
-            <span className="px-4 py-2 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 text-xs font-bold flex items-center gap-1.5">
+          <div className="flex flex-col sm:flex-row items-center gap-4 shrink-0">
+            <div className="relative w-36 sm:w-44 h-24 sm:h-28 rounded-2xl overflow-hidden border border-white/20 shadow-md">
+              <img
+                src="/honey-lab.jpg"
+                alt="Honey Testing Laboratory"
+                className="w-full h-full object-cover"
+              />
+              <span className="absolute bottom-1 left-1.5 px-2 py-0.5 rounded-full bg-black/60 text-[9px] font-bold text-emerald-300 backdrop-blur-xs">
+                NMR 400MHz Active
+              </span>
+            </div>
+            <span className="px-4 py-2 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 text-xs font-bold flex items-center gap-1.5 self-start sm:self-auto">
               <CheckCircle2 size={15} /> ISO 17025 Accredited
             </span>
           </div>

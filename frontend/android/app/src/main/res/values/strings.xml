@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">woolconnect-frontend</string>
-    <string name="title_activity_main">woolconnect-frontend</string>
-    <string name="package_name">com.woolconnect.app</string>
-    <string name="custom_url_scheme">com.woolconnect.app</string>
+    <string name="app_name">Honey Chain</string>
+    <string name="title_activity_main">Honey Chain</string>
+    <string name="package_name">com.honeychain.app</string>
+    <string name="custom_url_scheme">com.honeychain.app</string>
 </resources>

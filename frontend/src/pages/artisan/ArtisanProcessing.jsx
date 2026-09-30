@@ -109,7 +109,7 @@ export default function ArtisanProcessing() {
                   </span>
                 </div>
                 <div className="col-span-2 sm:col-span-1">
-                  <p className="text-[10px] uppercase font-bold text-deepBrown/50">{t('assignedWool')}</p>
+                  <p className="text-[10px] uppercase font-bold text-deepBrown/50">{t('assignedHoney')}</p>
                   <p className="font-bold text-deepBrown mt-0.5">{req.floralSource || req.wool_type || 'Raw Blossom'} Honey</p>
                 </div>
               </div>

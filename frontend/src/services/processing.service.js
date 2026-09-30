@@ -12,7 +12,7 @@ const normalizeRequest = (r = {}) => ({
   completion_date: r.completionDate || r.completion_date,
 });
 
-// Wool batches / processing jobs assigned to the current artisan/processor.
+// Honey batches / processing jobs assigned to the current artisan/processor.
 export async function getAssignedProcessingRequests() {
   const result = await apiRequest('/processing/requests', { method: 'GET' });
   return result.error ? result : { ...result, data: (result.data || []).map(normalizeRequest) };
@@ -32,7 +32,7 @@ export async function getProcessors(state) {
   return apiRequest(url, { method: 'GET' });
 }
 
-// Submit a new processing request for a wool batch
+// Submit a new processing request for a honey batch
 export async function requestProcessing(payload) {
   const result = await apiRequest('/processing/requests', {
     method: 'POST',

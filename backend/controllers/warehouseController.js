@@ -1,5 +1,5 @@
 import Warehouse from '../models/Warehouse.js';
-import WoolBatch from '../models/WoolBatch.js';
+import HoneyBatch from '../models/HoneyBatch.js';
 import TraceabilityEvent from '../models/TraceabilityEvent.js';
 import Notification from '../models/Notification.js';
 
@@ -44,13 +44,13 @@ export async function requestStorage(req, res, next) {
 
     let batch = null;
     if (batchId.match(/^[0-9a-fA-F]{24}$/)) {
-      batch = await WoolBatch.findById(batchId);
+      batch = await HoneyBatch.findById(batchId);
     } else {
-      batch = await WoolBatch.findOne({ batchId: batchId.toUpperCase() });
+      batch = await HoneyBatch.findOne({ batchId: batchId.toUpperCase() });
     }
 
     if (!batch) {
-      return res.status(404).json({ success: false, message: 'Batch not found.' });
+      return res.status(404).json({ success: false, message: 'Honey batch not found.' });
     }
 
     const qty = Number(quantityKg) || batch.quantityKg;
@@ -60,7 +60,7 @@ export async function requestStorage(req, res, next) {
       batchId: batch.batchId,
       farmer: req.user._id,
       farmerName: req.user.name,
-      woolType: batch.woolType,
+      floralSource: batch.floralSource,
       quantityKg: qty,
       durationMonths: Number(durationMonths) || 1,
       status: 'pending',
@@ -72,8 +72,8 @@ export async function requestStorage(req, res, next) {
     if (warehouse.manager) {
       await Notification.create({
         recipient: warehouse.manager,
-        title: `New Storage Request: ${batch.batchId}`,
-        message: `${req.user.name} requested storage for ${qty} kg ${batch.woolType} wool.`,
+        title: `New Honey Storage Request: ${batch.batchId}`,
+        message: `${req.user.name} requested storage for ${qty} kg ${batch.floralSource} honey.`,
         type: 'storage',
         relatedId: batch.batchId,
         link: '/warehouse/dashboard',
@@ -108,7 +108,7 @@ export async function updateStorageStatus(req, res, next) {
     await warehouse.save();
 
     if (status === 'accepted' || status === 'stored') {
-      const batch = await WoolBatch.findById(reqItem.batch);
+      const batch = await HoneyBatch.findById(reqItem.batch);
       if (batch) {
         batch.status = 'stored';
         batch.warehouse = warehouse._id;
@@ -124,7 +124,7 @@ export async function updateStorageStatus(req, res, next) {
           batchId: batch.batchId,
           eventType: 'stored',
           location: `${warehouse.name}, ${warehouse.district}`,
-          description: `Stored in certified warehouse facility (${warehouse.code}${bay ? `, Bay ${bay}` : ''}) at rate ₹${warehouse.pricePerKgMonth}/kg/month.`,
+          description: `Stored in certified cold storage & moisture-controlled warehouse (${warehouse.code}${bay ? `, Bay ${bay}` : ''}) at rate ₹${warehouse.pricePerKgMonth}/kg/month.`,
           performedBy: req.user._id,
           actorName: `${req.user.name} (Warehouse Staff)`,
           timestamp: new Date(),
@@ -135,7 +135,7 @@ export async function updateStorageStatus(req, res, next) {
         await Notification.create({
           recipient: reqItem.farmer,
           title: `Storage Request Accepted: ${batch.batchId}`,
-          message: `${warehouse.name} has accepted and allocated secure storage for batch ${batch.batchId}.`,
+          message: `${warehouse.name} has accepted and allocated secure storage for honey lot ${batch.batchId}.`,
           type: 'storage',
           relatedId: batch.batchId,
           link: `/batches/${batch.batchId}/details`,

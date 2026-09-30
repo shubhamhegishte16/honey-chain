@@ -1,5 +1,5 @@
 import TraceabilityEvent from '../models/TraceabilityEvent.js';
-import WoolBatch from '../models/WoolBatch.js';
+import HoneyBatch from '../models/HoneyBatch.js';
 
 export async function getTraceabilityEvents(req, res, next) {
   try {
@@ -7,13 +7,13 @@ export async function getTraceabilityEvents(req, res, next) {
 
     let batch = null;
     if (batchId.match(/^[0-9a-fA-F]{24}$/)) {
-      batch = await WoolBatch.findById(batchId);
+      batch = await HoneyBatch.findById(batchId);
     } else {
-      batch = await WoolBatch.findOne({ batchId: batchId.toUpperCase() });
+      batch = await HoneyBatch.findOne({ batchId: batchId.toUpperCase() });
     }
 
     if (!batch) {
-      return res.status(404).json({ success: false, message: 'Batch not found.' });
+      return res.status(404).json({ success: false, message: 'Honey batch not found.' });
     }
 
     const events = await TraceabilityEvent.find({ batch: batch._id })
@@ -26,7 +26,7 @@ export async function getTraceabilityEvents(req, res, next) {
         batch: {
           id: batch._id,
           batchId: batch.batchId,
-          woolType: batch.woolType,
+          floralSource: batch.floralSource,
           quantityKg: batch.quantityKg,
           origin: batch.origin,
           qualityGrade: batch.qualityGrade,
@@ -48,13 +48,13 @@ export async function addTraceabilityEvent(req, res, next) {
 
     let batch = null;
     if (batchId.match(/^[0-9a-fA-F]{24}$/)) {
-      batch = await WoolBatch.findById(batchId);
+      batch = await HoneyBatch.findById(batchId);
     } else {
-      batch = await WoolBatch.findOne({ batchId: batchId.toUpperCase() });
+      batch = await HoneyBatch.findOne({ batchId: batchId.toUpperCase() });
     }
 
     if (!batch) {
-      return res.status(404).json({ success: false, message: 'Batch not found.' });
+      return res.status(404).json({ success: false, message: 'Honey batch not found.' });
     }
 
     const event = await TraceabilityEvent.create({

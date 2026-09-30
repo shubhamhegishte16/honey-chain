@@ -3,7 +3,9 @@ import { INITIAL_MANDI_PRICES } from './mockData';
 
 const normalizePrice = (price = {}) => ({
   ...price,
+  floralSource: price.floralSource || price.woolType || price.wool_type || 'Mustard Blossom Raw',
   wool_type: price.floralSource || price.woolType || price.wool_type || 'Mustard Blossom Raw',
+  woolType: price.floralSource || price.woolType || price.wool_type || 'Mustard Blossom Raw',
   price_per_kg: price.pricePerKg ?? price.price_per_kg ?? 280,
   change_percent: price.changePercent ?? price.change_percent ?? 0,
 });

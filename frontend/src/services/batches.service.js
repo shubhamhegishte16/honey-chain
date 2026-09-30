@@ -6,24 +6,24 @@ const normalizeBatch = (batch = {}) => ({
   id: batch.id || batch._id || batch.batchId || batch.batch_id,
   batch_id: batch.batchId || batch.batch_id || batch.id,
   batchId: batch.batchId || batch.batch_id || batch.id,
-  wool_type: batch.floralSource || batch.woolType || batch.wool_type || 'Mustard Blossom',
-  woolType: batch.floralSource || batch.woolType || batch.wool_type || 'Mustard Blossom',
   floralSource: batch.floralSource || batch.woolType || batch.wool_type || 'Mustard Blossom',
+  woolType: batch.floralSource || batch.woolType || batch.wool_type || 'Mustard Blossom',
+  wool_type: batch.floralSource || batch.woolType || batch.wool_type || 'Mustard Blossom',
   beeSpecies: batch.beeSpecies || 'Apis mellifera (European Honeybee)',
   quantity_kg: Number(batch.quantityKg ?? batch.quantity_kg ?? 50),
   quantityKg: Number(batch.quantityKg ?? batch.quantity_kg ?? 50),
   state: batch.origin?.state || batch.state || 'Rajasthan',
   district: batch.origin?.district || batch.district || 'Bharatpur',
   farm_location: batch.origin?.farmLocation || batch.farm_location || 'Apiary Box #1 to #25',
-  shearing_date: batch.extractionDate || batch.shearingDate || batch.shearing_date || new Date().toISOString(),
-  shearingDate: batch.extractionDate || batch.shearingDate || batch.shearing_date || new Date().toISOString(),
-  extractionDate: batch.extractionDate || batch.shearingDate || batch.shearing_date || new Date().toISOString(),
+  harvestDate: batch.harvestDate || batch.extractionDate || batch.shearingDate || new Date().toISOString(),
+  extractionDate: batch.harvestDate || batch.extractionDate || batch.shearingDate || new Date().toISOString(),
+  shearingDate: batch.harvestDate || batch.extractionDate || batch.shearingDate || new Date().toISOString(),
   farmer_id: batch.farmer?._id || batch.farmer?.id || batch.farmer || batch.farmer_id || 'user-beekeeper-1',
   users: batch.farmer || batch.users || { name: 'Ramesh Singh', role: 'farmer', district: 'Bharatpur', state: 'Rajasthan' },
   status: batch.status || 'produced',
   qualityGrade: batch.qualityGrade || batch.quality_grade || 'Grade A+ (NMR Certified 100% Pure)',
-  blockHash: batch.blockHash || `0x${Math.random().toString(16).substring(2)}${Math.random().toString(16).substring(2)}`,
-  wool_batch_images: (batch.images || batch.wool_batch_images || []).map(image =>
+  blockHash: batch.blockchainHash || batch.blockHash || `0x${Math.random().toString(16).substring(2)}${Math.random().toString(16).substring(2)}`,
+  honey_batch_images: (batch.images || batch.wool_batch_images || []).map(image =>
     typeof image === 'string' ? { image_url: image } : image
   ),
 });
@@ -73,27 +73,32 @@ export async function getBatchById(id) {
   return { data: found };
 }
 
-export async function createWoolBatch(batchData) {
+export async function createHoneyBatch(batchData) {
   const currentCount = getStoredBatches().length + 109;
   const stateCode = batchData.state ? batchData.state.slice(0, 2).toUpperCase() : 'RJ';
   const newBatchId = `HC-${stateCode}-2026-${String(currentCount).padStart(6, '0')}`;
   const blockHash = `0x${Array.from({length: 64}, () => Math.floor(Math.random()*16).toString(16)).join('')}`;
 
-  const normalizedNew = normalizeBatch({
+  const payload = {
     ...batchData,
+    floralSource: batchData.floralSource || batchData.woolType || 'Mustard Blossom',
+    harvestDate: batchData.harvestDate || batchData.extractionDate || batchData.shearingDate || new Date().toISOString(),
+  };
+
+  const normalizedNew = normalizeBatch({
+    ...payload,
     id: newBatchId,
     batchId: newBatchId,
     batch_id: newBatchId,
     status: 'produced',
     blockHash,
     qualityGrade: 'Pending Inspection',
-    shearingDate: batchData.extractionDate || batchData.shearingDate || new Date().toISOString(),
   });
 
   try {
     const result = await apiRequest('/batches', {
       method: 'POST',
-      body: JSON.stringify(batchData),
+      body: JSON.stringify(payload),
     });
     if (result.data) return { ...result, data: normalizeBatch(result.data) };
   } catch {
@@ -121,3 +126,6 @@ export async function createWoolBatch(batchData) {
 
   return { data: normalizedNew };
 }
+
+// Alias for backwards compatibility
+export const createWoolBatch = createHoneyBatch;

@@ -30,9 +30,6 @@ const producerSchema = new mongoose.Schema({
   honeyVarieties: [{
     type: String,
   }],
-  woolTypes: [{
-    type: String,
-  }],
   annualProductionKg: {
     type: Number,
     default: 1200,
@@ -41,14 +38,7 @@ const producerSchema = new mongoose.Schema({
     type: Number,
     default: 80,
   },
-  flockSize: {
-    type: Number,
-    default: 80,
-  },
   beeSpecies: [{
-    type: String,
-  }],
-  breeds: [{
     type: String,
   }],
   specialty: {
@@ -77,8 +67,6 @@ const producerSchema = new mongoose.Schema({
   toJSON: {
     transform(doc, ret) {
       ret.id = ret._id;
-      if (!ret.honeyVarieties && ret.woolTypes) ret.honeyVarieties = ret.woolTypes;
-      if (!ret.woolTypes && ret.honeyVarieties) ret.woolTypes = ret.honeyVarieties;
       delete ret.__v;
       return ret;
     }

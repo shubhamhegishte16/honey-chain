@@ -23,7 +23,7 @@ const BASE_SEASONS = [
     targetKeyword: 'Monsoon'
   },
   {
-    key: 'shearing',
+    key: 'harvesting',
     title: 'Extraction & Harvest',
     monthsLabel: 'October – January',
     months: [9, 10, 11, 0], // Oct-Jan

@@ -17,7 +17,7 @@ import FarmerHome from './pages/farmer/FarmerHome';
 import FarmerDashboard from './pages/farmer/FarmerDashboard';
 import FarmerMarket from './pages/farmer/FarmerMarket';
 import FarmerTracking from './pages/farmer/FarmerTracking';
-import AddWoolBatch from './pages/farmer/AddWoolBatch';
+import AddHoneyBatch from './pages/farmer/AddHoneyBatch';
 import BatchDetails from './pages/farmer/BatchDetails';
 import BatchQR from './pages/farmer/BatchQR';
 import BatchTraceability from './pages/farmer/BatchTraceability';
@@ -31,10 +31,10 @@ import Checkout from './pages/buyer/Checkout';
 import BuyerOrders from './pages/buyer/BuyerOrders';
 import OrderDetails from './pages/buyer/OrderDetails';
 import OrderTracking from './pages/buyer/OrderTracking';
-import SavedWool from './pages/buyer/SavedWool';
+import SavedBatches from './pages/buyer/SavedBatches';
 import BuyerNotifications from './pages/buyer/BuyerNotifications';
 import BuyerProfile from './pages/buyer/BuyerProfile';
-import WoolPassport from './pages/buyer/WoolPassport';
+import HoneyPassport from './pages/buyer/HoneyPassport';
 import BuyerAnalytics from './pages/buyer/BuyerAnalytics';
 
 import ProcessorDashboard from './pages/processor/ProcessorDashboard';
@@ -494,17 +494,16 @@ export default function App() {
         <Route path="/register" element={<Register />} />
 
         {/* Public QR Consumer Passport Routes */}
-        <Route path="/buyer/honey-passport/:id" element={<WoolPassport />} />
-        <Route path="/buyer/wool-passport/:id" element={<WoolPassport />} />
-        <Route path="/honey-passport/:id" element={<WoolPassport />} />
-        <Route path="/passport/:id" element={<WoolPassport />} />
+        <Route path="/buyer/honey-passport/:id" element={<HoneyPassport />} />
+        <Route path="/honey-passport/:id" element={<HoneyPassport />} />
+        <Route path="/passport/:id" element={<HoneyPassport />} />
 
         {/* Beekeeper / Farmer Routes */}
         <Route path="/farmer/dashboard" element={<Protected allowedRoles={['farmer']}><FarmerDashboard /></Protected>} />
         <Route path="/farmer/market" element={<Protected allowedRoles={['farmer']}><FarmerMarket /></Protected>} />
         <Route path="/farmer/marketplace" element={<Protected allowedRoles={['farmer']}><MarketplaceExperience allowBuying /></Protected>} />
         <Route path="/farmer/tracking" element={<Protected allowedRoles={['farmer']}><FarmerTracking /></Protected>} />
-        <Route path="/batches/add" element={<Protected allowedRoles={['farmer']}><AddWoolBatch /></Protected>} />
+        <Route path="/batches/add" element={<Protected allowedRoles={['farmer']}><AddHoneyBatch /></Protected>} />
         <Route path="/batches/:id/details" element={<Protected allowedRoles={['farmer']}><BatchDetails /></Protected>} />
         <Route path="/batches/:id/qr" element={<Protected allowedRoles={['farmer']}><BatchQR /></Protected>} />
         <Route path="/batches/:id/traceability" element={<Protected allowedRoles={['farmer']}><BatchTraceability /></Protected>} />
@@ -527,7 +526,7 @@ export default function App() {
         <Route path="/buyer/orders/:id" element={<Protected allowedRoles={['buyer']}><OrderDetails /></Protected>} />
         <Route path="/buyer/tracking" element={<Protected allowedRoles={['buyer']}><OrderTracking /></Protected>} />
         <Route path="/buyer/tracking/:id" element={<Protected allowedRoles={['buyer']}><OrderTracking /></Protected>} />
-        <Route path="/buyer/saved" element={<Protected allowedRoles={['buyer']}><SavedWool /></Protected>} />
+        <Route path="/buyer/saved" element={<Protected allowedRoles={['buyer']}><SavedBatches /></Protected>} />
         <Route path="/buyer/notifications" element={<Protected allowedRoles={['buyer']}><BuyerNotifications /></Protected>} />
         <Route path="/buyer/profile" element={<Protected allowedRoles={['buyer']}><BuyerProfile /></Protected>} />
         <Route path="/buyer/analytics" element={<Protected allowedRoles={['buyer']}><BuyerAnalytics /></Protected>} />
@@ -541,7 +540,7 @@ export default function App() {
         <Route path="/processor/batches" element={<Protected allowedRoles={['processor']}><ProcessorBatchManagement /></Protected>} />
         <Route path="/processor/products" element={<Protected allowedRoles={['processor']}><ProcessedProducts /></Protected>} />
         <Route path="/processor/passport" element={<Protected allowedRoles={['processor']}><ProcessorPassportScanner /></Protected>} />
-        <Route path="/processor/passport/:id" element={<Protected allowedRoles={['processor']}><WoolPassport /></Protected>} />
+        <Route path="/processor/passport/:id" element={<Protected allowedRoles={['processor']}><HoneyPassport /></Protected>} />
         <Route path="/processor/notifications" element={<Protected allowedRoles={['processor']}><ProcessorNotifications /></Protected>} />
         <Route path="/processor/profile" element={<Protected allowedRoles={['processor']}><ProcessorProfile /></Protected>} />
 

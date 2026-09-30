@@ -94,7 +94,7 @@ export default function ArtisanCompleted() {
                   onClick={() => navigate(`/artisan/batches/${req.id}`)}
                   className="text-burgundy hover:underline font-bold inline-flex items-center gap-1.5 group"
                 >
-                  <span>{t('viewWoolPassportBtn')}</span>
+                  <span>{t('viewHoneyPassportBtn')}</span>
                   <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
                 </button>
               </div>

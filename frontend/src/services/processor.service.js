@@ -7,7 +7,8 @@ const normalizeRequest = (r = {}) => ({
   id: r.id || r._id,
   // For components that expect flat fields:
   batchIdDisplay: r.batch?.batchId || r.batchId || '—',
-  woolType: r.batch?.woolType || '—',
+  floralSource: r.batch?.floralSource || r.batch?.woolType || r.floralSource || '—',
+  woolType: r.batch?.floralSource || r.batch?.woolType || r.floralSource || '—',
   grade: r.batch?.qualityGrade || '—',
   quantity: r.quantityKg || 0,
   farmerName: r.farmer?.name || r.farmerName || '—',
@@ -20,18 +21,19 @@ const normalizeBatch = (b = {}) => ({
   ...b,
   id: b.id || b._id,
   batchId: b.batchId || '—',
-  woolType: b.woolType || '—',
+  floralSource: b.floralSource || b.woolType || '—',
+  woolType: b.floralSource || b.woolType || '—',
   grade: b.qualityGrade || '—',
   quantity: b.quantityKg || 0,
   originalQuantity: b.quantityKg || 0,
   farmerName: b.farmer?.name || '—',
   location: b.currentLocation || '—',
   date: b.updatedAt ? new Date(b.updatedAt).toLocaleDateString('en-IN') : '—',
-  // Map wool batch status to display-friendly status
+  // Map honey batch status to display-friendly status
   status: (() => {
     if (b.status === 'processing_requested') return 'transit';
     if (b.status === 'in_processing') return 'in_progress';
-    if (b.status === 'processed') return 'completed';
+    if (b.status === 'processed' || b.status === 'bottled') return 'completed';
     return b.status || 'unknown';
   })(),
 });
@@ -75,10 +77,10 @@ export const getActiveProcessing = async () => {
     ...res,
     data: (res.data || []).map(r => ({
       ...normalizeRequest(r),
-      stage: r.serviceType || 'Processing',
-      stages: [r.serviceType || 'Processing', 'Quality Check', 'Packaging', 'Completed'],
+      stage: r.serviceType || 'Micro-Filtration & Settling',
+      stages: [r.serviceType || 'Micro-Filtration & Settling', 'NMR Quality Check', 'Hermetic Bottling', 'Completed'],
       history: [
-        { stage: r.serviceType || 'Processing', status: 'active', in: r.quantityKg, out: null },
+        { stage: r.serviceType || 'Micro-Filtration & Settling', status: 'active', in: r.quantityKg, out: null },
       ],
     })),
   };
@@ -106,7 +108,7 @@ export const getProcessedProducts = async () => {
     ...res,
     data: (res.data || []).map(b => ({
       ...normalizeBatch(b),
-      type: b.woolType || '—',
+      type: b.floralSource || b.woolType || '—',
       qty: b.quantityKg || 0,
       originalId: b.batchId || '—',
     })),
@@ -127,4 +129,3 @@ export const getBatches = async () => {
     })),
   };
 };
-

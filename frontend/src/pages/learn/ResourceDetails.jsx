@@ -25,7 +25,7 @@ export default function ResourceDetails() {
 
   useEffect(() => {
     try {
-      const stored = localStorage.getItem('honeychain_completed_steps') || localStorage.getItem('woolconnect_completed_steps');
+      const stored = localStorage.getItem('honeychain_completed_steps') || localStorage.getItem('honeychain_completed_steps');
       if (stored) setCompletedSteps(JSON.parse(stored));
     } catch (e) {}
   }, []);
@@ -47,13 +47,13 @@ export default function ResourceDetails() {
       try {
         const { data, error } = await getTrainingResourceById(id);
         if (error) {
-          setError(t('somethingWrongWool'));
+          setError(t('somethingWrongHoney'));
         } else {
           setRawResource(data);
           setCompleted(isResourceCompleted(data._id || data.id));
         }
       } catch (err) {
-        setError(t('somethingWrongWool'));
+        setError(t('somethingWrongHoney'));
         console.error(err);
       } finally {
         setLoading(false);

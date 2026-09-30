@@ -59,7 +59,7 @@ export default function ArtisanBatches() {
             <span>Assigned Apiary Consignments</span>
           </div>
           <h1 className="text-2xl md:text-3xl font-serif font-bold text-deepBrown">
-            {t('assignedWool')}
+            {t('assignedHoney')}
           </h1>
           <p className="text-sm text-deepBrown/70 max-w-xl">
             Contracted raw honey combs allocated to your center for centrifugal extraction, settling, and purity grading.
@@ -74,7 +74,7 @@ export default function ArtisanBatches() {
             type="text"
             value={search}
             onChange={e => setSearch(e.target.value)}
-            placeholder={t('searchWoolIdBatchId')}
+            placeholder={t('searchHoneyIdBatchId')}
             className="w-full pl-10 pr-4 py-2.5 rounded-2xl border border-border bg-warmIvory text-xs font-medium text-deepBrown placeholder:text-deepBrown/40 focus:outline-none focus:ring-2 focus:ring-burgundy/15 focus:border-burgundy shadow-xs"
           />
         </div>
@@ -105,8 +105,8 @@ export default function ArtisanBatches() {
           <div className="grid h-16 w-16 place-items-center rounded-3xl bg-honeyGold/20 text-burgundy mb-4 shadow-md shadow-honeyGold/10">
             <Package size={30} />
           </div>
-          <h3 className="font-serif font-bold text-lg text-deepBrown">{t('noAssignedWoolFound')}</h3>
-          <p className="text-xs text-deepBrown/70 max-w-sm mt-1">{t('noAssignedWoolHelp')}</p>
+          <h3 className="font-serif font-bold text-lg text-deepBrown">{t('noAssignedHoneyFound')}</h3>
+          <p className="text-xs text-deepBrown/70 max-w-sm mt-1">{t('noAssignedHoneyHelp')}</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

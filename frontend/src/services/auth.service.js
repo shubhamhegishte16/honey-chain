@@ -2,16 +2,17 @@ import { apiRequest } from './api';
 import { DEMO_PROFILES } from './mockData';
 
 export function getSession() {
-  const token = localStorage.getItem('woolconnect_session_token');
+  const token = localStorage.getItem('honeychain_session_token') || localStorage.getItem('honeychain_session_token');
   return token ? { token } : null;
 }
 
 export function setSession(token) {
-  localStorage.setItem('woolconnect_session_token', token);
+  localStorage.setItem('honeychain_session_token', token);
 }
 
 export function clearSession() {
-  localStorage.removeItem('woolconnect_session_token');
+  localStorage.removeItem('honeychain_session_token');
+  localStorage.removeItem('honeychain_session_token');
   localStorage.removeItem('honeychain_demo_user');
 }
 

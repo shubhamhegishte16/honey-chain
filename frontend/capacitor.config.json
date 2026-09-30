@@ -1,5 +1,5 @@
 {
-  "appId": "com.woolconnect.app",
-  "appName": "woolconnect-frontend",
+  "appId": "com.honeychain.app",
+  "appName": "honey-chain",
   "webDir": "dist"
 }

@@ -102,7 +102,7 @@ export default function BuyerAnalytics() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Honey Varieties Breakdown */}
         <div className="bento-card p-6 md:p-8 space-y-4">
-          <h3 className="font-serif font-bold text-lg text-deepBrown">{t('volumeByWoolType')}</h3>
+          <h3 className="font-serif font-bold text-lg text-deepBrown">{t('volumeByHoneyType')}</h3>
           {topWoolTypes.length === 0 ? (
             <p className="text-xs text-deepBrown/60 text-center py-8">{t('noPurchaseData')}</p>
           ) : (
